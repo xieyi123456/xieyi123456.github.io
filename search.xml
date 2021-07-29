@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Hello World</title>
+    <url>/2021/07/29/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>first</category>
+      </categories>
+      <tags>
+        <tag>无聊</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>我的第一篇blog</title>
+    <url>/2021/07/29/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87blog/</url>
+    <content><![CDATA[<h3 id="你快乐吗"><a href="#你快乐吗" class="headerlink" title="你快乐吗"></a>你快乐吗</h3><h4 id="怎么样算快乐"><a href="#怎么样算快乐" class="headerlink" title="怎么样算快乐"></a>怎么样算快乐</h4><p>1</p>
+<p>2</p>
+<p>3</p>
+<p>4</p>
+<h4 id="如何快乐"><a href="#如何快乐" class="headerlink" title="如何快乐"></a>如何快乐</h4><p>5</p>
+<p>6</p>
+<p>7</p>
+<h3 id="怎么健康生活"><a href="#怎么健康生活" class="headerlink" title="怎么健康生活"></a>怎么健康生活</h3><h4 id="锻炼身体"><a href="#锻炼身体" class="headerlink" title="锻炼身体"></a>锻炼身体</h4><p>1</p>
+<p>2</p>
+<p>1</p>
+<p>1</p>
+<h4 id="乐观心态"><a href="#乐观心态" class="headerlink" title="乐观心态"></a>乐观心态</h4><p>1</p>
+<p>1</p>
+<p>1</p>
+<p>1</p>
+<h3 id="你忽略了什么"><a href="#你忽略了什么" class="headerlink" title="你忽略了什么"></a>你忽略了什么</h3><h4 id="你的家人"><a href="#你的家人" class="headerlink" title="你的家人"></a>你的家人</h4><p>1</p>
+<p>1</p>
+<h4 id="你的朋友"><a href="#你的朋友" class="headerlink" title="你的朋友"></a>你的朋友</h4><p>1</p>
+<p>1</p>
+<h4 id="别忽略自己"><a href="#别忽略自己" class="headerlink" title="别忽略自己"></a>别忽略自己</h4><p>1</p>
+<p>1</p>
+]]></content>
+      <categories>
+        <category>杂杂</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>我的第三篇blog</title>
+    <url>/2021/07/29/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%89%E7%AF%87blog/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>我的第二篇blog</title>
+    <url>/2021/07/29/%E6%88%91%E7%9A%84%E7%AC%AC%E4%BA%8C%E7%AF%87blog/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>快乐</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>我的第四篇blog</title>
+    <url>/2021/07/29/%E6%88%91%E7%9A%84%E7%AC%AC%E5%9B%9B%E7%AF%87blog/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>八股文</tag>
+      </tags>
+  </entry>
+</search>
