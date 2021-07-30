@@ -20,14 +20,17 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="article">
+  <meta name="description" content="1，线程与进程 2，创建线程的方式 3，线程协作 4，显式锁与显式条件">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Java并发-常见基础">
 <meta property="og:url" content="http://example.com/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="Yiblog">
+<meta property="og:description" content="1，线程与进程 2，创建线程的方式 3，线程协作 4，显式锁与显式条件">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-07-30T07:08:27.000Z">
-<meta property="article:modified_time" content="2021-07-30T07:08:27.486Z">
+<meta property="article:modified_time" content="2021-07-30T08:00:40.869Z">
 <meta property="article:author" content="Xieyi">
+<meta property="article:tag" content="basic">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://example.com/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%9F%BA%E7%A1%80/">
@@ -181,8 +184,18 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-07-30 15:08:27" itemprop="dateCreated datePublished" datetime="2021-07-30T15:08:27+08:00">2021-07-30</time>
+              <time title="创建时间：2021-07-30 15:08:27 / 修改时间：16:00:40" itemprop="dateCreated datePublished" datetime="2021-07-30T15:08:27+08:00">2021-07-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a>
+                </span>
             </span>
 
           
@@ -196,7 +209,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <p>1，线程与进程</p>
+<p>2，创建线程的方式</p>
+<p>3，线程协作</p>
+<p>4，显式锁与显式条件</p>
+
     </div>
 
     
@@ -204,6 +221,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/basic/" rel="tag"># basic</a>
+          </div>
 
         
 
@@ -289,20 +309,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-count">55</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">33</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
