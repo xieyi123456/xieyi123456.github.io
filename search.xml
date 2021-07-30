@@ -29,30 +29,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/2021/07/29/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-      <categories>
-        <category>first</category>
-      </categories>
-      <tags>
-        <tag>无聊</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>我的第一篇blog</title>
     <url>/2021/07/29/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87blog/</url>
     <content><![CDATA[<h3 id="你快乐吗"><a href="#你快乐吗" class="headerlink" title="你快乐吗"></a>你快乐吗</h3><h4 id="怎么样算快乐"><a href="#怎么样算快乐" class="headerlink" title="怎么样算快乐"></a>怎么样算快乐</h4><p>1</p>
@@ -116,5 +92,292 @@
       <tags>
         <tag>八股文</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Java基础-Java集合框架</title>
+    <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java基础-常见问题</title>
+    <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java并发-同步和协作工具类</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%90%8C%E6%AD%A5%E5%92%8C%E5%8D%8F%E4%BD%9C%E5%B7%A5%E5%85%B7%E7%B1%BB/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java并发-常见关键字</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java并发-常见基础</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java并发-并发容器</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java并发-线程池</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java虚拟机-内存结构</title>
+    <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java虚拟机-垃圾回收器</title>
+    <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java虚拟机-垃圾回收算法</title>
+    <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java虚拟机-类加载子系统</title>
+    <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%AD%90%E7%B3%BB%E7%BB%9F/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Java虚拟机-虚拟机栈，堆，方法区</title>
+    <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%EF%BC%8C%E5%A0%86%EF%BC%8C%E6%96%B9%E6%B3%95%E5%8C%BA/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Mysql-sql常见语法与优化</title>
+    <url>/2021/07/30/Mysql-sql%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95%E4%B8%8E%E4%BC%98%E5%8C%96/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Mysql-事务</title>
+    <url>/2021/07/30/Mysql-%E4%BA%8B%E5%8A%A1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Mysql-架构与存储引擎</title>
+    <url>/2021/07/30/Mysql-%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Mysql-索引</title>
+    <url>/2021/07/30/Mysql-%E7%B4%A2%E5%BC%95/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Netty-NIO三大组件</title>
+    <url>/2021/07/30/Netty-NIO%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Netty-优点，应用场景</title>
+    <url>/2021/07/30/Netty-%E4%BC%98%E7%82%B9%EF%BC%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Netty-核心组件</title>
+    <url>/2021/07/30/Netty-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Netty-线程模型</title>
+    <url>/2021/07/30/Netty-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Netty-长连接，心跳机制</title>
+    <url>/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Netty-零拷贝</title>
+    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Redis-持久化</title>
+    <url>/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Redis-线程模型</title>
+    <url>/2021/07/30/Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Redis-数据类型</title>
+    <url>/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Redis-缓存击穿，雪崩，穿透</title>
+    <url>/2021/07/30/Redis-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%8C%E9%9B%AA%E5%B4%A9%EF%BC%8C%E7%A9%BF%E9%80%8F/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Redis-集群</title>
+    <url>/2021/07/30/Redis-%E9%9B%86%E7%BE%A4/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Spring-常见概念</title>
+    <url>/2021/07/30/Spring-%E5%B8%B8%E8%A7%81%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-二叉树-最近公共祖先</title>
+    <url>/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-二叉树-路径和</title>
+    <url>/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E8%B7%AF%E5%BE%84%E5%92%8C/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-二叉树遍历</title>
+    <url>/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-动态规划-剑指offer-01</title>
+    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E5%89%91%E6%8C%87offer-01/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-动态规划-子序列问题</title>
+    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E5%AD%90%E5%BA%8F%E5%88%97%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-动态规划-打家劫舍</title>
+    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-动态规划-简单</title>
+    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E7%AE%80%E5%8D%95/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-动态规划-股票问题</title>
+    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-动态规划-背包</title>
+    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%83%8C%E5%8C%85/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-双指针</title>
+    <url>/2021/07/30/leetcode-%E5%8F%8C%E6%8C%87%E9%92%88/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-哈希表</title>
+    <url>/2021/07/30/leetcode-%E5%93%88%E5%B8%8C%E8%A1%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-回溯</title>
+    <url>/2021/07/30/leetcode-%E5%9B%9E%E6%BA%AF/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-字符串</title>
+    <url>/2021/07/30/leetcode-%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-排序算法</title>
+    <url>/2021/07/30/leetcode-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-数组</title>
+    <url>/2021/07/30/leetcode-%E6%95%B0%E7%BB%84/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-栈与队列</title>
+    <url>/2021/07/30/leetcode-%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-贪心算法</title>
+    <url>/2021/07/30/leetcode-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>leetcode-链表</title>
+    <url>/2021/07/30/leetcode-%E9%93%BE%E8%A1%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>操作系统-内存管理</title>
+    <url>/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>操作系统-线程与进程</title>
+    <url>/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>操作系统-调度算法</title>
+    <url>/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>最长回文子串（子序列）</title>
+    <url>/2021/07/30/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2%EF%BC%88%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%89/</url>
+    <content><![CDATA[<h4 id="1，最长回文子串"><a href="#1，最长回文子串" class="headerlink" title="1，最长回文子串"></a>1，最长回文子串</h4><h5 id="动态规划：o（n-2）空间复杂度。"><a href="#动态规划：o（n-2）空间复杂度。" class="headerlink" title="动态规划：o（n^2）空间复杂度。"></a>动态规划：o（n^2）空间复杂度。</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> len = s.length();</span><br><span class="line">    <span class="keyword">if</span> (len &lt; <span class="number">2</span>) <span class="keyword">return</span> s;</span><br><span class="line">    <span class="keyword">int</span> maxLen = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> begin = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// dp[i][j] 表示 s[i, j] 是否是回文串</span></span><br><span class="line">    <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[len][len];</span><br><span class="line">    <span class="keyword">char</span>[] charArray = s.toCharArray();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">        dp[i][i] = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; len; j++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; j; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (charArray[i] != charArray[j]) &#123;</span><br><span class="line">                dp[i][j] = <span class="keyword">false</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (j - i &lt;= <span class="number">2</span>) &#123;</span><br><span class="line">                    dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 只要 dp[i][j] == true 成立，就表示子串 s[i..j] 是回文，此时记录回文长度和起始位置</span></span><br><span class="line">            <span class="keyword">if</span> (dp[i][j] &amp;&amp; j - i + <span class="number">1</span> &gt; maxLen) &#123;</span><br><span class="line">                maxLen = j - i + <span class="number">1</span>;</span><br><span class="line">                begin = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s.substring(begin, begin + maxLen);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="最优解：中心扩散法。o（1）空间复杂度。"><a href="#最优解：中心扩散法。o（1）空间复杂度。" class="headerlink" title="最优解：中心扩散法。o（1）空间复杂度。"></a>最优解：中心扩散法。o（1）空间复杂度。</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (s.length() &lt; <span class="number">2</span>) &#123;</span><br><span class="line">           <span class="keyword">return</span> s;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">int</span> start = <span class="number">0</span>, max = <span class="number">1</span>;</span><br><span class="line">       <span class="keyword">int</span> len = s.length();</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; ) &#123;</span><br><span class="line">           <span class="keyword">if</span> (len - i &lt;= max / <span class="number">2</span>) <span class="keyword">break</span>;</span><br><span class="line">           <span class="keyword">int</span> left = i, right = i;</span><br><span class="line">           <span class="keyword">while</span> (right &lt; len - <span class="number">1</span> &amp;&amp; s.charAt(right + <span class="number">1</span>) == s.charAt(right))</span><br><span class="line">               ++right; <span class="comment">//过滤掉重复的</span></span><br><span class="line">           <span class="comment">//下次在判断的时候从重复的下一个字符开始判断</span></span><br><span class="line">           i = right + <span class="number">1</span>;</span><br><span class="line">           <span class="comment">//然后往两边判断，找出回文子串的长度</span></span><br><span class="line">           <span class="keyword">while</span> (right &lt; len - <span class="number">1</span> &amp;&amp; left &gt; <span class="number">0</span> &amp;&amp; s.charAt(right + <span class="number">1</span>) == s.charAt(left - <span class="number">1</span>)) &#123;</span><br><span class="line">               ++right;</span><br><span class="line">               --left;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">if</span> (right - left + <span class="number">1</span> &gt; max) &#123;</span><br><span class="line">               max = right - left + <span class="number">1</span>;</span><br><span class="line">               start = left;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> s.substring(start, start + max);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2，最长回文子序列"><a href="#2，最长回文子序列" class="headerlink" title="2，最长回文子序列"></a>2，最长回文子序列</h4><h5 id="动态规划："><a href="#动态规划：" class="headerlink" title="动态规划："></a>动态规划：</h5><p>dp[i][j]表示i,j范围的最长回文子序列。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">longestPalindromeSubseq</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[s.length()][s.length()];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = s.length() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        dp[i][i] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; s.length(); j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">2</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                dp[i][j] = Math.max(dp[i + <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[<span class="number">0</span>][s.length() - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3，无重复最长子串"><a href="#3，无重复最长子串" class="headerlink" title="3，无重复最长子串"></a>3，无重复最长子串</h4><p>高频</p>
+<p>思路：滑动窗口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(String s)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len=s.length();</span><br><span class="line">        HashMap&lt;Character,Integer&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; len; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (map.containsKey(s.charAt(j)))&#123;</span><br><span class="line">                i=Math.max(i,map.get(s.charAt(j)));</span><br><span class="line">            &#125;</span><br><span class="line">            ans=Math.max(ans,j-i+<span class="number">1</span>);</span><br><span class="line">            map.put(s.charAt(j),j+<span class="number">1</span>);<span class="comment">//</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">核心：发现了重复的字符，左边窗口就要向右一位。</span><br><span class="line">    如下写法亦可。</span><br><span class="line">     <span class="keyword">if</span> (map.containsKey(s.charAt(j)))&#123;</span><br><span class="line">                i=Math.max(i,map.get(s.charAt(j)+<span class="number">1</span>));</span><br><span class="line">            &#125;</span><br><span class="line">            ans=Math.max(ans,j-i+<span class="number">1</span>);</span><br><span class="line">            map.put(s.charAt(j),j);<span class="comment">//</span></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+      <tags>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机网络-IO多路复用</title>
+    <url>/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>计算机网络-http</title>
+    <url>/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>计算机网络-tcp</title>
+    <url>/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-tcp/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>计算机网络-网络模型</title>
+    <url>/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/</url>
+    <content><![CDATA[]]></content>
   </entry>
 </search>
