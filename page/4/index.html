@@ -352,7 +352,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-31 17:41:02" itemprop="dateModified" datetime="2021-07-31T17:41:02+08:00">2021-07-31</time>
+                <time title="修改时间：2021-07-31 21:25:18" itemprop="dateModified" datetime="2021-07-31T21:25:18+08:00">2021-07-31</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -375,8 +375,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。</p>
-<h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><h4 id="报文"><a href="#报文" class="headerlink" title="报文"></a>报文</h4><table>
+          <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。</p>
+<h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><h3 id="报文"><a href="#报文" class="headerlink" title="报文"></a>报文</h3><table>
 <thead>
 <tr>
 <th align="left">方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与get类似，不返回内容主体。</th>
@@ -414,7 +414,7 @@
 <td></td>
 </tr>
 </tbody></table>
-<h4 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h4><p>1xx 类状态码属于提示信息，是协议处理中的⼀种中间状态，实际⽤到的⽐较少。 </p>
+<h3 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h3><p>1xx 类状态码属于提示信息，是协议处理中的⼀种中间状态，实际⽤到的⽐较少。 </p>
 <p>2xx 类状态码表示<strong>服务器成功处理了客户端的请求</strong>，也是我们最愿意看到的状态。 </p>
 <ul>
 <li>「200 OK」是最常⻅的成功状态码，表示⼀切正常。如果是⾮ HEAD 请求，服务器返回的响应头都会有 body 数据。 </li>
@@ -439,17 +439,17 @@
 <li>「502 Bad Gateway」通常是服务器作为⽹关或代理时返回的错误码，表示服务器⾃身⼯作正常，访问后端服务器 发⽣了错误。 </li>
 <li>「503 Service Unavailable」表示服务器当前很忙，暂时⽆法响应服务器。</li>
 </ul>
-<h4 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h4><p>Host 字段 客户端发送请求时，⽤来指定服务器的域名。</p>
+<h3 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h3><p>Host 字段 客户端发送请求时，⽤来指定服务器的域名。</p>
 <p>服务器在返回数据时，会有 Content-Length 字段，表明本次回应的数据⻓度。</p>
 <p>Connection 字段最常⽤于客户端要求服务器使⽤ TCP 持久连接，以便其他请求复⽤。</p>
 <p>Content-Type 字段⽤于服务器回应时，告诉客户端，本次数据是什么格式。</p>
 <p>Content-Encoding 字段说明数据的压缩⽅法。表示服务器返回的数据使⽤了什么压缩格式</p>
-<h4 id="get-post"><a href="#get-post" class="headerlink" title="get post"></a>get post</h4><h5 id="区别？"><a href="#区别？" class="headerlink" title="区别？"></a>区别？</h5><p>Get ⽅法的含义是请求从服务器获取资源，这个资源可以是静态的⽂本、⻚⾯、图⽚视频等。</p>
+<h3 id="get-post"><a href="#get-post" class="headerlink" title="get post"></a>get post</h3><h4 id="区别？"><a href="#区别？" class="headerlink" title="区别？"></a>区别？</h4><p>Get ⽅法的含义是请求从服务器获取资源，这个资源可以是静态的⽂本、⻚⾯、图⽚视频等。</p>
 <p>POST ⽅法则是相反操作，它向 URI 指定的资源提交数据，数据就放在报⽂的 body ⾥。⽐如，留⾔后点击「提交」，浏览器就会执⾏⼀次 POST 请求，把你的留⾔⽂字放进了报⽂ body ⾥，然后拼接好 POST 请求头，通过 TCP 协议发送给服务器。</p>
-<h5 id="安全幂等？"><a href="#安全幂等？" class="headerlink" title="安全幂等？"></a>安全幂等？</h5><p>在 HTTP 协议⾥，所谓的「安全」是指请求⽅法不会「破坏」服务器上的资源。</p>
+<h4 id="安全幂等？"><a href="#安全幂等？" class="headerlink" title="安全幂等？"></a>安全幂等？</h4><p>在 HTTP 协议⾥，所谓的「安全」是指请求⽅法不会「破坏」服务器上的资源。</p>
 <p>所谓的「幂等」，意思是<strong>多次执⾏相同的操作</strong>，结果都是「相同」的。</p>
 <p>那么很明显 <strong>GET ⽅法就是安全且幂等</strong>的，因为它是「只读」操作，⽆论操作多少次，服务器上的数据都是安全的，且每次的结果都是相同的。<strong>POST</strong> 因为是「新增或提交数据」的操作，会修改服务器上的资源，所以是<strong>不安全</strong>的，且多次提交数据就会创建多个资源，所以<strong>不是幂等的</strong>。</p>
-<h3 id="https"><a href="#https" class="headerlink" title="https"></a>https</h3><table>
+<h2 id="https"><a href="#https" class="headerlink" title="https"></a>https</h2><table>
 <thead>
 <tr>
 <th>http</th>
@@ -467,24 +467,24 @@
 <td>需要向CA申请数字证书</td>
 </tr>
 </tbody></table>
-<h5 id="解决了啥？"><a href="#解决了啥？" class="headerlink" title="解决了啥？"></a>解决了啥？</h5><blockquote>
+<h3 id="解决了啥？"><a href="#解决了啥？" class="headerlink" title="解决了啥？"></a>解决了啥？</h3><blockquote>
 <p>窃听-信息加密</p>
 <p>篡改-校验</p>
 <p>冒充-身份证书</p>
 </blockquote>
-<h5 id="如何解决不安全的问题？"><a href="#如何解决不安全的问题？" class="headerlink" title="如何解决不安全的问题？"></a>如何解决不安全的问题？</h5><p>混合加密</p>
+<h3 id="如何解决不安全的问题？"><a href="#如何解决不安全的问题？" class="headerlink" title="如何解决不安全的问题？"></a>如何解决不安全的问题？</h3><p>混合加密</p>
 <p>对称加密（只有一个密钥，速度快）（通信过程中）+非对称加密（两个密钥）（通信建立前）</p>
 <p>摘要算法实现完整性：每份数据都生成独一无二的指纹。</p>
-<p><img src="image-20210731111936519.png"></p>
 <p>服务器公钥放到数字证书中</p>
-<h3 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h3><h4 id="1-1"><a href="#1-1" class="headerlink" title="1.1"></a>1.1</h4><p>长连接</p>
+<p><img src="image-20210731111936519.png"></p>
+<h2 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h2><h3 id="http-1-1"><a href="#http-1-1" class="headerlink" title="http 1.1"></a>http 1.1</h3><p>长连接</p>
 <p>管道传输</p>
 <p>不能压缩首部，只能压缩body。</p>
 <p>首部冗长。</p>
 <p>队头阻塞。（服务器按照请求顺序响应）</p>
 <p>无请求优先级控制。</p>
 <p>请求只能从客户端开始。</p>
-<h4 id="2"><a href="#2" class="headerlink" title="2"></a>2</h4><p>基于https-安全</p>
+<h3 id="http-2"><a href="#http-2" class="headerlink" title="http 2"></a>http 2</h3><p>基于https-安全</p>
 <p>头部压缩：HPACK算法：双方维护一个头部信息表，发送索引。</p>
 <p>二进制格式而不是文本。头信息帧，数据帧。</p>
 <p>在二进制分帧层上，HTTP 2.0 会将所有传输的信息分割为更小的消息和帧,并对它们采用二进制格式的编码 ，其中HTTP1.x的首部信息会被封装到Headers帧，而我们的request body则封装到Data帧里面。</p>
@@ -494,7 +494,7 @@
 <p>服务器推送。</p>
 <p>复用一个TCP连接，下层的TCP不知道有几个http请求，发生丢包，就会触发重传机制。所有的http请求都必</p>
 <p>须等待这个包的重传（阻塞）。</p>
-<h4 id="3"><a href="#3" class="headerlink" title="3"></a>3</h4><p>TCP===UDP</p>
+<h3 id="http-3"><a href="#http-3" class="headerlink" title="http 3"></a>http 3</h3><p>TCP===UDP</p>
 <p>基于UDP的QUIC协议，可以实现类似的可靠传输。</p>
 <p><img src="image-20210731112531267.png"></p>
 
