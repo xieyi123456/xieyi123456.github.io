@@ -352,7 +352,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-31 17:33:53" itemprop="dateModified" datetime="2021-07-31T17:33:53+08:00">2021-07-31</time>
+                <time title="修改时间：2021-07-31 17:37:33" itemprop="dateModified" datetime="2021-07-31T17:37:33+08:00">2021-07-31</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -476,19 +476,17 @@
 <p>混合加密</p>
 <p>对称加密（只有一个密钥，速度快）（通信过程中）+非对称加密（两个密钥）（通信建立前）</p>
 <p>摘要算法实现完整性：每份数据都生成独一无二的指纹。</p>
+<p><img src="image-20210731111936519.png"></p>
 <p>服务器公钥放到数字证书中</p>
 </blockquote>
-<p><img src="image-20210731111936519.png"></p>
-<h3 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h3><p>1.1</p>
-<p>长连接</p>
+<h3 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h3><h4 id="1-1"><a href="#1-1" class="headerlink" title="1.1"></a>1.1</h4><p>长连接</p>
 <p>管道传输</p>
 <p>不能压缩首部，只能压缩body。</p>
 <p>首部冗长。</p>
 <p>队头阻塞。（服务器按照请求顺序响应）</p>
 <p>无请求优先级控制。</p>
 <p>请求只能从客户端开始。</p>
-<p>2</p>
-<p>基于https-安全</p>
+<h4 id="2"><a href="#2" class="headerlink" title="2"></a>2</h4><p>基于https-安全</p>
 <p>头部压缩：HPACK算法：双方维护一个头部信息表，发送索引。</p>
 <p>二进制格式而不是文本。头信息帧，数据帧。</p>
 <p>在二进制分帧层上，HTTP 2.0 会将所有传输的信息分割为更小的消息和帧,并对它们采用二进制格式的编码 ，其中HTTP1.x的首部信息会被封装到Headers帧，而我们的request body则封装到Data帧里面。</p>
@@ -498,8 +496,7 @@
 <p>服务器推送。</p>
 <p>复用一个TCP连接，下层的TCP不知道有几个http请求，发生丢包，就会触发重传机制。所有的http请求都必</p>
 <p>须等待这个包的重传（阻塞）。</p>
-<p>3</p>
-<p>TCP===UDP</p>
+<h4 id="3"><a href="#3" class="headerlink" title="3"></a>3</h4><p>TCP===UDP</p>
 <p>基于UDP的QUIC协议，可以实现类似的可靠传输。</p>
 <p><img src="image-20210731112531267.png"></p>
 
