@@ -20,18 +20,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="1，概念 2，是什么 3，https 4，http1-2-3">
+  <meta name="description" content="概念HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。 是什么报文   方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与get类似，不返回内容主体。 URI 协议版本    可选的首部字段     内容实体        协议版本 状态码 状态码原因短语    可选的响应首部字段     主体">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机网络-http">
 <meta property="og:url" content="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/index.html">
 <meta property="og:site_name" content="Yiblog">
-<meta property="og:description" content="1，概念 2，是什么 3，https 4，http1-2-3">
+<meta property="og:description" content="概念HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。 是什么报文   方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与get类似，不返回内容主体。 URI 协议版本    可选的首部字段     内容实体        协议版本 状态码 状态码原因短语    可选的响应首部字段     主体">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/image-20210731111936519.png">
+<meta property="og:image" content="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/image-20210731112531267.png">
 <meta property="article:published_time" content="2021-07-30T07:04:12.000Z">
-<meta property="article:modified_time" content="2021-07-30T07:59:58.218Z">
+<meta property="article:modified_time" content="2021-07-31T03:27:02.262Z">
 <meta property="article:author" content="Xieyi">
 <meta property="article:tag" content="协议">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/image-20210731111936519.png">
 
 <link rel="canonical" href="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/">
 
@@ -184,10 +187,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-07-30 15:04:12 / 修改时间：15:59:58" itemprop="dateCreated datePublished" datetime="2021-07-30T15:04:12+08:00">2021-07-30</time>
+              <time title="创建时间：2021-07-30 15:04:12" itemprop="dateCreated datePublished" datetime="2021-07-30T15:04:12+08:00">2021-07-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-31 11:27:02" itemprop="dateModified" datetime="2021-07-31T11:27:02+08:00">2021-07-31</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -209,10 +218,133 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>1，概念</p>
-<p>2，是什么</p>
-<p>3，https</p>
-<p>4，http1-2-3</p>
+        <h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。</p>
+<h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><h4 id="报文"><a href="#报文" class="headerlink" title="报文"></a>报文</h4><table>
+<thead>
+<tr>
+<th align="left">方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与get类似，不返回内容主体。</th>
+<th>URI</th>
+<th>协议版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">可选的首部字段</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">内容实体</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>协议版本</th>
+<th>状态码</th>
+<th>状态码原因短语</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>可选的响应首部字段</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>主体</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h4><p>1xx 类状态码属于提示信息，是协议处理中的⼀种中间状态，实际⽤到的⽐较少。 </p>
+<p>2xx 类状态码表示<strong>服务器成功处理了客户端的请求</strong>，也是我们最愿意看到的状态。 </p>
+<ul>
+<li>「200 OK」是最常⻅的成功状态码，表示⼀切正常。如果是⾮ HEAD 请求，服务器返回的响应头都会有 body 数据。 </li>
+<li>「204 No Content」也是常⻅的成功状态码，与 200 OK 基本相同，但响应头没有 body 数据。</li>
+<li>「206 Partial Content」是应⽤于 HTTP 分块下载或断点续传，表示响应返回的 body 数据并不是资源的全部，⽽ 是其中的⼀部分，也是服务器处理成功的状态。 </li>
+</ul>
+<p>3xx 类状态码表示客户端请求的资源发送了变动，需要客户端⽤新的 URL 重新发送请求获取资源，也就是重定向。 </p>
+<ul>
+<li>「301 Moved Permanently」表示永久重定向，说明请求的资源已经不存在了，需改⽤新的 URL 再次访问。 </li>
+<li>「302 Found」表示临时重定向，说明请求的资源还在，但暂时需要⽤另⼀个 URL 来访问。 301 和 302 都会在响应头⾥使⽤字段 Location ，指明后续要跳转的 URL，浏览器会⾃动重定向新的 URL。 </li>
+</ul>
+<p>4xx 类状态码表示客户端发送的报⽂有误，服务器⽆法处理，也就是错误码的含义。 </p>
+<ul>
+<li>「400 Bad Request」表示客户端请求的报⽂有错误，但只是个笼统的错误。 </li>
+<li>「403 Forbidden」表示服务器禁⽌访问资源，并不是客户端的请求出错。 </li>
+<li>「404 Not Found」表示请求的资源在服务器上不存在或未找到，所以⽆法提供给客户端。 </li>
+</ul>
+<p>5xx 类状态码表示客户端请求报⽂正确，但是服务器处理时内部发⽣了错误，属于服务器端的错误码。 </p>
+<ul>
+<li>「500 Internal Server Error」与 400 类型，是个笼统通⽤的错误码，服务器发⽣了什么错误，我们并不知道。</li>
+<li>「501 Not Implemented」表示客户端请求的功能还不⽀持，类似“即将开业，敬请期待”的意思。</li>
+<li>「502 Bad Gateway」通常是服务器作为⽹关或代理时返回的错误码，表示服务器⾃身⼯作正常，访问后端服务器 发⽣了错误。 </li>
+<li>「503 Service Unavailable」表示服务器当前很忙，暂时⽆法响应服务器。</li>
+</ul>
+<h4 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h4><p>Host 字段 客户端发送请求时，⽤来指定服务器的域名。</p>
+<p>服务器在返回数据时，会有 Content-Length 字段，表明本次回应的数据⻓度。</p>
+<p>Connection 字段最常⽤于客户端要求服务器使⽤ TCP 持久连接，以便其他请求复⽤。</p>
+<p>Content-Type 字段⽤于服务器回应时，告诉客户端，本次数据是什么格式。</p>
+<p>Content-Encoding 字段说明数据的压缩⽅法。表示服务器返回的数据使⽤了什么压缩格式</p>
+<h4 id="get-post"><a href="#get-post" class="headerlink" title="get post"></a>get post</h4><h5 id="区别？"><a href="#区别？" class="headerlink" title="区别？"></a>区别？</h5><p>Get ⽅法的含义是请求从服务器获取资源，这个资源可以是静态的⽂本、⻚⾯、图⽚视频等。</p>
+<p>POST ⽅法则是相反操作，它向 URI 指定的资源提交数据，数据就放在报⽂的 body ⾥。⽐如，留⾔后点击「提交」，浏览器就会执⾏⼀次 POST 请求，把你的留⾔⽂字放进了报⽂ body ⾥，然后拼接好 POST 请求头，通过 TCP 协议发送给服务器。</p>
+<h5 id="安全幂等？"><a href="#安全幂等？" class="headerlink" title="安全幂等？"></a>安全幂等？</h5><p>在 HTTP 协议⾥，所谓的「安全」是指请求⽅法不会「破坏」服务器上的资源。</p>
+<p>所谓的「幂等」，意思是<strong>多次执⾏相同的操作</strong>，结果都是「相同」的。</p>
+<p>那么很明显 <strong>GET ⽅法就是安全且幂等</strong>的，因为它是「只读」操作，⽆论操作多少次，服务器上的数据都是安全的，且每次的结果都是相同的。<strong>POST</strong> 因为是「新增或提交数据」的操作，会修改服务器上的资源，所以是<strong>不安全</strong>的，且多次提交数据就会创建多个资源，所以<strong>不是幂等的</strong>。</p>
+<h3 id="https"><a href="#https" class="headerlink" title="https"></a>https</h3><table>
+<thead>
+<tr>
+<th>http</th>
+<th>不安全</th>
+<th>三次握手</th>
+<th>80端口</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>https</td>
+<td>安全（SSL/TSL）</td>
+<td>三次握手+SSL握手</td>
+<td>443端口</td>
+<td>需要向CA申请数字证书</td>
+</tr>
+</tbody></table>
+<h5 id="解决了啥？"><a href="#解决了啥？" class="headerlink" title="解决了啥？"></a>解决了啥？</h5><blockquote>
+<p>窃听-信息加密</p>
+<p>篡改-校验</p>
+<p>冒充-身份证书</p>
+</blockquote>
+<h5 id="如何解决不安全的问题？"><a href="#如何解决不安全的问题？" class="headerlink" title="如何解决不安全的问题？"></a>如何解决不安全的问题？</h5><blockquote>
+<p>混合加密</p>
+<p>对称加密（只有一个密钥，速度快）（通信过程中）+非对称加密（两个密钥）（通信建立前）</p>
+<p>摘要算法实现完整性：每份数据都生成独一无二的指纹。</p>
+<p>服务器公钥放到数字证书中</p>
+</blockquote>
+<p><img src="image-20210731111936519.png"></p>
+<h3 id="http1-2-3"><a href="#http1-2-3" class="headerlink" title="http1-2-3"></a>http1-2-3</h3><p>1.1</p>
+<p>长连接</p>
+<p>管道传输</p>
+<p>不能压缩首部，只能压缩body。</p>
+<p>首部冗长。</p>
+<p>队头阻塞。（服务器按照请求顺序响应）</p>
+<p>无请求优先级控制。</p>
+<p>请求只能从客户端开始。</p>
+<p>2</p>
+<p>基于https-安全</p>
+<p>头部压缩：HPACK算法：双方维护一个头部信息表，发送索引。</p>
+<p>二进制格式而不是文本。头信息帧，数据帧。</p>
+<p>在二进制分帧层上，HTTP 2.0 会将所有传输的信息分割为更小的消息和帧,并对它们采用二进制格式的编码 ，其中HTTP1.x的首部信息会被封装到Headers帧，而我们的request body则封装到Data帧里面。</p>
+<p>然后，HTTP 2.0 通信都在一个连接上完成，这个连接可以承载任意数量的双向数据流。相应地，每个数据流以消息的形式发送，而消息由一或多个帧组成，这些帧可以乱序发送，然后再根据每个帧首部的流标识符重新组装。</p>
+<p>数据流，可指定优先级。</p>
+<p>多路复用：一个连接中可以并发多个请求，不用按照顺序一一回应==解决了队头阻塞，降低延迟。</p>
+<p>服务器推送。</p>
+<p>复用一个TCP连接，下层的TCP不知道有几个http请求，发生丢包，就会触发重传机制。所有的http请求都必</p>
+<p>须等待这个包的重传（阻塞）。</p>
+<p>3</p>
+<p>TCP===UDP</p>
+<p>基于UDP的QUIC协议，可以实现类似的可靠传输。</p>
+<p><img src="image-20210731112531267.png"></p>
 
     </div>
 
@@ -296,6 +428,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%A5%E6%96%87"><span class="nav-number">2.1.</span> <span class="nav-text">报文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">状态码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E6%AE%B5"><span class="nav-number">2.3.</span> <span class="nav-text">字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#get-post"><span class="nav-number">2.4.</span> <span class="nav-text">get post</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">2.4.1.</span> <span class="nav-text">区别？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%B9%82%E7%AD%89%EF%BC%9F"><span class="nav-number">2.4.2.</span> <span class="nav-text">安全幂等？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#https"><span class="nav-number">3.</span> <span class="nav-text">https</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E4%BA%86%E5%95%A5%EF%BC%9F"><span class="nav-number">3.0.1.</span> <span class="nav-text">解决了啥？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">3.0.2.</span> <span class="nav-text">如何解决不安全的问题？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http1-2-3"><span class="nav-number">4.</span> <span class="nav-text">http1-2-3</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

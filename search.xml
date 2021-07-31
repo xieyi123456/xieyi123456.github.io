@@ -61,6 +61,22 @@
       </tags>
   </entry>
   <entry>
+    <title>Java并发-同步和协作工具类</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%90%8C%E6%AD%A5%E5%92%8C%E5%8D%8F%E4%BD%9C%E5%B7%A5%E5%85%B7%E7%B1%BB/</url>
+    <content><![CDATA[<p>1，读写锁-ReentrantReadWriteLock</p>
+<p>2，信号量Semaphore</p>
+<p>3，倒计时门栓CountDownLatch</p>
+<p>4，循环栅栏CyclicBarrier</p>
+<p>5，ThreadLocal</p>
+]]></content>
+      <categories>
+        <category>Java并发</category>
+      </categories>
+      <tags>
+        <tag>工具类</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java并发-常见关键字</title>
     <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/</url>
     <content><![CDATA[<p>1，synchronized</p>
@@ -87,22 +103,6 @@
       </categories>
       <tags>
         <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java并发-同步和协作工具类</title>
-    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%90%8C%E6%AD%A5%E5%92%8C%E5%8D%8F%E4%BD%9C%E5%B7%A5%E5%85%B7%E7%B1%BB/</url>
-    <content><![CDATA[<p>1，读写锁-ReentrantReadWriteLock</p>
-<p>2，信号量Semaphore</p>
-<p>3，倒计时门栓CountDownLatch</p>
-<p>4，循环栅栏CyclicBarrier</p>
-<p>5，ThreadLocal</p>
-]]></content>
-      <categories>
-        <category>Java并发</category>
-      </categories>
-      <tags>
-        <tag>工具类</tag>
       </tags>
   </entry>
   <entry>
@@ -337,33 +337,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Netty-零拷贝</title>
-    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
-    <content><![CDATA[<p>1，slice</p>
-<p>2，duplicate</p>
-<p>3，Composite</p>
-]]></content>
-      <categories>
-        <category>Netty</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis-持久化</title>
-    <url>/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</url>
-    <content><![CDATA[<p>1，RDB</p>
-<p>2，AOF</p>
-]]></content>
-      <categories>
-        <category>Redis</category>
-      </categories>
-      <tags>
-        <tag>持久化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Redis-数据类型</title>
     <url>/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
     <content><![CDATA[<p>1，String</p>
@@ -408,6 +381,33 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis-持久化</title>
+    <url>/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</url>
+    <content><![CDATA[<p>1，RDB</p>
+<p>2，AOF</p>
+]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>持久化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Netty-零拷贝</title>
+    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
+    <content><![CDATA[<p>1，slice</p>
+<p>2，duplicate</p>
+<p>3，Composite</p>
+]]></content>
+      <categories>
+        <category>Netty</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis-集群</title>
     <url>/2021/07/30/Redis-%E9%9B%86%E7%BE%A4/</url>
     <content><![CDATA[<p>1，主从复制</p>
@@ -435,17 +435,6 @@
       </tags>
   </entry>
   <entry>
-    <title>leetcode-二叉树-最近公共祖先</title>
-    <url>/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>leetcode-二叉树-路径和</title>
     <url>/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E8%B7%AF%E5%BE%84%E5%92%8C/</url>
     <content><![CDATA[]]></content>
@@ -454,6 +443,17 @@
       </categories>
       <tags>
         <tag>路径和</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>leetcode-二叉树-最近公共祖先</title>
+    <url>/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
       </tags>
   </entry>
   <entry>
@@ -490,17 +490,6 @@
       </tags>
   </entry>
   <entry>
-    <title>leetcode-动态规划-打家劫舍</title>
-    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>具体</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>leetcode-动态规划-简单</title>
     <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E7%AE%80%E5%8D%95/</url>
     <content><![CDATA[]]></content>
@@ -509,6 +498,17 @@
       </categories>
       <tags>
         <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>leetcode-动态规划-打家劫舍</title>
+    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+      <tags>
+        <tag>具体</tag>
       </tags>
   </entry>
   <entry>
@@ -706,9 +706,68 @@
   <entry>
     <title>计算机网络-IO多路复用</title>
     <url>/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/</url>
-    <content><![CDATA[<p>1，select</p>
-<p>2，poll</p>
-<p>3，epoll</p>
+    <content><![CDATA[<h3 id="解释名词"><a href="#解释名词" class="headerlink" title="解释名词"></a>解释名词</h3><h4 id="用户空间内核空间"><a href="#用户空间内核空间" class="headerlink" title="用户空间内核空间"></a>用户空间内核空间</h4><p>现在操作系统都是采用虚拟存储技术，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。为了保证用户进程不能直接操作内核（kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G字节，供内核使用，称为内核空间，而将较低的3G字节（从虚拟地址0x00000000到0xBFFFFFFF），供各个进程使用，称为用户空间。</p>
+<p>每个进程可以通过<strong>系统调用</strong>进入内核，因此，Linux内核由系统内的所有进程共享。于是，从具体进程的角度来看，每个进程可以拥有4G字节的虚拟空间。</p>
+<h4 id="系统调用："><a href="#系统调用：" class="headerlink" title="系统调用："></a>系统调用：</h4><ul>
+<li>设备管理</li>
+<li>文件管理</li>
+<li>进程控制</li>
+<li>进程通信</li>
+<li>内存管理</li>
+</ul>
+<h4 id="进程上下文切换"><a href="#进程上下文切换" class="headerlink" title="进程上下文切换"></a>进程上下文切换</h4><p>为控制进程的执行，操作系统内核挂起正在CPU上运行的进程，并恢复以前挂起的某个进程的执行，这种行为称为上下文切换（context switch）。通过上下文切换技术，即使在单处理器系统上也能够并发执行多个任务。</p>
+<p>进程切换的原因：</p>
+<ol>
+<li>在CPU上运行进程的<strong>时间片耗尽</strong>，便会被操作系统挂起，调度器选择其他进程执行。</li>
+<li>在CPU上运行进程被<strong>更高优先级的进程抢占</strong>。</li>
+<li>在CPU上运行进程需要<strong>等待某种设备资源时</strong>，进程会被挂起，从运行状态（TASK_RUNNING）改为就绪状态（TASK_INTERRUPTIBLE）。</li>
+<li>在CPU上运行进程的时间片尚未耗尽时，<strong>发生硬件中断</strong>，CPU中断当前执行的进程，转而去调用对应的中断处理程序处理中断。</li>
+</ol>
+<p>进程切换细节：</p>
+<ul>
+<li>保存处理机上下文，包括程序计数器和其他寄存器。</li>
+<li>更新PCB信息。</li>
+<li>把进程的PCB移入相应的队列，如就绪、在某事件阻塞等队列。</li>
+<li>选择另一个进程执行，并更新其PCB。</li>
+<li>更新内存管理的数据结构。</li>
+<li>恢复处理机上下文。</li>
+</ul>
+<p>进程的阻塞是进程自身的一种<strong>主动行为</strong>，也因此只有处于运行态的进程（获得CPU），才可能将其转为阻塞状态。当进程进入阻塞状态，是<strong>不占用CPU资源的</strong>。</p>
+<h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>文件描述符形式上是一个非负整数。它是一个<strong>索引值</strong>，指向内核为每一个进程所维护的该进程打开文件的记录表。</p>
+<p>当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。在程序设计中，一些涉及底层的程序编写往往会围绕着文件描述符展开。但是文件描述符这一概念往往只适用于UNIX、Linux这样的操作系统。</p>
+<h4 id="缓存IO"><a href="#缓存IO" class="headerlink" title="缓存IO"></a>缓存IO</h4><p>缓存 I/O 又被称作标准 I/O，大多数文件系统的默认 I/O 操作都是缓存 I/O。在 Linux 的缓存 I/O 机制中，操作系统会将 I/O 的数据缓存在文件系统的页缓存（ page cache ）中，也就是说，<strong>数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间。</strong></p>
+<p>缺点：<br>数据在传输过程中需要<strong>在应用程序地址空间和内核进行多次数据拷贝操作</strong>，这些数据拷贝操作所带来的 CPU 以及内存开销是非常大的。</p>
+<h4 id="阻塞IO"><a href="#阻塞IO" class="headerlink" title="阻塞IO"></a>阻塞IO</h4><p>当用户进程调用了recvfrom这个系统调用，内核就开始了IO的第一个阶段：<strong>准备数据</strong>（对于网络IO来说，很多时候数据在一开始还没有到达。比如，还没有收到一个完整的UDP包。这个时候内核就要等待足够的数据到来）。这个过程需要等待，也就是说数据被拷贝到操作系统内核的缓冲区中是需要一个过程的。而在用户进程这边，整个进程会被阻塞（当然，是进程自己选择的阻塞）。当内核一直等到数据准备好了，它就会<strong>将数据从kernel中拷贝到用户内存</strong>，然后kernel返回结果，用户进程才解除block的状态，重新运行起来。</p>
+<p><strong>两个阶段都被阻塞。</strong></p>
+<h4 id="非阻塞IO"><a href="#非阻塞IO" class="headerlink" title="非阻塞IO"></a>非阻塞IO</h4><p>当用户进程发出read操作时，如果内核中的数据还没有准备好，那么它并不会block用户进程，而是立刻返回一个error。从用户进程角度讲 ，它发起一个read操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个error时，它就知道数据还没有准备好，于是它可以再次发送read操作。一旦内核中的数据准备好了，并且又再次收到了用户进程的system call，那么它马上就将数据拷贝到了用户内存，然后返回。</p>
+<p>所以，nonblocking IO的特点是<strong>用户进程需要不断的主动询问内核</strong></p>
+<p>NIO在一些<strong>短业务线，访问量高</strong>的程序中使用，会提高系统的吞吐量，但是对于业务线长，且访问量低的程序来说，就未必是件好事，使用BIO可能会更好一些，<strong>不然线程就会空转，浪费CPU。</strong></p>
+<h4 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h4><p>优点：<strong>一个进程可以同时处理多个连接。</strong></p>
+<p>I/O 多路复用的特点是通过一种机制<strong>一个进程能同时等待多个文件描述符</strong>，而这些文件描述符（套接字描述符）其中的任意一个进入读就绪状态，select()函数就可以返回。</p>
+<h4 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h4><p>异步（线程自己不去获得结果，而是由其他的线程送来结果）</p>
+<p><img src="image-20210731094812802.png"></p>
+<p>异步情况下一定是非阻塞的。</p>
+<p>异步意味着：在进行读写操作时，线程不必等待结果，而是通过回调的方式由另外的线程来获取。linux在2.6底层通过多路复用模拟了异步IO。windows通过IOCP真正实现了异步IO。</p>
+<p>select，poll，epoll本质上都是<strong>同步I/O</strong>，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会由其他线程负责把数据从内核拷贝到用户空间。</p>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>select 实现多路复⽤的⽅式：</p>
+<p>将已连接的 Socket 都放到⼀个<strong>⽂件描述符集合</strong>，然后调⽤ select 函数<strong>将⽂件描述符集合拷⻉到内核</strong>⾥，让内核来检查是否有⽹络事件产⽣，检查的⽅式很粗暴，就是通过遍历⽂件描述符集合的⽅式，当检查到有事件产⽣后，将此 Socket 标记为可读或可写。</p>
+<p>接着<strong>再把整个⽂件描述符集合拷⻉回⽤户态</strong>⾥，然后⽤户态还需要再通过遍历的⽅法找到可读或可写的 Socket，然后再对其处理。</p>
+<p>对于 select 这种⽅式，需要进⾏ 2 次「遍历」⽂件描述符集合，⼀次是在内核态⾥，⼀个次是在⽤户态⾥ ，⽽且还会发⽣ 2 次「拷⻉」⽂件描述符集合，先从⽤户空间传⼊内核空间，由内核修改后，再传出到⽤户空间中。</p>
+<p>select 使⽤3个固定⻓度的 BitsMap（表示可读，可写，except），表示⽂件描述符集合，⽽且所⽀持的⽂件描述符的个数是有限制的，在Linux 系统中，由内核中的 FD_SETSIZE 限制， 默认最⼤值为 <strong>1024</strong> ，只能监听 0~1023 的⽂件描述符。</p>
+<p>select<strong>目前几乎在所有的平台上支持，</strong>其良好跨平台支持也是它的一个优点。select的一 个缺点在于单个进程能够监视的文件描述符的数量存在最大限制，<strong>在Linux上一般为1024，</strong>可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但 是这样也会造成效率的降低。</p>
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><p>poll 不再⽤ BitsMap 来存储所关注的⽂件描述符，取⽽代之⽤<strong>动态数组，以链表形式来组织</strong>，（pollfd的指针）突破了select 的⽂件描述符个数限制，当然还会受到系统⽂件描述符限制。</p>
+<p><img src="image-20210731095816033.png"></p>
+<p>但是 poll 和 select 并没有太⼤的本质区别，都是使⽤「线性结构」存储进程关注的 Socket 集合，因此都需要遍历⽂件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，⽽且也需要在⽤户态与内核态之间拷⻉⽂件描述符集合，这种⽅式随着并发数上来，性能的损耗会呈指数级增⻓。</p>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>第⼀点，epoll 在内核⾥使⽤<strong>红⿊树</strong>来跟踪进程所有待检测的⽂件描述字，把需要监控的 socket 通过epoll_ctl() 函数加⼊内核中的红⿊树⾥，红⿊树是个⾼效的数据结构，增删查⼀般时间复杂度是O(logn) ，通过对这棵⿊红树进⾏操作，这样就不需要像 select/poll 每次操作时都传⼊整个 socket 集合，只需要传⼊⼀个待检测的 socket，减少了内核和⽤户空间⼤量的数据拷⻉和内存分配。</p>
+<p>第⼆点， epoll 使⽤<strong>事件驱动的机制</strong>，内核⾥维护了⼀个链表来记录就绪事件，当某个 socket 有事件发⽣时，通过回调函数内核会将其加⼊到这个就绪事件列表中，<strong>当⽤户调⽤ epoll_wait() 函数时</strong>，只会返回有事件发⽣的⽂件描述符，不需要像 select/poll 那样轮询扫描整个 socket 集合，⼤⼤提⾼了检测的效率。</p>
+<p><img src="image-20210731100147054.png"></p>
+<p>epoll对文件描述符的操作有两种模式：LT（level trigger）和ET（edge trigger）。LT模式是默认模式，LT模式与ET模式的区别如下：</p>
+<p>LT模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。<strong>下次调用epoll_wait时，会再次响应应用程序并通知此事件。</strong></p>
+<p>ET模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，<strong>下次调用epoll_wait时，不会再次响应应用程序并通知此事件。</strong></p>
+<p>LT(level triggered)是缺省的工作方式，并且同时支持block和no-block socket.在这种做法中，内核告诉你一个文件描述符是否就绪了，然后你可以对这个就绪的fd进行IO操作。如果你不作任何操作，内核还是会继续通知你的。</p>
+<p>ET(edge-triggered)是<strong>高速工作方式，</strong>只支持<strong>no-block socket</strong>。在这种模式下，当描述符从未就绪变为就绪时，内核通过epoll告诉你。然后<strong>它会假设你知道文件描述符已经就绪，</strong>并且不会再为那个文件描述符发送更多的就绪通知，直到你做了某些操作导致那个文件描述符不再为就绪状态了。但是请注意，如果一直不对这个fd作IO操作(从而导致它再次变成未就绪)，<strong>内核不会发送更多的通知(only once)</strong></p>
+<p>ET模式在很大程度上<strong>减少了epoll事件被重复触发的次数</strong>，因此效率要比LT模式高。</p>
+<p>（会循环从⽂件描述符读写数据，那么<strong>如果⽂件描述符是阻塞的，没有数据可读写时，进程会阻塞在读写函数那⾥</strong>，程序就没办法继续往下执⾏。所以，<strong>边缘触发模式⼀般和⾮阻塞 I/O 搭配使⽤</strong>，程序会⼀直执⾏ I/O 操作，直到系统调⽤（如 read 和write ）返回错误。）</p>
 ]]></content>
       <categories>
         <category>计算机网络</category>
@@ -720,10 +779,133 @@
   <entry>
     <title>计算机网络-http</title>
     <url>/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/</url>
-    <content><![CDATA[<p>1，概念</p>
-<p>2，是什么</p>
-<p>3，https</p>
-<p>4，http1-2-3</p>
+    <content><![CDATA[<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。</p>
+<h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><h4 id="报文"><a href="#报文" class="headerlink" title="报文"></a>报文</h4><table>
+<thead>
+<tr>
+<th align="left">方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与get类似，不返回内容主体。</th>
+<th>URI</th>
+<th>协议版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">可选的首部字段</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">内容实体</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>协议版本</th>
+<th>状态码</th>
+<th>状态码原因短语</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>可选的响应首部字段</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>主体</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h4><p>1xx 类状态码属于提示信息，是协议处理中的⼀种中间状态，实际⽤到的⽐较少。 </p>
+<p>2xx 类状态码表示<strong>服务器成功处理了客户端的请求</strong>，也是我们最愿意看到的状态。 </p>
+<ul>
+<li>「200 OK」是最常⻅的成功状态码，表示⼀切正常。如果是⾮ HEAD 请求，服务器返回的响应头都会有 body 数据。 </li>
+<li>「204 No Content」也是常⻅的成功状态码，与 200 OK 基本相同，但响应头没有 body 数据。</li>
+<li>「206 Partial Content」是应⽤于 HTTP 分块下载或断点续传，表示响应返回的 body 数据并不是资源的全部，⽽ 是其中的⼀部分，也是服务器处理成功的状态。 </li>
+</ul>
+<p>3xx 类状态码表示客户端请求的资源发送了变动，需要客户端⽤新的 URL 重新发送请求获取资源，也就是重定向。 </p>
+<ul>
+<li>「301 Moved Permanently」表示永久重定向，说明请求的资源已经不存在了，需改⽤新的 URL 再次访问。 </li>
+<li>「302 Found」表示临时重定向，说明请求的资源还在，但暂时需要⽤另⼀个 URL 来访问。 301 和 302 都会在响应头⾥使⽤字段 Location ，指明后续要跳转的 URL，浏览器会⾃动重定向新的 URL。 </li>
+</ul>
+<p>4xx 类状态码表示客户端发送的报⽂有误，服务器⽆法处理，也就是错误码的含义。 </p>
+<ul>
+<li>「400 Bad Request」表示客户端请求的报⽂有错误，但只是个笼统的错误。 </li>
+<li>「403 Forbidden」表示服务器禁⽌访问资源，并不是客户端的请求出错。 </li>
+<li>「404 Not Found」表示请求的资源在服务器上不存在或未找到，所以⽆法提供给客户端。 </li>
+</ul>
+<p>5xx 类状态码表示客户端请求报⽂正确，但是服务器处理时内部发⽣了错误，属于服务器端的错误码。 </p>
+<ul>
+<li>「500 Internal Server Error」与 400 类型，是个笼统通⽤的错误码，服务器发⽣了什么错误，我们并不知道。</li>
+<li>「501 Not Implemented」表示客户端请求的功能还不⽀持，类似“即将开业，敬请期待”的意思。</li>
+<li>「502 Bad Gateway」通常是服务器作为⽹关或代理时返回的错误码，表示服务器⾃身⼯作正常，访问后端服务器 发⽣了错误。 </li>
+<li>「503 Service Unavailable」表示服务器当前很忙，暂时⽆法响应服务器。</li>
+</ul>
+<h4 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h4><p>Host 字段 客户端发送请求时，⽤来指定服务器的域名。</p>
+<p>服务器在返回数据时，会有 Content-Length 字段，表明本次回应的数据⻓度。</p>
+<p>Connection 字段最常⽤于客户端要求服务器使⽤ TCP 持久连接，以便其他请求复⽤。</p>
+<p>Content-Type 字段⽤于服务器回应时，告诉客户端，本次数据是什么格式。</p>
+<p>Content-Encoding 字段说明数据的压缩⽅法。表示服务器返回的数据使⽤了什么压缩格式</p>
+<h4 id="get-post"><a href="#get-post" class="headerlink" title="get post"></a>get post</h4><h5 id="区别？"><a href="#区别？" class="headerlink" title="区别？"></a>区别？</h5><p>Get ⽅法的含义是请求从服务器获取资源，这个资源可以是静态的⽂本、⻚⾯、图⽚视频等。</p>
+<p>POST ⽅法则是相反操作，它向 URI 指定的资源提交数据，数据就放在报⽂的 body ⾥。⽐如，留⾔后点击「提交」，浏览器就会执⾏⼀次 POST 请求，把你的留⾔⽂字放进了报⽂ body ⾥，然后拼接好 POST 请求头，通过 TCP 协议发送给服务器。</p>
+<h5 id="安全幂等？"><a href="#安全幂等？" class="headerlink" title="安全幂等？"></a>安全幂等？</h5><p>在 HTTP 协议⾥，所谓的「安全」是指请求⽅法不会「破坏」服务器上的资源。</p>
+<p>所谓的「幂等」，意思是<strong>多次执⾏相同的操作</strong>，结果都是「相同」的。</p>
+<p>那么很明显 <strong>GET ⽅法就是安全且幂等</strong>的，因为它是「只读」操作，⽆论操作多少次，服务器上的数据都是安全的，且每次的结果都是相同的。<strong>POST</strong> 因为是「新增或提交数据」的操作，会修改服务器上的资源，所以是<strong>不安全</strong>的，且多次提交数据就会创建多个资源，所以<strong>不是幂等的</strong>。</p>
+<h3 id="https"><a href="#https" class="headerlink" title="https"></a>https</h3><table>
+<thead>
+<tr>
+<th>http</th>
+<th>不安全</th>
+<th>三次握手</th>
+<th>80端口</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>https</td>
+<td>安全（SSL/TSL）</td>
+<td>三次握手+SSL握手</td>
+<td>443端口</td>
+<td>需要向CA申请数字证书</td>
+</tr>
+</tbody></table>
+<h5 id="解决了啥？"><a href="#解决了啥？" class="headerlink" title="解决了啥？"></a>解决了啥？</h5><blockquote>
+<p>窃听-信息加密</p>
+<p>篡改-校验</p>
+<p>冒充-身份证书</p>
+</blockquote>
+<h5 id="如何解决不安全的问题？"><a href="#如何解决不安全的问题？" class="headerlink" title="如何解决不安全的问题？"></a>如何解决不安全的问题？</h5><blockquote>
+<p>混合加密</p>
+<p>对称加密（只有一个密钥，速度快）（通信过程中）+非对称加密（两个密钥）（通信建立前）</p>
+<p>摘要算法实现完整性：每份数据都生成独一无二的指纹。</p>
+<p>服务器公钥放到数字证书中</p>
+</blockquote>
+<p><img src="image-20210731111936519.png"></p>
+<h3 id="http1-2-3"><a href="#http1-2-3" class="headerlink" title="http1-2-3"></a>http1-2-3</h3><p>1.1</p>
+<p>长连接</p>
+<p>管道传输</p>
+<p>不能压缩首部，只能压缩body。</p>
+<p>首部冗长。</p>
+<p>队头阻塞。（服务器按照请求顺序响应）</p>
+<p>无请求优先级控制。</p>
+<p>请求只能从客户端开始。</p>
+<p>2</p>
+<p>基于https-安全</p>
+<p>头部压缩：HPACK算法：双方维护一个头部信息表，发送索引。</p>
+<p>二进制格式而不是文本。头信息帧，数据帧。</p>
+<p>在二进制分帧层上，HTTP 2.0 会将所有传输的信息分割为更小的消息和帧,并对它们采用二进制格式的编码 ，其中HTTP1.x的首部信息会被封装到Headers帧，而我们的request body则封装到Data帧里面。</p>
+<p>然后，HTTP 2.0 通信都在一个连接上完成，这个连接可以承载任意数量的双向数据流。相应地，每个数据流以消息的形式发送，而消息由一或多个帧组成，这些帧可以乱序发送，然后再根据每个帧首部的流标识符重新组装。</p>
+<p>数据流，可指定优先级。</p>
+<p>多路复用：一个连接中可以并发多个请求，不用按照顺序一一回应==解决了队头阻塞，降低延迟。</p>
+<p>服务器推送。</p>
+<p>复用一个TCP连接，下层的TCP不知道有几个http请求，发生丢包，就会触发重传机制。所有的http请求都必</p>
+<p>须等待这个包的重传（阻塞）。</p>
+<p>3</p>
+<p>TCP===UDP</p>
+<p>基于UDP的QUIC协议，可以实现类似的可靠传输。</p>
+<p><img src="image-20210731112531267.png"></p>
 ]]></content>
       <categories>
         <category>计算机网络</category>
@@ -735,13 +917,98 @@
   <entry>
     <title>计算机网络-tcp</title>
     <url>/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-tcp/</url>
-    <content><![CDATA[<p>1，是什么</p>
-<p>2，头部格式</p>
-<p>3，TCP vs UDP</p>
-<p>4，三次握手</p>
-<p>5，四次挥手</p>
-<p>6，socket编程？</p>
-<p>7，可靠传输</p>
+    <content><![CDATA[<h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><ul>
+<li> TCP 是<strong>⾯向连接的、可靠的、基于字节流</strong>的传输层通信协议 。</li>
+<li> TCP 四元组可以唯⼀的确定⼀个连接，四元组包括如下： <strong>源地址 源端⼝ ⽬的地址 ⽬的端⼝</strong> 。</li>
+<li><strong>源地址和⽬的地址的字段（32位）是在 IP 头部中</strong>，作⽤是通过 IP 协议发送报⽂给对⽅主机。</li>
+<li><strong>源端⼝和⽬的端⼝的字段（16位）是在 TCP 头部中</strong>，作⽤是告诉 TCP 协议应该把报⽂发给哪个进程。</li>
+</ul>
+<p>服务端最⼤并发 TCP 连接数远不能达到理论上限。</p>
+<p>主要是⽂件描述符限制，Socket 都是⽂件，所以⾸先要通过 ulimit 配置⽂件描述符的数⽬。<br>另⼀个是内存限制，每个 TCP 连接都要占⽤⼀定内存，操作系统的内存是有限的。</p>
+<h4 id="头部格式"><a href="#头部格式" class="headerlink" title="头部格式"></a>头部格式</h4><p><img src="image-20210731112848824.png"></p>
+<p>序列号：在建⽴连接时由计算机⽣成的随机数作为其初始值，通过 SYN 包传给接收端主机，每发送⼀次数据，就「累加」⼀次该「数据字节数」的⼤⼩。⽤来解决⽹络包乱序问题。</p>
+<p>确认应答号：指下⼀次「期望」收到的数据的序列号，发送端收到这个确认应答以后可以认为在这个序号以前的数据都已经被正常接收。⽤来解决不丢包的问题。</p>
+<p>控制位：</p>
+<ul>
+<li>ACK：该位为 1 时，「确认应答」的字段变为有效，TCP 规定除了最初建⽴连接时的 SYN 包之外该位必须设置为 1 。</li>
+<li>RST：该位为 1 时，表示 TCP 连接中出现异常必须强制断开连接。</li>
+<li>SYN：该位为 1 时，表示希望建⽴连接，并在其「序列号」的字段进⾏序列号初始值的设定。</li>
+<li>FIN：该位为 1 时，表示今后不会再有数据发送，希望断开连接。当通信结束希望断开连接时，通信双⽅的主机之间就可以相互交换 FIN 位为 1 的 TCP 段。</li>
+</ul>
+<h4 id="TCP-vs-UDP"><a href="#TCP-vs-UDP" class="headerlink" title="TCP vs UDP"></a>TCP vs UDP</h4><p><img src="image-20210731113120885.png"></p>
+<p>TCP 和 UDP 区别：</p>
+<ol>
+<li>连接<br>TCP 是⾯向连接的传输层协议，传输数据前先要建⽴连接。<br>UDP 是不需要连接，即刻传输数据。</li>
+<li>服务对象<br>TCP 是⼀对⼀的两点服务，即⼀条连接只有两个端点。<br>UDP ⽀持⼀对⼀、⼀对多、多对多的交互通信</li>
+<li>可靠性<br>TCP 是可靠交付数据的，数据可以⽆差错、不丢失、不᯿复、按需到达。<br>UDP 是尽最⼤努⼒交付，不保证可靠交付数据。</li>
+<li>拥塞控制、流量控制<br>TCP 有拥塞控制和流ᰁ控制机制，保证数据传输的安全性。UDP 则没有，即使⽹络⾮常拥堵了，也不会影响 UDP 的发送速率。</li>
+<li>⾸部开销<br>TCP ⾸部⻓度较⻓，会有⼀定的开销，⾸部在没有使⽤「选项」字段时是 20 个字节，如果使⽤了「选项」字段则会变⻓的。<br>UDP ⾸部只有 8 个字节，并且是固定不变的，开销较⼩。</li>
+<li>传输⽅式<br>TCP 是流式传输，没有边界，但保证顺序和可靠。<br>UDP 是⼀个包⼀个包的发送，是有边界的，但可能会丢包和乱序。</li>
+<li>分⽚不同<br>TCP 的数据⼤⼩如果⼤于 MSS ⼤⼩，则会在传输层进⾏分⽚，⽬标主机收到后，也同样在传输层组装 TCP数据包，如果中途丢失了⼀个分⽚，只需要传输丢失的这个分⽚。</li>
+</ol>
+<p> UDP 的数据⼤⼩如果⼤于 MTU ⼤⼩，则会在 IP 层进⾏分⽚，⽬标主机收到后，在 IP 层组装完数据，接着再传给传输层，但是如果中途丢了⼀个分⽚，在实现可靠传输的 UDP 时则就需要重传所有的数据包，这样传输效率⾮常差，所以通常 UDP 的报⽂应该⼩于 MTU。</p>
+<ol start="8">
+<li><p>TCP 和 UDP 应⽤场景：<br>  由于 TCP 是⾯向连接，能保证数据的可靠性交付，因此经常⽤于：<br>  FTP ⽂件传输<br>  HTTP / HTTPS</p>
+<p>  由于 UDP ⾯向⽆连接，它可以随时发送数据，再加上UDP本身的处理既简单⼜⾼效，因此经常⽤于：<br>  包总数较少的通信，如 DNS 、 SNMP 等<br>  视频、⾳频等多媒体通信<br>  ⼴播通信</p>
+</li>
+</ol>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><img src="image-20210731113603327.png"></p>
+<p>注意序列号和确认应答号的变化。<br>第三次握手可以携带数据。</p>
+<p>注意序列号和确认应答号的变化。</p>
+<p>第三次握手可以携带数据。</p>
+<h4 id="为什么是三次？"><a href="#为什么是三次？" class="headerlink" title="为什么是三次？"></a>为什么是三次？</h4><ol>
+<li>避免历史连接！！！。</li>
+<li>同步双方序列号（去重，按序接收）。</li>
+<li>避免资源浪费。（只有两次，客户端的syn阻塞，就会重新发送syn，那么服务端每收到一个syn就要建立连接。）</li>
+</ol>
+<ul>
+<li>在⽹络拥堵情况下，⼀个「旧 SYN 报⽂」⽐「最新的 SYN 」 报⽂早到达了服务端；</li>
+<li>那么此时服务端就会回⼀个 SYN + ACK 报⽂给客户端；</li>
+<li>客户端收到后可以根据⾃身的上下⽂，判断这是⼀个历史连接（序列号过期或超时），那么客户端就会发送RST 报⽂给服务端，表示中⽌这⼀次连接。</li>
+<li>如果是两次握⼿连接，就不能判断当前连接是否是历史连接，三次握⼿则可以在客户端（发送⽅）准备发送第三次报⽂时，客户端因有⾜够的上下⽂来判断当前连接是否是历史连接。</li>
+</ul>
+<h4 id="既然-IP-层会分⽚，为什么-TCP-层还需要-MSS-呢？"><a href="#既然-IP-层会分⽚，为什么-TCP-层还需要-MSS-呢？" class="headerlink" title="既然 IP 层会分⽚，为什么 TCP 层还需要 MSS 呢？"></a>既然 IP 层会分⽚，为什么 TCP 层还需要 MSS 呢？</h4><p>MTU ：⼀个⽹络包的最⼤⻓度，以太⽹中⼀般为 1500 字节；<br>MSS ：除去 IP 和 TCP 头部之后，⼀个⽹络包所能容纳的 TCP 数据的最⼤⻓度；</p>
+<ul>
+<li>当 IP 层有⼀个超过 MTU ⼤⼩的数据（TCP 头部 + TCP 数据）要发送，那么 IP 层就要进⾏分⽚，把数据分⽚成若⼲⽚，保证每⼀个分⽚都⼩于 MTU。把⼀份 IP 数据报进⾏分⽚以后，由⽬标主机的 IP 层来进⾏组装后，再交给上⼀层 TCP 传输层。</li>
+<li>那么当如果⼀个 IP 分⽚丢失，整个 IP 报⽂的所有分⽚都得重传。</li>
+<li>因为 IP 层本身没有超时重传机制，它由传输层的 TCP 来负责超时和重传。</li>
+<li>当接收⽅发现 TCP 报⽂（头部 + 数据）的某⼀⽚丢失后，则不会响应 ACK 给对⽅，那么发送⽅的 TCP 在超时后，就会重发「整个 TCP 报⽂（头部 + 数据）」。</li>
+</ul>
+<h4 id="什么是-SYN-攻击？如何避免-SYN-攻击？"><a href="#什么是-SYN-攻击？如何避免-SYN-攻击？" class="headerlink" title="什么是 SYN 攻击？如何避免 SYN 攻击？"></a>什么是 SYN 攻击？如何避免 SYN 攻击？</h4><p>攻击者短时间伪造不同 IP 地址的 SYN 报⽂，服务端每接收到⼀个 SYN 报⽂，就进⼊ SYN_RCVD 状态，但服务端发送出去的 ACK + SYN 报⽂，⽆法得到未知 IP 主机的ACK 应答，久⽽久之就会占满服务端的 SYN 接收队列（未连接队列），使得服务器不能为正常⽤户服务。</p>
+<p><img src="image-20210731145537881.png"></p>
+<p><img src="image-20210731145610582.png"></p>
+<p><strong>解决办法：</strong></p>
+<p>控制该队列的最⼤值：SYN_RCVD 状态连接的最⼤个数：net.core.netdev_max_backlog</p>
+<ul>
+<li>tcp_syncookies 的⽅式可以应对 SYN 攻击的⽅法：<br>net.ipv4.tcp_syncookies = 1<br>当 「 SYN 队列」满之后，后续服务器收到 SYN 包，不进⼊「 SYN 队列」；<br>计算出⼀个 cookie 值，再以 SYN + ACK 中的「序列号」返回客户端，<br>服务端接收到客户端的应答报⽂时，服务器会检查这个 ACK 包的合法性。如果合法，直接放⼊到「Accept队列」。</li>
+</ul>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><img src="image-20210731145722373.png"></p>
+<p>关闭连接时，客户端向服务端发送 FIN 时，仅仅表示客户端不再发送数据了<strong>但是还能接收数据</strong>。服务器收到客户端的 FIN 报⽂时，先回⼀个 ACK 应答报⽂，⽽<strong>服务端可能还有数据需要处理和发送</strong>，等服务端不再发送数据时，才发送 <strong>FIN 报⽂给客户端来表示同意现在关闭连接</strong>。</p>
+<h4 id="为什么-TIME-WAIT-等待的时间是-2MSL"><a href="#为什么-TIME-WAIT-等待的时间是-2MSL" class="headerlink" title="为什么 TIME_WAIT 等待的时间是 2MSL"></a>为什么 TIME_WAIT 等待的时间是 2MSL</h4><p>MSL 是 Maximum Segment Lifetime，报⽂最⼤⽣存时间，它是任何报⽂在⽹络上存在的最⻓时间，超过这个时间报⽂将被丢弃。<br>⽹络中可能存在来⾃发送⽅的数据包，当这些发送⽅的数据包被接收⽅处理后⼜会向对⽅发送响应，所以⼀来⼀回需要等待 2 倍的时间。<br>⽐如如果被动关闭⽅没有收到断开连接的最后的 ACK 报⽂，就会触发超时重发 Fin 报⽂，另⼀⽅接收到 FIN 后，会重发 ACK 给被动关闭⽅， ⼀来⼀去正好 2 个 MSL。<br>在 Linux 系统⾥ 2MSL 默认是 60 秒，那么⼀个 MSL 也就是 30 秒。Linux 系统停留在 TIME_WAIT 的时间为固定的 60 秒。</p>
+<h4 id="需要-TIME-WAIT-状态"><a href="#需要-TIME-WAIT-状态" class="headerlink" title="需要 TIME-WAIT 状态"></a>需要 TIME-WAIT 状态</h4><ul>
+<li>防⽌具有相同「四元组」的「旧」数据包被收到；<br>经过 2MSL 这个时间，⾜以让两个⽅向上的数据包都被丢弃，使得原来连接的数据包在⽹络中都⾃然消失，再出现的数据包⼀定都是新建⽴连接所产⽣的。</li>
+<li>保证「被动关闭连接」的⼀⽅能被正确的关闭，即保证最后的 ACK 能让被动关闭⽅接收。</li>
+</ul>
+<h4 id="如果已经建⽴了连接，但是客户端突然出现故障了怎么办？"><a href="#如果已经建⽴了连接，但是客户端突然出现故障了怎么办？" class="headerlink" title="如果已经建⽴了连接，但是客户端突然出现故障了怎么办？"></a>如果已经建⽴了连接，但是客户端突然出现故障了怎么办？</h4><p>TCP 有⼀个机制是<strong>保活机制</strong>。这个机制的原理是这样的：ping-pong<br>定义⼀个时间段，在这个时间段内，如果没有任何连接相关的活动，TCP 保活机制会开始作⽤，每隔⼀个时间间隔，发送⼀个探测报⽂，该探测报⽂包含的数据⾮常少，如果连续⼏个探测报⽂都没有得到响应，则认为当前的TCP 连接已经死亡，系统内核将错误信息通知给上层应⽤程序。</p>
+<h3 id="socket编程？"><a href="#socket编程？" class="headerlink" title="socket编程？"></a>socket编程？</h3><h4 id="连接过程"><a href="#连接过程" class="headerlink" title="连接过程"></a>连接过程</h4><p><img src="image-20210731150237375.png"></p>
+<h4 id="listen-时候参数-backlog-的意义？"><a href="#listen-时候参数-backlog-的意义？" class="headerlink" title="listen 时候参数 backlog 的意义？"></a>listen 时候参数 backlog 的意义？</h4><p>参数⼀ socketfd 为 socketfd ⽂件描述符<br>参数⼆ <strong>backlog</strong>，这参数在历史版本有⼀定的变化<br>在早期 Linux 内核 backlog 是 <strong>SYN 队列⼤⼩</strong>，也就是未完成的队列⼤⼩。<br>在 Linux 内核 2.2 之后，backlog 变成 <strong>accept 队列</strong>，也就是已完成连接建⽴的队列⻓度，所以现在通常认为backlog 是 accept 队列长度</p>
+<p>客户端 connect 成功返回是在第⼆次握⼿，服务端 accept 成功返回是在三次握⼿成功之后。</p>
+<h3 id="可靠传输"><a href="#可靠传输" class="headerlink" title="可靠传输"></a>可靠传输</h3><p><strong>序列号、确认应答、重发控制、连接管理以及窗⼝控制等。</strong></p>
+<h4 id="自动重传请求（Automatic-Repeat-reQuest，ARQ）"><a href="#自动重传请求（Automatic-Repeat-reQuest，ARQ）" class="headerlink" title="自动重传请求（Automatic Repeat-reQuest，ARQ）"></a>自动重传请求（Automatic Repeat-reQuest，ARQ）</h4><p>OSI模型中数据链路层的错误纠正协议之一。它通过使用<strong>确认和超时</strong>这两个机制，在不可靠服务的基础上实现可靠的信息传输。<strong>如果发送方在发送后一段时间之内没有收到确认帧，它通常会重新发送。</strong><br>当发送窗口和接收窗口的大小都等于 1时，就是停止等待协议。<br>当发送窗口大于1，接收窗口等于1时，就是回退N步协议。<br>当发送窗口和接收窗口的大小均大于1时，就是选择重发协议</p>
+<h4 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h4><p>序列号与确认应答！</p>
+<p><strong>超时重传</strong>-数据包丢失，确认应答丢失。</p>
+<p><img src="image-20210731150635851.png"></p>
+<p>当超时时间 RTO 较⼤时，重发就慢，没有效率，性能差；<br>当超时时间 RTO 较⼩时，会导致可能并没有丢就重发。<br>超时重传时间 RTO 的值应该略⼤于报⽂往返 RTT 的值。<br>如果超时重发的数据，再次超时的时候，TCP 的策略是超时间隔加倍。<br>也就是每当遇到⼀次超时重传的时候，都会将下⼀次超时时间间隔设为先前值的两倍。两次超时，就说明⽹络环境差，不宜频繁反复发送。</p>
+<p><strong>快速重传</strong><br>三次同样的ACK。</p>
+<p><strong>SACK</strong><br> SACK （ Selective Acknowledgment 选择性确认）。<br>这种⽅式需要在 <strong>TCP 头部「选项」字段⾥加⼀个 SACK</strong> 的东⻄，它可以将缓存的地图发送给发送⽅，这样<strong>发送⽅就可以知道哪些数据收到了，哪些数据没收到，</strong>知道了这些信息，就可以只重传丢失的数据。<br>D-SACK</p>
+<h4 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h4><p>窗⼝⼤⼩就是指⽆需等待确认应答，⽽可以继续发送数据的最⼤值。</p>
+<p><strong>累计确认：</strong></p>
+<p><img src="image-20210731150833402.png"></p>
+<h4 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h4><p>怎么让发送⽅<strong>避免发送⼩数据呢？</strong><br>发送⽅通常的策略:<br>使⽤ <strong>Nagle 算法</strong>，该算法的思路是延时处理，它满⾜以下两个条件中的⼀条才可以发送数据：<br>窗⼝⼤⼩ &gt;= MSS 或是 数据⼤⼩ &gt;= MSS<br>收到之前发送数据的 ack 回包<br>只要没满⾜上⾯条件中的⼀条，发送⽅⼀直在囤积数据，直到满⾜上⾯的发送条件。<br>另外，Nagle 算法默认是打开的，可以在 <strong>Socket 设置 TCP_NODELAY</strong> 选项来关闭这个算法。</p>
+<h4 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h4><p><strong>什么是拥塞窗⼝？和发送窗⼝有什么关系呢？</strong><br>拥塞窗⼝ cwnd是发送⽅维护的⼀个的状态变量，它会根据⽹络的拥塞程度动态变化的。<br>我们在前⾯提到过发送窗⼝ swnd 和接收窗⼝ rwnd 是约等于的关系，那么由于加⼊了拥塞窗⼝的概念后，此时发送窗⼝的值是swnd = min(cwnd, rwnd)，也就是拥塞窗⼝和接收窗⼝中的最⼩值。<br><strong>只要⽹络中没有出现拥塞， cwnd 就会增⼤；</strong><br><strong>但⽹络中出现了拥塞， cwnd 就减少</strong>；</p>
+<p><strong>那么怎么知道当前⽹络是否出现了拥塞呢？</strong><br>其实只要「发送⽅」没有在规定时间内接收到 ACK 应答报⽂，也就是<strong>发⽣了超时重传</strong>，就会认为⽹络出现了⽤拥塞。</p>
+<p><strong>拥塞控制有哪些控制算法？</strong><br><strong>慢启动</strong><br><strong>拥塞避免</strong><br><strong>快重传</strong><br><strong>快恢复</strong></p>
+<p><img src="image-20210731151028278.png"></p>
 ]]></content>
       <categories>
         <category>计算机网络</category>
@@ -753,8 +1020,51 @@
   <entry>
     <title>计算机网络-网络模型</title>
     <url>/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/</url>
-    <content><![CDATA[<p>1，7层网络模型</p>
-<p>2，五层标准模型</p>
+    <content><![CDATA[<h3 id="七层网络模型"><a href="#七层网络模型" class="headerlink" title="七层网络模型"></a>七层网络模型</h3><p><strong>应用层</strong></p>
+<p>服务与用户应用。</p>
+<p><strong>表示层</strong></p>
+<p>解决信息的语法表示问题，比如加密解密。</p>
+<p><strong>会话层</strong></p>
+<p>实现不同主机上用户进程之间的通信。</p>
+<p><strong>传输层</strong></p>
+<p><strong>网络层</strong></p>
+<p><strong>链路层</strong></p>
+<p><strong>物理层</strong></p>
+<h3 id="五层标准模型"><a href="#五层标准模型" class="headerlink" title="五层标准模型"></a>五层标准模型</h3><p><strong>应用层</strong></p>
+<p>专注于为用户提供应用功能，不关心如何传输。工作于用户态。<br>决定了向用户提供应用服务时的通信活动。</p>
+<p>DNS（域名系统）=域名和IP的映射,HTTP（生成针对目标服务器的HTTP请求报文）,FTP（文件传输协议）</p>
+<p>HTTP报文</p>
+<p><strong>传输层</strong></p>
+<p>两台计算机之间的数据传输。为应用层提供网络支持。</p>
+<p>TCP(传输控制协议)/UDP（用户数据报协议）</p>
+<p>TCP报文段</p>
+<p><strong>网络层</strong></p>
+<p>规定了通过怎样的路径到达对方计算机。（选择一条传输路线）将数据从一个设备传输到另一个设备。</p>
+<p>IP（寻址，路由）一边中转一边传送</p>
+<p>IP数据包</p>
+<p><strong>链路层</strong></p>
+<p>（处理连接网络的硬件部分）标识网络中的设备，为网络层提供链路级别的服务。</p>
+<p>ARP==<strong>ip地址到硬件地址的动态映射</strong>-ARP高速缓存。</p>
+<p><strong>物理层</strong></p>
+<p>为链路层提供二进制传输服务。</p>
+<h3 id="打开百度到显示具体过程？"><a href="#打开百度到显示具体过程？" class="headerlink" title="打开百度到显示具体过程？"></a>打开百度到显示具体过程？</h3><p><img src="image-20210731103105388.png"></p>
+<p><strong>解析url</strong></p>
+<p><strong>生成http消息</strong></p>
+<p><strong>真实地址查询dns</strong></p>
+<p><img src="image-20210731105736261.png"></p>
+<p><strong>应⽤程序（浏览器）通过调⽤ Socket 库，来委托协议栈⼯作。</strong></p>
+<p>协议栈的上半部分有两块，是负责收发数据的TCP 和 UDP 协议，它们两会接受应⽤层的委托执⾏收发数据的操作。</p>
+<p>协议栈的下⾯⼀半是⽤ IP 协议控制⽹络包收发操作，在互联⽹上传数据时，数据会被切分成⼀块块的⽹络包，⽽<br>将⽹络包发送给对⽅的操作就是由 IP 负责的。</p>
+<p>此外 IP 中还包括 ICMP 协议和 ARP 协议。<br>ICMP ⽤于<strong>告知⽹络包传送过程中产⽣的错误以及各种控制信息。</strong><br>ARP ⽤于<strong>根据 IP 地址查询相应的以太⽹ MAC 地址。</strong></p>
+<p><strong>可靠传输 TCP</strong></p>
+<p><strong>远程定位 IP</strong></p>
+<p><strong>两点传输 MAC</strong></p>
+<p>在 MAC 包头⾥需要发送⽅ MAC 地址和接收⽅⽬标 MAC 地址，⽤于两点之间的传输。<br>⼀般在 TCP/IP 通信⾥，MAC 包头的协议类型只使⽤：<br>0800 ： IP 协议<br>0806 ： ARP 协议</p>
+<p><strong>先查询 ARP 缓存</strong>，如果其中已经保存了对⽅的 MAC 地址，就不需要发送 ARP 查询，直接使⽤ ARP 缓存中 的地址。 ⽽当 ARP 缓存中不存在对⽅ MAC 地址时，则发送 ARP <strong>⼴播查询。</strong></p>
+<p><strong>出⼝ ⽹卡</strong></p>
+<p>⽹卡驱动从 IP 模块获取到包之后，会将其复制到⽹卡内的缓存区中，接着会在其开头加上报头和起始帧分界符， 在末尾加上⽤于检测错误的帧校验序列</p>
+<p><img src="image-20210731104901289.png"></p>
+<p><img src="image-20210731104830860.png"></p>
 ]]></content>
       <categories>
         <category>计算机网络</category>
