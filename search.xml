@@ -29,23 +29,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java基础-常见问题</title>
-    <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p>1，==与equals()?</p>
-<p>2，重载与重写</p>
-<p>3，面向对象</p>
-<p>4，String，StringBuffer，StringBuilder</p>
-<p>5，异常体系</p>
-<p>6，IO流</p>
-]]></content>
-      <categories>
-        <category>Java基础</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java基础-Java集合框架</title>
     <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<p>1，集合框架总览</p>
@@ -91,21 +74,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java并发-常见基础</title>
-    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<p>1，线程与进程</p>
-<p>2，创建线程的方式</p>
-<p>3，线程协作</p>
-<p>4，显式锁与显式条件</p>
-]]></content>
-      <categories>
-        <category>Java并发</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java并发-并发容器</title>
     <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/</url>
     <content><![CDATA[<p>1，写时复制的的List和Set</p>
@@ -121,6 +89,21 @@
       </tags>
   </entry>
   <entry>
+    <title>Java并发-常见基础</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<p>1，线程与进程</p>
+<p>2，创建线程的方式</p>
+<p>3，线程协作</p>
+<p>4，显式锁与显式条件</p>
+]]></content>
+      <categories>
+        <category>Java并发</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java并发-线程池</title>
     <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
     <content><![CDATA[<p>1，优点</p>
@@ -132,6 +115,18 @@
       </categories>
       <tags>
         <tag>线程池</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java虚拟机-内存结构</title>
+    <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<p><img src="image-20210730153652776.png"></p>
+]]></content>
+      <categories>
+        <category>JVM</category>
+      </categories>
+      <tags>
+        <tag>结构</tag>
       </tags>
   </entry>
   <entry>
@@ -150,18 +145,6 @@
       </categories>
       <tags>
         <tag>实现</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java虚拟机-内存结构</title>
-    <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<p><img src="image-20210730153652776.png"></p>
-]]></content>
-      <categories>
-        <category>JVM</category>
-      </categories>
-      <tags>
-        <tag>结构</tag>
       </tags>
   </entry>
   <entry>
@@ -270,11 +253,13 @@
       </tags>
   </entry>
   <entry>
-    <title>Netty-NIO三大组件</title>
-    <url>/2021/07/30/Netty-NIO%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6/</url>
-    <content><![CDATA[<p>1，channel</p>
-<p>2，buffer</p>
-<p>3，selector</p>
+    <title>Netty-核心组件</title>
+    <url>/2021/07/30/Netty-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[<p>1，Eventloop(Group)</p>
+<p>2，channel</p>
+<p>3，handler</p>
+<p>4，Bootstrap</p>
+<p>5，bytebuf</p>
 ]]></content>
       <categories>
         <category>Netty</category>
@@ -284,26 +269,11 @@
       </tags>
   </entry>
   <entry>
-    <title>Netty-优点，应用场景</title>
-    <url>/2021/07/30/Netty-%E4%BC%98%E7%82%B9%EF%BC%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</url>
-    <content><![CDATA[<p>1，优点</p>
-<p>2，应用场景</p>
-]]></content>
-      <categories>
-        <category>Netty</category>
-      </categories>
-      <tags>
-        <tag>应用</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Netty-核心组件</title>
-    <url>/2021/07/30/Netty-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6/</url>
-    <content><![CDATA[<p>1，Eventloop(Group)</p>
-<p>2，channel</p>
-<p>3，handler</p>
-<p>4，Bootstrap</p>
-<p>5，bytebuf</p>
+    <title>Netty-NIO三大组件</title>
+    <url>/2021/07/30/Netty-NIO%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6/</url>
+    <content><![CDATA[<p>1，channel</p>
+<p>2，buffer</p>
+<p>3，selector</p>
 ]]></content>
       <categories>
         <category>Netty</category>
@@ -337,17 +307,16 @@
       </tags>
   </entry>
   <entry>
-    <title>Netty-零拷贝</title>
-    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
-    <content><![CDATA[<p>1，slice</p>
-<p>2，duplicate</p>
-<p>3，Composite</p>
+    <title>Netty-优点，应用场景</title>
+    <url>/2021/07/30/Netty-%E4%BC%98%E7%82%B9%EF%BC%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</url>
+    <content><![CDATA[<p>1，优点</p>
+<p>2，应用场景</p>
 ]]></content>
       <categories>
         <category>Netty</category>
       </categories>
       <tags>
-        <tag>basic</tag>
+        <tag>应用</tag>
       </tags>
   </entry>
   <entry>
@@ -361,6 +330,20 @@
       </categories>
       <tags>
         <tag>持久化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Netty-零拷贝</title>
+    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
+    <content><![CDATA[<p>1，slice</p>
+<p>2，duplicate</p>
+<p>3，Composite</p>
+]]></content>
+      <categories>
+        <category>Netty</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
       </tags>
   </entry>
   <entry>
@@ -446,6 +429,23 @@
       </tags>
   </entry>
   <entry>
+    <title>Java基础-常见问题</title>
+    <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>1，==与equals()?</p>
+<p>2，重载与重写</p>
+<p>3，面向对象</p>
+<p>4，String，StringBuffer，StringBuilder</p>
+<p>5，异常体系</p>
+<p>6，IO流</p>
+]]></content>
+      <categories>
+        <category>Java基础</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>leetcode-二叉树-路径和</title>
     <url>/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E8%B7%AF%E5%BE%84%E5%92%8C/</url>
     <content><![CDATA[]]></content>
@@ -512,17 +512,6 @@
       </tags>
   </entry>
   <entry>
-    <title>leetcode-动态规划-股票问题</title>
-    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>具体</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>leetcode-动态规划-背包</title>
     <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%83%8C%E5%8C%85/</url>
     <content><![CDATA[<p>1，0-1背包</p>
@@ -569,6 +558,17 @@
       </tags>
   </entry>
   <entry>
+    <title>leetcode-动态规划-股票问题</title>
+    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+      <tags>
+        <tag>具体</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>leetcode-字符串</title>
     <url>/2021/07/30/leetcode-%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
     <content><![CDATA[]]></content>
@@ -599,17 +599,6 @@
       </categories>
       <tags>
         <tag>array</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-栈与队列</title>
-    <url>/2021/07/30/leetcode-%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
       </tags>
   </entry>
   <entry>
@@ -679,6 +668,17 @@
       </categories>
       <tags>
         <tag>调度算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>leetcode-栈与队列</title>
+    <url>/2021/07/30/leetcode-%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
       </tags>
   </entry>
   <entry>
@@ -876,13 +876,11 @@
 <p>篡改-校验</p>
 <p>冒充-身份证书</p>
 </blockquote>
-<h5 id="如何解决不安全的问题？"><a href="#如何解决不安全的问题？" class="headerlink" title="如何解决不安全的问题？"></a>如何解决不安全的问题？</h5><blockquote>
-<p>混合加密</p>
+<h5 id="如何解决不安全的问题？"><a href="#如何解决不安全的问题？" class="headerlink" title="如何解决不安全的问题？"></a>如何解决不安全的问题？</h5><p>混合加密</p>
 <p>对称加密（只有一个密钥，速度快）（通信过程中）+非对称加密（两个密钥）（通信建立前）</p>
 <p>摘要算法实现完整性：每份数据都生成独一无二的指纹。</p>
 <p><img src="image-20210731111936519.png"></p>
 <p>服务器公钥放到数字证书中</p>
-</blockquote>
 <h3 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h3><h4 id="1-1"><a href="#1-1" class="headerlink" title="1.1"></a>1.1</h4><p>长连接</p>
 <p>管道传输</p>
 <p>不能压缩首部，只能压缩body。</p>
