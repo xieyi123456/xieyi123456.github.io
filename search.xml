@@ -883,7 +883,7 @@
 <p>服务器公钥放到数字证书中</p>
 </blockquote>
 <p><img src="image-20210731111936519.png"></p>
-<h3 id="http1-2-3"><a href="#http1-2-3" class="headerlink" title="http1-2-3"></a>http1-2-3</h3><p>1.1</p>
+<h3 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h3><p>1.1</p>
 <p>长连接</p>
 <p>管道传输</p>
 <p>不能压缩首部，只能压缩body。</p>
