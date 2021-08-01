@@ -20,18 +20,20 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="虚拟机栈堆方法区">
+  <meta name="description" content="PC寄存器（程序计数器）它是一块很小的内存空间，几乎可以忽略不记。也是运行速度最快的存储区域。 在JVM规范中，每个线程都有它自己的程序计数器，是线程私有的，生命周期与线程的生命周期保持一致。 任何时间一个线程都只有一个方法在执行，也就是所谓的当前方法。程序计数器会存储当前线程正在执行的Java方法的JVM指令地址；或者，如果是在执行native方法，则是未指定值（undefned）。 它是程序控">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java虚拟机-虚拟机栈，堆，方法区">
 <meta property="og:url" content="http://example.com/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%EF%BC%8C%E5%A0%86%EF%BC%8C%E6%96%B9%E6%B3%95%E5%8C%BA/index.html">
 <meta property="og:site_name" content="Yiblog">
-<meta property="og:description" content="虚拟机栈堆方法区">
+<meta property="og:description" content="PC寄存器（程序计数器）它是一块很小的内存空间，几乎可以忽略不记。也是运行速度最快的存储区域。 在JVM规范中，每个线程都有它自己的程序计数器，是线程私有的，生命周期与线程的生命周期保持一致。 任何时间一个线程都只有一个方法在执行，也就是所谓的当前方法。程序计数器会存储当前线程正在执行的Java方法的JVM指令地址；或者，如果是在执行native方法，则是未指定值（undefned）。 它是程序控">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%EF%BC%8C%E5%A0%86%EF%BC%8C%E6%96%B9%E6%B3%95%E5%8C%BA/image-20210801231432286.png">
 <meta property="article:published_time" content="2021-07-30T07:07:16.000Z">
-<meta property="article:modified_time" content="2021-08-01T15:04:00.997Z">
+<meta property="article:modified_time" content="2021-08-01T15:23:21.015Z">
 <meta property="article:author" content="Xieyi">
 <meta property="article:tag" content="宏观">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%EF%BC%8C%E5%A0%86%EF%BC%8C%E6%96%B9%E6%B3%95%E5%8C%BA/image-20210801231432286.png">
 
 <link rel="canonical" href="http://example.com/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%EF%BC%8C%E5%A0%86%EF%BC%8C%E6%96%B9%E6%B3%95%E5%8C%BA/">
 
@@ -192,7 +194,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-01 23:04:00" itemprop="dateModified" datetime="2021-08-01T23:04:00+08:00">2021-08-01</time>
+                <time title="修改时间：2021-08-01 23:23:21" itemprop="dateModified" datetime="2021-08-01T23:23:21+08:00">2021-08-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -215,7 +217,38 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a>虚拟机栈</h3><h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3>
+        <h3 id="PC寄存器（程序计数器）"><a href="#PC寄存器（程序计数器）" class="headerlink" title="PC寄存器（程序计数器）"></a>PC寄存器（程序计数器）</h3><p>它是一块<strong>很小的内存空间</strong>，几乎可以忽略不记。也是<strong>运行速度最快的存储区域</strong>。</p>
+<p>在JVM规范中，<strong>每个线程都有它自己的程序计数器</strong>，是线程私有的，生命周期与线程的生命周期保持一致。</p>
+<p>任何时间一个线程都只有一个方法在执行，也就是所谓的当前方法。程序计数器会存储当前线程正在执行的Java方法的JVM指令地址；或者，如果是在执行native方法，则是未指定值（undefned）。</p>
+<p>它是程序控制流的指示器，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。</p>
+<p>字节码解释器工作时就是<strong>通过改变这个计数器的值来选取下一条需要执行的字节码指令。</strong><br>它是唯一一个在Java虚拟机规范中<strong>没有规定任何OutofMemoryError情况的区域。没有垃圾回收。</strong></p>
+<p><strong>PC寄存器的作用</strong></p>
+<p>PC寄存器用来<strong>存储指向下一条指令的地址</strong>，也即将要执行的指令代码。由执行引擎读取下一条指令，并执行该指令。</p>
+<p><strong>使用PC寄存器存储字节码指令地址有什么用呢？或者问为什么使用 PC 寄存器来记录当前线程的执行地址呢？</strong></p>
+<p>因为CPU需要不停的切换各个线程，这时候切换回来以后，就得知道接着从哪开始继续执行。<br>JVM的字节码解释器就需要通过改变PC寄存器的值来明确下一条应该执行什么样的字节码指令。</p>
+<p><strong>PC寄存器为什么被设定为私有的？</strong></p>
+<p>我们都知道所谓的多线程在一个特定的时间段内只会执行其中某一个线程的方法，CPU会不停地做任务切换，这样必然导致经常中断或恢复，如何保证分毫无差呢？为了能够准确地记录各个线程正在执行的当前字节码指令地址，<strong>最好的办法自然是为每一个线程都分配一个PC寄存器，这样一来各个线程之间便可以进行独立计算，从而不会出现相互干扰的情况。</strong></p>
+<h3 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a>虚拟机栈</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>由于<strong>跨平台性</strong>的设计，Java的指令都是根据<strong>栈来设计的</strong>。不同平台CPU架构不同，所以不能设计为<strong>基于寄存器</strong>的【如果设计成基于寄存器的，耦合度高，性能会有所提升，因为可以对具体的CPU架构进行优化，但是跨平台性大大降低】。<br>优点是跨平台，指令集小，编译器容易实现，缺点是<strong>性能下降，实现同样的功能需要更多的指令。</strong></p>
+<p><strong>内存中的栈与堆</strong><br>首先栈是运行时的单位，而堆是存储的单位。<br>即：栈解决程序的运行问题，即程序如何执行，或者说如何处理数据。堆解决的是数据存储的问题，即数据怎么放，放哪里</p>
+<p><strong>Java虚拟机栈是什么？</strong><br>Java虚拟机栈（Java Virtual Machine Stack），早期也叫Java栈。每个线程在创建时都会创建一个虚拟机栈，其内部保存<strong>一个个的栈帧（</strong>Stack Frame），<strong>对应着一次次的Java方法调用，栈是线程私有的</strong></p>
+<p><strong>虚拟机栈的生命周期</strong></p>
+<p>生命周期和线程一致，也就是线程结束了，该虚拟机栈也销毁了</p>
+<p><strong>虚拟机栈的作用</strong></p>
+<p>主管Java程序的运行，它<strong>保存方法的局部变量（8 种基本数据类型、对象的引用地址）、部分结果，并参与方法的调用和返回。</strong><br>局部变量，它是相比于成员变量来说的（或属性）<br>基本数据类型变量 VS 引用类型变量（类、数组、接口）</p>
+<p><strong>虚拟机栈的特点</strong></p>
+<p>栈是一种快速有效的分配存储方式，<strong>访问速度仅次于程序计数器。</strong><br>JVM直接对Java栈的操作只有两个：<br>每个方法执行，伴随着进栈（入栈、压栈）<br>执行结束后的出栈工作<br>对于栈来说不存在垃圾回收问题<br><strong>栈不需要GC，但是可能存在OOM</strong></p>
+<h4 id="虚拟机栈的异常"><a href="#虚拟机栈的异常" class="headerlink" title="虚拟机栈的异常"></a>虚拟机栈的异常</h4><p>Java 虚拟机规范允许Java栈的大小是动态的或者是固定不变的。<br>1，如果采用<strong>固定大小的Java虚拟机栈</strong>，那每一个线程的Java虚拟机栈容量可以在线程创建的时候独立选定。如果线程请求分配的栈容量超过Java虚拟机栈允许的最大容量，Java虚拟机将会抛出一个<strong>StackoverflowErro</strong>r 异常。<br>2，如果Java虚拟机栈可以<strong>动态扩展，</strong>并且在尝试扩展的时候无法申请到足够的内存，或者在创建新的线程时没有足够的内存去创建对应的虚拟机栈，那Java虚拟机将会抛出一个 <strong>OutofMemoryError</strong> 异常。<br>我们可以使用参数 -Xss 选项来设置<strong>线程的最大栈空间</strong>，栈的大小直接决定了<strong>函数调用的最大可达深度。</strong></p>
+<h4 id="栈中存储什么？"><a href="#栈中存储什么？" class="headerlink" title="栈中存储什么？"></a>栈中存储什么？</h4><p>每个线程都有自己的栈，栈中的数据都是以<strong>栈帧</strong>（Stack Frame）的格式存在<br>在这个线程上正在执行的<strong>每个方法都各自对应一个栈帧</strong>（Stack Frame）。<br>栈帧是一个内存区块，是一个数据集，维系着方法执行过程中的各种数据信息。</p>
+<h4 id="栈运行原理"><a href="#栈运行原理" class="headerlink" title="栈运行原理"></a>栈运行原理</h4><p>JVM直接对Java栈的操作只有两个，就是对栈帧的压栈和出栈，遵循先进后出（后进先出）原则。<br>在一条活动线程中，一个时间点上，只会有一个活动的栈帧。<strong>即只有当前正在执行的方法的栈帧（栈顶栈帧）是有效的。</strong>这个栈帧被称为当前栈帧（Current Frame），与当前栈帧相对应的方法就是当前方法（Current Method），定义这个方法的类就是当前类（Current Class）<br>执行引擎运行的所有字节码指令只针对当前栈帧进行操作。<br><strong>如果在该方法中调用了其他方法，对应的新的栈帧会被创建出来，放在栈的顶端，成为新的当前帧</strong>。</p>
+<p><img src="image-20210801231432286.png"></p>
+<p>1，不同线程中所包含的栈帧是<strong>不允许存在相互引用的</strong>，即不可能在一个栈帧之中引用另外一个线程的栈帧。<br>2，如果当前方法调用了其他方法，方法返回之际，当前栈帧会传回此方法的执行结果给前一个栈帧，接着，虚拟机会丢弃当前栈帧，<strong>使得前一个栈帧重新成为当前栈帧。</strong><br>3，Java方法有两种返回函数的方式。<br>一种是正常的函数返回，使用return指令。<br>另一种是方法执行中出现未捕获处理的异常，以抛出异常的方式结束。<br>但不管使用哪种方式，都会导致栈帧被弹出。</p>
+<h4 id="栈帧的内部结构"><a href="#栈帧的内部结构" class="headerlink" title="栈帧的内部结构"></a>栈帧的内部结构</h4><p>每个栈帧中存储着：<br><strong>局部变量表</strong>（Local Variables）LV</p>
+<p><strong>操作数栈</strong>（Operand Stack）（或表达式栈）</p>
+<p><strong>动态链接</strong>（Dynamic Linking）（或指向运行时常量池的方法引用）</p>
+<p><strong>方法返回地址</strong>（Return Address）（或方法正常退出或者异常退出的定义）</p>
+<p><strong>一些附加信息</strong></p>
+<p>并行每个线程下的<strong>栈都是私有的</strong>，因此每个线程都有自己各自的栈，并且每个栈里面都有很多栈帧，栈帧的大小主要由<strong>局部变量表 和 操作数栈</strong>决定的</p>
+<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3>
     </div>
 
     
@@ -298,7 +331,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88"><span class="nav-number">1.</span> <span class="nav-text">虚拟机栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86"><span class="nav-number">2.</span> <span class="nav-text">堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="nav-number">3.</span> <span class="nav-text">方法区</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#PC%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%88%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">PC寄存器（程序计数器）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88"><span class="nav-number">2.</span> <span class="nav-text">虚拟机栈</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">2.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%E7%9A%84%E5%BC%82%E5%B8%B8"><span class="nav-number">2.2.</span> <span class="nav-text">虚拟机栈的异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%88%E4%B8%AD%E5%AD%98%E5%82%A8%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.3.</span> <span class="nav-text">栈中存储什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%88%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">栈运行原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%88%E5%B8%A7%E7%9A%84%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84"><span class="nav-number">2.5.</span> <span class="nav-text">栈帧的内部结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86"><span class="nav-number">3.</span> <span class="nav-text">堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="nav-number">4.</span> <span class="nav-text">方法区</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
