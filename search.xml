@@ -218,10 +218,10 @@
 <p>如果是数组。<strong>还要记录数组长度。</strong><br>实例数据：<strong>对象真正存储的有效信息。先加载父类。</strong><br>对齐填充<strong>：不是必须的，占位符。</strong></p>
 <h4 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h4><p><strong>1、句柄访问</strong></p>
 <p>缺点：在堆空间中开辟了一块空间作为句柄池，句柄池本身也会占用空间；通过两次指针访问才能访问到堆中的对象，效率低<br>优点：reference中存储稳定句柄地址，对象被移动（垃圾收集时移动对象很普遍）时只会改变句柄中实例数据指针即可，reference本身不需要被修改</p>
-<p><img src="Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3/image-20210802115916339.png"></p>
+<p><img src="image-20210802115916339.png"></p>
 <p><strong>2、直接指针（HotSpot采用）</strong></p>
 <p>优点：直接指针是局部变量表中的引用，直接指向堆中的实例，在对象实例中有类型指针，指向的是方法区中的对象类型数据<br>缺点：对象被移动（垃圾收集时移动对象很普遍）时需要修改 reference 的值</p>
-<p><img src="Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3/image-20210802115934406.png"></p>
+<p><img src="image-20210802115934406.png"></p>
 ]]></content>
   </entry>
   <entry>
