@@ -156,6 +156,399 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">计算机网络-网络模型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-30 15:04:02" itemprop="dateCreated datePublished" datetime="2021-07-30T15:04:02+08:00">2021-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-31 11:01:51" itemprop="dateModified" datetime="2021-07-31T11:01:51+08:00">2021-07-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="七层网络模型"><a href="#七层网络模型" class="headerlink" title="七层网络模型"></a>七层网络模型</h3><p><strong>应用层</strong></p>
+<p>服务与用户应用。</p>
+<p><strong>表示层</strong></p>
+<p>解决信息的语法表示问题，比如加密解密。</p>
+<p><strong>会话层</strong></p>
+<p>实现不同主机上用户进程之间的通信。</p>
+<p><strong>传输层</strong></p>
+<p><strong>网络层</strong></p>
+<p><strong>链路层</strong></p>
+<p><strong>物理层</strong></p>
+<h3 id="五层标准模型"><a href="#五层标准模型" class="headerlink" title="五层标准模型"></a>五层标准模型</h3><p><strong>应用层</strong></p>
+<p>专注于为用户提供应用功能，不关心如何传输。工作于用户态。<br>决定了向用户提供应用服务时的通信活动。</p>
+<p>DNS（域名系统）=域名和IP的映射,HTTP（生成针对目标服务器的HTTP请求报文）,FTP（文件传输协议）</p>
+<p>HTTP报文</p>
+<p><strong>传输层</strong></p>
+<p>两台计算机之间的数据传输。为应用层提供网络支持。</p>
+<p>TCP(传输控制协议)/UDP（用户数据报协议）</p>
+<p>TCP报文段</p>
+<p><strong>网络层</strong></p>
+<p>规定了通过怎样的路径到达对方计算机。（选择一条传输路线）将数据从一个设备传输到另一个设备。</p>
+<p>IP（寻址，路由）一边中转一边传送</p>
+<p>IP数据包</p>
+<p><strong>链路层</strong></p>
+<p>（处理连接网络的硬件部分）标识网络中的设备，为网络层提供链路级别的服务。</p>
+<p>ARP==<strong>ip地址到硬件地址的动态映射</strong>-ARP高速缓存。</p>
+<p><strong>物理层</strong></p>
+<p>为链路层提供二进制传输服务。</p>
+<h3 id="打开百度到显示具体过程？"><a href="#打开百度到显示具体过程？" class="headerlink" title="打开百度到显示具体过程？"></a>打开百度到显示具体过程？</h3><p><img src="image-20210731103105388.png"></p>
+<p><strong>解析url</strong></p>
+<p><strong>生成http消息</strong></p>
+<p><strong>真实地址查询dns</strong></p>
+<p><img src="image-20210731105736261.png"></p>
+<p><strong>应⽤程序（浏览器）通过调⽤ Socket 库，来委托协议栈⼯作。</strong></p>
+<p>协议栈的上半部分有两块，是负责收发数据的TCP 和 UDP 协议，它们两会接受应⽤层的委托执⾏收发数据的操作。</p>
+<p>协议栈的下⾯⼀半是⽤ IP 协议控制⽹络包收发操作，在互联⽹上传数据时，数据会被切分成⼀块块的⽹络包，⽽<br>将⽹络包发送给对⽅的操作就是由 IP 负责的。</p>
+<p>此外 IP 中还包括 ICMP 协议和 ARP 协议。<br>ICMP ⽤于<strong>告知⽹络包传送过程中产⽣的错误以及各种控制信息。</strong><br>ARP ⽤于<strong>根据 IP 地址查询相应的以太⽹ MAC 地址。</strong></p>
+<p><strong>可靠传输 TCP</strong></p>
+<p><strong>远程定位 IP</strong></p>
+<p><strong>两点传输 MAC</strong></p>
+<p>在 MAC 包头⾥需要发送⽅ MAC 地址和接收⽅⽬标 MAC 地址，⽤于两点之间的传输。<br>⼀般在 TCP/IP 通信⾥，MAC 包头的协议类型只使⽤：<br>0800 ： IP 协议<br>0806 ： ARP 协议</p>
+<p><strong>先查询 ARP 缓存</strong>，如果其中已经保存了对⽅的 MAC 地址，就不需要发送 ARP 查询，直接使⽤ ARP 缓存中 的地址。 ⽽当 ARP 缓存中不存在对⽅ MAC 地址时，则发送 ARP <strong>⼴播查询。</strong></p>
+<p><strong>出⼝ ⽹卡</strong></p>
+<p>⽹卡驱动从 IP 模块获取到包之后，会将其复制到⽹卡内的缓存区中，接着会在其开头加上报头和起始帧分界符， 在末尾加上⽤于检测错误的帧校验序列</p>
+<p><img src="image-20210731104901289.png"></p>
+<p><img src="image-20210731104830860.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/" class="post-title-link" itemprop="url">Java基础-Java集合框架</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-30 15:03:18" itemprop="dateCreated datePublished" datetime="2021-07-30T15:03:18+08:00">2021-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-04 21:38:40" itemprop="dateModified" datetime="2021-08-04T21:38:40+08:00">2021-08-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="集合框架"><a href="#集合框架" class="headerlink" title="集合框架"></a>集合框架</h2><p><img src="https://i.loli.net/2021/08/04/6xejDEtAQKSRpwv.png" alt="image-20210804212935827"></p>
+<p><img src="https://i.loli.net/2021/08/04/leZ9CILv4hTbsYz.png" alt="image-20210804213053882"></p>
+<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p>在 JDK 1.8，HashMap 底层是由 “数组+链表+红黑树” 组成，如下图所示，而在 JDK 1.8 之前是由 “数组+链表” 组成。</p>
+<p>使用 “数组+链表” 是为了解决 hash 冲突的问题。</p>
+<p>数组和链表有如下特点：</p>
+<p>数组：查找容易，通过 index 快速定位；插入和删除困难，需要移动插入和删除位置之后的节点；<br>链表：查找困难，需要从头结点或尾节点开始遍历，直到寻找到目标节点；插入和删除容易，只需修改目标节点前后节点的 next 或 prev 属性即可；</p>
+<p>HashMap 巧妙的将数组和链表结合在一起，发挥两者各自的优势，使用一种叫做 “拉链法” 的方式来解决哈希冲突。<br>首先通过 index 快速定位到索引位置，这边利用了数组的优点；然后遍历链表找到节点，进行节点的新增/修改/删除操作，这边利用了链表的优点。</p>
+<h3 id="为什么要改成“数组-链表-红黑树”？"><a href="#为什么要改成“数组-链表-红黑树”？" class="headerlink" title="为什么要改成“数组+链表+红黑树”？"></a>为什么要改成“数组+链表+红黑树”？</h3><p>“数组+链表” 在定位到索引位置后，需要先遍历链表找到节点，这个地方如果链表很长的话，也就是 hash 冲突很严重的时候，会有查找性能问题，因此在 JDK1.8 中，通过引入红黑树，来优化这个问题。<br>使用链表的查找性能是 O(n)，而使用红黑树是 O(logn)。</p>
+<h3 id="那在什么时候用链表？什么时候用红黑树？"><a href="#那在什么时候用链表？什么时候用红黑树？" class="headerlink" title="那在什么时候用链表？什么时候用红黑树？"></a>那在什么时候用链表？什么时候用红黑树？</h3><p>对于插入，默认情况下是使用链表节点。当同一个索引位置的节点在新增后超过 8 个（阈值 8）：如果此时数组长度大于等于 64，则会触发链表节点转红黑树节点（treeifyBin）；而如果数组长度小于 64，则不会触发链表转红黑树，而是会进行扩容，因为此时的数据量还比较小。</p>
+<p>对于移除，当同一个索引位置的节点在移除后<strong>达到 6 个（阈值 6）</strong>，并且该索引位置的节点为红黑树节点，会触发红黑树节点转链表节点（untreeify）。</p>
+<h3 id="为什么链表转红黑树的阈值是-8？"><a href="#为什么链表转红黑树的阈值是-8？" class="headerlink" title="为什么链表转红黑树的阈值是 8？"></a>为什么链表转红黑树的阈值是 8？</h3><p>我们平时在进行方案设计时，必须考虑的两个很重要的因素是：时间和空间。对于 HashMap 也是同样的道理，简单来说，阈值为 8 是在时间和空间上权衡的结果。</p>
+<p>红黑树节点大小约为链表节点的 2 倍，在节点太少时，红黑树的查找性能优势并不明显，付出 2 倍空间的代价不值得。</p>
+<p>理想情况下，使用随机的哈希码，节点分布在 hash 桶中的频率遵循泊松分布，按照泊松分布的公式计算，链表中<strong>节点个数为 8 时的概率</strong>为 0.00000006，这个概率足够低了，并且到 8 个节点时，红黑树的性能优势也会开始展现出来，因此 8 是一个较合理的数字。</p>
+<h3 id="那为什么转回链表节点是用的-6-而不是复用-8？"><a href="#那为什么转回链表节点是用的-6-而不是复用-8？" class="headerlink" title="那为什么转回链表节点是用的 6 而不是复用 8？"></a>那为什么转回链表节点是用的 6 而不是复用 8？</h3><p>如果我们设置节点多于 8 个转红黑树，少于 8 个就马上转链表，<strong>当节点个数在 8 徘徊时，就会频繁进行红黑树和链表的转换，造成性能的损耗。</strong></p>
+<h3 id="HashMap-有哪些重要属性？分别用于做什么的？"><a href="#HashMap-有哪些重要属性？分别用于做什么的？" class="headerlink" title="HashMap 有哪些重要属性？分别用于做什么的？"></a>HashMap 有哪些重要属性？分别用于做什么的？</h3><p>除了用来存储我们的节点 table 数组外，HashMap 还有以下几个重要属性：<br>1）size：HashMap 已经存储的节点个数；<br>2）<strong>threshold</strong>：1）扩容阈值（主要），当 HashMap 的个数达到该值，触发扩容。2）初始化时的容量，在我们新建HashMap 对象时， threshold 还会被用来存初始化时的容量。HashMap 直到我们第一次插入节点时，才会对 table进行初始化，避免不必要的空间浪费。<br>3）<strong>loadFactor</strong>：负载因子，扩容阈值 = 容量 * 负载因子。</p>
+<h3 id="HashMap-的默认初始容量是多少？HashMap-的容量有什么限制吗？"><a href="#HashMap-的默认初始容量是多少？HashMap-的容量有什么限制吗？" class="headerlink" title="HashMap 的默认初始容量是多少？HashMap 的容量有什么限制吗？"></a>HashMap 的默认初始容量是多少？HashMap 的容量有什么限制吗？</h3><p>默认初始容量是 16。HashMap 的容量必须是 2 的 N 次方，HashMap 会根据我们传入的容量计算一个“大于等于该容量的最小的 2 的 N 次方”，例如传 16，容量为 16；传 17，容量为 32。</p>
+<h3 id="HashMap-的容量必须是-2-的-N-次方，这是为什么？"><a href="#HashMap-的容量必须是-2-的-N-次方，这是为什么？" class="headerlink" title="HashMap 的容量必须是 2 的 N 次方，这是为什么？"></a>HashMap 的容量必须是 2 的 N 次方，这是为什么？</h3><p>计算索引位置的公式为：**(n - 1) &amp; hash**</p>
+<p>当 n 为 2 的 N 次方时，n - 1 为低位全是 1 的值，此时任何值跟 n - 1 进行 &amp; 运算的结果为该值的低 N 位，达到了和取模同样的效果，实现了均匀分布。</p>
+<p>实际上，这个设计就是基于式：<br><strong>x mod 2^n = x &amp; (2^n - 1)，因为 &amp; 运算比 mod 具有更高的效率。</strong></p>
+<h3 id="插入流程"><a href="#插入流程" class="headerlink" title="插入流程"></a>插入流程</h3><p><img src="https://i.loli.net/2021/08/04/CDL1MPFjsV5k9Tw.png" alt="image-20210804211704324"></p>
+<h3 id="ConcurrenHashMap，1-7-和-1-8-的区别"><a href="#ConcurrenHashMap，1-7-和-1-8-的区别" class="headerlink" title="ConcurrenHashMap，1.7 和 1.8 的区别"></a>ConcurrenHashMap，1.7 和 1.8 的区别</h3><p>ConcurrentHashMap 是 HashMap 的线程安全版本，和 HashMap 一样，在 JDK 1.8 中进行了较大的优化。</p>
+<p>JDK1.7：底层结构为：分段的数组+链表；实现线程安全的方式：分段锁（Segment，继承ReentrantLock），</p>
+<p><img src="https://i.loli.net/2021/08/04/FliNj7RXtm2oSv5.png" alt="image-20210804212122257"></p>
+<p>JDK1.8：底层结构为：数组+链表+红黑树；实现线程安全的方式：CAS + Synchronized，synchronized只会锁定当前链表或者红黑树的首节点。效率大大提高。</p>
+<p><img src="https://i.loli.net/2021/08/04/uMemQzWqZdTXxK1.png" alt="image-20210804212314272"></p>
+<p><strong>区别：</strong></p>
+<p>1、JDK1.8 中降低锁的粒度。JDK1.7 版本锁的粒度是基于 Segment 的，包含多个节点（HashEntry），而 JDK1.8 锁的粒度就是单节点（Node）。</p>
+<p>2、JDK1.8 版本的数据结构变得更加简单，使得操作也更加清晰流畅，因为已经使用 synchronized 来进行同步，所以不需要分段锁的概念，也就不需要 Segment 这种数据结构了，当前还保留仅为了兼容。</p>
+<p>3、JDK1.8 使用红黑树来优化链表，跟 HashMap 一样，优化了极端情况下，链表过长带来的性能问题。</p>
+<p>4、JDK1.8 使用内置锁 synchronized 来代替重入锁 ReentrantLock，synchronized 是官方一直在不断优化的，现在性能已经比较可观，也是官方推荐使用的加锁方式</p>
+<h3 id="map对比？"><a href="#map对比？" class="headerlink" title="map对比？"></a>map对比？</h3><p><img src="https://i.loli.net/2021/08/04/jIZsbOmcCagN18q.png" alt="image-20210804212504959"></p>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><h3 id="ArrayList-和-Vector-的区别"><a href="#ArrayList-和-Vector-的区别" class="headerlink" title="ArrayList 和 Vector 的区别"></a>ArrayList 和 Vector 的区别</h3><p>Vector 和 ArrayList 的实现几乎是一样的，区别在于：</p>
+<p>1）最重要的的区别：Vector 在方法上使用了 synchronized 来保证线程安全，同时由于这个原因，在性能上 ArrayList会有更好的表现。</p>
+<p>2） Vector 扩容后容量默认变为原来 2 倍，而 ArrayList 为原来的 1.5 倍。</p>
+<h3 id="ArrayList-和-LinkedList-的区别？"><a href="#ArrayList-和-LinkedList-的区别？" class="headerlink" title="ArrayList 和 LinkedList 的区别？"></a>ArrayList 和 LinkedList 的区别？</h3><p>1、ArrayList 底层基于动态数组实现，LinkedList 底层基于双向链表实现。</p>
+<p>2、对于随机访问（按 index 访问，get/set 方法）：ArrayList 通过 index 直接定位到数组对应位置的节点，而 LinkedList需要从头结点或尾节点开始遍历，直到寻找到目标节点，<strong>在效率上 ArrayList 优于 LinkedList</strong>。</p>
+<p>3、对于随机插入和删除：ArrayList 需要移动目标节点后面的节点（使用 System.arraycopy 方法移动节点），而LinkedList 只需修改目标节点前后节点的 next 或 prev 属性即可，因此在效率上 LinkedList 优于 ArrayList。</p>
+<p>4、对于顺序插入和删除：由于 ArrayList 不需要移动节点，因此在效率上比 LinkedList 更好。这也是为什么在实际使用中 ArrayList 更多，因为<strong>大部分情况下我们的使用都是顺序插入。</strong></p>
+<p>5、两者都不是线程安全的。</p>
+<p>6、内存空间占用： ArrayList 的空 间浪费主要体现在在 list 列表的结尾会<strong>预留一定的容量空间</strong>，而 LinkedList 的空间花费则体现在它的每一个元素都需要消耗比 ArrayList 更多的空间（因为要存放直接后继和直接前驱以及数据）。</p>
+<h3 id="hashmap对比hashtable"><a href="#hashmap对比hashtable" class="headerlink" title="hashmap对比hashtable"></a>hashmap对比hashtable</h3><p>线程安全：hashmap不安全，hashtable安全（方法被synchronized修饰过）。</p>
+<p>效率：hashtable效率很低，被淘汰。</p>
+<p>null key value？：hashmap支持一个null key。hashtable不支持。</p>
+<p>扩容：hashtable初始：不指定的话为11，之后变为原来的2n+1。hashmap初始16，每次扩充两倍。hashmap在指定了初始容量后会扩充为2的幂次大小。</p>
+<p>底层：解决hash冲突，hashmap在链表大于8会转化成红黑树（如果数组长度小于64，会先进性扩容）。</p>
+<h3 id="List、Set、Map-三者的区别"><a href="#List、Set、Map-三者的区别" class="headerlink" title="List、Set、Map 三者的区别?"></a>List、Set、Map 三者的区别?</h3><p>List（对付<strong>顺序</strong>的好帮手）： 存储的对象是可重复的、有序的。<br>Set（注重<strong>独一无二</strong>的性质）：存储的对象是不可重复的、无序的。<br>Map（<strong>用 Key 来搜索的专业户</strong>）: 存储键值对（key-value），不能包含重复的键（key），每个键只能映射到一个值</p>
+<h3 id="Comparable-和-Comparator-比较？"><a href="#Comparable-和-Comparator-比较？" class="headerlink" title="Comparable 和 Comparator 比较？"></a>Comparable 和 Comparator 比较？</h3><p>1、Comparable 是<strong>排序接口</strong>，一个类实现了 Comparable 接口，意味着“该类支持排序”。Comparator 是<strong>比较器，我们可以实现该接口，自定义比较算法，创建一个 “该类的比较器” 来进行排序</strong>。</p>
+<p>2、Comparable 相当于“内部比较器”，而 Comparator 相当于“外部比较器”。</p>
+<p>3、Comparable 的耦合性更强，<strong>Comparator 的灵活性和扩展性更优。</strong></p>
+<p>4、Comparable 可以用作类的默认排序方法，而 Comparator 则用于默认排序不满足时，提供自定义排序</p>
+<h3 id="Collection-与-Collections-的区别"><a href="#Collection-与-Collections-的区别" class="headerlink" title="Collection 与 Collections 的区别"></a>Collection 与 Collections 的区别</h3><p>Collection：<strong>集合类的一个顶级接口</strong>，提供了对集合对象进行基本操作的通用接口方法。Collection 接口的意义是为各种具体的集合提供了最大化的统一操作方式，常见的 List 与 Set 就是直接继承 Collection 接口。</p>
+<p>Collections：<strong>集合类的一个工具类/帮助类</strong>，提供了一系列静态方法，用于对集合中元素进行排序、搜索以及线程安全等各种操作</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="HashSet-是如何保证不重复的？"><a href="#HashSet-是如何保证不重复的？" class="headerlink" title="HashSet 是如何保证不重复的？"></a>HashSet 是如何保证不重复的？</h3><p>HashSet 底层使用 <strong>HashMap</strong> 来实现，元素放在 HashMap 的 key 里，value 为固定的 Object 对象。</p>
+<p>当 add 时调用 HashMap 的 put 方法，如果元素不存在，则返回 null 表示 add 成功，否则 add 失败。</p>
+<p>由于 HashMap 的 Key 值本身就不允许重复，HashSet 正好利用 HashMap 中 key 不重复的特性来校验重复元素。<img src="https://i.loli.net/2021/08/04/I2VuKypq5o7xWrd.png" alt="image-20210804213228204"></p>
+<h3 id="Map、List、Set-它们有的线程安全类和线程不安全的类？"><a href="#Map、List、Set-它们有的线程安全类和线程不安全的类？" class="headerlink" title="Map、List、Set 它们有的线程安全类和线程不安全的类？"></a>Map、List、Set 它们有的线程安全类和线程不安全的类？</h3><p><strong>Map</strong></p>
+<p>线程安全：<strong>CocurrentHashMap、Hashtable</strong><br>线程不安全：HashMap、LinkedHashMap、TreeMap、WeakHashMap</p>
+<p><strong>List</strong></p>
+<p>线程安全<strong>：Vector（线程安全版的 ArrayList）、Stack（继承 Vector，增加 pop、push 方法）、CopyOnWriteArrayList</strong><br>线程不安全：ArrayList、LinkedList</p>
+<p><strong>Set</strong></p>
+<p><strong>线程安全：CopyOnWriteArraySet（底层使用 CopyOnWriteArrayList，通过在插入前判断是否存在实现 Set 不重复的效果</strong></p>
+<p>线程不安全：HashSet（基于 HashMap）、LinkedHashSet（基于 LinkedHashMap）、TreeSet（基于 TreeMap）、EnumSe</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Java%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/Java%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">Java基础-常见问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-07-30 15:03:04 / 修改时间：16:00:57" itemprop="dateCreated datePublished" datetime="2021-07-30T15:03:04+08:00">2021-07-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>1，==与equals()?</p>
+<p>2，重载与重写</p>
+<p>3，面向对象</p>
+<p>4，String，StringBuffer，StringBuilder</p>
+<p>5，异常体系</p>
+<p>6，IO流</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E5%89%91%E6%8C%87offer-01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E5%89%91%E6%8C%87offer-01/" class="post-title-link" itemprop="url">leetcode-动态规划-剑指offer-01</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-07-30 15:02:24 / 修改时间：16:02:02" itemprop="dateCreated datePublished" datetime="2021-07-30T15:02:24+08:00">2021-07-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E5%AD%90%E5%BA%8F%E5%88%97%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -556,278 +949,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E5%9B%9E%E6%BA%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/leetcode-%E5%9B%9E%E6%BA%AF/" class="post-title-link" itemprop="url">leetcode-回溯</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-07-30 15:00:22 / 修改时间：16:02:40" itemprop="dateCreated datePublished" datetime="2021-07-30T15:00:22+08:00">2021-07-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E8%B7%AF%E5%BE%84%E5%92%8C/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E8%B7%AF%E5%BE%84%E5%92%8C/" class="post-title-link" itemprop="url">leetcode-二叉树-路径和</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-07-30 15:00:05 / 修改时间：16:02:17" itemprop="dateCreated datePublished" datetime="2021-07-30T15:00:05+08:00">2021-07-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/" class="post-title-link" itemprop="url">leetcode-二叉树-最近公共祖先</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-07-30 14:59:52 / 修改时间：16:02:23" itemprop="dateCreated datePublished" datetime="2021-07-30T14:59:52+08:00">2021-07-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/" class="post-title-link" itemprop="url">leetcode-二叉树遍历</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-07-30 14:59:20 / 修改时间：16:02:28" itemprop="dateCreated datePublished" datetime="2021-07-30T14:59:20+08:00">2021-07-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -895,7 +1020,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">64</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -908,7 +1033,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -20,18 +20,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="1，读写锁-ReentrantReadWriteLock 2，信号量Semaphore 3，倒计时门栓CountDownLatch 4，循环栅栏CyclicBarrier 5，ThreadLocal">
+  <meta name="description" content="wait、notify属于Object类中。 当条件不成立时，线程调用wait进入条件等待队列。 另一个线程修改了条件变量后调用notify，调用wait的线程唤醒后需要重新检查条件变量。 显示条件sychronized：wait，notify reentranlock：显式条件-condition接口：await，signal 线程中断协作工具类读写锁reentrantreadwritelock">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发-同步和协作工具类">
+<meta property="og:title" content="Java并发-线程协作机制">
 <meta property="og:url" content="http://example.com/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%90%8C%E6%AD%A5%E5%92%8C%E5%8D%8F%E4%BD%9C%E5%B7%A5%E5%85%B7%E7%B1%BB/index.html">
 <meta property="og:site_name" content="Yiblog">
-<meta property="og:description" content="1，读写锁-ReentrantReadWriteLock 2，信号量Semaphore 3，倒计时门栓CountDownLatch 4，循环栅栏CyclicBarrier 5，ThreadLocal">
+<meta property="og:description" content="wait、notify属于Object类中。 当条件不成立时，线程调用wait进入条件等待队列。 另一个线程修改了条件变量后调用notify，调用wait的线程唤醒后需要重新检查条件变量。 显示条件sychronized：wait，notify reentranlock：显式条件-condition接口：await，signal 线程中断协作工具类读写锁reentrantreadwritelock">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/08/03/Qdk7pGoAtMq1NmJ.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/03/OP6kMEHuTK14R89.png">
 <meta property="article:published_time" content="2021-07-30T07:09:54.000Z">
-<meta property="article:modified_time" content="2021-07-30T08:00:46.471Z">
+<meta property="article:modified_time" content="2021-08-03T14:36:49.596Z">
 <meta property="article:author" content="Xieyi">
 <meta property="article:tag" content="工具类">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/08/03/Qdk7pGoAtMq1NmJ.png">
 
 <link rel="canonical" href="http://example.com/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%90%8C%E6%AD%A5%E5%92%8C%E5%8D%8F%E4%BD%9C%E5%B7%A5%E5%85%B7%E7%B1%BB/">
 
@@ -46,7 +49,7 @@
   };
 </script>
 
-  <title>Java并发-同步和协作工具类 | Yiblog</title>
+  <title>Java并发-线程协作机制 | Yiblog</title>
   
 
 
@@ -175,7 +178,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Java并发-同步和协作工具类
+          Java并发-线程协作机制
         </h1>
 
         <div class="post-meta">
@@ -184,10 +187,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-07-30 15:09:54 / 修改时间：16:00:46" itemprop="dateCreated datePublished" datetime="2021-07-30T15:09:54+08:00">2021-07-30</time>
+              <time title="创建时间：2021-07-30 15:09:54" itemprop="dateCreated datePublished" datetime="2021-07-30T15:09:54+08:00">2021-07-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-03 22:36:49" itemprop="dateModified" datetime="2021-08-03T22:36:49+08:00">2021-08-03</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -209,12 +218,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>1，读写锁-ReentrantReadWriteLock</p>
-<p>2，信号量Semaphore</p>
-<p>3，倒计时门栓CountDownLatch</p>
-<p>4，循环栅栏CyclicBarrier</p>
-<p>5，ThreadLocal</p>
-
+        <h2 id="wait、notify"><a href="#wait、notify" class="headerlink" title="wait、notify"></a>wait、notify</h2><p>属于Object类中。</p>
+<p>当条件不成立时，线程调用wait进入条件等待队列。</p>
+<p>另一个线程修改了条件变量后调用notify，调用wait的线程唤醒后需要重新检查条件变量。</p>
+<h2 id="显示条件"><a href="#显示条件" class="headerlink" title="显示条件"></a>显示条件</h2><p>sychronized：wait，notify</p>
+<p>reentranlock：显式条件-condition接口：await，signal</p>
+<h2 id="线程中断"><a href="#线程中断" class="headerlink" title="线程中断"></a>线程中断</h2><h2 id="协作工具类"><a href="#协作工具类" class="headerlink" title="协作工具类"></a>协作工具类</h2><h3 id="读写锁reentrantreadwritelock"><a href="#读写锁reentrantreadwritelock" class="headerlink" title="读写锁reentrantreadwritelock"></a>读写锁reentrantreadwritelock</h3><p>读读是并行的。</p>
+<h4 id="实现："><a href="#实现：" class="headerlink" title="实现："></a>实现：</h4><p><img src="https://i.loli.net/2021/08/03/Qdk7pGoAtMq1NmJ.png" alt="image-20210803205028306"></p>
+<h3 id="信号量semaphore"><a href="#信号量semaphore" class="headerlink" title="信号量semaphore"></a>信号量semaphore</h3><p>信号量，用来控制同时访问特定资源的线程数量，它通过协调各个线程以保证合理的使用公共资源，可以用做流量控制，譬如数据库连接场景控制等；</p>
+<p>Semaphore 的构造方法 Semaphore(int permits) 接收一个整型参数，表示可用的许可证数量，即<strong>最大并发数量</strong>，使用方法就是在线程里面首先调用 acquire 方法获取一个许可，使用完后接着调用 <strong>release 归还一个许可，</strong>还可以使用 <strong>tryAcquire 尝试获取许可</strong>。</p>
+<h3 id="倒计时门栓countdownlatch"><a href="#倒计时门栓countdownlatch" class="headerlink" title="倒计时门栓countdownlatch"></a>倒计时门栓countdownlatch</h3><p>允许<strong>一个或者多个线程</strong>等待其他线程完成操作。</p>
+<p>平时我们在主线程等待其他线程结束一般都是在主线程调用其他 Thread 的 join 方法进行阻塞等待，而 join 的实质就是循环判断线程 isAlive 就进行 wait 操作，直到被 join 的线程终止后线程的 this.notifyAll 方法（JVM实现，外部不可见）会被调用进而触发 wait 结束而使 join 阻塞退出；</p>
+<p>并发包提供的 CountDownLatch 也可以实现 join 的功能，而且还提供了比 join 更多的功能。</p>
+<p>CountDownLatch 构造函数<strong>接收一个 int 参数作为计数器</strong>，如果你想等待 N 个计数点完成就传 N，当我们每个点完成时调用 CountDownLatch 的 <strong>countDown</strong> 方法则 N 就会自动减一，CountDownLatch 的 <strong>await 会阻塞当前线程直到 N 变为零为止</strong>，其采用 CAS 和 AQS（AbstractQueuedSynchronizer）实现。</p>
+<h3 id="循环栅栏cyclicbarrier"><a href="#循环栅栏cyclicbarrier" class="headerlink" title="循环栅栏cyclicbarrier"></a>循环栅栏cyclicbarrier</h3><p><strong>同步可循换使用</strong>的屏障，让一组线程<strong>到达一个屏障（同步点）时被阻塞</strong>，直到最后一个线程到达屏障时才会开门，所有被屏障拦截的线程才会继续干活；</p>
+<p>CyclicBarrier 默认的构造方法是 CyclicBarrier(int parties)，其参数表示<strong>屏障拦截的线程数量</strong>，每个线程调用 <strong>await 方法告诉 CyclicBarrier 我已经到达了屏障</strong>，然后当前线程被阻塞；</p>
+<p>CyclicBarrier 还提供一个高级构造函数 CyclicBarrier(int parties, Runnable barrierAction) 用于在线程到达屏障时优先执行 barrierAction，方便处理复杂的业务场景；</p>
+<p>CyclicBarrier 适合<strong>并发计算数据汇总场景</strong>，每个线程负责一部分计算，然后在栅栏处等待，到齐后交换数据结果，进行下一次迭代。</p>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p><img src="https://i.loli.net/2021/08/03/OP6kMEHuTK14R89.png" alt="image-20210803210950957"></p>
+<h2 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h2><h2 id="future-futuretask"><a href="#future-futuretask" class="headerlink" title="future/futuretask"></a>future/futuretask</h2>
     </div>
 
     
@@ -297,6 +319,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#wait%E3%80%81notify"><span class="nav-number">1.</span> <span class="nav-text">wait、notify</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E6%9D%A1%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">显示条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%96%AD"><span class="nav-number">3.</span> <span class="nav-text">线程中断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E4%BD%9C%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="nav-number">4.</span> <span class="nav-text">协作工具类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E9%94%81reentrantreadwritelock"><span class="nav-number">4.1.</span> <span class="nav-text">读写锁reentrantreadwritelock</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%EF%BC%9A"><span class="nav-number">4.1.1.</span> <span class="nav-text">实现：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8Fsemaphore"><span class="nav-number">4.2.</span> <span class="nav-text">信号量semaphore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%92%E8%AE%A1%E6%97%B6%E9%97%A8%E6%A0%93countdownlatch"><span class="nav-number">4.3.</span> <span class="nav-text">倒计时门栓countdownlatch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E6%A0%85%E6%A0%8Fcyclicbarrier"><span class="nav-number">4.4.</span> <span class="nav-text">循环栅栏cyclicbarrier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-number">4.5.</span> <span class="nav-text">区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97"><span class="nav-number">5.</span> <span class="nav-text">阻塞队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#future-futuretask"><span class="nav-number">6.</span> <span class="nav-text">future&#x2F;futuretask</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -312,7 +335,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">64</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -325,7 +348,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
