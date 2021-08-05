@@ -156,6 +156,366 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-tcp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-tcp/" class="post-title-link" itemprop="url">计算机网络-tcp</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-30 15:04:43" itemprop="dateCreated datePublished" datetime="2021-07-30T15:04:43+08:00">2021-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-31 15:10:47" itemprop="dateModified" datetime="2021-07-31T15:10:47+08:00">2021-07-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><ul>
+<li> TCP 是<strong>⾯向连接的、可靠的、基于字节流</strong>的传输层通信协议 。</li>
+<li> TCP 四元组可以唯⼀的确定⼀个连接，四元组包括如下： <strong>源地址 源端⼝ ⽬的地址 ⽬的端⼝</strong> 。</li>
+<li><strong>源地址和⽬的地址的字段（32位）是在 IP 头部中</strong>，作⽤是通过 IP 协议发送报⽂给对⽅主机。</li>
+<li><strong>源端⼝和⽬的端⼝的字段（16位）是在 TCP 头部中</strong>，作⽤是告诉 TCP 协议应该把报⽂发给哪个进程。</li>
+</ul>
+<p>服务端最⼤并发 TCP 连接数远不能达到理论上限。</p>
+<p>主要是⽂件描述符限制，Socket 都是⽂件，所以⾸先要通过 ulimit 配置⽂件描述符的数⽬。<br>另⼀个是内存限制，每个 TCP 连接都要占⽤⼀定内存，操作系统的内存是有限的。</p>
+<h4 id="头部格式"><a href="#头部格式" class="headerlink" title="头部格式"></a>头部格式</h4><p><img src="image-20210731112848824.png"></p>
+<p>序列号：在建⽴连接时由计算机⽣成的随机数作为其初始值，通过 SYN 包传给接收端主机，每发送⼀次数据，就「累加」⼀次该「数据字节数」的⼤⼩。⽤来解决⽹络包乱序问题。</p>
+<p>确认应答号：指下⼀次「期望」收到的数据的序列号，发送端收到这个确认应答以后可以认为在这个序号以前的数据都已经被正常接收。⽤来解决不丢包的问题。</p>
+<p>控制位：</p>
+<ul>
+<li>ACK：该位为 1 时，「确认应答」的字段变为有效，TCP 规定除了最初建⽴连接时的 SYN 包之外该位必须设置为 1 。</li>
+<li>RST：该位为 1 时，表示 TCP 连接中出现异常必须强制断开连接。</li>
+<li>SYN：该位为 1 时，表示希望建⽴连接，并在其「序列号」的字段进⾏序列号初始值的设定。</li>
+<li>FIN：该位为 1 时，表示今后不会再有数据发送，希望断开连接。当通信结束希望断开连接时，通信双⽅的主机之间就可以相互交换 FIN 位为 1 的 TCP 段。</li>
+</ul>
+<h4 id="TCP-vs-UDP"><a href="#TCP-vs-UDP" class="headerlink" title="TCP vs UDP"></a>TCP vs UDP</h4><p><img src="image-20210731113120885.png"></p>
+<p>TCP 和 UDP 区别：</p>
+<ol>
+<li>连接<br>TCP 是⾯向连接的传输层协议，传输数据前先要建⽴连接。<br>UDP 是不需要连接，即刻传输数据。</li>
+<li>服务对象<br>TCP 是⼀对⼀的两点服务，即⼀条连接只有两个端点。<br>UDP ⽀持⼀对⼀、⼀对多、多对多的交互通信</li>
+<li>可靠性<br>TCP 是可靠交付数据的，数据可以⽆差错、不丢失、不᯿复、按需到达。<br>UDP 是尽最⼤努⼒交付，不保证可靠交付数据。</li>
+<li>拥塞控制、流量控制<br>TCP 有拥塞控制和流ᰁ控制机制，保证数据传输的安全性。UDP 则没有，即使⽹络⾮常拥堵了，也不会影响 UDP 的发送速率。</li>
+<li>⾸部开销<br>TCP ⾸部⻓度较⻓，会有⼀定的开销，⾸部在没有使⽤「选项」字段时是 20 个字节，如果使⽤了「选项」字段则会变⻓的。<br>UDP ⾸部只有 8 个字节，并且是固定不变的，开销较⼩。</li>
+<li>传输⽅式<br>TCP 是流式传输，没有边界，但保证顺序和可靠。<br>UDP 是⼀个包⼀个包的发送，是有边界的，但可能会丢包和乱序。</li>
+<li>分⽚不同<br>TCP 的数据⼤⼩如果⼤于 MSS ⼤⼩，则会在传输层进⾏分⽚，⽬标主机收到后，也同样在传输层组装 TCP数据包，如果中途丢失了⼀个分⽚，只需要传输丢失的这个分⽚。</li>
+</ol>
+<p> UDP 的数据⼤⼩如果⼤于 MTU ⼤⼩，则会在 IP 层进⾏分⽚，⽬标主机收到后，在 IP 层组装完数据，接着再传给传输层，但是如果中途丢了⼀个分⽚，在实现可靠传输的 UDP 时则就需要重传所有的数据包，这样传输效率⾮常差，所以通常 UDP 的报⽂应该⼩于 MTU。</p>
+<ol start="8">
+<li><p>TCP 和 UDP 应⽤场景：<br>  由于 TCP 是⾯向连接，能保证数据的可靠性交付，因此经常⽤于：<br>  FTP ⽂件传输<br>  HTTP / HTTPS</p>
+<p>  由于 UDP ⾯向⽆连接，它可以随时发送数据，再加上UDP本身的处理既简单⼜⾼效，因此经常⽤于：<br>  包总数较少的通信，如 DNS 、 SNMP 等<br>  视频、⾳频等多媒体通信<br>  ⼴播通信</p>
+</li>
+</ol>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><img src="image-20210731113603327.png"></p>
+<p>注意序列号和确认应答号的变化。<br>第三次握手可以携带数据。</p>
+<p>注意序列号和确认应答号的变化。</p>
+<p>第三次握手可以携带数据。</p>
+<h4 id="为什么是三次？"><a href="#为什么是三次？" class="headerlink" title="为什么是三次？"></a>为什么是三次？</h4><ol>
+<li>避免历史连接！！！。</li>
+<li>同步双方序列号（去重，按序接收）。</li>
+<li>避免资源浪费。（只有两次，客户端的syn阻塞，就会重新发送syn，那么服务端每收到一个syn就要建立连接。）</li>
+</ol>
+<ul>
+<li>在⽹络拥堵情况下，⼀个「旧 SYN 报⽂」⽐「最新的 SYN 」 报⽂早到达了服务端；</li>
+<li>那么此时服务端就会回⼀个 SYN + ACK 报⽂给客户端；</li>
+<li>客户端收到后可以根据⾃身的上下⽂，判断这是⼀个历史连接（序列号过期或超时），那么客户端就会发送RST 报⽂给服务端，表示中⽌这⼀次连接。</li>
+<li>如果是两次握⼿连接，就不能判断当前连接是否是历史连接，三次握⼿则可以在客户端（发送⽅）准备发送第三次报⽂时，客户端因有⾜够的上下⽂来判断当前连接是否是历史连接。</li>
+</ul>
+<h4 id="既然-IP-层会分⽚，为什么-TCP-层还需要-MSS-呢？"><a href="#既然-IP-层会分⽚，为什么-TCP-层还需要-MSS-呢？" class="headerlink" title="既然 IP 层会分⽚，为什么 TCP 层还需要 MSS 呢？"></a>既然 IP 层会分⽚，为什么 TCP 层还需要 MSS 呢？</h4><p>MTU ：⼀个⽹络包的最⼤⻓度，以太⽹中⼀般为 1500 字节；<br>MSS ：除去 IP 和 TCP 头部之后，⼀个⽹络包所能容纳的 TCP 数据的最⼤⻓度；</p>
+<ul>
+<li>当 IP 层有⼀个超过 MTU ⼤⼩的数据（TCP 头部 + TCP 数据）要发送，那么 IP 层就要进⾏分⽚，把数据分⽚成若⼲⽚，保证每⼀个分⽚都⼩于 MTU。把⼀份 IP 数据报进⾏分⽚以后，由⽬标主机的 IP 层来进⾏组装后，再交给上⼀层 TCP 传输层。</li>
+<li>那么当如果⼀个 IP 分⽚丢失，整个 IP 报⽂的所有分⽚都得重传。</li>
+<li>因为 IP 层本身没有超时重传机制，它由传输层的 TCP 来负责超时和重传。</li>
+<li>当接收⽅发现 TCP 报⽂（头部 + 数据）的某⼀⽚丢失后，则不会响应 ACK 给对⽅，那么发送⽅的 TCP 在超时后，就会重发「整个 TCP 报⽂（头部 + 数据）」。</li>
+</ul>
+<h4 id="什么是-SYN-攻击？如何避免-SYN-攻击？"><a href="#什么是-SYN-攻击？如何避免-SYN-攻击？" class="headerlink" title="什么是 SYN 攻击？如何避免 SYN 攻击？"></a>什么是 SYN 攻击？如何避免 SYN 攻击？</h4><p>攻击者短时间伪造不同 IP 地址的 SYN 报⽂，服务端每接收到⼀个 SYN 报⽂，就进⼊ SYN_RCVD 状态，但服务端发送出去的 ACK + SYN 报⽂，⽆法得到未知 IP 主机的ACK 应答，久⽽久之就会占满服务端的 SYN 接收队列（未连接队列），使得服务器不能为正常⽤户服务。</p>
+<p><img src="image-20210731145537881.png"></p>
+<p><img src="image-20210731145610582.png"></p>
+<p><strong>解决办法：</strong></p>
+<p>控制该队列的最⼤值：SYN_RCVD 状态连接的最⼤个数：net.core.netdev_max_backlog</p>
+<ul>
+<li>tcp_syncookies 的⽅式可以应对 SYN 攻击的⽅法：<br>net.ipv4.tcp_syncookies = 1<br>当 「 SYN 队列」满之后，后续服务器收到 SYN 包，不进⼊「 SYN 队列」；<br>计算出⼀个 cookie 值，再以 SYN + ACK 中的「序列号」返回客户端，<br>服务端接收到客户端的应答报⽂时，服务器会检查这个 ACK 包的合法性。如果合法，直接放⼊到「Accept队列」。</li>
+</ul>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><img src="image-20210731145722373.png"></p>
+<p>关闭连接时，客户端向服务端发送 FIN 时，仅仅表示客户端不再发送数据了<strong>但是还能接收数据</strong>。服务器收到客户端的 FIN 报⽂时，先回⼀个 ACK 应答报⽂，⽽<strong>服务端可能还有数据需要处理和发送</strong>，等服务端不再发送数据时，才发送 <strong>FIN 报⽂给客户端来表示同意现在关闭连接</strong>。</p>
+<h4 id="为什么-TIME-WAIT-等待的时间是-2MSL"><a href="#为什么-TIME-WAIT-等待的时间是-2MSL" class="headerlink" title="为什么 TIME_WAIT 等待的时间是 2MSL"></a>为什么 TIME_WAIT 等待的时间是 2MSL</h4><p>MSL 是 Maximum Segment Lifetime，报⽂最⼤⽣存时间，它是任何报⽂在⽹络上存在的最⻓时间，超过这个时间报⽂将被丢弃。<br>⽹络中可能存在来⾃发送⽅的数据包，当这些发送⽅的数据包被接收⽅处理后⼜会向对⽅发送响应，所以⼀来⼀回需要等待 2 倍的时间。<br>⽐如如果被动关闭⽅没有收到断开连接的最后的 ACK 报⽂，就会触发超时重发 Fin 报⽂，另⼀⽅接收到 FIN 后，会重发 ACK 给被动关闭⽅， ⼀来⼀去正好 2 个 MSL。<br>在 Linux 系统⾥ 2MSL 默认是 60 秒，那么⼀个 MSL 也就是 30 秒。Linux 系统停留在 TIME_WAIT 的时间为固定的 60 秒。</p>
+<h4 id="需要-TIME-WAIT-状态"><a href="#需要-TIME-WAIT-状态" class="headerlink" title="需要 TIME-WAIT 状态"></a>需要 TIME-WAIT 状态</h4><ul>
+<li>防⽌具有相同「四元组」的「旧」数据包被收到；<br>经过 2MSL 这个时间，⾜以让两个⽅向上的数据包都被丢弃，使得原来连接的数据包在⽹络中都⾃然消失，再出现的数据包⼀定都是新建⽴连接所产⽣的。</li>
+<li>保证「被动关闭连接」的⼀⽅能被正确的关闭，即保证最后的 ACK 能让被动关闭⽅接收。</li>
+</ul>
+<h4 id="如果已经建⽴了连接，但是客户端突然出现故障了怎么办？"><a href="#如果已经建⽴了连接，但是客户端突然出现故障了怎么办？" class="headerlink" title="如果已经建⽴了连接，但是客户端突然出现故障了怎么办？"></a>如果已经建⽴了连接，但是客户端突然出现故障了怎么办？</h4><p>TCP 有⼀个机制是<strong>保活机制</strong>。这个机制的原理是这样的：ping-pong<br>定义⼀个时间段，在这个时间段内，如果没有任何连接相关的活动，TCP 保活机制会开始作⽤，每隔⼀个时间间隔，发送⼀个探测报⽂，该探测报⽂包含的数据⾮常少，如果连续⼏个探测报⽂都没有得到响应，则认为当前的TCP 连接已经死亡，系统内核将错误信息通知给上层应⽤程序。</p>
+<h3 id="socket编程？"><a href="#socket编程？" class="headerlink" title="socket编程？"></a>socket编程？</h3><h4 id="连接过程"><a href="#连接过程" class="headerlink" title="连接过程"></a>连接过程</h4><p><img src="image-20210731150237375.png"></p>
+<h4 id="listen-时候参数-backlog-的意义？"><a href="#listen-时候参数-backlog-的意义？" class="headerlink" title="listen 时候参数 backlog 的意义？"></a>listen 时候参数 backlog 的意义？</h4><p>参数⼀ socketfd 为 socketfd ⽂件描述符<br>参数⼆ <strong>backlog</strong>，这参数在历史版本有⼀定的变化<br>在早期 Linux 内核 backlog 是 <strong>SYN 队列⼤⼩</strong>，也就是未完成的队列⼤⼩。<br>在 Linux 内核 2.2 之后，backlog 变成 <strong>accept 队列</strong>，也就是已完成连接建⽴的队列⻓度，所以现在通常认为backlog 是 accept 队列长度</p>
+<p>客户端 connect 成功返回是在第⼆次握⼿，服务端 accept 成功返回是在三次握⼿成功之后。</p>
+<h3 id="可靠传输"><a href="#可靠传输" class="headerlink" title="可靠传输"></a>可靠传输</h3><p><strong>序列号、确认应答、重发控制、连接管理以及窗⼝控制等。</strong></p>
+<h4 id="自动重传请求（Automatic-Repeat-reQuest，ARQ）"><a href="#自动重传请求（Automatic-Repeat-reQuest，ARQ）" class="headerlink" title="自动重传请求（Automatic Repeat-reQuest，ARQ）"></a>自动重传请求（Automatic Repeat-reQuest，ARQ）</h4><p>OSI模型中数据链路层的错误纠正协议之一。它通过使用<strong>确认和超时</strong>这两个机制，在不可靠服务的基础上实现可靠的信息传输。<strong>如果发送方在发送后一段时间之内没有收到确认帧，它通常会重新发送。</strong><br>当发送窗口和接收窗口的大小都等于 1时，就是停止等待协议。<br>当发送窗口大于1，接收窗口等于1时，就是回退N步协议。<br>当发送窗口和接收窗口的大小均大于1时，就是选择重发协议</p>
+<h4 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h4><p>序列号与确认应答！</p>
+<p><strong>超时重传</strong>-数据包丢失，确认应答丢失。</p>
+<p><img src="image-20210731150635851.png"></p>
+<p>当超时时间 RTO 较⼤时，重发就慢，没有效率，性能差；<br>当超时时间 RTO 较⼩时，会导致可能并没有丢就重发。<br>超时重传时间 RTO 的值应该略⼤于报⽂往返 RTT 的值。<br>如果超时重发的数据，再次超时的时候，TCP 的策略是超时间隔加倍。<br>也就是每当遇到⼀次超时重传的时候，都会将下⼀次超时时间间隔设为先前值的两倍。两次超时，就说明⽹络环境差，不宜频繁反复发送。</p>
+<p><strong>快速重传</strong><br>三次同样的ACK。</p>
+<p><strong>SACK</strong><br> SACK （ Selective Acknowledgment 选择性确认）。<br>这种⽅式需要在 <strong>TCP 头部「选项」字段⾥加⼀个 SACK</strong> 的东⻄，它可以将缓存的地图发送给发送⽅，这样<strong>发送⽅就可以知道哪些数据收到了，哪些数据没收到，</strong>知道了这些信息，就可以只重传丢失的数据。<br>D-SACK</p>
+<h4 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h4><p>窗⼝⼤⼩就是指⽆需等待确认应答，⽽可以继续发送数据的最⼤值。</p>
+<p><strong>累计确认：</strong></p>
+<p><img src="image-20210731150833402.png"></p>
+<h4 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h4><p>怎么让发送⽅<strong>避免发送⼩数据呢？</strong><br>发送⽅通常的策略:<br>使⽤ <strong>Nagle 算法</strong>，该算法的思路是延时处理，它满⾜以下两个条件中的⼀条才可以发送数据：<br>窗⼝⼤⼩ &gt;= MSS 或是 数据⼤⼩ &gt;= MSS<br>收到之前发送数据的 ack 回包<br>只要没满⾜上⾯条件中的⼀条，发送⽅⼀直在囤积数据，直到满⾜上⾯的发送条件。<br>另外，Nagle 算法默认是打开的，可以在 <strong>Socket 设置 TCP_NODELAY</strong> 选项来关闭这个算法。</p>
+<h4 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h4><p><strong>什么是拥塞窗⼝？和发送窗⼝有什么关系呢？</strong><br>拥塞窗⼝ cwnd是发送⽅维护的⼀个的状态变量，它会根据⽹络的拥塞程度动态变化的。<br>我们在前⾯提到过发送窗⼝ swnd 和接收窗⼝ rwnd 是约等于的关系，那么由于加⼊了拥塞窗⼝的概念后，此时发送窗⼝的值是swnd = min(cwnd, rwnd)，也就是拥塞窗⼝和接收窗⼝中的最⼩值。<br><strong>只要⽹络中没有出现拥塞， cwnd 就会增⼤；</strong><br><strong>但⽹络中出现了拥塞， cwnd 就减少</strong>；</p>
+<p><strong>那么怎么知道当前⽹络是否出现了拥塞呢？</strong><br>其实只要「发送⽅」没有在规定时间内接收到 ACK 应答报⽂，也就是<strong>发⽣了超时重传</strong>，就会认为⽹络出现了⽤拥塞。</p>
+<p><strong>拥塞控制有哪些控制算法？</strong><br><strong>慢启动</strong><br><strong>拥塞避免</strong><br><strong>快重传</strong><br><strong>快恢复</strong></p>
+<p><img src="image-20210731151028278.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/" class="post-title-link" itemprop="url">计算机网络-http</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-30 15:04:12" itemprop="dateCreated datePublished" datetime="2021-07-30T15:04:12+08:00">2021-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-31 21:25:18" itemprop="dateModified" datetime="2021-07-31T21:25:18+08:00">2021-07-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。</p>
+<h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><h3 id="报文"><a href="#报文" class="headerlink" title="报文"></a>报文</h3><table>
+<thead>
+<tr>
+<th align="left">方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与get类似，不返回内容主体。</th>
+<th>URI</th>
+<th>协议版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">可选的首部字段</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td align="left">内容实体</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>协议版本</th>
+<th>状态码</th>
+<th>状态码原因短语</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>可选的响应首部字段</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>主体</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h3><p>1xx 类状态码属于提示信息，是协议处理中的⼀种中间状态，实际⽤到的⽐较少。 </p>
+<p>2xx 类状态码表示<strong>服务器成功处理了客户端的请求</strong>，也是我们最愿意看到的状态。 </p>
+<ul>
+<li>「200 OK」是最常⻅的成功状态码，表示⼀切正常。如果是⾮ HEAD 请求，服务器返回的响应头都会有 body 数据。 </li>
+<li>「204 No Content」也是常⻅的成功状态码，与 200 OK 基本相同，但响应头没有 body 数据。</li>
+<li>「206 Partial Content」是应⽤于 HTTP 分块下载或断点续传，表示响应返回的 body 数据并不是资源的全部，⽽ 是其中的⼀部分，也是服务器处理成功的状态。 </li>
+</ul>
+<p>3xx 类状态码表示客户端请求的资源发送了变动，需要客户端⽤新的 URL 重新发送请求获取资源，也就是重定向。 </p>
+<ul>
+<li>「301 Moved Permanently」表示永久重定向，说明请求的资源已经不存在了，需改⽤新的 URL 再次访问。 </li>
+<li>「302 Found」表示临时重定向，说明请求的资源还在，但暂时需要⽤另⼀个 URL 来访问。 301 和 302 都会在响应头⾥使⽤字段 Location ，指明后续要跳转的 URL，浏览器会⾃动重定向新的 URL。 </li>
+</ul>
+<p>4xx 类状态码表示客户端发送的报⽂有误，服务器⽆法处理，也就是错误码的含义。 </p>
+<ul>
+<li>「400 Bad Request」表示客户端请求的报⽂有错误，但只是个笼统的错误。 </li>
+<li>「403 Forbidden」表示服务器禁⽌访问资源，并不是客户端的请求出错。 </li>
+<li>「404 Not Found」表示请求的资源在服务器上不存在或未找到，所以⽆法提供给客户端。 </li>
+</ul>
+<p>5xx 类状态码表示客户端请求报⽂正确，但是服务器处理时内部发⽣了错误，属于服务器端的错误码。 </p>
+<ul>
+<li>「500 Internal Server Error」与 400 类型，是个笼统通⽤的错误码，服务器发⽣了什么错误，我们并不知道。</li>
+<li>「501 Not Implemented」表示客户端请求的功能还不⽀持，类似“即将开业，敬请期待”的意思。</li>
+<li>「502 Bad Gateway」通常是服务器作为⽹关或代理时返回的错误码，表示服务器⾃身⼯作正常，访问后端服务器 发⽣了错误。 </li>
+<li>「503 Service Unavailable」表示服务器当前很忙，暂时⽆法响应服务器。</li>
+</ul>
+<h3 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h3><p>Host 字段 客户端发送请求时，⽤来指定服务器的域名。</p>
+<p>服务器在返回数据时，会有 Content-Length 字段，表明本次回应的数据⻓度。</p>
+<p>Connection 字段最常⽤于客户端要求服务器使⽤ TCP 持久连接，以便其他请求复⽤。</p>
+<p>Content-Type 字段⽤于服务器回应时，告诉客户端，本次数据是什么格式。</p>
+<p>Content-Encoding 字段说明数据的压缩⽅法。表示服务器返回的数据使⽤了什么压缩格式</p>
+<h3 id="get-post"><a href="#get-post" class="headerlink" title="get post"></a>get post</h3><h4 id="区别？"><a href="#区别？" class="headerlink" title="区别？"></a>区别？</h4><p>Get ⽅法的含义是请求从服务器获取资源，这个资源可以是静态的⽂本、⻚⾯、图⽚视频等。</p>
+<p>POST ⽅法则是相反操作，它向 URI 指定的资源提交数据，数据就放在报⽂的 body ⾥。⽐如，留⾔后点击「提交」，浏览器就会执⾏⼀次 POST 请求，把你的留⾔⽂字放进了报⽂ body ⾥，然后拼接好 POST 请求头，通过 TCP 协议发送给服务器。</p>
+<h4 id="安全幂等？"><a href="#安全幂等？" class="headerlink" title="安全幂等？"></a>安全幂等？</h4><p>在 HTTP 协议⾥，所谓的「安全」是指请求⽅法不会「破坏」服务器上的资源。</p>
+<p>所谓的「幂等」，意思是<strong>多次执⾏相同的操作</strong>，结果都是「相同」的。</p>
+<p>那么很明显 <strong>GET ⽅法就是安全且幂等</strong>的，因为它是「只读」操作，⽆论操作多少次，服务器上的数据都是安全的，且每次的结果都是相同的。<strong>POST</strong> 因为是「新增或提交数据」的操作，会修改服务器上的资源，所以是<strong>不安全</strong>的，且多次提交数据就会创建多个资源，所以<strong>不是幂等的</strong>。</p>
+<h2 id="https"><a href="#https" class="headerlink" title="https"></a>https</h2><table>
+<thead>
+<tr>
+<th>http</th>
+<th>不安全</th>
+<th>三次握手</th>
+<th>80端口</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>https</td>
+<td>安全（SSL/TSL）</td>
+<td>三次握手+SSL握手</td>
+<td>443端口</td>
+<td>需要向CA申请数字证书</td>
+</tr>
+</tbody></table>
+<h3 id="解决了啥？"><a href="#解决了啥？" class="headerlink" title="解决了啥？"></a>解决了啥？</h3><blockquote>
+<p>窃听-信息加密</p>
+<p>篡改-校验</p>
+<p>冒充-身份证书</p>
+</blockquote>
+<h3 id="如何解决不安全的问题？"><a href="#如何解决不安全的问题？" class="headerlink" title="如何解决不安全的问题？"></a>如何解决不安全的问题？</h3><p>混合加密</p>
+<p>对称加密（只有一个密钥，速度快）（通信过程中）+非对称加密（两个密钥）（通信建立前）</p>
+<p>摘要算法实现完整性：每份数据都生成独一无二的指纹。</p>
+<p>服务器公钥放到数字证书中</p>
+<p><img src="image-20210731111936519.png"></p>
+<h2 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h2><h3 id="http-1-1"><a href="#http-1-1" class="headerlink" title="http 1.1"></a>http 1.1</h3><p>长连接</p>
+<p>管道传输</p>
+<p>不能压缩首部，只能压缩body。</p>
+<p>首部冗长。</p>
+<p>队头阻塞。（服务器按照请求顺序响应）</p>
+<p>无请求优先级控制。</p>
+<p>请求只能从客户端开始。</p>
+<h3 id="http-2"><a href="#http-2" class="headerlink" title="http 2"></a>http 2</h3><p>基于https-安全</p>
+<p>头部压缩：HPACK算法：双方维护一个头部信息表，发送索引。</p>
+<p>二进制格式而不是文本。头信息帧，数据帧。</p>
+<p>在二进制分帧层上，HTTP 2.0 会将所有传输的信息分割为更小的消息和帧,并对它们采用二进制格式的编码 ，其中HTTP1.x的首部信息会被封装到Headers帧，而我们的request body则封装到Data帧里面。</p>
+<p>然后，HTTP 2.0 通信都在一个连接上完成，这个连接可以承载任意数量的双向数据流。相应地，每个数据流以消息的形式发送，而消息由一或多个帧组成，这些帧可以乱序发送，然后再根据每个帧首部的流标识符重新组装。</p>
+<p>数据流，可指定优先级。</p>
+<p>多路复用：一个连接中可以并发多个请求，不用按照顺序一一回应==解决了队头阻塞，降低延迟。</p>
+<p>服务器推送。</p>
+<p>复用一个TCP连接，下层的TCP不知道有几个http请求，发生丢包，就会触发重传机制。所有的http请求都必</p>
+<p>须等待这个包的重传（阻塞）。</p>
+<h3 id="http-3"><a href="#http-3" class="headerlink" title="http 3"></a>http 3</h3><p>TCP===UDP</p>
+<p>基于UDP的QUIC协议，可以实现类似的可靠传输。</p>
+<p><img src="image-20210731112531267.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -432,10 +792,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-07-30 15:03:04 / 修改时间：16:00:57" itemprop="dateCreated datePublished" datetime="2021-07-30T15:03:04+08:00">2021-07-30</time>
+              <time title="创建时间：2021-07-30 15:03:04" itemprop="dateCreated datePublished" datetime="2021-07-30T15:03:04+08:00">2021-07-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-05 13:52:40" itemprop="dateModified" datetime="2021-08-05T13:52:40+08:00">2021-08-05</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -457,12 +823,110 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>1，==与equals()?</p>
-<p>2，重载与重写</p>
-<p>3，面向对象</p>
-<p>4，String，StringBuffer，StringBuilder</p>
-<p>5，异常体系</p>
-<p>6，IO流</p>
+          <h3 id="关键字总结"><a href="#关键字总结" class="headerlink" title="关键字总结"></a>关键字总结</h3><h4 id="final-关键字"><a href="#final-关键字" class="headerlink" title="final 关键字"></a>final 关键字</h4><p>final 关键字，意思是<strong>最终的、不可修改的</strong>，用来修饰类、方法和变量，具有以下特点：</p>
+<p>final 修饰的类<strong>不能被继承</strong>，final 类中的所有成员方法都会被隐式的指定为 final 方法；</p>
+<p>final 修饰的方法<strong>不能被重写</strong>；</p>
+<p>final <strong>修饰的变量是常量</strong>，如果是基本数据类型的变量，则其数值一旦在初始化之后便不能更改；如果是引用类型的变量，则在对其初始化之后便不能让其指向另一个对象。</p>
+<h4 id="static-关键字"><a href="#static-关键字" class="headerlink" title="static 关键字"></a>static 关键字</h4><p>static 关键字主要有以下四种使用场景：</p>
+<p><strong>修饰成员变量和成员方法:</strong> 被 static 修饰的<strong>成员属于类</strong>，不属于单个这个类的某个对象，被类中所有对象共享，可以并且建议<strong>通过类名调用</strong>。被 static 声明的成员变量属于静态成员变量，静态变量 存放在 Java 内存区域的方法区。</p>
+<p>调用格式：类名.静态变量名 类名.静态方法名()</p>
+<p><strong>静态代码块:</strong> 静态代码块定义在<strong>类中方法外</strong>, 静态代码块在非静态代码块之前执行(静态代码块—&gt;非静态代码块—&gt;构造方法)。 该类不管创建多少对象，静态代码块只执行一次.</p>
+<p><strong>静态内部类（static 修饰类的话只能修饰内部类</strong>）： 静态内部类与非静态内部类之间存在一个最大的区别: 非静态内部类在编译完成之后会隐含地保存着一个引用，该引用是指向创建它的外围类，但是静态内部类却没有。没有这个引用就意味着：</p>
+<ol>
+<li><strong>它的创建是不需要依赖外围类的创建。</strong></li>
+<li>它<strong>不能使用任何外围类的非 static 成员变量和方法。</strong></li>
+</ol>
+<p><strong>静态导包</strong>(用来导入类中的静态资源，1.5 之后的新特性): 格式为：import static 这两个关键字连用可以<strong>指定导入某个类中的指定静态资源</strong>，并且不需要使用类名调用类中静态成员，可以直接使用类中静态成员变量和成员方法。</p>
+<h4 id="this-关键字"><a href="#this-关键字" class="headerlink" title="this 关键字"></a>this 关键字</h4><p>this 关键字用于<strong>引用类的当前实例</strong>。 例如：<br>此关键字是可选的， 但是，使用此关键字可能会使代码更易读或易懂。</p>
+<h4 id="super-关键字"><a href="#super-关键字" class="headerlink" title="super 关键字"></a>super 关键字</h4><p>super 关键字用于<strong>从子类访问父类的变量和方法</strong>。 例如：</p>
+<p>使用 this 和 super 要注意的问题：</p>
+<p>在构造器中使用 <strong>super() 调用父类中的其他构造方法时</strong>，<strong>该语句必须处于构造器的首行</strong>，否则编译器会报错。另外，<strong>this 调用本类中的其他构造方法时，也要放在首行。</strong></p>
+<p><strong>this、super 不能用在 static 方法中。</strong></p>
+<p>被 static 修饰的成员属于类，不属于单个这个类的某个对象，被类中所有对象共享。</p>
+<p><strong>而 this 代表对本类对象的引用，指向本类对象；而 super 代表对父类对象的引用，指向父类对象</strong>；所以， this 和 super 是属于对象范畴的东西，而静态方法是属于类范畴的东西。</p>
+<h3 id="与equals"><a href="#与equals" class="headerlink" title="==与equals()?"></a>==与equals()?</h3><p>==判断两个对象的<strong>地址</strong>是不是相等，<strong>对于基本数据类型：值。引用数据类型：内存地址。</strong><br>equals()没有被覆盖重写，与==一样。</p>
+<p><strong>可以覆盖重写比较引用对象值的大小。</strong><br>举例：String中的equals方法是被重写过的。</p>
+<h4 id="hashcode（）与equal（）？hashset去重？"><a href="#hashcode（）与equal（）？hashset去重？" class="headerlink" title="hashcode（）与equal（）？hashset去重？"></a>hashcode（）与equal（）？hashset去重？</h4><p><strong>为什么要有hashcode？</strong></p>
+<p>当你把对象加⼊ HashSet 时， <strong>HashSet 会先计算对象的 hashcode 值来判断对象加⼊的位置</strong>，同时也会与其他已经加⼊的对象的 hashcode 值比较，如果没有相符的 hashcode， HashSet会假设对象没有重复出现。</p>
+<p>但是如果发现有相同 hashcode 值的对象，这时会调⽤ equals() ⽅法来检查 hashcode 相等的对象是否真的相同。如果两者相同， HashSet 就不会让其加⼊操作成功。如果不同的话，就会重新散列到其他位置。</p>
+<p><strong>这样我们就⼤⼤减少了 equals 的次数，相应就⼤⼤提⾼了执⾏速度。</strong><br><strong>hash优越的查询性能。</strong></p>
+<h4 id="为什么重写equals必须重写hashcode-？"><a href="#为什么重写equals必须重写hashcode-？" class="headerlink" title="为什么重写equals必须重写hashcode()？"></a>为什么重写equals必须重写hashcode()？</h4><p>对象相等，hashcode一定相等，反之不一定（hash碰撞）。<br>hashcode()默认对堆上面的对象产生独特值，hashcode不同，对象一定不同。</p>
+<p>举例：student s1=new student(name=”11”);<br>student s2=new student(name=”11”);</p>
+<p>假如只重写equals而不重写hashcode，那么默认的hashcode方法是根据对象的内存地址经哈希算法得来的，显然此时s1!=s2。然而重写了equals，且s1.equals(s2)返回true。</p>
+<p>根据hashcode的规则，<strong>两个对象相等其哈希值一定相等</strong>，所以矛盾就产生了，因此重写equals一定要重写hashcode。</p>
+<h3 id="重载与重写"><a href="#重载与重写" class="headerlink" title="重载与重写"></a>重载与重写</h3><ol>
+<li><p>重载(overloading) 是在一个类里面，<strong>方法名字相同，而参数不同。返回类型可以相同也可以不同。</strong></p>
+<p>每个重载的方法（或者构造函数）都必须<strong>有一个独一无二的参数类型列表</strong>。</p>
+<p>最常用的地方就是构造器的重载。</p>
+</li>
+<li><p>重写（发生于<strong>运行期</strong>）：<strong>子类继承父类的方法，输入一样，做出不同的操作就要覆盖重写父类方法。</strong></p>
+</li>
+</ol>
+<p>  方法名，参数列表必须一样。</p>
+<p>  抛出异常范围小于父类。<br>  访问修饰符可以降低限制。</p>
+<p>  <strong>父类方法由private，final，static修饰时不能被重写。</strong></p>
+<h3 id="成员变量与局部变量？"><a href="#成员变量与局部变量？" class="headerlink" title="成员变量与局部变量？"></a>成员变量与局部变量？</h3><p>根据定义变量位置的不同，可以将变量分为成员变量和局部变量<br>     成员变量是在<strong>类范围</strong>内定义的变量<br>     局部变量是在<strong>一个方法内</strong>定义的变量<br>1，成员变量可以分为：<br>     实例属性 （不用static修饰）<br>            随着实例属性的存在而存在<br>     类属性 （static修饰）<br>            随着类的存在而存在<br>成员变量无需显式初始化，系统会自动对其进行默认初始化</p>
+<p>2，局部变量可分为：<br>     形参（形式参数）<br>            在整个方法内有效<br>     方法局部变量 （方法内定义）<br>            从定义这个变量开始到方法结束这一段时间内有效<br>     代码块局部变量 （代码块内定义）<br>            从定义这个变量开始到代码块结束这一段时间内有效</p>
+<p><strong>局部变量除了形参外</strong>，<strong>都必须显示初始化</strong>，也就是要指定一个初始值，否则不能访问。<br>java允许局部变量和成员变量重名，<strong>局部变量会覆盖成员变量的值</strong></p>
+<h3 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h3><p><strong>面向过程：以事件为中心，一步一步实现每个步骤。以步骤划分。</strong></p>
+<p>任务明确</p>
+<p>效率高</p>
+<p>扩展性差，复用性弱，逻辑需要深入思考。</p>
+<p><strong>面向对象：以对象为中心，以功能划分，每个对象都有自己的属性与行为。</strong></p>
+<p>程序模块化，结构化。</p>
+<p>易于扩展，维护。</p>
+<p>性能相对于面向过程低。</p>
+<p>java性能相对低的原因主要在于其是半编译语言。</p>
+<p><strong>封装</strong></p>
+<p>封装是指把一个对象的状态信息（也就是属性）隐藏在对象内部，不允许外部对象直接访问对象的内部信息。但是可以<strong>提供一些可以被外界访问的方法来操作属性</strong>。</p>
+<p>就好像我们看不到挂在墙上的空调的内部的零件信息（也就是属性），但是可以通过遥控器（方法）来控制空调。</p>
+<p><strong>继承</strong></p>
+<p>不同类型的对象，<strong>相互之间经常有一定数量的共同点</strong>。例如，小明同学、小红同学、小李同学，都共享学生的特性（班级、学号等）。</p>
+<p>同时，每一个对象还定义了额外的特性使得他们与众不同。例如小明的数学比较好，小红的性格惹人喜爱；小李的力气比较大。</p>
+<p>继承是<strong>使用已存在的类的定义作为基础建立新类的技术</strong>，新类的定义可以<strong>增加新的数据或新的功能，也可以用父类的功能，但不能选择性地继承父类。通过使用继承，可以快速地创建新的类，可以提高代码的重用，程序的可维护性，节省大量创建新类的时间 ，提高我们的开发效率。</strong></p>
+<p>关于继承如下 3 点请记住：</p>
+<p>子类拥有父类对象所有的属性和方法（包括私有属性和私有方法），但是<strong>父类中的私有属性和方法子类是无法访问</strong>，只是拥有。<br>子类可以拥有自己属性和方法，即<strong>子类可以对父类进行扩展。</strong><br>子类可以用自己的方式实现父类的方法。</p>
+<p><strong>多态</strong></p>
+<p>多态，顾名思义，表示<strong>一个对象具有多种的状态</strong>。一种类型的变量可以引用多种实际类型的对象。实现方式：      继承（多个子类重写同一方法）<br>      接口（实现接口并覆盖同一方法）</p>
+<p><strong>多态的特点:</strong></p>
+<p>对象类型和引用类型之间具有<strong>继承（类）/实现（接口）的</strong>关系；<br>引用类型变量发出的方法调用的到底是哪个类中的方法，<strong>必须在程序运行期间才能确定；</strong><br>多态不能调用“只在子类存在但在父类不存在”的方法；<br>如果子类重写了父类的方法，真正执行的是子类覆盖的方法，如果子类没有覆盖父类的方法，执行的是父类的方法。</p>
+<h3 id="hash冲突解决"><a href="#hash冲突解决" class="headerlink" title="hash冲突解决"></a>hash冲突解决</h3><p><strong>开放地址法</strong></p>
+<p>​    线性探测法：冲突之后，在紧跟着的地方安放数据。（大部分的数据都会聚集）。<br>​    二次探测法：往后找1,4,9,16,25,…位置有没有空位。<br>​    再哈希法：多个散列函数。</p>
+<p>链地址法：</p>
+<h3 id="String，StringBuffer，StringBuilder"><a href="#String，StringBuffer，StringBuilder" class="headerlink" title="String，StringBuffer，StringBuilder"></a>String，StringBuffer，StringBuilder</h3><p>String 类中使用 final 关键字修饰字符数组来保存字符串，private final char value[]，所以String 对象是不可变的。</p>
+<p><strong>在 Java 9 之后，String 、StringBuilder 与 StringBuffer 的实现改用 byte 数组存储字符串 private final byte[] value</strong></p>
+<p>而 StringBuilder 与 StringBuffer 都继承自 AbstractStringBuilder 类，在 AbstractStringBuilder 中也是使用字符数组保存字符串char[] value 但是没有用 final 关键字修饰，所以这两种对象都是可变的。</p>
+<p><strong>线程安全性</strong></p>
+<p>String 中的对象是不可变的，也就可以理解为常量<strong>，线程安全。</strong></p>
+<p>AbstractStringBuilder 是 StringBuilder 与 StringBuffer 的公共父类，定义了一些字符串的基本操作，如 expandCapacity、append、insert、indexOf 等公共方法。</p>
+<p>StringBuffer 对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。</p>
+<p>StringBuilder 并没有对方法进行加同步锁，所以是非线程安全的。</p>
+<p><strong>性能</strong></p>
+<p>每次对 String 类型进行改变的时候，都会生成一个新的 String 对象，然后将指针指向新的 String 对象。</p>
+<p>StringBuffer 每次都会对 StringBuffer 对象本身进行操作，而不是生成新的对象并改变对象引用。</p>
+<p>相同情况下使用 StringBuilder 相比使用 StringBuffer 仅能获得 10%~15% 左右的性能提升，但却要冒多线程不安全的风险。</p>
+<p>对于三者使用的总结：</p>
+<p>操作少量的数据: 适用 String<br>单线程操作字符串缓冲区下操作大量数据: 适用 StringBuilder<br>多线程操作字符串缓冲区下操作大量数据: 适用 StringBuffer</p>
+<h3 id="异常体系"><a href="#异常体系" class="headerlink" title="异常体系"></a>异常体系</h3><p><img src="https://i.loli.net/2021/08/05/Hb642mCQlxy3M5o.png" alt="image-20210805134232290"></p>
+<p>自定义异常：继承Exception类。</p>
+<p><strong>异常的处理：</strong></p>
+<ol>
+<li><p>使用try  catch捕获异常。可以有多个catch，总会根据异常的类型优先找到第一个匹配的。因此，基类exception放在前面会导致后面的catch无法执行。</p>
+</li>
+<li><p>重新抛出异常。在catch中可以throw 新的或者原来的异常，表示当前代码不能完全处理。可以通过getCause()获取原始异常。</p>
+</li>
+<li><p>try catch finally。finally中语句始终会执行。适合释放资源，比如数据库连接，文件流释放等等。<br> 如果try  catch中有return，会在finally之后执行，但是finally不能改变其返回值。<br> finally中有return，try catch中的return会丢失，实际上会返回finally中的值。还会掩盖try catch中的异常。</p>
+</li>
+<li><p>try with resourses，用于资源的释放，无需写finally，会自动执行close（）。</p>
+</li>
+<li><p>throws，声明一个方法可能抛出的异常。</p>
+</li>
+</ol>
+<p>  异常体系可以：<strong>对异常集中处理，还可以向上传递，不需要每层都处理，也可以向上传递，也不会被自动忽略。处理异常情况的代码可以大大减少。</strong></p>
+<h3 id="IO流"><a href="#IO流" class="headerlink" title="IO流"></a>IO流</h3><p><img src="https://i.loli.net/2021/08/05/gXcmZMILa2EnuiW.png" alt="image-20210805134331023"></p>
+<p>为何有了字节流，还要有字符流？</p>
+<p><strong>字符流是由java虚拟机将字节流转化而成。这个过程耗时，也容易出错。</strong></p>
+<p>所以提供了字符流，对于字符进行流操作。<br>而对于音频，图片等等推荐字节流。</p>
 
       
     </div>
@@ -482,7 +946,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E5%89%91%E6%8C%87offer-01/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2%EF%BC%88%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -496,7 +960,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E5%89%91%E6%8C%87offer-01/" class="post-title-link" itemprop="url">leetcode-动态规划-剑指offer-01</a>
+            <a href="/2021/07/30/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2%EF%BC%88%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%89/" class="post-title-link" itemprop="url">最长回文子串（子序列）</a>
         </h2>
 
         <div class="post-meta">
@@ -507,7 +971,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-07-30 15:02:24 / 修改时间：16:02:02" itemprop="dateCreated datePublished" datetime="2021-07-30T15:02:24+08:00">2021-07-30</time>
+              <time title="创建时间：2021-07-30 10:37:44 / 修改时间：15:52:09" itemprop="dateCreated datePublished" datetime="2021-07-30T10:37:44+08:00">2021-07-30</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -530,7 +994,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h4 id="1，最长回文子串"><a href="#1，最长回文子串" class="headerlink" title="1，最长回文子串"></a>1，最长回文子串</h4><h5 id="动态规划：o（n-2）空间复杂度。"><a href="#动态规划：o（n-2）空间复杂度。" class="headerlink" title="动态规划：o（n^2）空间复杂度。"></a>动态规划：o（n^2）空间复杂度。</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> len = s.length();</span><br><span class="line">    <span class="keyword">if</span> (len &lt; <span class="number">2</span>) <span class="keyword">return</span> s;</span><br><span class="line">    <span class="keyword">int</span> maxLen = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> begin = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// dp[i][j] 表示 s[i, j] 是否是回文串</span></span><br><span class="line">    <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[len][len];</span><br><span class="line">    <span class="keyword">char</span>[] charArray = s.toCharArray();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">        dp[i][i] = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; len; j++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; j; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (charArray[i] != charArray[j]) &#123;</span><br><span class="line">                dp[i][j] = <span class="keyword">false</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (j - i &lt;= <span class="number">2</span>) &#123;</span><br><span class="line">                    dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 只要 dp[i][j] == true 成立，就表示子串 s[i..j] 是回文，此时记录回文长度和起始位置</span></span><br><span class="line">            <span class="keyword">if</span> (dp[i][j] &amp;&amp; j - i + <span class="number">1</span> &gt; maxLen) &#123;</span><br><span class="line">                maxLen = j - i + <span class="number">1</span>;</span><br><span class="line">                begin = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s.substring(begin, begin + maxLen);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="最优解：中心扩散法。o（1）空间复杂度。"><a href="#最优解：中心扩散法。o（1）空间复杂度。" class="headerlink" title="最优解：中心扩散法。o（1）空间复杂度。"></a>最优解：中心扩散法。o（1）空间复杂度。</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (s.length() &lt; <span class="number">2</span>) &#123;</span><br><span class="line">           <span class="keyword">return</span> s;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">int</span> start = <span class="number">0</span>, max = <span class="number">1</span>;</span><br><span class="line">       <span class="keyword">int</span> len = s.length();</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; ) &#123;</span><br><span class="line">           <span class="keyword">if</span> (len - i &lt;= max / <span class="number">2</span>) <span class="keyword">break</span>;</span><br><span class="line">           <span class="keyword">int</span> left = i, right = i;</span><br><span class="line">           <span class="keyword">while</span> (right &lt; len - <span class="number">1</span> &amp;&amp; s.charAt(right + <span class="number">1</span>) == s.charAt(right))</span><br><span class="line">               ++right; <span class="comment">//过滤掉重复的</span></span><br><span class="line">           <span class="comment">//下次在判断的时候从重复的下一个字符开始判断</span></span><br><span class="line">           i = right + <span class="number">1</span>;</span><br><span class="line">           <span class="comment">//然后往两边判断，找出回文子串的长度</span></span><br><span class="line">           <span class="keyword">while</span> (right &lt; len - <span class="number">1</span> &amp;&amp; left &gt; <span class="number">0</span> &amp;&amp; s.charAt(right + <span class="number">1</span>) == s.charAt(left - <span class="number">1</span>)) &#123;</span><br><span class="line">               ++right;</span><br><span class="line">               --left;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">if</span> (right - left + <span class="number">1</span> &gt; max) &#123;</span><br><span class="line">               max = right - left + <span class="number">1</span>;</span><br><span class="line">               start = left;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> s.substring(start, start + max);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2，最长回文子序列"><a href="#2，最长回文子序列" class="headerlink" title="2，最长回文子序列"></a>2，最长回文子序列</h4><h5 id="动态规划："><a href="#动态规划：" class="headerlink" title="动态规划："></a>动态规划：</h5><p>dp[i][j]表示i,j范围的最长回文子序列。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">longestPalindromeSubseq</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[s.length()][s.length()];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = s.length() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        dp[i][i] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; s.length(); j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">2</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                dp[i][j] = Math.max(dp[i + <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[<span class="number">0</span>][s.length() - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3，无重复最长子串"><a href="#3，无重复最长子串" class="headerlink" title="3，无重复最长子串"></a>3，无重复最长子串</h4><p>高频</p>
+<p>思路：滑动窗口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(String s)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len=s.length();</span><br><span class="line">        HashMap&lt;Character,Integer&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; len; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (map.containsKey(s.charAt(j)))&#123;</span><br><span class="line">                i=Math.max(i,map.get(s.charAt(j)));</span><br><span class="line">            &#125;</span><br><span class="line">            ans=Math.max(ans,j-i+<span class="number">1</span>);</span><br><span class="line">            map.put(s.charAt(j),j+<span class="number">1</span>);<span class="comment">//</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">核心：发现了重复的字符，左边窗口就要向右一位。</span><br><span class="line">    如下写法亦可。</span><br><span class="line">     <span class="keyword">if</span> (map.containsKey(s.charAt(j)))&#123;</span><br><span class="line">                i=Math.max(i,map.get(s.charAt(j)+<span class="number">1</span>));</span><br><span class="line">            &#125;</span><br><span class="line">            ans=Math.max(ans,j-i+<span class="number">1</span>);</span><br><span class="line">            map.put(s.charAt(j),j);<span class="comment">//</span></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+
       
     </div>
 
@@ -549,7 +1024,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E5%AD%90%E5%BA%8F%E5%88%97%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/29/ACM%E6%A8%A1%E5%BC%8F%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -563,7 +1038,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E5%AD%90%E5%BA%8F%E5%88%97%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">leetcode-动态规划-子序列问题</a>
+            <a href="/2021/07/29/ACM%E6%A8%A1%E5%BC%8F%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/" class="post-title-link" itemprop="url">ACM模式输入输出</a>
         </h2>
 
         <div class="post-meta">
@@ -572,10 +1047,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-07-30 15:01:42 / 修改时间：16:02:09" itemprop="dateCreated datePublished" datetime="2021-07-30T15:01:42+08:00">2021-07-30</time>
+              <time title="创建时间：2021-07-29 19:34:10" itemprop="dateCreated datePublished" datetime="2021-07-29T19:34:10+08:00">2021-07-29</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-30 15:51:46" itemprop="dateModified" datetime="2021-07-30T15:51:46+08:00">2021-07-30</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -597,209 +1078,23 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
-      
-    </div>
+          <h4 id="Scanner"><a href="#Scanner" class="headerlink" title="Scanner"></a>Scanner</h4><h5 id="next-与-nextLine-区别"><a href="#next-与-nextLine-区别" class="headerlink" title="next() 与 nextLine() 区别"></a><strong>next() 与 nextLine() 区别</strong></h5><h5 id="next"><a href="#next" class="headerlink" title="next():"></a>next():</h5><p>1、一定要读取到有效字符后才可以结束输入。<br>2、对输入有效字符之前遇到的空白，next() 方法会自动将其去掉。<br>3、只有输入有效字符后才将其后面<strong>输入的空白作为分隔符或者结束符</strong>。<br>next() 不能得到带有空格的字符串。</p>
+<p><strong>nextLine()：</strong></p>
+<p>1、<strong>以Enter为结束符</strong>,也就是说 nextLine()方法返回的是<strong>输入回车之前的所有字符</strong>。<br>2、<strong>可以获得空白。</strong></p>
+<p>如果要<strong>输入 int 或 float 类型的数据</strong>，在 Scanner 类中也有支持，但是在输入之前最好先使用 hasNextXxx() 方法进行验证，再使用 nextXxx() 来读取。</p>
+<h5 id="小小例子："><a href="#小小例子：" class="headerlink" title="小小例子："></a>小小例子：</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">while</span> (sc.hasNextInt()) &#123;</span><br><span class="line">            <span class="keyword">int</span> a = sc.nextInt();</span><br><span class="line">            <span class="keyword">int</span> b = sc.nextInt();</span><br><span class="line">            System.out.println(a + b);</span><br><span class="line">        &#125;</span><br><span class="line">        sc.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">2</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">5</span>    </span><br></pre></td></tr></table></figure>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">while</span> (sc.hasNext()) &#123;</span><br><span class="line">            String[] abc = sc.nextLine().split(<span class="string">&quot; &quot;</span>);</span><br><span class="line">            <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; abc.length; i++) &#123;</span><br><span class="line">                res += Integer.parseInt(abc[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(res);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> </span><br><span class="line"><span class="number">1</span> <span class="number">3</span> <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="number">6</span></span><br><span class="line"><span class="number">8</span></span><br></pre></td></tr></table></figure>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98/">
+<h5 id="小小实战"><a href="#小小实战" class="headerlink" title="小小实战"></a>小小实战</h5><p><strong>牛顿迭代法求立方根</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">double</span> num = sc.nextFloat();</span><br><span class="line">        sc.close();</span><br><span class="line">        System.out.println(solve(num));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">solve</span><span class="params">(<span class="keyword">double</span> num)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">double</span> x=<span class="number">1.0</span>;</span><br><span class="line">        <span class="keyword">while</span> (Math.abs(num-x*x*x)&gt;<span class="number">1e-9</span>)&#123;</span><br><span class="line">            x=x+(num-x*x*x)/(<span class="number">3</span>*x*x);</span><br><span class="line">        &#125;</span><br><span class="line">        String res = String.format(<span class="string">&quot;%.1f&quot;</span>, x);</span><br><span class="line">        <span class="keyword">return</span> Double.parseDouble(res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
+<p><strong>拓展</strong>：<strong>同样思路可以求平方根</strong></p>
+<p>另：<strong>二分法求平方根</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">squrt</span><span class="params">(<span class="keyword">double</span> num)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">double</span> l = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">double</span> r = num;</span><br><span class="line">       <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">           <span class="keyword">double</span> mid = l + (r - l) / <span class="number">2</span>;</span><br><span class="line">           <span class="keyword">if</span> (Math.abs(mid * mid - num) &lt; <span class="number">1e-9</span>) &#123;</span><br><span class="line">               <span class="keyword">return</span> mid;</span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mid * mid &lt; num) &#123;</span><br><span class="line">               l = mid;</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               r = mid;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">leetcode-动态规划-股票问题</a>
-        </h2>
+<h5 id="字符串有多少个回文子串"><a href="#字符串有多少个回文子串" class="headerlink" title="字符串有多少个回文子串"></a>字符串有多少个回文子串</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        String s = sc.next();</span><br><span class="line">        System.out.println(maxLength(s));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">maxLength</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[s.length()][s.length()];</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = s.length() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &lt; s.length(); j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (j - i &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">                        res++;</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dp[i + <span class="number">1</span>][j - <span class="number">1</span>]) &#123;</span><br><span class="line">                        res++;</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-07-30 15:01:25 / 修改时间：16:01:51" itemprop="dateCreated datePublished" datetime="2021-07-30T15:01:25+08:00">2021-07-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D/" class="post-title-link" itemprop="url">leetcode-动态规划-打家劫舍</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-07-30 15:01:13 / 修改时间：16:01:47" itemprop="dateCreated datePublished" datetime="2021-07-30T15:01:13+08:00">2021-07-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%83%8C%E5%8C%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%83%8C%E5%8C%85/" class="post-title-link" itemprop="url">leetcode-动态规划-背包</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-07-30 15:01:04 / 修改时间：16:01:38" itemprop="dateCreated datePublished" datetime="2021-07-30T15:01:04+08:00">2021-07-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>1，0-1背包</p>
-<p>2，完全背包</p>
 
       
     </div>
@@ -819,7 +1114,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E7%AE%80%E5%8D%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/29/helloword/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -833,7 +1128,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E7%AE%80%E5%8D%95/" class="post-title-link" itemprop="url">leetcode-动态规划-简单</a>
+            <a href="/2021/07/29/helloword/" class="post-title-link" itemprop="url">helloword</a>
         </h2>
 
         <div class="post-meta">
@@ -842,17 +1137,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-07-30 15:00:55 / 修改时间：16:01:57" itemprop="dateCreated datePublished" datetime="2021-07-30T15:00:55+08:00">2021-07-30</time>
+              <time title="创建时间：2021-07-29 19:34:10" itemprop="dateCreated datePublished" datetime="2021-07-29T19:34:10+08:00">2021-07-29</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-01 20:40:23" itemprop="dateModified" datetime="2021-08-01T20:40:23+08:00">2021-08-01</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                  <a href="/categories/%E6%9D%82%E6%9D%82/" itemprop="url" rel="index"><span itemprop="name">杂杂</span></a>
                 </span>
             </span>
 
@@ -867,74 +1168,150 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
-      
-    </div>
+          <h3 id="Java基础"><a href="#Java基础" class="headerlink" title="Java基础"></a>Java基础</h3><p>面向对象三大特性？</p>
+<p>面向对象的设计原则？</p>
+<p>抽象类与接口？抽象类中可以有具体方法？</p>
+<p>重写与重载？</p>
+<p>权限修饰符？</p>
+<p>策略模式的实现？</p>
+<p>设计模式六大原则？</p>
+<p>常见设计模式？单例模式，工厂模式？观察者模式？装饰着模式？</p>
+<p>基本数据类型（几个字节）以及包装类（自动装箱，自动拆箱？）为什么要有包装类？</p>
+<p>java8的新特性？</p>
+<p>浏览器怎么渲染html的？</p>
+<p>java IO把UTF8编码文件转化为GBK？</p>
+<p>final类？</p>
+<p>static修饰符？</p>
+<p>深拷贝浅拷贝？</p>
+<p>动态代理的实现方式？</p>
+<p>String的存储方式，线程安全，字符串相加产生新的实例？append（）对象是否变化？</p>
+<p>Arraylist扩容机制？，如何避免平凡的回收和申请？</p>
+<p>Arraylist vs Linkedlist遍历效率？</p>
+<p>Java容器框架（List，Set，Map）</p>
+<p>Map的遍历方式？</p>
+<p>hashmap底层结构？</p>
+<p>HashMap扩容为什么是两倍？（2的n次方问题）</p>
+<p>hashmap和concurenthashmap？</p>
+<p>集合类的线程安全类？</p>
+<h3 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h3><p>16g机器怎么分配JVM内存？</p>
+<p>机器慢了怎么排查？</p>
+<p>java编译为什么生成字节码，不生成二进制文件？（跨平台性）</p>
+<p>字节码文件的最小粒度？</p>
+<p>类加载机制？</p>
+<p>初始化顺序？</p>
+<p>（非静态：默认初始化-显示初始化-代码块初始化-无参构造初始化or有参构造初始化）</p>
+<p>（静态：默认-显示-静态代码块-非静态代码块-无参构造初始化or有参构造初始化）</p>
+<p>A类引用了B,C,C引用B，程序入口A，类加载顺序？（？BCA）</p>
+<p>双亲委派模型？怎样将两个全路径相同的类加载到内存？（类相同还需类加载器相同，自定义类加载器即可）</p>
+<p>java打破双亲委派机制?举例子？</p>
+<p>栈溢出？什么情况导致？</p>
+<p>虚拟机栈空间大小可以设置吗？</p>
+<p>jvm内存模型？</p>
+<p>字符串存在哪里？内存泄漏？</p>
+<p>方法区在jdk版本不同的变化？</p>
+<p>方法区的垃圾回收？</p>
+<p>堆空间的垃圾回收?</p>
+<p>G1和CMS？详细过程，为什么要最终标记？</p>
+<p>（垃圾回收–标记（引用计数，可达性分析（gc roots）-二次标记（finalize）-垃圾回收算法-回收策略-回收器（G1，CMS）））</p>
+<p>jvm哪些会出现oom，sof？</p>
+<h3 id="Java并发"><a href="#Java并发" class="headerlink" title="Java并发"></a>Java并发</h3><p>进程与线程？</p>
+<p>线程有哪些状态？</p>
+<p>创建线程的方式（实现Runnable，继承Thread，实现Callable）</p>
+<p>run()和start()的区别？</p>
+<p>wait()和slepp（）的区别？</p>
+<p>Java线程同步协作机制？（synchronized，reentrantlock（显式锁），wait/notify，join（），await/signal，协作工具类（信号量，倒计时门栓，循环栅栏，阻塞队列…））</p>
+<p>10个数据，1000个线程争抢？（限流，并发？）</p>
+<p>volatile的理解？vs sychronized？</p>
+<p>reentrantlock？</p>
+<p>AQS?有哪些状态？</p>
+<p>线程阻塞有几种情况，如何自己实现阻塞队列？</p>
+<p>Threadlocal，如何实现本地缓存？</p>
+<p>创建线程池？的方式？</p>
+<p>线程池的主要参数？（核心线程数，最大线程数，阻塞队列，超时时间，单位，线程工厂，拒绝策略）</p>
+<p>核心线程数怎么确定？（4核CPU？计算密集？IO密集型）</p>
+<p>Java有哪些锁？共享锁？CAS?乐观锁悲观锁？synchronized底层实现？锁升级？死锁？破解死锁？</p>
+<h3 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h3><p>bean的生命周期，对象创建了放在哪？</p>
+<p>两个类A注入B，B注入，有问题吗？</p>
+<p>AOP?如何实现？</p>
+<p>requsetmapping（）具体用法？</p>
+<h3 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h3><p>写SQL？</p>
+<p>char  vachar？</p>
+<p>行级锁表级锁？</p>
+<p>Mysql架构？为什么要分层设计？</p>
+<p>Mysql事务？rr级别可以解决幻读？MVCC?</p>
+<p>主键索引，唯一索引？</p>
+<p>innoDB索引结构？</p>
+<p>B树和B+树在查询上的优势？磁盘结构？</p>
+<p>SSD时代，B树的意义？</p>
+<p>查询多个字段要注意什么？</p>
+<p>（a，b）索引？a，b，c三列，不走索引的查询（除了a，ab）</p>
+<p>学号姓名+学号成绩=合并-姓名成绩？</p>
+<p>mysql优化手段？？</p>
+<p>数据库死锁定义？避免？</p>
+<h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><p>数据结构？</p>
+<p>跳表底层实现以及复杂度？为何不用红黑树？</p>
+<p>对同一个key的读写是否有竞争，如何避免？</p>
+<p>redis和Mysql的主从复制?</p>
+<p>集群？如何处理宕机？redis同步策略？</p>
+<p>集群部署？</p>
+<p>redis会出现多线程导致数据错乱吗？</p>
+<p>redis快？</p>
+<p>redis6.0引入多线程？？（应对愈加复杂qps要求）</p>
+<p>缓存击穿，雪崩，穿透？</p>
+<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><p>n个节点二叉树有几种形态？</p>
+<p>布隆过滤器（大量文件去重）</p>
+<p>数据结构及其特点？链表增删快，如何提高查询效率？（跳表，B+树）</p>
+<p>大顶堆，小顶堆（优先队列）？</p>
+<p>外部排序，多路归并？</p>
+<p>排序算法的时间空间复杂度（最好，最坏）？稳定性？</p>
+<p>动态规划，分治算法？</p>
+<p>三数之和？</p>
+<p>Arrays.sort（）为何一部分用快排？不用堆排？快排的好处？</p>
+<p>解决hash冲突的各个方法，以及优缺点？</p>
+<p>字符串在文本中出现的次数？</p>
+<p>top k？</p>
+<h3 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h3><p>OSI七层模型？</p>
+<p>TCP、IP的理解？</p>
+<p>TCP，UDP头部有多大？有什么？udp怎么用的？</p>
+<p>TCP可靠性保证？</p>
+<p>TCP流量控制？拥塞控制？</p>
+<p>TCP安全性如何实现？两台服务器之间可以同时建立多条TCP连接吗？</p>
+<p>TCP，UDP的区别？</p>
+<p>设计协议保证UDP可靠传输？</p>
+<p>http是无状态的？如何知道多个请求来自一个用户？</p>
+<p>http状态码？</p>
+<p>https的加密过程？</p>
+<p>数字证书的作用？包含什么？</p>
+<p>访问https站点，弹出广告，是https劫持吗？</p>
+<p>服务器处理一个http请求的过程？</p>
+<p>输入网址到得到返回的网络传输过程？</p>
+<p>长地址请求到服务端，服务端重定向短地址到客户端，如何实现长短地址的相互映射？</p>
+<p>三次握手，两次行不行？</p>
+<p>time-waited为什么是2msl？</p>
+<p>四次挥手？三次行不行？（也可以）</p>
+<p>cookie，session？</p>
+<p>socket？函数调用对应于TCP连接哪一步？</p>
+<p>调用socket返回的是什么？</p>
+<p>监听socket文件描述符具体在内核中怎么实现？</p>
+<p>accept（）过程？调用之后服务端获得了什么？</p>
+<p>服务端怎么判断某条连接建立？客户端调用connect返回什么？怎么判断连接建立？</p>
+<p>阻塞IO-非阻塞IO-多路复用进化过程？</p>
+<h3 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h3><p>用户态和内核态？</p>
+<p>内存管理机制？</p>
+<p>页面淘汰算法？LRU？如何实现？应用场景？</p>
+<p>进程间通信方式（管道，消息队列，共享内存，信号量，信号，socket）</p>
+<p>文件系统？没有文件系统会怎样？</p>
+<p>fork（）？</p>
+<h3 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h3><p>什么是分布式？为什么要分布式？有哪些问题？分布式如何实现事务？</p>
+<p>cp原理？分布式框架？</p>
+<p>consul，zookeeper服务发现机制，区别？</p>
+<p>raft协议？</p>
+<p>服务注册的时候发现没有注册成功是什么原因？</p>
+<p>rpc和service mesh的关系？</p>
+<h3 id="个人"><a href="#个人" class="headerlink" title="个人"></a>个人</h3><p>项目遇到的难题，怎么解决？</p>
+<p>最近看什么书？</p>
+<p>个人规划？</p>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/leetcode-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/leetcode-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">leetcode-贪心算法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-07-30 15:00:40 / 修改时间：16:03:09" itemprop="dateCreated datePublished" datetime="2021-07-30T15:00:40+08:00">2021-07-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
       
     </div>
 
@@ -952,7 +1329,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
   </nav>
 
 
@@ -1020,20 +1397,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-count">48</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

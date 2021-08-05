@@ -104,12 +104,110 @@
   <entry>
     <title>Java基础-常见问题</title>
     <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p>1，==与equals()?</p>
-<p>2，重载与重写</p>
-<p>3，面向对象</p>
-<p>4，String，StringBuffer，StringBuilder</p>
-<p>5，异常体系</p>
-<p>6，IO流</p>
+    <content><![CDATA[<h3 id="关键字总结"><a href="#关键字总结" class="headerlink" title="关键字总结"></a>关键字总结</h3><h4 id="final-关键字"><a href="#final-关键字" class="headerlink" title="final 关键字"></a>final 关键字</h4><p>final 关键字，意思是<strong>最终的、不可修改的</strong>，用来修饰类、方法和变量，具有以下特点：</p>
+<p>final 修饰的类<strong>不能被继承</strong>，final 类中的所有成员方法都会被隐式的指定为 final 方法；</p>
+<p>final 修饰的方法<strong>不能被重写</strong>；</p>
+<p>final <strong>修饰的变量是常量</strong>，如果是基本数据类型的变量，则其数值一旦在初始化之后便不能更改；如果是引用类型的变量，则在对其初始化之后便不能让其指向另一个对象。</p>
+<h4 id="static-关键字"><a href="#static-关键字" class="headerlink" title="static 关键字"></a>static 关键字</h4><p>static 关键字主要有以下四种使用场景：</p>
+<p><strong>修饰成员变量和成员方法:</strong> 被 static 修饰的<strong>成员属于类</strong>，不属于单个这个类的某个对象，被类中所有对象共享，可以并且建议<strong>通过类名调用</strong>。被 static 声明的成员变量属于静态成员变量，静态变量 存放在 Java 内存区域的方法区。</p>
+<p>调用格式：类名.静态变量名 类名.静态方法名()</p>
+<p><strong>静态代码块:</strong> 静态代码块定义在<strong>类中方法外</strong>, 静态代码块在非静态代码块之前执行(静态代码块—&gt;非静态代码块—&gt;构造方法)。 该类不管创建多少对象，静态代码块只执行一次.</p>
+<p><strong>静态内部类（static 修饰类的话只能修饰内部类</strong>）： 静态内部类与非静态内部类之间存在一个最大的区别: 非静态内部类在编译完成之后会隐含地保存着一个引用，该引用是指向创建它的外围类，但是静态内部类却没有。没有这个引用就意味着：</p>
+<ol>
+<li><strong>它的创建是不需要依赖外围类的创建。</strong></li>
+<li>它<strong>不能使用任何外围类的非 static 成员变量和方法。</strong></li>
+</ol>
+<p><strong>静态导包</strong>(用来导入类中的静态资源，1.5 之后的新特性): 格式为：import static 这两个关键字连用可以<strong>指定导入某个类中的指定静态资源</strong>，并且不需要使用类名调用类中静态成员，可以直接使用类中静态成员变量和成员方法。</p>
+<h4 id="this-关键字"><a href="#this-关键字" class="headerlink" title="this 关键字"></a>this 关键字</h4><p>this 关键字用于<strong>引用类的当前实例</strong>。 例如：<br>此关键字是可选的， 但是，使用此关键字可能会使代码更易读或易懂。</p>
+<h4 id="super-关键字"><a href="#super-关键字" class="headerlink" title="super 关键字"></a>super 关键字</h4><p>super 关键字用于<strong>从子类访问父类的变量和方法</strong>。 例如：</p>
+<p>使用 this 和 super 要注意的问题：</p>
+<p>在构造器中使用 <strong>super() 调用父类中的其他构造方法时</strong>，<strong>该语句必须处于构造器的首行</strong>，否则编译器会报错。另外，<strong>this 调用本类中的其他构造方法时，也要放在首行。</strong></p>
+<p><strong>this、super 不能用在 static 方法中。</strong></p>
+<p>被 static 修饰的成员属于类，不属于单个这个类的某个对象，被类中所有对象共享。</p>
+<p><strong>而 this 代表对本类对象的引用，指向本类对象；而 super 代表对父类对象的引用，指向父类对象</strong>；所以， this 和 super 是属于对象范畴的东西，而静态方法是属于类范畴的东西。</p>
+<h3 id="与equals"><a href="#与equals" class="headerlink" title="==与equals()?"></a>==与equals()?</h3><p>==判断两个对象的<strong>地址</strong>是不是相等，<strong>对于基本数据类型：值。引用数据类型：内存地址。</strong><br>equals()没有被覆盖重写，与==一样。</p>
+<p><strong>可以覆盖重写比较引用对象值的大小。</strong><br>举例：String中的equals方法是被重写过的。</p>
+<h4 id="hashcode（）与equal（）？hashset去重？"><a href="#hashcode（）与equal（）？hashset去重？" class="headerlink" title="hashcode（）与equal（）？hashset去重？"></a>hashcode（）与equal（）？hashset去重？</h4><p><strong>为什么要有hashcode？</strong></p>
+<p>当你把对象加⼊ HashSet 时， <strong>HashSet 会先计算对象的 hashcode 值来判断对象加⼊的位置</strong>，同时也会与其他已经加⼊的对象的 hashcode 值比较，如果没有相符的 hashcode， HashSet会假设对象没有重复出现。</p>
+<p>但是如果发现有相同 hashcode 值的对象，这时会调⽤ equals() ⽅法来检查 hashcode 相等的对象是否真的相同。如果两者相同， HashSet 就不会让其加⼊操作成功。如果不同的话，就会重新散列到其他位置。</p>
+<p><strong>这样我们就⼤⼤减少了 equals 的次数，相应就⼤⼤提⾼了执⾏速度。</strong><br><strong>hash优越的查询性能。</strong></p>
+<h4 id="为什么重写equals必须重写hashcode-？"><a href="#为什么重写equals必须重写hashcode-？" class="headerlink" title="为什么重写equals必须重写hashcode()？"></a>为什么重写equals必须重写hashcode()？</h4><p>对象相等，hashcode一定相等，反之不一定（hash碰撞）。<br>hashcode()默认对堆上面的对象产生独特值，hashcode不同，对象一定不同。</p>
+<p>举例：student s1=new student(name=”11”);<br>student s2=new student(name=”11”);</p>
+<p>假如只重写equals而不重写hashcode，那么默认的hashcode方法是根据对象的内存地址经哈希算法得来的，显然此时s1!=s2。然而重写了equals，且s1.equals(s2)返回true。</p>
+<p>根据hashcode的规则，<strong>两个对象相等其哈希值一定相等</strong>，所以矛盾就产生了，因此重写equals一定要重写hashcode。</p>
+<h3 id="重载与重写"><a href="#重载与重写" class="headerlink" title="重载与重写"></a>重载与重写</h3><ol>
+<li><p>重载(overloading) 是在一个类里面，<strong>方法名字相同，而参数不同。返回类型可以相同也可以不同。</strong></p>
+<p>每个重载的方法（或者构造函数）都必须<strong>有一个独一无二的参数类型列表</strong>。</p>
+<p>最常用的地方就是构造器的重载。</p>
+</li>
+<li><p>重写（发生于<strong>运行期</strong>）：<strong>子类继承父类的方法，输入一样，做出不同的操作就要覆盖重写父类方法。</strong></p>
+</li>
+</ol>
+<p>  方法名，参数列表必须一样。</p>
+<p>  抛出异常范围小于父类。<br>  访问修饰符可以降低限制。</p>
+<p>  <strong>父类方法由private，final，static修饰时不能被重写。</strong></p>
+<h3 id="成员变量与局部变量？"><a href="#成员变量与局部变量？" class="headerlink" title="成员变量与局部变量？"></a>成员变量与局部变量？</h3><p>根据定义变量位置的不同，可以将变量分为成员变量和局部变量<br>     成员变量是在<strong>类范围</strong>内定义的变量<br>     局部变量是在<strong>一个方法内</strong>定义的变量<br>1，成员变量可以分为：<br>     实例属性 （不用static修饰）<br>            随着实例属性的存在而存在<br>     类属性 （static修饰）<br>            随着类的存在而存在<br>成员变量无需显式初始化，系统会自动对其进行默认初始化</p>
+<p>2，局部变量可分为：<br>     形参（形式参数）<br>            在整个方法内有效<br>     方法局部变量 （方法内定义）<br>            从定义这个变量开始到方法结束这一段时间内有效<br>     代码块局部变量 （代码块内定义）<br>            从定义这个变量开始到代码块结束这一段时间内有效</p>
+<p><strong>局部变量除了形参外</strong>，<strong>都必须显示初始化</strong>，也就是要指定一个初始值，否则不能访问。<br>java允许局部变量和成员变量重名，<strong>局部变量会覆盖成员变量的值</strong></p>
+<h3 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h3><p><strong>面向过程：以事件为中心，一步一步实现每个步骤。以步骤划分。</strong></p>
+<p>任务明确</p>
+<p>效率高</p>
+<p>扩展性差，复用性弱，逻辑需要深入思考。</p>
+<p><strong>面向对象：以对象为中心，以功能划分，每个对象都有自己的属性与行为。</strong></p>
+<p>程序模块化，结构化。</p>
+<p>易于扩展，维护。</p>
+<p>性能相对于面向过程低。</p>
+<p>java性能相对低的原因主要在于其是半编译语言。</p>
+<p><strong>封装</strong></p>
+<p>封装是指把一个对象的状态信息（也就是属性）隐藏在对象内部，不允许外部对象直接访问对象的内部信息。但是可以<strong>提供一些可以被外界访问的方法来操作属性</strong>。</p>
+<p>就好像我们看不到挂在墙上的空调的内部的零件信息（也就是属性），但是可以通过遥控器（方法）来控制空调。</p>
+<p><strong>继承</strong></p>
+<p>不同类型的对象，<strong>相互之间经常有一定数量的共同点</strong>。例如，小明同学、小红同学、小李同学，都共享学生的特性（班级、学号等）。</p>
+<p>同时，每一个对象还定义了额外的特性使得他们与众不同。例如小明的数学比较好，小红的性格惹人喜爱；小李的力气比较大。</p>
+<p>继承是<strong>使用已存在的类的定义作为基础建立新类的技术</strong>，新类的定义可以<strong>增加新的数据或新的功能，也可以用父类的功能，但不能选择性地继承父类。通过使用继承，可以快速地创建新的类，可以提高代码的重用，程序的可维护性，节省大量创建新类的时间 ，提高我们的开发效率。</strong></p>
+<p>关于继承如下 3 点请记住：</p>
+<p>子类拥有父类对象所有的属性和方法（包括私有属性和私有方法），但是<strong>父类中的私有属性和方法子类是无法访问</strong>，只是拥有。<br>子类可以拥有自己属性和方法，即<strong>子类可以对父类进行扩展。</strong><br>子类可以用自己的方式实现父类的方法。</p>
+<p><strong>多态</strong></p>
+<p>多态，顾名思义，表示<strong>一个对象具有多种的状态</strong>。一种类型的变量可以引用多种实际类型的对象。实现方式：      继承（多个子类重写同一方法）<br>      接口（实现接口并覆盖同一方法）</p>
+<p><strong>多态的特点:</strong></p>
+<p>对象类型和引用类型之间具有<strong>继承（类）/实现（接口）的</strong>关系；<br>引用类型变量发出的方法调用的到底是哪个类中的方法，<strong>必须在程序运行期间才能确定；</strong><br>多态不能调用“只在子类存在但在父类不存在”的方法；<br>如果子类重写了父类的方法，真正执行的是子类覆盖的方法，如果子类没有覆盖父类的方法，执行的是父类的方法。</p>
+<h3 id="hash冲突解决"><a href="#hash冲突解决" class="headerlink" title="hash冲突解决"></a>hash冲突解决</h3><p><strong>开放地址法</strong></p>
+<p>​    线性探测法：冲突之后，在紧跟着的地方安放数据。（大部分的数据都会聚集）。<br>​    二次探测法：往后找1,4,9,16,25,…位置有没有空位。<br>​    再哈希法：多个散列函数。</p>
+<p>链地址法：</p>
+<h3 id="String，StringBuffer，StringBuilder"><a href="#String，StringBuffer，StringBuilder" class="headerlink" title="String，StringBuffer，StringBuilder"></a>String，StringBuffer，StringBuilder</h3><p>String 类中使用 final 关键字修饰字符数组来保存字符串，private final char value[]，所以String 对象是不可变的。</p>
+<p><strong>在 Java 9 之后，String 、StringBuilder 与 StringBuffer 的实现改用 byte 数组存储字符串 private final byte[] value</strong></p>
+<p>而 StringBuilder 与 StringBuffer 都继承自 AbstractStringBuilder 类，在 AbstractStringBuilder 中也是使用字符数组保存字符串char[] value 但是没有用 final 关键字修饰，所以这两种对象都是可变的。</p>
+<p><strong>线程安全性</strong></p>
+<p>String 中的对象是不可变的，也就可以理解为常量<strong>，线程安全。</strong></p>
+<p>AbstractStringBuilder 是 StringBuilder 与 StringBuffer 的公共父类，定义了一些字符串的基本操作，如 expandCapacity、append、insert、indexOf 等公共方法。</p>
+<p>StringBuffer 对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。</p>
+<p>StringBuilder 并没有对方法进行加同步锁，所以是非线程安全的。</p>
+<p><strong>性能</strong></p>
+<p>每次对 String 类型进行改变的时候，都会生成一个新的 String 对象，然后将指针指向新的 String 对象。</p>
+<p>StringBuffer 每次都会对 StringBuffer 对象本身进行操作，而不是生成新的对象并改变对象引用。</p>
+<p>相同情况下使用 StringBuilder 相比使用 StringBuffer 仅能获得 10%~15% 左右的性能提升，但却要冒多线程不安全的风险。</p>
+<p>对于三者使用的总结：</p>
+<p>操作少量的数据: 适用 String<br>单线程操作字符串缓冲区下操作大量数据: 适用 StringBuilder<br>多线程操作字符串缓冲区下操作大量数据: 适用 StringBuffer</p>
+<h3 id="异常体系"><a href="#异常体系" class="headerlink" title="异常体系"></a>异常体系</h3><p><img src="https://i.loli.net/2021/08/05/Hb642mCQlxy3M5o.png" alt="image-20210805134232290"></p>
+<p>自定义异常：继承Exception类。</p>
+<p><strong>异常的处理：</strong></p>
+<ol>
+<li><p>使用try  catch捕获异常。可以有多个catch，总会根据异常的类型优先找到第一个匹配的。因此，基类exception放在前面会导致后面的catch无法执行。</p>
+</li>
+<li><p>重新抛出异常。在catch中可以throw 新的或者原来的异常，表示当前代码不能完全处理。可以通过getCause()获取原始异常。</p>
+</li>
+<li><p>try catch finally。finally中语句始终会执行。适合释放资源，比如数据库连接，文件流释放等等。<br> 如果try  catch中有return，会在finally之后执行，但是finally不能改变其返回值。<br> finally中有return，try catch中的return会丢失，实际上会返回finally中的值。还会掩盖try catch中的异常。</p>
+</li>
+<li><p>try with resourses，用于资源的释放，无需写finally，会自动执行close（）。</p>
+</li>
+<li><p>throws，声明一个方法可能抛出的异常。</p>
+</li>
+</ol>
+<p>  异常体系可以：<strong>对异常集中处理，还可以向上传递，不需要每层都处理，也可以向上传递，也不会被自动忽略。处理异常情况的代码可以大大减少。</strong></p>
+<h3 id="IO流"><a href="#IO流" class="headerlink" title="IO流"></a>IO流</h3><p><img src="https://i.loli.net/2021/08/05/gXcmZMILa2EnuiW.png" alt="image-20210805134331023"></p>
+<p>为何有了字节流，还要有字符流？</p>
+<p><strong>字符流是由java虚拟机将字节流转化而成。这个过程耗时，也容易出错。</strong></p>
+<p>所以提供了字符流，对于字符进行流操作。<br>而对于音频，图片等等推荐字节流。</p>
 ]]></content>
       <categories>
         <category>Java基础</category>
@@ -130,21 +228,80 @@
 <h4 id="实现："><a href="#实现：" class="headerlink" title="实现："></a>实现：</h4><p><img src="https://i.loli.net/2021/08/03/Qdk7pGoAtMq1NmJ.png" alt="image-20210803205028306"></p>
 <h3 id="信号量semaphore"><a href="#信号量semaphore" class="headerlink" title="信号量semaphore"></a>信号量semaphore</h3><p>信号量，用来控制同时访问特定资源的线程数量，它通过协调各个线程以保证合理的使用公共资源，可以用做流量控制，譬如数据库连接场景控制等；</p>
 <p>Semaphore 的构造方法 Semaphore(int permits) 接收一个整型参数，表示可用的许可证数量，即<strong>最大并发数量</strong>，使用方法就是在线程里面首先调用 acquire 方法获取一个许可，使用完后接着调用 <strong>release 归还一个许可，</strong>还可以使用 <strong>tryAcquire 尝试获取许可</strong>。</p>
-<h3 id="倒计时门栓countdownlatch"><a href="#倒计时门栓countdownlatch" class="headerlink" title="倒计时门栓countdownlatch"></a>倒计时门栓countdownlatch</h3><p>允许<strong>一个或者多个线程</strong>等待其他线程完成操作。</p>
-<p>平时我们在主线程等待其他线程结束一般都是在主线程调用其他 Thread 的 join 方法进行阻塞等待，而 join 的实质就是循环判断线程 isAlive 就进行 wait 操作，直到被 join 的线程终止后线程的 this.notifyAll 方法（JVM实现，外部不可见）会被调用进而触发 wait 结束而使 join 阻塞退出；</p>
-<p>并发包提供的 CountDownLatch 也可以实现 join 的功能，而且还提供了比 join 更多的功能。</p>
-<p>CountDownLatch 构造函数<strong>接收一个 int 参数作为计数器</strong>，如果你想等待 N 个计数点完成就传 N，当我们每个点完成时调用 CountDownLatch 的 <strong>countDown</strong> 方法则 N 就会自动减一，CountDownLatch 的 <strong>await 会阻塞当前线程直到 N 变为零为止</strong>，其采用 CAS 和 AQS（AbstractQueuedSynchronizer）实现。</p>
-<h3 id="循环栅栏cyclicbarrier"><a href="#循环栅栏cyclicbarrier" class="headerlink" title="循环栅栏cyclicbarrier"></a>循环栅栏cyclicbarrier</h3><p><strong>同步可循换使用</strong>的屏障，让一组线程<strong>到达一个屏障（同步点）时被阻塞</strong>，直到最后一个线程到达屏障时才会开门，所有被屏障拦截的线程才会继续干活；</p>
-<p>CyclicBarrier 默认的构造方法是 CyclicBarrier(int parties)，其参数表示<strong>屏障拦截的线程数量</strong>，每个线程调用 <strong>await 方法告诉 CyclicBarrier 我已经到达了屏障</strong>，然后当前线程被阻塞；</p>
-<p>CyclicBarrier 还提供一个高级构造函数 CyclicBarrier(int parties, Runnable barrierAction) 用于在线程到达屏障时优先执行 barrierAction，方便处理复杂的业务场景；</p>
-<p>CyclicBarrier 适合<strong>并发计算数据汇总场景</strong>，每个线程负责一部分计算，然后在栅栏处等待，到齐后交换数据结果，进行下一次迭代。</p>
+<h3 id="倒计时门栓countdownlatch"><a href="#倒计时门栓countdownlatch" class="headerlink" title="倒计时门栓countdownlatch"></a>倒计时门栓countdownlatch</h3><p>CountDownLatch <strong>允许 count 个线程阻塞在一个地方</strong>，直至所有线程的任务都执行完毕。</p>
+<p>CountDownLatch 是共享锁的一种实现,它默认构造 AQS 的 state 值为 count。</p>
+<p>线程使用 <strong>countDown()</strong> 方法时,使用了tryReleaseShared方法以 CAS 的操作来<strong>减少 state</strong>,直至 state 为 0 。</p>
+<p>当调用 <strong>await() 方法</strong>的时候，如果 state 不为 0，那就证明任务还没有执行完毕，await() 方法就会一直阻塞，也就是说 <strong>await() 方法之后的语句不会被执行</strong>。然后，CountDownLatch 会自旋 CAS 判断 state == 0，如果 state == 0 的话，就会释放所有等待的线程，await() 方法之后的语句得到执行。</p>
+<h4 id="CountDownLatch-的两种典型用法"><a href="#CountDownLatch-的两种典型用法" class="headerlink" title="CountDownLatch 的两种典型用法"></a>CountDownLatch 的两种典型用法</h4><p>1、某一线程在开始运行前等待 n 个线程执行完毕。</p>
+<p>将 CountDownLatch 的计数器初始化为 n （new CountDownLatch(n)），每当一个任务线程执行完毕，就将计数器减 1 （countdownlatch.countDown()），当计数器的值变为 0 时，在 CountDownLatch 上 await() 的线程就会被唤醒。一个典型应用场景就是<strong>启动一个服务时，主线程需要等待多个组件加载完毕</strong>，之后再继续执行。</p>
+<p>2、实现多个线程开始执行任务的<strong>最大并行性。</strong></p>
+<p>注意是并行性，不是并发，强调的是<strong>多个线程在某一时刻同时开始执行</strong>。类似于赛跑，将多个线程放到起点，等待发令枪响，然后同时开跑。做法是初始化一个共享的 CountDownLatch 对象，将其计数器初始化为 1 （new CountDownLatch(1)），多个线程在开始执行任务前首先 coundownlatch.await()，当主线程调用 countDown() 时，计数器变为 0，多个线程同时被唤醒。</p>
+<h4 id="CountDownLatch-的不足"><a href="#CountDownLatch-的不足" class="headerlink" title="CountDownLatch 的不足"></a>CountDownLatch 的不足</h4><p>CountDownLatch 是一次性的，计数器的值只能在构造方法中初始化一次，之后没有任何机制再次对其设置值，当 CountDownLatch 使用完毕后，它不能再次被使用。</p>
+<h3 id="循环栅栏cyclicbarrier"><a href="#循环栅栏cyclicbarrier" class="headerlink" title="循环栅栏cyclicbarrier"></a>循环栅栏cyclicbarrier</h3><p>CountDownLatch 的实现是基于 AQS 的，而 CycliBarrier 是基于 ReentrantLock(ReentrantLock 也属于 AQS 同步器)和 Condition 的。</p>
+<p>CyclicBarrier 的字面意思是<strong>可循环使用（Cyclic）的屏障（Barrier）</strong>。它要做的事情是：让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续干活。</p>
+<p>CyclicBarrier 默认的构造方法是 CyclicBarrier(int parties)，其参数表示屏障拦截的线程数量，每个线程调用 <strong>await() 方法告诉 CyclicBarrier 我已经到达了屏障，然后当前线程被阻塞。</strong></p>
+<p>CyclicBarrier 内部通过一个 <strong>count 变量作为计数器</strong>，count 的初始值为 parties 属性的初始化值，每当一个线程到了栅栏这里了，那么就将计数器减一。如果 count 值为 0 了，表示这是这一代最后一个线程到达栅栏，就尝试执行我们构造方法中输入的任务。</p>
+<h4 id="CyclicBarrier-的应用场景"><a href="#CyclicBarrier-的应用场景" class="headerlink" title="CyclicBarrier 的应用场景"></a>CyclicBarrier 的应用场景</h4><p>CyclicBarrier 可以用于<strong>多线程计算数据，最后合并计算结果的应用场景</strong>。比如我们用一个 Excel 保存了用户所有银行流水，每个 Sheet 保存一个帐户近一年的每笔银行流水，现在需要统计用户的日均银行流水，先用多线程处理每个 sheet 里的银行流水，都执行完之后，得到每个 sheet 的日均银行流水，最后，再用 barrierAction 用这些线程的计算结果，计算出整个 Excel 的日均银行流水。</p>
+<p>CyclicBarrier 还提供一个更高级的构造函数 CyclicBarrier(int parties, Runnable barrierAction)，用于在线程到达屏障时，优先执行 barrierAction，方便处理更复杂的业务场景。</p>
 <h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p><img src="https://i.loli.net/2021/08/03/OP6kMEHuTK14R89.png" alt="image-20210803210950957"></p>
-<h2 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h2><h2 id="future-futuretask"><a href="#future-futuretask" class="headerlink" title="future/futuretask"></a>future/futuretask</h2>]]></content>
+<p>CountDownLatch 是计数器，<strong>只能使用一次</strong>，而 CyclicBarrier 的计数器提供 reset 功能，<strong>可以多次使用</strong>。</p>
+<p>CountDownLatch: <strong>一个或者多个线程</strong>，等待<strong>其他多个线程完成某件事情之后</strong>才能执行；</p>
+<p>CyclicBarrier : <strong>多个线程互相等待，直到到达同一个同步点，再继续一起执行。</strong></p>
+<p>对于 CountDownLatch 来说，重点是“<strong>一个线程（多个线程）等待</strong>”，而其他的 N 个线程在完成“某件事情”之后，可以终止，也可以等待。</p>
+<p>而对于 CyclicBarrier，重点是<strong>多个线程，在任意一个线程没有完成，所有的线程都必须等待。</strong></p>
+<p>CountDownLatch 是计数器，线程完成一个记录一个，只不过计数不是递增而是递减，而 CyclicBarrier 更像是一个阀门，需要所有线程都到达，阀门才能打开，然后继续执行。</p>
+<h2 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h2><p><img src="https://i.loli.net/2021/08/05/vjqPYt4JX1xfGlk.png" alt="image-20210805141923139"></p>
+<p>线程 1 往阻塞队列中添加元素，而线程 2 从阻塞队列中移除元素</p>
+<p><strong>当阻塞队列是空时</strong>，从队列中获取元素的操作将会被阻塞。</p>
+<p><strong>当阻塞队列是满时</strong>，从队列中添加元素的操作将会被阻塞。</p>
+<p>试图从空的阻塞队列中获取元素的线程将会阻塞，直到其他的线程往空的队列插入新的元素，同样，试图往已满的阻塞队列添加新元素的线程同样也会阻塞，直到其他的线程从列中移除一个或多个元素或者完全清空队列后继续新增。</p>
+<h3 id="为什么要用阻塞队列，有什么好处吗"><a href="#为什么要用阻塞队列，有什么好处吗" class="headerlink" title="为什么要用阻塞队列，有什么好处吗"></a>为什么要用阻塞队列，有什么好处吗</h3><p>在多线程领域：所谓阻塞，是指在某些情况下会<strong>挂起线程（即阻塞）</strong>，一旦条件满足，<strong>被挂起的线程又会自动被唤醒。</strong></p>
+<p>好处是我们<strong>不需要关心什么时候需要阻塞线程，什么时候需要唤醒线程，因为这些 BlockingQueue 都包办了。</strong></p>
+<p>在 concurrent 包发布以前，多线程环境下，我们每个程序员都必须自己去实现这些细节，尤其还要兼顾效率和线程安全，这会给我们的程序带来不小的复杂性。</p>
+<p>JDK 提供了 7 个阻塞队列。分别是</p>
+<p>ArrayBlockingQueue ：一个由数组结构组成的有界阻塞队列<br>LinkedBlockingQueue ：一个由链表结构组成的有界阻塞队列<br>PriorityBlockingQueue ：一个支持优先级排序的无界阻塞队列<br>DelayQueue：一个使用优先级队列实现的无界阻塞队列<br>SynchronousQueue：一个不存储元素的阻塞队列<br>LinkedTransferQueue：一个由链表结构组成的无界阻塞队列（实现了继承于 BlockingQueue的 TransferQueue）<br>LinkedBlockingDeque：一个由链表结构组成的双向阻塞队列</p>
+<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><p><img src="https://i.loli.net/2021/08/05/dv943bwnZLAeIKt.png" alt="image-20210805142222849"></p>
+<h2 id="future-futuretask"><a href="#future-futuretask" class="headerlink" title="future/futuretask"></a>future/futuretask</h2>]]></content>
       <categories>
         <category>Java并发</category>
       </categories>
       <tags>
         <tag>工具类</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java并发-常见关键字</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/</url>
+    <content><![CDATA[<h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p>见《线程安全的机制》</p>
+<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。</p>
+<p>CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。</p>
+<p>CAS虽然很高效的解决了原子操作问题，但是CAS仍然存在三大问题。</p>
+<p><strong>循环时间长开销很大。</strong><br><strong>只能保证一个共享变量的原子操作。</strong><br><strong>ABA问题。</strong></p>
+<p><strong>如果CAS失败，会一直进行尝试</strong>。如果CAS长时间一直不成功，可能会给CPU带来很大的开销。</p>
+<p>当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候就可以用锁来保证原子性。</p>
+<p>如果值曾经被改成了B，后来又被改回为A，那CAS操作就会误认为它从来没有被改变过。这个漏洞称为CAS操作的“ABA”问题。</p>
+<p>Java并发包为了解决这个问题，提供了一个<strong>带有标记的原子引用类“AtomicStampedReference”，</strong>它可以通过<strong>控制变量值的版本</strong>来保证CAS的正确性。因此，在使用CAS前要考虑清楚“ABA”问题是否会影响程序并发的正确性，如果需要解决ABA问题，改用传统的互斥同步可能会比原子类更高效。</p>
+<h3 id="AQS-抽象队列同步器"><a href="#AQS-抽象队列同步器" class="headerlink" title="AQS-抽象队列同步器"></a>AQS-抽象队列同步器</h3><p><img src="https://i.loli.net/2021/08/03/ovkD8F5rExbgpBq.png" alt="image-20210803192200462"></p>
+<p><strong>AQS 核心思想是，</strong>如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设置为锁定状态。<strong>如果被请求的共享资源被占用</strong>，那么就需要一套线程阻塞等待以及被唤醒时锁分配的机制，这个机制 AQS 是用 <strong>CLH 队列锁</strong>实现的，即将暂时获取不到锁的线程加入到队列中。</p>
+<p>CLH(Craig,Landin,and Hagersten)队列是一个<strong>虚拟的双向队列</strong>（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将<strong>每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点</strong>（Node）来实现锁的分配。</p>
+<p><img src="https://i.loli.net/2021/08/05/FMUxJCKm7Gkn8Hv.png" alt="image-20210805140155989"></p>
+<p>AQS 使用一个 int 成员变量来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。</p>
+<h4 id="AQS-对资源的共享方式"><a href="#AQS-对资源的共享方式" class="headerlink" title="AQS 对资源的共享方式"></a>AQS 对资源的共享方式</h4><p><strong>AQS 定义两种资源共享方式</strong></p>
+<h5 id="Exclusive（独占）"><a href="#Exclusive（独占）" class="headerlink" title="Exclusive（独占）"></a>Exclusive（独占）</h5><p><strong>只有一个线程能执行</strong>，如 ReentrantLock。又可分为公平锁和非公平锁，ReentrantLock 同时支持两种锁，下面以 ReentrantLock 对这两种锁的定义做介绍：</p>
+<p>公平锁 ：<strong>按照线程在队列中的排队顺序，先到者先拿到锁</strong><br>非公平锁 ：当线程要获取锁时，先通过<strong>两次 CAS 操作去抢锁</strong>，如果没抢到，当前线程再加入到队列中等待唤醒。</p>
+<p>ReentrantLock 默认采用<strong>非公平锁</strong>，<strong>因为考虑获得更好的性能</strong>，通过 boolean 来决定是否用公平锁（传入 true 用公平锁）。</p>
+<p>非公平锁在<strong>调用 lock</strong> 后，首先就会调用 CAS 进行一次抢锁，如果这个时候恰巧锁没有被占用，那么直接就获取到锁返回了。<br>非公平锁<strong>在 CAS 失败后</strong>，和公平锁一样都会进入到 <strong>tryAcquire 方法</strong>，在 tryAcquire 方法中，如果发现锁这个时候被释放了（state == 0），<strong>非公平锁会直接 CAS 抢锁</strong>，<strong>但是公平锁会判断等待队列是否有线程处于等待状态，如果有则不去抢锁，乖乖排到后面。</strong></p>
+<p>公平锁和非公平锁就这两点区别，<strong>如果这两次 CAS 都不成功，那么后面非公平锁和公平锁是一样的，都要进入到阻塞队列等待唤醒。</strong></p>
+<p>相对来说，<strong>非公平锁会有更好的性能，因为它的吞吐量比较大</strong>。当然，非公平锁让获取锁的时间变得更加不确定，可能会导致在阻塞队列中的线程长期处于饥饿状态。</p>
+<h5 id="Share（共享）"><a href="#Share（共享）" class="headerlink" title="Share（共享）"></a>Share（共享）</h5><p>多个线程可同时执行，如Semaphore、CountDownLatCh、 CyclicBarrier、ReadWriteLock 。</p>
+<p>ReentrantReadWriteLock 可以看成是组合式，因为 ReentrantReadWriteLock 也就是读写锁允许多个线程同时对某一资源进行读。</p>
+<p>不同的<strong>自定义同步器</strong>争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队/唤醒出队等），AQS 已经在上层已经帮我们实现好了。</p>
+]]></content>
+      <categories>
+        <category>Java并发</category>
+      </categories>
+      <tags>
+        <tag>关键字</tag>
       </tags>
   </entry>
   <entry>
@@ -183,8 +340,16 @@
 <p>直接执行run就相当于执行main中的普通方法了，就不是多线程了。</p>
 <p><strong>实现runnable接口</strong>，重写run，启动start。</p>
 <p>java只支持单继承，因此引入runnable接口。</p>
-<p><strong>实现callable接口</strong>，覆盖call（）方法。</p>
+<p><strong>通过 Callable 和 Future 创建线程。</strong>覆盖call（）方法。</p>
 <p>可以获得任务执行返回值；</p>
+<ol>
+<li><strong>创建 Callable 接口的实现类</strong>，并实现 call() 方法，该 call() 方法将作为线程执行体，并且有返回值。</li>
+<li>创建 <strong>Callable 实现类的实例</strong>，使用 <strong>FutureTask 类来包装 Callable 对象</strong>，该 FutureTask 对象封装了该 Callable 对象的 call() 方法的返回值。</li>
+<li>使用 <strong>FutureTask 对象作为 Thread 对象的 target</strong> 创建并启动新线程。</li>
+<li>调用 <strong>FutureTask 对象的 get() 方法来获得子线程执行结束后的返回值</strong>。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class CallableThreadTest implements Callable&lt;Integer&gt; &#123;</span><br><span class="line">    public static void main(String[] args)&#123;  </span><br><span class="line">        CallableThreadTest ctt = new CallableThreadTest();  </span><br><span class="line">        FutureTask&lt;Integer&gt; ft = new FutureTask&lt;&gt;(ctt);  </span><br><span class="line">        for(int i = 0;i &lt; 100;i++)&#123;  </span><br><span class="line">            System.out.println(Thread.currentThread().getName()+&quot; 的循环变量i的值&quot;+i);  </span><br><span class="line">            if(i==20)&#123;  </span><br><span class="line">                new Thread(ft,&quot;有返回值的线程&quot;).start();  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;try&#123;  </span><br><span class="line">            System.out.println(&quot;子线程的返回值：&quot;+ft.get());  </span><br><span class="line">        &#125; catch (InterruptedException e)&#123;  </span><br><span class="line">            e.printStackTrace();  </span><br><span class="line">        &#125; catch (ExecutionException e)&#123;  </span><br><span class="line">            e.printStackTrace();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br><span class="line">    @Override  </span><br><span class="line">    public Integer call() throws Exception&#123;  </span><br><span class="line">        int i = 0;  </span><br><span class="line">        for(;i&lt;100;i++)&#123;  </span><br><span class="line">            System.out.println(Thread.currentThread().getName()+&quot; &quot;+i);  </span><br><span class="line">        &#125;  </span><br><span class="line">        return i;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>通过与Future的结合，可以实现利用Future来跟踪异步计算的结果。</p>
 <p>JDK5.0新特性。需要借助Future接口的唯一实现类<strong>FutureTask</strong>辅助线程的对象创建和返回值获取（FutureTask还实现了Runnable接口），再创建Thread对象，将FutureTask类的对象作为构造器参数传入，完成线程的创建，最后调用start()方法完成线程启动。</p>
 <p><strong>Runnable和Callable的区别：</strong></p>
@@ -266,92 +431,6 @@
       </categories>
       <tags>
         <tag>并发容器</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java并发-常见关键字</title>
-    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/</url>
-    <content><![CDATA[<p>synchronized</p>
-<p>CAS</p>
-<p>AQS</p>
-<p><img src="https://i.loli.net/2021/08/03/ovkD8F5rExbgpBq.png" alt="image-20210803192200462"></p>
-]]></content>
-      <categories>
-        <category>Java并发</category>
-      </categories>
-      <tags>
-        <tag>关键字</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java虚拟机-String-table</title>
-    <url>/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-String-table/</url>
-    <content><![CDATA[<h3 id="String的基本特性"><a href="#String的基本特性" class="headerlink" title="String的基本特性"></a>String的基本特性</h3><p>String：字符串，使用一对 “” 引起来表示<br>String s1 = “qweq” ;               // 字面量的定义方式<br>String s2 =  new String(“hello”);     // new 对象的方式</p>
-<p>String被声明为final的，不可被继承</p>
-<p>String实现了Serializable接口：表示字符串是支持序列化的。实现了Comparable接口：表示String可以比较大小</p>
-<p><strong>String在jdk8及以前内部定义了final char value[]用于存储字符串数据。JDK9时改为byte[]</strong></p>
-<h4 id="为什么-JDK9-改变了-String-的结构"><a href="#为什么-JDK9-改变了-String-的结构" class="headerlink" title="为什么 JDK9 改变了 String 的结构"></a>为什么 JDK9 改变了 String 的结构</h4><p>为什么改为 byte[] 存储？<br>String类的当前实现将字符存储在char数组中，<strong>每个字符使用两个字节(16位)。</strong><br>从许多不同的应用程序收集的数据表明，字符串是堆使用的主要组成部分，而且大多数字符串对象只包含拉丁字符（Latin-1）。这些字符只需要一个字节的存储空间，因此这些字符串对象的内部char数组中有一半的空间将不会使用，产生了大量浪费。</p>
-<p>之前 String 类使用 UTF-16 的 char[] 数组存储，现在改为 byte[] 数组，<strong>外加一个编码标识存储。该编码表示如果你的字符是ISO-8859-1或者Latin-1，那么只需要一个字节存。如果你是其它字符集，比如UTF-8，你仍然用两个字节存。</strong><br>结论：String再也不用char[] 来存储了，改成了byte [] 加上编码标记，<strong>节约了一些空间</strong><br>同时基于String的数据结构，例如StringBuffer和StringBuilder也同样做了修改。</p>
-<p>String：代表不可变的字符序列。简称：<strong>不可变性。</strong></p>
-<p>当对字符串重新赋值时，<strong>需要重写指定内存区域赋值</strong>，不能使用原有的value进行赋值。</p>
-<p>当对现有的字符串进行连接操作时，也需要重新指定内存区域赋值，不能使用原有的value进行赋值。</p>
-<p>当调用String的replace()方法修改指定字符或字符串时，也需要重新指定内存区域赋值，不能使用原有的value进行赋值。</p>
-<p>通过<strong>字面量的方式（区别于new）给一个字符串赋值</strong>，此时的字符串值声明在<strong>字符串常量池</strong>中。<br>当对字符串重新赋值时，需要重写指定内存区域赋值，不能使用原有的value进行赋值</p>
-<h3 id="String-的底层结构"><a href="#String-的底层结构" class="headerlink" title="String 的底层结构"></a>String 的底层结构</h3><p>字符串常量池是<strong>不会存储相同内容的字符串的</strong></p>
-<p>String的String Pool（字符串常量池）是一个<strong>固定大小的Hashtable，默认值大小长度是60013</strong>。如果放进String Pool的String非常多，就会造成Hash冲突严重，从而导致链表会很长，而链表长了后直接会造成的影响就是当调用String.intern()方法时性能会大幅下降。</p>
-<p>使用-XX:StringTablesize可设置StringTable的长度<br>在JDK6中StringTable是固定的，就是1009的长度，所以如果常量池中的字符串过多就会导致效率下降很快，StringTablesize设置没有要求<br>在JDK7中，StringTable的长度默认值是60013，StringTablesize设置没有要求<br>在JDK8中，StringTable的长度默认值是60013，StringTable可以设置的最小值为1009</p>
-<h3 id="String-的内存分配"><a href="#String-的内存分配" class="headerlink" title="String 的内存分配"></a>String 的内存分配</h3><p>在Java语言中有8种基本数据类型和一种比较特殊的类型String。这些类型为了使它们在运行过程中速度更快、更节省内存，都提供了一种<strong>常量池</strong>的概念。</p>
-<p>常量池就类似一个<strong>Java系统级别提供的缓存</strong>。8种基本数据类型的常量池都是系统协调的，String类型的常量池比较特殊。</p>
-<p>它的主要使用方法有两种。<br>直接使用双引号声明出来的String对象会直接存储在常量池中。比如：String info=”xy.com”;<br>如果不是用双引号声明的String对象，可以使用String提供的intern()方法。</p>
-<p>Java 6及以前，字符串常量池存放在<strong>永久代</strong><br>Java 7中 Oracle的工程师对字符串池的逻辑做了很大的改变，即将字符串常量池的位置<strong>调整到Java堆内</strong><br><strong>所有的字符串都保存在堆（Heap）中</strong>，和其他普通对象一样，这样可以让你在进行调优应用时仅需要调整堆大小就可以了。<br>字符串常量池概念原本使用得比较多，但是这个改动使得我们有足够的理由让我们重新考虑在Java 7中使用String.intern()。<br>Java8<strong>元空间，字符串常量在堆</strong></p>
-<h3 id="StringTable-为什么要调整？"><a href="#StringTable-为什么要调整？" class="headerlink" title="StringTable 为什么要调整？"></a>StringTable 为什么要调整？</h3><p>为什么要调整位置？</p>
-<p>1，永久代的默认空间大小比较小<br>2，永久代垃圾回收频率低，大量的字符串无法及时回收，容易进行Full GC产生STW或者容易产生OOM：PermGen Space<br><strong>堆中空间足够大，字符串可被及时回收</strong></p>
-<h3 id="字符串拼接操作"><a href="#字符串拼接操作" class="headerlink" title="字符串拼接操作"></a>字符串拼接操作</h3><p><strong>常量与常量的拼接结果在常量池，原理是编译期优化</strong></p>
-<p>常量池中不会存在相同内容的变量<br>拼接前后，只要其中有一个是变量，结果就在堆中。变量拼接的原理是StringBuilder<br>如果拼接的结果调用intern()方法，根据该字符串是否在常量池中存在，分为：</p>
-<p>如果存在，则返回字符串在常量池中的地址。<br>如果字符串常量池中不存在该字符串，则在常量池中创建一份，并返回此对象的地址。</p>
-<p>1、常量与常量的拼接结果在常量池，原理是编译期优化。</p>
-<p>2、拼接前后，只要其中有一个是变量，结果就在堆中<br>调用 intern() 方法，则主动将字符串对象存入字符串常量池中，并将其地址返回</p>
-<p><strong>通过StringBuilder的append()的方式添加字符串的效率要远高于使用String的字符串拼接方式！</strong></p>
-<p>原因：</p>
-<p><strong>StringBuilder的append()的方式：</strong><br>自始至终中只创建过一个StringBuilder的对象<br><strong>使用String的字符串拼接方式：</strong><br>创建过多个StringBuilder和String（调的toString方法）的对象，内存占用更大；</p>
-<p>如果进行GC，需要花费额外的时间（在拼接的过程中产生的一些中间字符串可能永远也用不到，会产生大量垃圾字符串）。</p>
-<p>改进的空间：</p>
-<p>在实际开发中，如果基本确定要前前后后添加的字符串长度不高于某个限定值highLevel的情况下，建议使用构造器实例化：<br>StringBuilder s = new StringBuilder(highLevel); //new char[highLevel]<br>这样可以避免频繁扩容</p>
-<h3 id="intern-的使用"><a href="#intern-的使用" class="headerlink" title="intern() 的使用"></a>intern() 的使用</h3><p>intern() 方法的说明<br>public native String intern();</p>
-<p>intern是一个native方法，调用的是底层C的方法</p>
-<p>字符串常量池池最初是空的，由String类私有地维护。<strong>在调用intern方法时，如果池中已经包含了由equals(object)方法确定的与该字符串内容相等的字符串，则返回池中的字符串地址。否则，该字符串对象将被添加到池中，并返回对该字符串对象的地址。</strong>（这是源码里的大概翻译）</p>
-<p>如果不是用双引号声明的String对象，可以使用String提供的intern方法：intern方法会从字符串常量池中查询当前字符串是否存在，若不存在就会将当前字符串放入常量池中。比如：<br> String myInfo = new string(“I love atguigu”).intern();<br>也就是说，如果在任意字符串上调用String.intern方法，那么其返回结果所指向的那个类实例，必须和直接以常量形式出现的字符串实例完全相同。因此，下列表达式的值必定是true<br> (“a”+”b”+”c”).intern()= =”abc”<br>通俗点讲，<strong>Interned String就是确保字符串在内存里只有一份拷贝，这样可以节约内存空间，加快字符串操作任务的执行速度。</strong>注意，这个值会被存放在字符串内部池（String Intern Pool）</p>
-<h3 id="new-String-“a”-new-String-“b”-？"><a href="#new-String-“a”-new-String-“b”-？" class="headerlink" title="new String(“a”) + new String(“b”)？"></a>new String(“a”) + new String(“b”)？</h3><p>对象1：new StringBuilder()<br>对象2： new String(“a”)<br>对象3： 常量池中的”a”<br>对象4： new String(“b”)<br>对象5： 常量池中的”b”<br>    深入剖析： StringBuilder的toString():<br>对象6 ：new String(“ab”)<br>强调一下，toString()的调用，在字符串常量池中，没有生成”ab”</p>
-<p>可能是4，5，6个。</p>
-<p><strong>如何保证变量s指向的是字符串常量池中的数据呢？</strong></p>
-<p>有两种方式：</p>
-<ul>
-<li>方式一： String s = “shkstart”;//字面量定义的方式</li>
-<li>方式二： 调用intern()</li>
-<li><pre><code>    String s = new String(&quot;shkstart&quot;).intern();
-</code></pre>
-</li>
-<li><pre><code>    String s = new StringBuilder(&quot;shkstart&quot;).toString().intern();
-</code></pre>
-</li>
-</ul>
-<p>对于程序中大量存在存在的字符串，尤其其中存在很多重复字符串时，使用intern()可以节省内存空间。</p>
-<p>1、直接 new String ：由于每个 String 对象都是 new 出来的，所以程序需要维护大量存放在堆空间中的 String 实例，程序内存占用也会变高<br>2、使用 intern() 方法：由于数组中字符串的引用都指向字符串常量池中的字符串，所以程序需要维护的 String 对象更少，内存占用也更低</p>
-<p>//<strong>调用了intern()方法使用了字符串常量池里的字符串，那么前面堆里的字符串便会被GC掉</strong>，这也是intern省内存的关键原因</p>
-<p>对于程序中大量使用存在的字符串时，尤其存在很多<strong>已经重复的字符</strong>串时，使用intern()方法能够节省很大的内存空间。<br>大的网站平台，需要内存中存储大量的字符串。比如社交网站，很多人都存储：北京市、海淀区等信息。这时候如果字符串都调用intern() 方法，就会很明显降低内存的大小。</p>
-<h3 id="StringTable-的垃圾回收"><a href="#StringTable-的垃圾回收" class="headerlink" title="StringTable 的垃圾回收"></a>StringTable 的垃圾回收</h3><h4 id="G1-中的-String-去重操作"><a href="#G1-中的-String-去重操作" class="headerlink" title="G1 中的 String 去重操作"></a>G1 中的 String 去重操作</h4><p>String去重操作的背景</p>
-<p>注意不是字符串常量池的去重操作，<strong>字符串常量池本身就没有重复的</strong><br>背景：对许多Java应用（有大的也有小的）做的测试得出以下结果：<br>堆存活数据集合里面String对象占了25%<br>堆存活数据集合里面重复的String对象有13.5%<br>String对象的平均长度是45</p>
-<p>许多大规模的Java应用的瓶颈在于内存，测试表明，在这些类型的应用里面，<strong>Java堆中存活的数据集合差不多25%是String对象。更进一步，这里面差不多一半String对象是重复的</strong>，重复的意思是说：str1.equals(str2)= true。堆上存在重复的String对象必然是一种内存的浪费。</p>
-<p>这个项目将在G1垃圾收集器中实现自动持续对重复的String对象进行去重，这样就能避免浪费内存。</p>
-<h4 id="String-去重的的实现"><a href="#String-去重的的实现" class="headerlink" title="String 去重的的实现"></a>String 去重的的实现</h4><p>当垃圾收集器工作的时候，会访问堆上存活的对象。对每一个访问的对象都会检查是否是候选的要去重的String对象。<br>如果是，把<strong>这个对象的一个引用插入到队列中等待后续的处理。</strong>一个去重的线程在后台运行，处理这个队列。处理队列的一个元素意味着从队列删除这个元素，然后尝试去重它引用的String对象。</p>
-<p>使用一个Hashtable来记录所有的被String对象使用的不重复的char数组。当去重的时候，会查这个Hashtable，来看堆上是否已经存在一个一模一样的char数组。</p>
-<p>如果存在，String对象会被调整引用那个数组，释放对原来的数组的引用，最终会被垃圾收集器回收掉。<br>如果查找失败，<strong>char数组会被插入到Hashtable，这样以后的时候就可以共享这个数组了。</strong></p>
-]]></content>
-      <categories>
-        <category>JVM</category>
-      </categories>
-      <tags>
-        <tag>底层</tag>
       </tags>
   </entry>
   <entry>
@@ -509,10 +588,81 @@
       </tags>
   </entry>
   <entry>
+    <title>Java虚拟机-String-table</title>
+    <url>/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-String-table/</url>
+    <content><![CDATA[<h3 id="String的基本特性"><a href="#String的基本特性" class="headerlink" title="String的基本特性"></a>String的基本特性</h3><p>String：字符串，使用一对 “” 引起来表示<br>String s1 = “qweq” ;               // 字面量的定义方式<br>String s2 =  new String(“hello”);     // new 对象的方式</p>
+<p>String被声明为final的，不可被继承</p>
+<p>String实现了Serializable接口：表示字符串是支持序列化的。实现了Comparable接口：表示String可以比较大小</p>
+<p><strong>String在jdk8及以前内部定义了final char value[]用于存储字符串数据。JDK9时改为byte[]</strong></p>
+<h4 id="为什么-JDK9-改变了-String-的结构"><a href="#为什么-JDK9-改变了-String-的结构" class="headerlink" title="为什么 JDK9 改变了 String 的结构"></a>为什么 JDK9 改变了 String 的结构</h4><p>为什么改为 byte[] 存储？<br>String类的当前实现将字符存储在char数组中，<strong>每个字符使用两个字节(16位)。</strong><br>从许多不同的应用程序收集的数据表明，字符串是堆使用的主要组成部分，而且大多数字符串对象只包含拉丁字符（Latin-1）。这些字符只需要一个字节的存储空间，因此这些字符串对象的内部char数组中有一半的空间将不会使用，产生了大量浪费。</p>
+<p>之前 String 类使用 UTF-16 的 char[] 数组存储，现在改为 byte[] 数组，<strong>外加一个编码标识存储。该编码表示如果你的字符是ISO-8859-1或者Latin-1，那么只需要一个字节存。如果你是其它字符集，比如UTF-8，你仍然用两个字节存。</strong><br>结论：String再也不用char[] 来存储了，改成了byte [] 加上编码标记，<strong>节约了一些空间</strong><br>同时基于String的数据结构，例如StringBuffer和StringBuilder也同样做了修改。</p>
+<p>String：代表不可变的字符序列。简称：<strong>不可变性。</strong></p>
+<p>当对字符串重新赋值时，<strong>需要重写指定内存区域赋值</strong>，不能使用原有的value进行赋值。</p>
+<p>当对现有的字符串进行连接操作时，也需要重新指定内存区域赋值，不能使用原有的value进行赋值。</p>
+<p>当调用String的replace()方法修改指定字符或字符串时，也需要重新指定内存区域赋值，不能使用原有的value进行赋值。</p>
+<p>通过<strong>字面量的方式（区别于new）给一个字符串赋值</strong>，此时的字符串值声明在<strong>字符串常量池</strong>中。<br>当对字符串重新赋值时，需要重写指定内存区域赋值，不能使用原有的value进行赋值</p>
+<h3 id="String-的底层结构"><a href="#String-的底层结构" class="headerlink" title="String 的底层结构"></a>String 的底层结构</h3><p>字符串常量池是<strong>不会存储相同内容的字符串的</strong></p>
+<p>String的String Pool（字符串常量池）是一个<strong>固定大小的Hashtable，默认值大小长度是60013</strong>。如果放进String Pool的String非常多，就会造成Hash冲突严重，从而导致链表会很长，而链表长了后直接会造成的影响就是当调用String.intern()方法时性能会大幅下降。</p>
+<p>使用-XX:StringTablesize可设置StringTable的长度<br>在JDK6中StringTable是固定的，就是1009的长度，所以如果常量池中的字符串过多就会导致效率下降很快，StringTablesize设置没有要求<br>在JDK7中，StringTable的长度默认值是60013，StringTablesize设置没有要求<br>在JDK8中，StringTable的长度默认值是60013，StringTable可以设置的最小值为1009</p>
+<h3 id="String-的内存分配"><a href="#String-的内存分配" class="headerlink" title="String 的内存分配"></a>String 的内存分配</h3><p>在Java语言中有8种基本数据类型和一种比较特殊的类型String。这些类型为了使它们在运行过程中速度更快、更节省内存，都提供了一种<strong>常量池</strong>的概念。</p>
+<p>常量池就类似一个<strong>Java系统级别提供的缓存</strong>。8种基本数据类型的常量池都是系统协调的，String类型的常量池比较特殊。</p>
+<p>它的主要使用方法有两种。<br>直接使用双引号声明出来的String对象会直接存储在常量池中。比如：String info=”xy.com”;<br>如果不是用双引号声明的String对象，可以使用String提供的intern()方法。</p>
+<p>Java 6及以前，字符串常量池存放在<strong>永久代</strong><br>Java 7中 Oracle的工程师对字符串池的逻辑做了很大的改变，即将字符串常量池的位置<strong>调整到Java堆内</strong><br><strong>所有的字符串都保存在堆（Heap）中</strong>，和其他普通对象一样，这样可以让你在进行调优应用时仅需要调整堆大小就可以了。<br>字符串常量池概念原本使用得比较多，但是这个改动使得我们有足够的理由让我们重新考虑在Java 7中使用String.intern()。<br>Java8<strong>元空间，字符串常量在堆</strong></p>
+<h3 id="StringTable-为什么要调整？"><a href="#StringTable-为什么要调整？" class="headerlink" title="StringTable 为什么要调整？"></a>StringTable 为什么要调整？</h3><p>为什么要调整位置？</p>
+<p>1，永久代的默认空间大小比较小<br>2，永久代垃圾回收频率低，大量的字符串无法及时回收，容易进行Full GC产生STW或者容易产生OOM：PermGen Space<br><strong>堆中空间足够大，字符串可被及时回收</strong></p>
+<h3 id="字符串拼接操作"><a href="#字符串拼接操作" class="headerlink" title="字符串拼接操作"></a>字符串拼接操作</h3><p><strong>常量与常量的拼接结果在常量池，原理是编译期优化</strong></p>
+<p>常量池中不会存在相同内容的变量<br>拼接前后，只要其中有一个是变量，结果就在堆中。变量拼接的原理是StringBuilder<br>如果拼接的结果调用intern()方法，根据该字符串是否在常量池中存在，分为：</p>
+<p>如果存在，则返回字符串在常量池中的地址。<br>如果字符串常量池中不存在该字符串，则在常量池中创建一份，并返回此对象的地址。</p>
+<p>1、常量与常量的拼接结果在常量池，原理是编译期优化。</p>
+<p>2、拼接前后，只要其中有一个是变量，结果就在堆中<br>调用 intern() 方法，则主动将字符串对象存入字符串常量池中，并将其地址返回</p>
+<p><strong>通过StringBuilder的append()的方式添加字符串的效率要远高于使用String的字符串拼接方式！</strong></p>
+<p>原因：</p>
+<p><strong>StringBuilder的append()的方式：</strong><br>自始至终中只创建过一个StringBuilder的对象<br><strong>使用String的字符串拼接方式：</strong><br>创建过多个StringBuilder和String（调的toString方法）的对象，内存占用更大；</p>
+<p>如果进行GC，需要花费额外的时间（在拼接的过程中产生的一些中间字符串可能永远也用不到，会产生大量垃圾字符串）。</p>
+<p>改进的空间：</p>
+<p>在实际开发中，如果基本确定要前前后后添加的字符串长度不高于某个限定值highLevel的情况下，建议使用构造器实例化：<br>StringBuilder s = new StringBuilder(highLevel); //new char[highLevel]<br>这样可以避免频繁扩容</p>
+<h3 id="intern-的使用"><a href="#intern-的使用" class="headerlink" title="intern() 的使用"></a>intern() 的使用</h3><p>intern() 方法的说明<br>public native String intern();</p>
+<p>intern是一个native方法，调用的是底层C的方法</p>
+<p>字符串常量池池最初是空的，由String类私有地维护。<strong>在调用intern方法时，如果池中已经包含了由equals(object)方法确定的与该字符串内容相等的字符串，则返回池中的字符串地址。否则，该字符串对象将被添加到池中，并返回对该字符串对象的地址。</strong>（这是源码里的大概翻译）</p>
+<p>如果不是用双引号声明的String对象，可以使用String提供的intern方法：intern方法会从字符串常量池中查询当前字符串是否存在，若不存在就会将当前字符串放入常量池中。比如：<br> String myInfo = new string(“I love atguigu”).intern();<br>也就是说，如果在任意字符串上调用String.intern方法，那么其返回结果所指向的那个类实例，必须和直接以常量形式出现的字符串实例完全相同。因此，下列表达式的值必定是true<br> (“a”+”b”+”c”).intern()= =”abc”<br>通俗点讲，<strong>Interned String就是确保字符串在内存里只有一份拷贝，这样可以节约内存空间，加快字符串操作任务的执行速度。</strong>注意，这个值会被存放在字符串内部池（String Intern Pool）</p>
+<h3 id="new-String-“a”-new-String-“b”-？"><a href="#new-String-“a”-new-String-“b”-？" class="headerlink" title="new String(“a”) + new String(“b”)？"></a>new String(“a”) + new String(“b”)？</h3><p>对象1：new StringBuilder()<br>对象2： new String(“a”)<br>对象3： 常量池中的”a”<br>对象4： new String(“b”)<br>对象5： 常量池中的”b”<br>    深入剖析： StringBuilder的toString():<br>对象6 ：new String(“ab”)<br>强调一下，toString()的调用，在字符串常量池中，没有生成”ab”</p>
+<p>可能是4，5，6个。</p>
+<p><strong>如何保证变量s指向的是字符串常量池中的数据呢？</strong></p>
+<p>有两种方式：</p>
+<ul>
+<li>方式一： String s = “shkstart”;//字面量定义的方式</li>
+<li>方式二： 调用intern()</li>
+<li><pre><code>    String s = new String(&quot;shkstart&quot;).intern();
+</code></pre>
+</li>
+<li><pre><code>    String s = new StringBuilder(&quot;shkstart&quot;).toString().intern();
+</code></pre>
+</li>
+</ul>
+<p>对于程序中大量存在存在的字符串，尤其其中存在很多重复字符串时，使用intern()可以节省内存空间。</p>
+<p>1、直接 new String ：由于每个 String 对象都是 new 出来的，所以程序需要维护大量存放在堆空间中的 String 实例，程序内存占用也会变高<br>2、使用 intern() 方法：由于数组中字符串的引用都指向字符串常量池中的字符串，所以程序需要维护的 String 对象更少，内存占用也更低</p>
+<p>//<strong>调用了intern()方法使用了字符串常量池里的字符串，那么前面堆里的字符串便会被GC掉</strong>，这也是intern省内存的关键原因</p>
+<p>对于程序中大量使用存在的字符串时，尤其存在很多<strong>已经重复的字符</strong>串时，使用intern()方法能够节省很大的内存空间。<br>大的网站平台，需要内存中存储大量的字符串。比如社交网站，很多人都存储：北京市、海淀区等信息。这时候如果字符串都调用intern() 方法，就会很明显降低内存的大小。</p>
+<h3 id="StringTable-的垃圾回收"><a href="#StringTable-的垃圾回收" class="headerlink" title="StringTable 的垃圾回收"></a>StringTable 的垃圾回收</h3><h4 id="G1-中的-String-去重操作"><a href="#G1-中的-String-去重操作" class="headerlink" title="G1 中的 String 去重操作"></a>G1 中的 String 去重操作</h4><p>String去重操作的背景</p>
+<p>注意不是字符串常量池的去重操作，<strong>字符串常量池本身就没有重复的</strong><br>背景：对许多Java应用（有大的也有小的）做的测试得出以下结果：<br>堆存活数据集合里面String对象占了25%<br>堆存活数据集合里面重复的String对象有13.5%<br>String对象的平均长度是45</p>
+<p>许多大规模的Java应用的瓶颈在于内存，测试表明，在这些类型的应用里面，<strong>Java堆中存活的数据集合差不多25%是String对象。更进一步，这里面差不多一半String对象是重复的</strong>，重复的意思是说：str1.equals(str2)= true。堆上存在重复的String对象必然是一种内存的浪费。</p>
+<p>这个项目将在G1垃圾收集器中实现自动持续对重复的String对象进行去重，这样就能避免浪费内存。</p>
+<h4 id="String-去重的的实现"><a href="#String-去重的的实现" class="headerlink" title="String 去重的的实现"></a>String 去重的的实现</h4><p>当垃圾收集器工作的时候，会访问堆上存活的对象。对每一个访问的对象都会检查是否是候选的要去重的String对象。<br>如果是，把<strong>这个对象的一个引用插入到队列中等待后续的处理。</strong>一个去重的线程在后台运行，处理这个队列。处理队列的一个元素意味着从队列删除这个元素，然后尝试去重它引用的String对象。</p>
+<p>使用一个Hashtable来记录所有的被String对象使用的不重复的char数组。当去重的时候，会查这个Hashtable，来看堆上是否已经存在一个一模一样的char数组。</p>
+<p>如果存在，String对象会被调整引用那个数组，释放对原来的数组的引用，最终会被垃圾收集器回收掉。<br>如果查找失败，<strong>char数组会被插入到Hashtable，这样以后的时候就可以共享这个数组了。</strong></p>
+]]></content>
+      <categories>
+        <category>JVM</category>
+      </categories>
+      <tags>
+        <tag>底层</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java虚拟机-内存结构</title>
     <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<p><img src="image-20210730153652776.png"></p>
-<h3 id="jvm与java体系结构"><a href="#jvm与java体系结构" class="headerlink" title="jvm与java体系结构"></a>jvm与java体系结构</h3><h4 id="跨平台的语言"><a href="#跨平台的语言" class="headerlink" title="跨平台的语言"></a>跨平台的语言</h4><p><img src="image-20210801223002062.png"></p>
+    <content><![CDATA[<p><img src="https://i.loli.net/2021/08/05/y2G1hPE34wWgxtm.png" alt="image-20210805143306994"></p>
+<h3 id="jvm与java体系结构"><a href="#jvm与java体系结构" class="headerlink" title="jvm与java体系结构"></a>jvm与java体系结构</h3><h4 id="跨平台的语言"><a href="#跨平台的语言" class="headerlink" title="跨平台的语言"></a>跨平台的语言</h4><p><img src="https://i.loli.net/2021/08/05/i34EhPRJe9w6j1y.png" alt="image-20210805143331921"></p>
 <h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>一次编译，到处运行<br>自动内存管理<br>自动垃圾回收功能<br>JVM是运行在操作系统之上的，它与硬件没有直接的交互。</p>
 <h3 id="运行时数据区以及线程"><a href="#运行时数据区以及线程" class="headerlink" title="运行时数据区以及线程"></a>运行时数据区以及线程</h3><p><strong>线程独有：独立包括程序计数器、栈、本地方法栈</strong><br><strong>线程间共享：堆、堆外内存（永久代或元空间、代码缓存（方法区））</strong></p>
 <p><strong>Runtime类</strong><br>每个JVM只有一个Runtime实例。即为运行时环境，相当于内存结构的中间的那个框框：运行时环境。</p>
@@ -996,72 +1146,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Netty-线程模型</title>
-    <url>/2021/07/30/Netty-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/</url>
-    <content><![CDATA[<p><strong>⼤部分⽹络框架都是基于 Reactor 模式设计开发的。</strong></p>
-<p>Reactor 模式基于事件驱动，采⽤多路复⽤将事件分发给相应的 Handler 处理，⾮常适合处理海量 IO 的场景。</p>
-<p>在 Netty 主要靠 NioEventLoopGroup 线程池来实现具体的线程模型的 。</p>
-<p>我们实现服务端的时候，⼀般会初始化两个线程组：</p>
-<ol>
-<li>bossGroup :接收连接。</li>
-<li>workerGroup ：负责具体的处理，交由对应的 Handler 处理。</li>
-</ol>
-<p>拥有一个Acceptor 专门用来监听请求的I/O 类型<br>使用专门线程池可以提高acceptor的并发量，并且可以将同一个SocketChannel 放于同一个I/O 线程处理，同一个I/O线程可以处理多个SocketChannel的READ/WRITE事件</p>
-<p><strong>线程模型：</strong></p>
-<p>⼀个 Acceptor 线程只负责监听客户端的连接，⼀个 NIO 线程池负责具体处理：</p>
-<p><img src="https://i.loli.net/2021/08/04/cRva4kPzHwBpjOW.png" alt="image-20210804202010279"></p>
-<p>从⼀个 主线程 NIO 线程池中选择⼀个线程作为 Acceptor 线程，绑定监听端⼝，接收客户端连接<br>的连接，其他线程负责后续的接⼊认证等⼯作。连接建⽴完成后，Sub NIO 线程池负责具体处理<br>I/O 读写。</p>
-<p><img src="https://i.loli.net/2021/08/04/TXCUqymgReK3oNW.png" alt="image-20210804202045874"></p>
-]]></content>
-      <categories>
-        <category>Netty</category>
-      </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Netty-长连接，心跳机制</title>
-    <url>/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/</url>
-    <content><![CDATA[<h3 id="tcp粘包？netty解决办法？"><a href="#tcp粘包？netty解决办法？" class="headerlink" title="tcp粘包？netty解决办法？"></a>tcp粘包？netty解决办法？</h3><ul>
-<li>使⽤ Netty ⾃带的解码器</li>
-</ul>
-<ol>
-<li>LineBasedFrameDecoder : 发送端发送数据包的时候，每个数据包之间以换⾏符作为分隔， LineBasedFrameDecoder 的⼯作原理是它依次遍历 ByteBuf 中的可读字节，判断是否有换⾏符，然后进⾏相应的截取。</li>
-<li>DelimiterBasedFrameDecoder : 可以⾃定义分隔符解码器， LineBasedFrameDecoder 实际上是⼀种特殊的 DelimiterBasedFrameDecoder 解码器。</li>
-<li>FixedLengthFrameDecoder : 固定⻓度解码器，它能够按照指定的⻓度对消息进⾏相应的拆包。</li>
-<li>LengthFieldBasedFrameDecoder ：</li>
-</ol>
-<ul>
-<li><strong>⾃定义序列化编解码器</strong></li>
-</ul>
-<p><strong>头部有长度。</strong></p>
-<h3 id="netty长连接，心跳机制？"><a href="#netty长连接，心跳机制？" class="headerlink" title="netty长连接，心跳机制？"></a>netty长连接，心跳机制？</h3><p><strong>tcp长连接短连接</strong></p>
-<p>TCP 在进⾏读写之前，server 与 client 之间必须提前建⽴⼀个连接。建⽴连接的过程，需要我们常说的三次握⼿，释放/关闭连接的话需要四次挥⼿。这个过程是比较消耗⽹络资源并且有时间延迟的。<br>短连接说的就是 server 端 与 client 端建⽴连接之后，读写完成之后就关闭掉连接，如果下⼀次再要互相发送消息，就要重新连接。</p>
-<ol>
-<li><p>短连接的有点很明显，就是管理和实现都⽐较简单，</p>
-</li>
-<li><p>缺点也很明显，每⼀次的读写都要建⽴连接必然会带来⼤量⽹络资源的消耗，并且连接的建⽴也需要耗费时间。</p>
-</li>
-</ol>
-<p>⻓连接说的就是 client 向 server 双⽅建⽴连接之后，即使 client 与 server 完成⼀次读写，它们之间的连接并不会主动关闭，后续的读写操作会继续使⽤这个连接。⻓连接的可以省去较多的TCP 建⽴和关闭的操作，降低对⽹络资源的依赖，节约时间。</p>
-<p>对于频繁请求资源的客户来说，⾮常适⽤⻓连接</p>
-<h3 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a>心跳机制</h3><p>在 TCP 保持⻓连接的过程中，可能会出现断⽹等⽹络异常出现，异常发⽣的时候， client 与server 之间如果没有交互的话，它们是⽆法发现对⽅已经掉线的。为了解决这个问题, 我们就需要引⼊⼼跳机制 。</p>
-<p>⼼跳机制的⼯作原理是: 在 client 与 server 之间在⼀定时间内没有数据交互时, 即处于 idle 状态时, 客户端或服务器就会发送⼀个特殊的数据包给对⽅, 当接收⽅收到这个数据报⽂后, 也⽴即发送⼀个特殊的数据报⽂, 回应发送⽅, 此即⼀个 PING-PONG 交互。</p>
-<ol>
-<li>所以, 当某⼀端收到⼼跳消息后, 就知道了对⽅仍然在线, 这就确保 TCP 连接的有效性。</li>
-<li>TCP 实际上⾃带的就有⻓连接选项，本身是也有⼼跳包机制，也就是 TCP 的选项：SO_KEEPALIVE 。 </li>
-<li>但是，TCP 协议层⾯的⻓连接灵活性不够。所以，⼀般情况下我们都是在应⽤层协议上实现⾃定义⼼跳机制的，也就是在 Netty 层⾯通过编码实现。通过 Netty 实现⼼跳机制的话，核⼼类是 IdleStateHandler 。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Netty</category>
-      </categories>
-      <tags>
-        <tag>机制</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Netty-核心组件</title>
     <url>/2021/07/30/Netty-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6/</url>
     <content><![CDATA[<h2 id="观念理解"><a href="#观念理解" class="headerlink" title="观念理解"></a>观念理解</h2><ul>
@@ -1162,6 +1246,72 @@
       </tags>
   </entry>
   <entry>
+    <title>Netty-线程模型</title>
+    <url>/2021/07/30/Netty-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/</url>
+    <content><![CDATA[<p><strong>⼤部分⽹络框架都是基于 Reactor 模式设计开发的。</strong></p>
+<p>Reactor 模式基于事件驱动，采⽤多路复⽤将事件分发给相应的 Handler 处理，⾮常适合处理海量 IO 的场景。</p>
+<p>在 Netty 主要靠 NioEventLoopGroup 线程池来实现具体的线程模型的 。</p>
+<p>我们实现服务端的时候，⼀般会初始化两个线程组：</p>
+<ol>
+<li>bossGroup :接收连接。</li>
+<li>workerGroup ：负责具体的处理，交由对应的 Handler 处理。</li>
+</ol>
+<p>拥有一个Acceptor 专门用来监听请求的I/O 类型<br>使用专门线程池可以提高acceptor的并发量，并且可以将同一个SocketChannel 放于同一个I/O 线程处理，同一个I/O线程可以处理多个SocketChannel的READ/WRITE事件</p>
+<p><strong>线程模型：</strong></p>
+<p>⼀个 Acceptor 线程只负责监听客户端的连接，⼀个 NIO 线程池负责具体处理：</p>
+<p><img src="https://i.loli.net/2021/08/04/cRva4kPzHwBpjOW.png" alt="image-20210804202010279"></p>
+<p>从⼀个 主线程 NIO 线程池中选择⼀个线程作为 Acceptor 线程，绑定监听端⼝，接收客户端连接<br>的连接，其他线程负责后续的接⼊认证等⼯作。连接建⽴完成后，Sub NIO 线程池负责具体处理<br>I/O 读写。</p>
+<p><img src="https://i.loli.net/2021/08/04/TXCUqymgReK3oNW.png" alt="image-20210804202045874"></p>
+]]></content>
+      <categories>
+        <category>Netty</category>
+      </categories>
+      <tags>
+        <tag>线程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Netty-长连接，心跳机制</title>
+    <url>/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<h3 id="tcp粘包？netty解决办法？"><a href="#tcp粘包？netty解决办法？" class="headerlink" title="tcp粘包？netty解决办法？"></a>tcp粘包？netty解决办法？</h3><ul>
+<li>使⽤ Netty ⾃带的解码器</li>
+</ul>
+<ol>
+<li>LineBasedFrameDecoder : 发送端发送数据包的时候，每个数据包之间以换⾏符作为分隔， LineBasedFrameDecoder 的⼯作原理是它依次遍历 ByteBuf 中的可读字节，判断是否有换⾏符，然后进⾏相应的截取。</li>
+<li>DelimiterBasedFrameDecoder : 可以⾃定义分隔符解码器， LineBasedFrameDecoder 实际上是⼀种特殊的 DelimiterBasedFrameDecoder 解码器。</li>
+<li>FixedLengthFrameDecoder : 固定⻓度解码器，它能够按照指定的⻓度对消息进⾏相应的拆包。</li>
+<li>LengthFieldBasedFrameDecoder ：</li>
+</ol>
+<ul>
+<li><strong>⾃定义序列化编解码器</strong></li>
+</ul>
+<p><strong>头部有长度。</strong></p>
+<h3 id="netty长连接，心跳机制？"><a href="#netty长连接，心跳机制？" class="headerlink" title="netty长连接，心跳机制？"></a>netty长连接，心跳机制？</h3><p><strong>tcp长连接短连接</strong></p>
+<p>TCP 在进⾏读写之前，server 与 client 之间必须提前建⽴⼀个连接。建⽴连接的过程，需要我们常说的三次握⼿，释放/关闭连接的话需要四次挥⼿。这个过程是比较消耗⽹络资源并且有时间延迟的。<br>短连接说的就是 server 端 与 client 端建⽴连接之后，读写完成之后就关闭掉连接，如果下⼀次再要互相发送消息，就要重新连接。</p>
+<ol>
+<li><p>短连接的有点很明显，就是管理和实现都⽐较简单，</p>
+</li>
+<li><p>缺点也很明显，每⼀次的读写都要建⽴连接必然会带来⼤量⽹络资源的消耗，并且连接的建⽴也需要耗费时间。</p>
+</li>
+</ol>
+<p>⻓连接说的就是 client 向 server 双⽅建⽴连接之后，即使 client 与 server 完成⼀次读写，它们之间的连接并不会主动关闭，后续的读写操作会继续使⽤这个连接。⻓连接的可以省去较多的TCP 建⽴和关闭的操作，降低对⽹络资源的依赖，节约时间。</p>
+<p>对于频繁请求资源的客户来说，⾮常适⽤⻓连接</p>
+<h3 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a>心跳机制</h3><p>在 TCP 保持⻓连接的过程中，可能会出现断⽹等⽹络异常出现，异常发⽣的时候， client 与server 之间如果没有交互的话，它们是⽆法发现对⽅已经掉线的。为了解决这个问题, 我们就需要引⼊⼼跳机制 。</p>
+<p>⼼跳机制的⼯作原理是: 在 client 与 server 之间在⼀定时间内没有数据交互时, 即处于 idle 状态时, 客户端或服务器就会发送⼀个特殊的数据包给对⽅, 当接收⽅收到这个数据报⽂后, 也⽴即发送⼀个特殊的数据报⽂, 回应发送⽅, 此即⼀个 PING-PONG 交互。</p>
+<ol>
+<li>所以, 当某⼀端收到⼼跳消息后, 就知道了对⽅仍然在线, 这就确保 TCP 连接的有效性。</li>
+<li>TCP 实际上⾃带的就有⻓连接选项，本身是也有⼼跳包机制，也就是 TCP 的选项：SO_KEEPALIVE 。 </li>
+<li>但是，TCP 协议层⾯的⻓连接灵活性不够。所以，⼀般情况下我们都是在应⽤层协议上实现⾃定义⼼跳机制的，也就是在 Netty 层⾯通过编码实现。通过 Netty 实现⼼跳机制的话，核⼼类是 IdleStateHandler 。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Netty</category>
+      </categories>
+      <tags>
+        <tag>机制</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Netty-零拷贝</title>
     <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
     <content><![CDATA[<p>零拷⻉技术是指计算机执⾏操作时，CPU 不需要先将数 据从某处内存复制到另⼀个特定区域。这种技术通常⽤于通过⽹络传输⽂件时节省CPU周期和内存带宽。 </p>
@@ -1184,77 +1334,6 @@
       </categories>
       <tags>
         <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis-持久化</title>
-    <url>/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</url>
-    <content><![CDATA[<p>Redis 的持久化机制有：<strong>RDB、AOF、混合持久化（RDB+AOF，Redis 4.0 引入）。</strong></p>
-<h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><p>类似于快照。在某个时间点，<strong>将 Redis 在内存中的数据库状态（数据库的键值对等信息）保存到磁盘里面</strong>。<br>RDB 持久化功能生成的 RDB 文件是<strong>经过压缩的二进制文件。</strong></p>
-<p>命令：有两个 Redis 命令可以用于生成 RDB 文件<strong>，一个是 SAVE，另一个是 BGSAVE</strong>。<br>开启：使用 save point 配置，满足 save point 条件后会触发 BGSAVE <strong>来存储一次快照</strong>。</p>
-<p>save point 格式：save <seconds> <changes>，含义是 Redis 如果<strong>在 seconds 秒内数据发生了 changes 次改变，就保存快照文件。</strong></p>
-<p>SAVE：生成 RDB 快照文件，<strong>但是会阻塞主进程</strong>，服务器将无法处理客户端发来的命令请求，所以通常不会直接使用该命令。</p>
-<p>BGSAVE：<strong>fork 子进程来生成 RDB 快照文件，阻塞只会发生在 fork 子进程的时候</strong>，之后主进程可以正常处理请求。</p>
-<p>fork：在 Linux 系统中，调用 fork() 时，会创建出一个新进程，称为子进程，子进程会拷贝父进程的 page table。如果进程占用的内存越大，进程的 page table 也会越大，那么 fork 也会占用更多的时间。如果 Redis 占用的内存很大，那么在 fork 子进程时，则会出现明显的停顿。</p>
-<h4 id="RDB-的优点"><a href="#RDB-的优点" class="headerlink" title="RDB 的优点"></a>RDB 的优点</h4><p>RDB 文件是是经过压缩的二进制文件，<strong>占用空间很小</strong>，它保存了 Redis 某个时间点的数据集，很适合用于做备<br>份。</p>
-<p>RDB 非常适用于灾难恢复（disaster recovery）：它只有一个文件，并且内容都非常紧凑，可以（在加密后）将它传送到别的数据中心。</p>
-<p>RDB 可以最大化 redis 的性能。父进程在保存 RDB 文件时唯一要做的就是 fork 出一个子进程，然后这个子进<br>程就会处理接下来的所有保存工作，父进程无须执行任何磁盘 I/O 操作。</p>
-<p>RDB 在<strong>恢复大数据集时的速度比 AOF 的恢复速度要快</strong>。</p>
-<h4 id="RDB-的缺点"><a href="#RDB-的缺点" class="headerlink" title="RDB 的缺点"></a>RDB 的缺点</h4><p>RDB 在服务器故障时<strong>容易造成数据的丢失</strong>。RDB 允许我们通过修改 save point 配置来控制持久化的频率。但是，因为 RDB 文件需要保存整个数据集的状态， 所以它是一个比较重的操作，如果频率太频繁，可能会对 Redis 性能产生影响。</p>
-<p>RDB 保存时使用 fork 子进程进行数据的持久化，如果数据比较大的话，<strong>fork 可能会非常耗时</strong>，造成 Redis 停<br>止处理服务 N 毫秒。如果数据集很大且 CPU 比较繁忙的时候，停止服务的时间甚至会到一秒。</p>
-<p>Linux fork 子进程采用的是 <strong>copy-on-write</strong> 的方式。在 Redis 执行 RDB 持久化期间，如果 client 写入数据很频繁，那么将增加 Redis 占用的内存，最坏情况下，内存的占用将达到原先的 2 倍。刚 fork 时，主进程和子进程共享内存，<strong>但是随着主进程需要处理写操作，主进程需要将修改的页面拷贝一份出来，然后进行修改</strong>。极端情况下，如果所有的页面都被修改，则此时的内存占用是原先的 2 倍。</p>
-<h3 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h3><p>保存 Redis 服务器所执行的所有写操作命令来记录数据库状态，并在服务器启动时，通过重新执行这些命令<br>来还原数据集。<br>开启：AOF 持久化默认是关闭的，可以通过配置：<strong>appendonly yes</strong> 开启。<br>关闭：使用配置 appendonly no 可以关闭 AOF 持久化。</p>
-<p>AOF 持久化功能的实现可以分为三个步骤：<strong>命令追加、文件写入、文件同步</strong>。</p>
-<p>命令追加：当 AOF 持久化功能打开时，服务器在执行完一个写命令之后，会将被执行的写命令追加到服务器状态的 <strong>aof 缓冲区（aof_buf）</strong>的末尾。<br>文件写入与文件同步：可能有人不明白为什么将 aof_buf 的内容写到磁盘上需要两步操作，这边简单解释一下。</p>
-<p>Linux 操作系统中为了提升性能，使用了<strong>页缓存（page cache）</strong>。当我们将 aof_buf 的内容写到磁盘上时，此时数据并没有真正的落盘，而是在 page cache 中，为了将 page cache 中的数据真正落盘，需要执行 fsync / fdatasync 命令来强制刷盘。这边的文件同步做的就是刷盘操作，或者叫文件刷盘可能更容易理解一些。</p>
-<p>appendfsync 参数值，来决定<strong>是否将 aof_buf 缓冲区的内容写入和保存到 AOF 文件</strong>。</p>
-<h4 id="appendfsync-参数有三个选项："><a href="#appendfsync-参数有三个选项：" class="headerlink" title="appendfsync 参数有三个选项："></a><strong>appendfsync 参数有三个选项：</strong></h4><p>always：<strong>每处理一个命令</strong>都将 aof_buf 缓冲区中的所有内容写入并同步到 AOF 文件，即每个命令都刷盘。</p>
-<p>everysec：将 aof_buf 缓冲区中的所有内容写入到 AOF 文件，如果上次同步 AOF 文件的时间距离现在超<br>过一秒钟， 那么再次对 AOF 文件进行同步， 并且这个同步操作是异步的，由一个后台线程专门负责执行，<br>即<strong>每秒刷盘 1 次。</strong></p>
-<p>no：将 aof_buf 缓冲区中的所有内容写入到 AOF 文件， 但并不对 AOF 文件进行同步， 何时同步由操作<br>系统来决定。即不执行刷盘，<strong>让操作系统自己执行刷盘。</strong></p>
-<h4 id="AOF-的优点"><a href="#AOF-的优点" class="headerlink" title="AOF 的优点"></a>AOF 的优点</h4><ol>
-<li><strong>AOF 比 RDB 可靠。</strong>你可以设置不同的 fsync 策略：no、everysec 和 always。默认是 everysec，在这种配置下，redis 仍然可以保持良好的性能，并且就算发生故障停机，也最多只会丢失一秒钟的数据。</li>
-<li><strong>AOF 文件是一个纯追加的日志文件</strong>。即使日志因为某些原因而包含了未写入完整的命令（比如写入时磁盘<br>已满，写入中途停机等等）， 我们也可以使用 redis-check-aof 工具也可以轻易地修复这种问题。</li>
-<li><strong>当 AOF 文件太大时，Redis 会自动在后台进行重写</strong>：重写后的新 AOF 文件包含了恢复当前数据集所需的最<br>小命令集合。整个重写是绝对安全，因为重写是在一个新的文件上进行，同时 Redis 会继续往旧的文件追<br>加数据。当新文件重写完毕，Redis 会把新旧文件进行切换，然后开始把数据写到新文件上。</li>
-<li>AOF 文件<strong>有序地保存了对数据库执行的所有写入操作以 Redis 协议的格式保存</strong>， 因此 AOF 文件的<strong>内容非</strong><br> <strong>常容易被人读懂</strong>， 对文件进行分析（parse）也很轻松。如果你不小心执行了 FLUSHALL 命令把所有数据刷<br> 掉了，但只要 AOF 文件没有被重写，那么只要停止服务器， 移除 AOF 文件末尾的 FLUSHALL 命令， 并<br> 重启 Redis ， 就可以将数据集恢复到 FLUSHALL 执行之前的状态。</li>
-</ol>
-<h4 id="AOF-的缺点"><a href="#AOF-的缺点" class="headerlink" title="AOF 的缺点"></a>AOF 的缺点</h4><p>对于相同的数据集，<strong>AOF 文件的大小一般会比 RDB 文件大。</strong></p>
-<p>根据所使用的 fsync 策略，<strong>AOF 的速度可能会比 RDB 慢</strong>。通常 fsync 设置为每秒一次就能获得比较高的<br>性能，而关闭 fsync 可以让 AOF 的速度和 RDB 一样快。</p>
-<h3 id="混合持久化"><a href="#混合持久化" class="headerlink" title="混合持久化"></a>混合持久化</h3><p>混合持久化并不是一种全新的持久化方式，而是对已有方式的优化。混合持久化<strong>只发生于 AOF 重写</strong>过程。<br>使用了混合持久化，<strong>重写后的新 AOF 文件前半段是 RDB 格式的全量数据，后半段是 AOF 格式的增量数据</strong>。</p>
-<p>开启：混合持久化的配置参数为 <strong>aof-use-rdb-preamble</strong>，配置为 yes 时开启混合持久化，在 redis 4 刚引入时，默认是关闭混合持久化的，但是在 redis 5 中默认已经打开了。</p>
-<p>关闭：使用 aof-use-rdb-preamble no 配置即可关闭混合持久化。</p>
-<p>混合持久化本质是<strong>通过 AOF 后台重写（bgrewriteaof 命令）完成的，不同的是当开启混合持久化时，fork 出的子进程先将当前全量数据以 RDB 方式写入新的 AOF 文件，然后再将 AOF 重写缓冲区的增量命令以 AOF 方式写入到文件</strong>，写入完成后通知主进程将新的含有 RDB 格式和 AOF 格式的 AOF 文件替换旧的的 AOF 文件。</p>
-<p>优点：结合 RDB 和 AOF 的优点, <strong>更快的重写和恢复。</strong><br>缺点：AOF 文件里面的 RDB 部分不再是 AOF 格式，可读性差。</p>
-<h4 id="为什么需要-AOF-重写"><a href="#为什么需要-AOF-重写" class="headerlink" title="为什么需要 AOF 重写"></a>为什么需要 AOF 重写</h4><p>AOF 持久化是通过保存<strong>被执行的写命令</strong>来记录数据库状态的，随着写入命令的不断增加，AOF 文件中的内容会越来越多，<strong>文件的体积也会越来越大。</strong></p>
-<p>举个例子， 如果你对一个计数器调用了 100 次 INCR ， 那么仅仅是为了保存这个计数器的当前值， AOF 文件就需要使用 100 条记录。<br>然而在实际上， 只使用一条 SET 命令已经足以保存计数器的当前值了， 其余 99 条记录实际上都是多余的。<br>为了处理这种情况， Redis 引入了 AOF 重写：可以在不打断服务端处理请求的情况下， 对 AOF 文件进行重建<br>（rebuild）。</p>
-<h4 id="介绍下-AOF-重写的过程、AOF-后台重写存在的问题、如何解决-AOF-后台重写存在的数据不一致问题"><a href="#介绍下-AOF-重写的过程、AOF-后台重写存在的问题、如何解决-AOF-后台重写存在的数据不一致问题" class="headerlink" title="介绍下 AOF 重写的过程、AOF 后台重写存在的问题、如何解决 AOF 后台重写存在的数据不一致问题"></a>介绍下 AOF 重写的过程、AOF 后台重写存在的问题、如何解决 AOF 后台重写存在的数据不一致问题</h4><p>Redis 生成新的 AOF 文件来代替旧 AOF 文件，这个新的 AOF 文件<strong>包含重建当前数据集所需的最少命令。</strong></p>
-<p>具体过程是<strong>遍历所有数据库的所有键，从数据库读取键现在的值，然后用一条命令去记录键值对，代替之前记录这个键值对的多条命令。</strong></p>
-<p>命令：有两个 Redis 命令可以用于触发 AOF 重写，一个是 <strong>BGREWRITEAOF</strong> 、另一个是 <strong>REWRITEAOF</strong> 命令；<br>开启：AOF 重写由两个参数共同控制，auto-aof-rewrite-percentage 和 auto-aof-rewrite-min-size，同时满足这两个条件，则触发 AOF 后台重写 BGREWRITEAOF。</p>
-<ol>
-<li><p>// 当前 AOF 文件比上次重写后的 AOF 文件大小的增长比例超过 100</p>
-<p>auto-aof-rewrite-percentage 100</p>
-</li>
-<li><p>// 当前 AOF 文件的文件大小大于 64MB</p>
-<p>auto-aof-rewrite-min-size 64mb</p>
-</li>
-</ol>
-<p>BGREWRITEAOF：fork 子进程来进行 AOF 重写，阻塞只会发生在 fork 子进程的时候，之后主进程可以正常处理请求。<br><strong>REWRITEAOF 和 BGREWRITEAOF 的关系与 SAVE 和 BGSAVE 的关系类似。</strong></p>
-<h4 id="AOF-后台重写存在的问题"><a href="#AOF-后台重写存在的问题" class="headerlink" title="AOF 后台重写存在的问题"></a>AOF 后台重写存在的问题</h4><p>AOF 后台重写使用子进程进行从写，解决了主进程阻塞的问题，但是仍然存在另一个问题：</p>
-<p>子进程在进行 AOF 重写期间，服务器主进程还需要继续处理命令请求，<strong>新的命令可能会对现有的数据库状态进行修改，从而使得当前的数据库状态和重写后的 AOF 文件保存的数据库状态不一致。</strong></p>
-<h4 id="如何解决-AOF-后台重写存在的数据不一致问题"><a href="#如何解决-AOF-后台重写存在的数据不一致问题" class="headerlink" title="如何解决 AOF 后台重写存在的数据不一致问题"></a>如何解决 AOF 后台重写存在的数据不一致问题</h4><p>为了解决上述问题，Redis 引入了 <strong>AOF 重写缓冲区</strong>（aof_rewrite_buf_blocks），这个缓冲区在服务器创建子进程之后开始使用，当 Redis 服务器执行完一个写命令之后，它会同时将这个写命令追加到 AOF 缓冲区和 AOF 重写缓冲区。</p>
-<p> 1、现有 AOF 文件的处理工作会如常进行。这样即使在重写的中途发生停机，现有的 AOF 文件也还是安全的。<br> 2、从创建子进程开始，也就是 AOF 重写开始，服务器执行的所有写命令会被记录到 AOF 重写缓冲区里面。</p>
-<p> 这样，<strong>当子进程完成 AOF 重写工作后，父进程会在 serverCron 中检测到子进程已经重写结束</strong>，则会执行以下工作：<br> 1、将 AOF 重写缓冲区中的所有内容写入到新 AOF 文件中，这时新 AOF 文件所保存的数据库状态将和服务器当前的数据库状态一致。<br> 2、对新的 AOF 文件进行改名，原子的覆盖现有的 AOF 文件，完成新旧两个 AOF 文件的替换。</p>
-<h4 id="RDB、AOF、混合持久，用哪一个？"><a href="#RDB、AOF、混合持久，用哪一个？" class="headerlink" title="RDB、AOF、混合持久，用哪一个？"></a>RDB、AOF、混合持久，用哪一个？</h4><p>如果想尽量保证数据安全性， 你应该同时使用 RDB 和 AOF 持久化功能，同时可以开启混合持久化。</p>
-<p>如果你非常关心你的数据， 但仍然可以承受数分钟以内的数据丢失， 那么你可以只使用 RDB 持久化。</p>
-<p>如果你的数据是可以丢失的，则可以关闭持久化功能，在这种情况下，Redis 的性能是最高的。</p>
-<p>使用 Redis 通常都是为了提升性能，而如果为了不丢失数据而将 appendfsync 设置为 always 级别时，对 Redis 的性能影响是很大的，在这种不能接受数据丢失的场景，其实可以考虑直接选择 MySQL 。</p>
-<h4 id="同时开启-RDB-和-AOF，服务重启时如何加载"><a href="#同时开启-RDB-和-AOF，服务重启时如何加载" class="headerlink" title="同时开启 RDB 和 AOF，服务重启时如何加载"></a>同时开启 RDB 和 AOF，服务重启时如何加载</h4><p>简单来说，如果同时启用了 AOF 和 RDB，Redis 重新启动时，<strong>会使用 AOF 文件来重建数据集</strong>，因为通常来说， AOF的数据会更完整。</p>
-<p>而在引入了混合持久化之后，使用 AOF 重建数据集时，会通过文件开头是否为“REDIS”来判断是否为混合持久化。</p>
-]]></content>
-      <categories>
-        <category>Redis</category>
-      </categories>
-      <tags>
-        <tag>持久化</tag>
       </tags>
   </entry>
   <entry>
@@ -1499,6 +1578,60 @@
       </tags>
   </entry>
   <entry>
+    <title>a设计模式</title>
+    <url>/2021/08/05/a%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="设计模式类型"><a href="#设计模式类型" class="headerlink" title="设计模式类型"></a>设计模式类型</h2><h3 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h3><p>这些设计模式提供了一种在<strong>创建对象的同时隐藏创建逻辑的方式</strong>，而不是使用 new 运算符直接实例化对象。这使得程序在判断针对某个给定实例需要创建哪些对象时更加灵活。</p>
+<p><strong>工厂模式（Factory Pattern）</strong><br><strong>抽象工厂模式（Abstract Factory Pattern）</strong><br><strong>单例模式（Singleton Pattern）</strong><br>建造者模式（Builder Pattern）<br>原型模式（Prototype Pattern）</p>
+<h3 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h3><p>这些设计模式关注<strong>类和对象的组合</strong>。继承的概念被用来组合接口和定义组合对象获得新功能的方式。</p>
+<p><strong>适配器模式（Adapter Pattern）</strong><br>桥接模式（Bridge Pattern）<br>过滤器模式（Filter、Criteria Pattern）<br>组合模式（Composite Pattern）<br><strong>装饰器模式（Decorator Pattern）</strong><br>外观模式（Facade Pattern）<br>享元模式（Flyweight Pattern）<br><strong>代理模式（Proxy Pattern）</strong></p>
+<h3 id="行为型模式"><a href="#行为型模式" class="headerlink" title="行为型模式"></a>行为型模式</h3><p>这些设计模式特别关注<strong>对象之间的通信。</strong>    </p>
+<p>责任链模式（Chain of Responsibility Pattern）<br>命令模式（Command Pattern）<br>解释器模式（Interpreter Pattern）<br>迭代器模式（Iterator Pattern）<br>中介者模式（Mediator Pattern）<br>备忘录模式（Memento Pattern）<br>观察者模式（Observer Pattern）<br>状态模式（State Pattern）<br>空对象模式（Null Object Pattern）<br>策略模式（Strategy Pattern）<br>模板模式（Template Pattern）<br>访问者模式（Visitor Pattern）</p>
+<h3 id="J2EE-模式"><a href="#J2EE-模式" class="headerlink" title="J2EE 模式"></a>J2EE 模式</h3><p>这些设计模式特别关注<strong>表示层</strong>。这些模式是由 Sun Java Center 鉴定的。    </p>
+<p>MVC 模式（MVC Pattern）<br>业务代表模式（Business Delegate Pattern）<br>组合实体模式（Composite Entity Pattern）<br>数据访问对象模式（Data Access Object Pattern）<br>前端控制器模式（Front Controller Pattern）<br>拦截过滤器模式（Intercepting Filter Pattern）<br>服务定位器模式（Service Locator Pattern）<br>传输对象模式（Transfer Object Pattern）</p>
+<h2 id="设计模式的六大原则"><a href="#设计模式的六大原则" class="headerlink" title="设计模式的六大原则"></a>设计模式的六大原则</h2><p>0、<strong>单一职责原则</strong>(Single Responsibility Principle)</p>
+<p>单一职责原则表示一个模块的组成元素之间的功能相关性。从软件变化的角度来看，就一个类而言，应该仅有一个让它变化的原因；通俗地说，<strong>即一个类只负责一项职责。</strong></p>
+<p>假设某个类 P 负责两个不同的职责，职责 P1 和 职责 P2，那么当职责 P1 需求发生改变而需要修改类 P，有可能会导致原来运行正常的职责 P2 功能发生故障。</p>
+<p>1、<strong>开闭原则</strong>（Open Close Principle）</p>
+<p>开闭原则的意思是：<strong>对扩展开放，对修改关闭</strong>。在程序需要进行拓展的时候，不能去修改原有的代码，实现一个热插拔的效果。简言之，<strong>是为了使程序的扩展性好，易于维护和升级</strong>。想要达到这样的效果，我们需要使用接口和抽象类，后面的具体设计中我们会提到这点。</p>
+<p>2、<strong>里氏代换原则</strong>（Liskov Substitution Principle）</p>
+<p>里氏代换原则是<strong>面向对象设计</strong>的基本原则之一。 里氏代换原则中说，<strong>任何基类可以出现的地方，子类一定可以出现</strong>。LSP 是继承复用的基石，只有当派生类可以替换掉基类，且软件单位的功能不受到影响时，基类才能真正被复用，而派生类也能够在基类的基础上增加新的行为。</p>
+<p>里氏代换原则是对开闭原则的补充。实现开闭原则的关键步骤就是<strong>抽象化</strong>，而基类与子类的继承关系就是抽象化的具体实现，所以里氏代换原则是对实现抽象化的具体步骤的规范。</p>
+<p>3、<strong>依赖倒转原则</strong>（Dependence Inversion Principle）</p>
+<p>这个原则是开闭原则的基础，具体内容：针对接口编程，依赖于抽象而不依赖于具体。</p>
+<p>4、<strong>接口隔离原则</strong>（Interface Segregation Principle）</p>
+<p>这个原则的意思是：使用多个隔离的接口，比使用单个接口要好。它还有另外一个意思是：<strong>降低类之间的耦合度。</strong></p>
+<p>5、<strong>迪米特法则，又称最少知道原则</strong>（Demeter Principle）</p>
+<p>最少知道原则是指：一个实体应当尽量少地与其他实体之间发生相互作用，使得系统功能模块相对独立。</p>
+<p>6、<strong>合成复用原则（</strong>Composite Reuse Principle）</p>
+<p>合成复用原则是指：尽量使用合成/聚合的方式，而不是使用继承。</p>
+<h2 id="常见设计模式"><a href="#常见设计模式" class="headerlink" title="常见设计模式"></a>常见设计模式</h2><h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><p>单例模式（Singleton）的目的是为了保证在一个进程中，某个类有且仅有一个实例。</p>
+<p>因为这个类只有一个实例，因此，自然不能让调用方使用new Xyz()来创建实例了。所以，单例的构造方法必须是private，这样就防止了调用方自己创建实例。</p>
+<p>只有private构造方法，确保外部无法实例化；</p>
+<p>通过private static变量持有唯一实例，<strong>保证全局唯一性；</strong></p>
+<p>通过public static方法返回此唯一实例，<strong>使外部调用方能获取到实例。</strong></p>
+<h4 id="双重检查单例模式"><a href="#双重检查单例模式" class="headerlink" title="双重检查单例模式"></a>双重检查单例模式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line">    private volatile static Singleton uniqueInstance;</span><br><span class="line">    private Singleton()&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    public static Singleton getUniqueInstance()&#123;</span><br><span class="line">        if (uniqueInstance==null)&#123;</span><br><span class="line">            synchronized (Singleton.class)&#123;</span><br><span class="line">                if (uniqueInstance==null)&#123;</span><br><span class="line">                    uniqueInstance=new Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>volatile修饰uniqueinstance的必要性：</p>
+<p>uniqueinstance=new singleton()；实际上分为3步。</p>
+<ul>
+<li>1，为uniqueinstance分配内存。</li>
+<li>2，初始化uniqueinstance。</li>
+<li>3，将uniqueinstance指向分配的内存地址。</li>
+</ul>
+<p>因此：</p>
+<ul>
+<li>代码读取到instance不为null时，instance引用的对象可能还没有完成初始化。</li>
+<li><strong>防止指令重排。</strong></li>
+</ul>
+]]></content>
+      <categories>
+        <category>top</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>helloword</title>
     <url>/2021/07/29/helloword/</url>
     <content><![CDATA[<h3 id="Java基础"><a href="#Java基础" class="headerlink" title="Java基础"></a>Java基础</h3><p>面向对象三大特性？</p>
@@ -1653,206 +1786,6 @@
       </tags>
   </entry>
   <entry>
-    <title>leetcode-二叉树-最近公共祖先</title>
-    <url>/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-二叉树-路径和</title>
-    <url>/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91-%E8%B7%AF%E5%BE%84%E5%92%8C/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>路径和</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-二叉树遍历</title>
-    <url>/2021/07/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>遍历</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-动态规划-剑指offer-01</title>
-    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E5%89%91%E6%8C%87offer-01/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-动态规划-子序列问题</title>
-    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E5%AD%90%E5%BA%8F%E5%88%97%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>具体</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-动态规划-打家劫舍</title>
-    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%89%93%E5%AE%B6%E5%8A%AB%E8%88%8D/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>具体</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-动态规划-简单</title>
-    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E7%AE%80%E5%8D%95/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-动态规划-背包</title>
-    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%83%8C%E5%8C%85/</url>
-    <content><![CDATA[<p>1，0-1背包</p>
-<p>2，完全背包</p>
-]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>背包</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-哈希表</title>
-    <url>/2021/07/30/leetcode-%E5%93%88%E5%B8%8C%E8%A1%A8/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>hash</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-回溯</title>
-    <url>/2021/07/30/leetcode-%E5%9B%9E%E6%BA%AF/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>back</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-字符串</title>
-    <url>/2021/07/30/leetcode-%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-排序算法</title>
-    <url>/2021/07/30/leetcode-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>sort</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-双指针</title>
-    <url>/2021/07/30/leetcode-%E5%8F%8C%E6%8C%87%E9%92%88/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>技巧</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-栈与队列</title>
-    <url>/2021/07/30/leetcode-%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-数组</title>
-    <url>/2021/07/30/leetcode-%E6%95%B0%E7%BB%84/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>array</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-动态规划-股票问题</title>
-    <url>/2021/07/30/leetcode-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>具体</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-贪心算法</title>
-    <url>/2021/07/30/leetcode-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>技巧</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode-链表</title>
-    <url>/2021/07/30/leetcode-%E9%93%BE%E8%A1%A8/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>listnode</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>ms1</title>
     <url>/2021/08/03/ms1/</url>
     <content><![CDATA[<p>rpc</p>
@@ -1865,6 +1798,47 @@
 <p>线程池阻塞队列中阻塞是什么含义？</p>
 <p>线程同步有哪些方法？（同步工具类的对比？）</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>常见数据结构和算法</title>
+    <url>/2021/08/05/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><h3 id="快排"><a href="#快排" class="headerlink" title="快排"></a>快排</h3><p>选取基准值，左边小于其，右边大于其。左右子序列重复此过程。<br>大量数据时表现良好。<br>数据越乱表现越好。数据接近有序是退化成冒泡排序。<br>一种不稳定的排序方式。<br>也是一种交换排序。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static int[] sort(int[] nums) &#123;</span><br><span class="line">    quicksort(nums, 0, nums.length - 1);</span><br><span class="line">    return nums;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static void quicksort(int[] nums, int left, int right) &#123;</span><br><span class="line">    if (left &gt;= right) return;</span><br><span class="line">    int pindex = partition(nums, left, right);</span><br><span class="line">    quicksort(nums, left, pindex - 1);</span><br><span class="line">    quicksort(nums, pindex + 1, right);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static int partition(int[] nums, int left, int right) &#123;</span><br><span class="line">    Random r = new Random();</span><br><span class="line">    int rindex = left + r.nextInt(right - left + 1);</span><br><span class="line">    swap(nums, rindex, left);</span><br><span class="line"></span><br><span class="line">    int pivot = nums[left];</span><br><span class="line">    int l = left;</span><br><span class="line">    for (int i = left + 1; i &lt;= right; i++) &#123;</span><br><span class="line">        if (nums[i] &lt; pivot) &#123;</span><br><span class="line">            l++;</span><br><span class="line">            swap(nums, i, l);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    swap(nums, left, l);</span><br><span class="line">    return l;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h3><p>每次都选择最大（最小）的元素放在最前面，依次往后。<br>堆排序亦是选择排序：利用堆来选择数据。时间复杂度降低。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">for (int i = 0; i &lt; len; i++) &#123;</span><br><span class="line">    int min = i;</span><br><span class="line">    for (int j = i + 1; j &lt; len; j++) &#123;</span><br><span class="line">        if (nums[j] &lt; nums[min]) &#123;</span><br><span class="line">            min = j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    swap(nums, min, i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h3><p>始终维持一个有序的队列。</p>
+<p>元素越接近于稳定时，效率越高。<br>稳定的排序方式。<br>希尔排序是对直接插入排序的优化。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">for (int i = 1; i &lt; len; i++) &#123;//第一个数有序</span><br><span class="line">    int temp=nums[i];</span><br><span class="line">    int j=i;</span><br><span class="line">    while (j&gt;0&amp;&amp;nums[j-1]&gt;temp)&#123;</span><br><span class="line">        nums[j]=nums[j-1];</span><br><span class="line">        j--;</span><br><span class="line">    &#125;</span><br><span class="line">    nums[j]=temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><p>比较相邻两个值的大小，出现逆序就交换。<br>稳定的排序。<br>慢：每次只能移动相邻的两个数据。<br>一种交换排序。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">for (int i = 0; i &lt; len; i++) &#123;//扫苗多少趟</span><br><span class="line">    for (int j = 0; j &lt; len-1; j++) &#123;</span><br><span class="line">        if (nums[j] &gt; nums[j + 1]) &#123;</span><br><span class="line">            swap(nums, j, j + 1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h3><p>分治法的应用。<br>合并有序的子序列。<br>o(n)的空间复杂度。更多考虑解决磁盘外部排序的问题。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static int[] sort(int[] nums)&#123;</span><br><span class="line">    int[] temp=new int[nums.length];</span><br><span class="line">    mergesort(nums,0,nums.length-1,temp);</span><br><span class="line">    return nums;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static void mergesort(int[] nums, int left, int right, int[] temp) &#123;</span><br><span class="line">    if (left&gt;=right)return;</span><br><span class="line">    int mid=left+(right-left)&gt;&gt;1;</span><br><span class="line">    mergesort(nums, left,mid,temp);</span><br><span class="line">    mergesort(nums,mid+1,right,temp);</span><br><span class="line">    //数组有序，不用merge</span><br><span class="line">    if (nums[mid]&lt;=nums[mid+1])&#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    merge(nums,left,mid,right,temp);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static void merge(int[] nums, int left, int mid, int right, int[] temp) &#123;</span><br><span class="line">    //System.arraycopy(nums,left,temp,left,right-left+1);</span><br><span class="line">    for (int i = left; i &lt;= right; i++) &#123;</span><br><span class="line">        temp[i]=nums[i];</span><br><span class="line">    &#125;</span><br><span class="line">    //左右两半的起点</span><br><span class="line">    int i=left;</span><br><span class="line">    int j=mid+1;</span><br><span class="line">    for (int k = left; k &lt;= right; k++) &#123;</span><br><span class="line">        if (i==mid+1)nums[k]=temp[j++];</span><br><span class="line">        else if (j==right+1)nums[k]=temp[i++];</span><br><span class="line">        else if (temp[i]&lt;=temp[j])nums[k]=temp[i++];</span><br><span class="line">        else nums[k]=temp[j++];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h3><ul>
+<li>稳定性：相同数值的元素经过排序以后，相对的位置保持不变。</li>
+<li>内部排序：数据全部放在内存中。</li>
+<li>外部排序：内存装不下</li>
+</ul>
+<p><img src="https://i.loli.net/2021/08/05/ojG8w5gRxvYDzrB.png" alt="image-20210805144637116"></p>
+<h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><h3 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static boolean isBalanced(TreeNode root) &#123;</span><br><span class="line">    return getHeight(root) != -1;</span><br><span class="line">&#125;</span><br><span class="line">//返回以该节点为根节点二叉树的深度</span><br><span class="line">private static int getHeight(TreeNode root) &#123;</span><br><span class="line">    if (root==null)return 0;</span><br><span class="line">    int left=getHeight(root.left);</span><br><span class="line">    if (left==-1)return -1;</span><br><span class="line">    int right=getHeight(root.right);</span><br><span class="line">    if (right==-1)return -1;</span><br><span class="line">    if (Math.abs(left-right)&gt;1)return -1;</span><br><span class="line">    return Math.max(left,right)+1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>top</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
   </entry>
   <entry>
     <title>操作系统-fork</title>
@@ -1962,6 +1936,77 @@
       </categories>
       <tags>
         <tag>内存管理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis-持久化</title>
+    <url>/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</url>
+    <content><![CDATA[<p>Redis 的持久化机制有：<strong>RDB、AOF、混合持久化（RDB+AOF，Redis 4.0 引入）。</strong></p>
+<h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><p>类似于快照。在某个时间点，<strong>将 Redis 在内存中的数据库状态（数据库的键值对等信息）保存到磁盘里面</strong>。<br>RDB 持久化功能生成的 RDB 文件是<strong>经过压缩的二进制文件。</strong></p>
+<p>命令：有两个 Redis 命令可以用于生成 RDB 文件<strong>，一个是 SAVE，另一个是 BGSAVE</strong>。<br>开启：使用 save point 配置，满足 save point 条件后会触发 BGSAVE <strong>来存储一次快照</strong>。</p>
+<p>save point 格式：save <seconds> <changes>，含义是 Redis 如果<strong>在 seconds 秒内数据发生了 changes 次改变，就保存快照文件。</strong></p>
+<p>SAVE：生成 RDB 快照文件，<strong>但是会阻塞主进程</strong>，服务器将无法处理客户端发来的命令请求，所以通常不会直接使用该命令。</p>
+<p>BGSAVE：<strong>fork 子进程来生成 RDB 快照文件，阻塞只会发生在 fork 子进程的时候</strong>，之后主进程可以正常处理请求。</p>
+<p>fork：在 Linux 系统中，调用 fork() 时，会创建出一个新进程，称为子进程，子进程会拷贝父进程的 page table。如果进程占用的内存越大，进程的 page table 也会越大，那么 fork 也会占用更多的时间。如果 Redis 占用的内存很大，那么在 fork 子进程时，则会出现明显的停顿。</p>
+<h4 id="RDB-的优点"><a href="#RDB-的优点" class="headerlink" title="RDB 的优点"></a>RDB 的优点</h4><p>RDB 文件是是经过压缩的二进制文件，<strong>占用空间很小</strong>，它保存了 Redis 某个时间点的数据集，很适合用于做备<br>份。</p>
+<p>RDB 非常适用于灾难恢复（disaster recovery）：它只有一个文件，并且内容都非常紧凑，可以（在加密后）将它传送到别的数据中心。</p>
+<p>RDB 可以最大化 redis 的性能。父进程在保存 RDB 文件时唯一要做的就是 fork 出一个子进程，然后这个子进<br>程就会处理接下来的所有保存工作，父进程无须执行任何磁盘 I/O 操作。</p>
+<p>RDB 在<strong>恢复大数据集时的速度比 AOF 的恢复速度要快</strong>。</p>
+<h4 id="RDB-的缺点"><a href="#RDB-的缺点" class="headerlink" title="RDB 的缺点"></a>RDB 的缺点</h4><p>RDB 在服务器故障时<strong>容易造成数据的丢失</strong>。RDB 允许我们通过修改 save point 配置来控制持久化的频率。但是，因为 RDB 文件需要保存整个数据集的状态， 所以它是一个比较重的操作，如果频率太频繁，可能会对 Redis 性能产生影响。</p>
+<p>RDB 保存时使用 fork 子进程进行数据的持久化，如果数据比较大的话，<strong>fork 可能会非常耗时</strong>，造成 Redis 停<br>止处理服务 N 毫秒。如果数据集很大且 CPU 比较繁忙的时候，停止服务的时间甚至会到一秒。</p>
+<p>Linux fork 子进程采用的是 <strong>copy-on-write</strong> 的方式。在 Redis 执行 RDB 持久化期间，如果 client 写入数据很频繁，那么将增加 Redis 占用的内存，最坏情况下，内存的占用将达到原先的 2 倍。刚 fork 时，主进程和子进程共享内存，<strong>但是随着主进程需要处理写操作，主进程需要将修改的页面拷贝一份出来，然后进行修改</strong>。极端情况下，如果所有的页面都被修改，则此时的内存占用是原先的 2 倍。</p>
+<h3 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h3><p>保存 Redis 服务器所执行的所有写操作命令来记录数据库状态，并在服务器启动时，通过重新执行这些命令<br>来还原数据集。<br>开启：AOF 持久化默认是关闭的，可以通过配置：<strong>appendonly yes</strong> 开启。<br>关闭：使用配置 appendonly no 可以关闭 AOF 持久化。</p>
+<p>AOF 持久化功能的实现可以分为三个步骤：<strong>命令追加、文件写入、文件同步</strong>。</p>
+<p>命令追加：当 AOF 持久化功能打开时，服务器在执行完一个写命令之后，会将被执行的写命令追加到服务器状态的 <strong>aof 缓冲区（aof_buf）</strong>的末尾。<br>文件写入与文件同步：可能有人不明白为什么将 aof_buf 的内容写到磁盘上需要两步操作，这边简单解释一下。</p>
+<p>Linux 操作系统中为了提升性能，使用了<strong>页缓存（page cache）</strong>。当我们将 aof_buf 的内容写到磁盘上时，此时数据并没有真正的落盘，而是在 page cache 中，为了将 page cache 中的数据真正落盘，需要执行 fsync / fdatasync 命令来强制刷盘。这边的文件同步做的就是刷盘操作，或者叫文件刷盘可能更容易理解一些。</p>
+<p>appendfsync 参数值，来决定<strong>是否将 aof_buf 缓冲区的内容写入和保存到 AOF 文件</strong>。</p>
+<h4 id="appendfsync-参数有三个选项："><a href="#appendfsync-参数有三个选项：" class="headerlink" title="appendfsync 参数有三个选项："></a><strong>appendfsync 参数有三个选项：</strong></h4><p>always：<strong>每处理一个命令</strong>都将 aof_buf 缓冲区中的所有内容写入并同步到 AOF 文件，即每个命令都刷盘。</p>
+<p>everysec：将 aof_buf 缓冲区中的所有内容写入到 AOF 文件，如果上次同步 AOF 文件的时间距离现在超<br>过一秒钟， 那么再次对 AOF 文件进行同步， 并且这个同步操作是异步的，由一个后台线程专门负责执行，<br>即<strong>每秒刷盘 1 次。</strong></p>
+<p>no：将 aof_buf 缓冲区中的所有内容写入到 AOF 文件， 但并不对 AOF 文件进行同步， 何时同步由操作<br>系统来决定。即不执行刷盘，<strong>让操作系统自己执行刷盘。</strong></p>
+<h4 id="AOF-的优点"><a href="#AOF-的优点" class="headerlink" title="AOF 的优点"></a>AOF 的优点</h4><ol>
+<li><strong>AOF 比 RDB 可靠。</strong>你可以设置不同的 fsync 策略：no、everysec 和 always。默认是 everysec，在这种配置下，redis 仍然可以保持良好的性能，并且就算发生故障停机，也最多只会丢失一秒钟的数据。</li>
+<li><strong>AOF 文件是一个纯追加的日志文件</strong>。即使日志因为某些原因而包含了未写入完整的命令（比如写入时磁盘<br>已满，写入中途停机等等）， 我们也可以使用 redis-check-aof 工具也可以轻易地修复这种问题。</li>
+<li><strong>当 AOF 文件太大时，Redis 会自动在后台进行重写</strong>：重写后的新 AOF 文件包含了恢复当前数据集所需的最<br>小命令集合。整个重写是绝对安全，因为重写是在一个新的文件上进行，同时 Redis 会继续往旧的文件追<br>加数据。当新文件重写完毕，Redis 会把新旧文件进行切换，然后开始把数据写到新文件上。</li>
+<li>AOF 文件<strong>有序地保存了对数据库执行的所有写入操作以 Redis 协议的格式保存</strong>， 因此 AOF 文件的<strong>内容非</strong><br> <strong>常容易被人读懂</strong>， 对文件进行分析（parse）也很轻松。如果你不小心执行了 FLUSHALL 命令把所有数据刷<br> 掉了，但只要 AOF 文件没有被重写，那么只要停止服务器， 移除 AOF 文件末尾的 FLUSHALL 命令， 并<br> 重启 Redis ， 就可以将数据集恢复到 FLUSHALL 执行之前的状态。</li>
+</ol>
+<h4 id="AOF-的缺点"><a href="#AOF-的缺点" class="headerlink" title="AOF 的缺点"></a>AOF 的缺点</h4><p>对于相同的数据集，<strong>AOF 文件的大小一般会比 RDB 文件大。</strong></p>
+<p>根据所使用的 fsync 策略，<strong>AOF 的速度可能会比 RDB 慢</strong>。通常 fsync 设置为每秒一次就能获得比较高的<br>性能，而关闭 fsync 可以让 AOF 的速度和 RDB 一样快。</p>
+<h3 id="混合持久化"><a href="#混合持久化" class="headerlink" title="混合持久化"></a>混合持久化</h3><p>混合持久化并不是一种全新的持久化方式，而是对已有方式的优化。混合持久化<strong>只发生于 AOF 重写</strong>过程。<br>使用了混合持久化，<strong>重写后的新 AOF 文件前半段是 RDB 格式的全量数据，后半段是 AOF 格式的增量数据</strong>。</p>
+<p>开启：混合持久化的配置参数为 <strong>aof-use-rdb-preamble</strong>，配置为 yes 时开启混合持久化，在 redis 4 刚引入时，默认是关闭混合持久化的，但是在 redis 5 中默认已经打开了。</p>
+<p>关闭：使用 aof-use-rdb-preamble no 配置即可关闭混合持久化。</p>
+<p>混合持久化本质是<strong>通过 AOF 后台重写（bgrewriteaof 命令）完成的，不同的是当开启混合持久化时，fork 出的子进程先将当前全量数据以 RDB 方式写入新的 AOF 文件，然后再将 AOF 重写缓冲区的增量命令以 AOF 方式写入到文件</strong>，写入完成后通知主进程将新的含有 RDB 格式和 AOF 格式的 AOF 文件替换旧的的 AOF 文件。</p>
+<p>优点：结合 RDB 和 AOF 的优点, <strong>更快的重写和恢复。</strong><br>缺点：AOF 文件里面的 RDB 部分不再是 AOF 格式，可读性差。</p>
+<h4 id="为什么需要-AOF-重写"><a href="#为什么需要-AOF-重写" class="headerlink" title="为什么需要 AOF 重写"></a>为什么需要 AOF 重写</h4><p>AOF 持久化是通过保存<strong>被执行的写命令</strong>来记录数据库状态的，随着写入命令的不断增加，AOF 文件中的内容会越来越多，<strong>文件的体积也会越来越大。</strong></p>
+<p>举个例子， 如果你对一个计数器调用了 100 次 INCR ， 那么仅仅是为了保存这个计数器的当前值， AOF 文件就需要使用 100 条记录。<br>然而在实际上， 只使用一条 SET 命令已经足以保存计数器的当前值了， 其余 99 条记录实际上都是多余的。<br>为了处理这种情况， Redis 引入了 AOF 重写：可以在不打断服务端处理请求的情况下， 对 AOF 文件进行重建<br>（rebuild）。</p>
+<h4 id="介绍下-AOF-重写的过程、AOF-后台重写存在的问题、如何解决-AOF-后台重写存在的数据不一致问题"><a href="#介绍下-AOF-重写的过程、AOF-后台重写存在的问题、如何解决-AOF-后台重写存在的数据不一致问题" class="headerlink" title="介绍下 AOF 重写的过程、AOF 后台重写存在的问题、如何解决 AOF 后台重写存在的数据不一致问题"></a>介绍下 AOF 重写的过程、AOF 后台重写存在的问题、如何解决 AOF 后台重写存在的数据不一致问题</h4><p>Redis 生成新的 AOF 文件来代替旧 AOF 文件，这个新的 AOF 文件<strong>包含重建当前数据集所需的最少命令。</strong></p>
+<p>具体过程是<strong>遍历所有数据库的所有键，从数据库读取键现在的值，然后用一条命令去记录键值对，代替之前记录这个键值对的多条命令。</strong></p>
+<p>命令：有两个 Redis 命令可以用于触发 AOF 重写，一个是 <strong>BGREWRITEAOF</strong> 、另一个是 <strong>REWRITEAOF</strong> 命令；<br>开启：AOF 重写由两个参数共同控制，auto-aof-rewrite-percentage 和 auto-aof-rewrite-min-size，同时满足这两个条件，则触发 AOF 后台重写 BGREWRITEAOF。</p>
+<ol>
+<li><p>// 当前 AOF 文件比上次重写后的 AOF 文件大小的增长比例超过 100</p>
+<p>auto-aof-rewrite-percentage 100</p>
+</li>
+<li><p>// 当前 AOF 文件的文件大小大于 64MB</p>
+<p>auto-aof-rewrite-min-size 64mb</p>
+</li>
+</ol>
+<p>BGREWRITEAOF：fork 子进程来进行 AOF 重写，阻塞只会发生在 fork 子进程的时候，之后主进程可以正常处理请求。<br><strong>REWRITEAOF 和 BGREWRITEAOF 的关系与 SAVE 和 BGSAVE 的关系类似。</strong></p>
+<h4 id="AOF-后台重写存在的问题"><a href="#AOF-后台重写存在的问题" class="headerlink" title="AOF 后台重写存在的问题"></a>AOF 后台重写存在的问题</h4><p>AOF 后台重写使用子进程进行从写，解决了主进程阻塞的问题，但是仍然存在另一个问题：</p>
+<p>子进程在进行 AOF 重写期间，服务器主进程还需要继续处理命令请求，<strong>新的命令可能会对现有的数据库状态进行修改，从而使得当前的数据库状态和重写后的 AOF 文件保存的数据库状态不一致。</strong></p>
+<h4 id="如何解决-AOF-后台重写存在的数据不一致问题"><a href="#如何解决-AOF-后台重写存在的数据不一致问题" class="headerlink" title="如何解决 AOF 后台重写存在的数据不一致问题"></a>如何解决 AOF 后台重写存在的数据不一致问题</h4><p>为了解决上述问题，Redis 引入了 <strong>AOF 重写缓冲区</strong>（aof_rewrite_buf_blocks），这个缓冲区在服务器创建子进程之后开始使用，当 Redis 服务器执行完一个写命令之后，它会同时将这个写命令追加到 AOF 缓冲区和 AOF 重写缓冲区。</p>
+<p> 1、现有 AOF 文件的处理工作会如常进行。这样即使在重写的中途发生停机，现有的 AOF 文件也还是安全的。<br> 2、从创建子进程开始，也就是 AOF 重写开始，服务器执行的所有写命令会被记录到 AOF 重写缓冲区里面。</p>
+<p> 这样，<strong>当子进程完成 AOF 重写工作后，父进程会在 serverCron 中检测到子进程已经重写结束</strong>，则会执行以下工作：<br> 1、将 AOF 重写缓冲区中的所有内容写入到新 AOF 文件中，这时新 AOF 文件所保存的数据库状态将和服务器当前的数据库状态一致。<br> 2、对新的 AOF 文件进行改名，原子的覆盖现有的 AOF 文件，完成新旧两个 AOF 文件的替换。</p>
+<h4 id="RDB、AOF、混合持久，用哪一个？"><a href="#RDB、AOF、混合持久，用哪一个？" class="headerlink" title="RDB、AOF、混合持久，用哪一个？"></a>RDB、AOF、混合持久，用哪一个？</h4><p>如果想尽量保证数据安全性， 你应该同时使用 RDB 和 AOF 持久化功能，同时可以开启混合持久化。</p>
+<p>如果你非常关心你的数据， 但仍然可以承受数分钟以内的数据丢失， 那么你可以只使用 RDB 持久化。</p>
+<p>如果你的数据是可以丢失的，则可以关闭持久化功能，在这种情况下，Redis 的性能是最高的。</p>
+<p>使用 Redis 通常都是为了提升性能，而如果为了不丢失数据而将 appendfsync 设置为 always 级别时，对 Redis 的性能影响是很大的，在这种不能接受数据丢失的场景，其实可以考虑直接选择 MySQL 。</p>
+<h4 id="同时开启-RDB-和-AOF，服务重启时如何加载"><a href="#同时开启-RDB-和-AOF，服务重启时如何加载" class="headerlink" title="同时开启 RDB 和 AOF，服务重启时如何加载"></a>同时开启 RDB 和 AOF，服务重启时如何加载</h4><p>简单来说，如果同时启用了 AOF 和 RDB，Redis 重新启动时，<strong>会使用 AOF 文件来重建数据集</strong>，因为通常来说， AOF的数据会更完整。</p>
+<p>而在引入了混合持久化之后，使用 AOF 重建数据集时，会通过文件开头是否为“REDIS”来判断是否为混合持久化。</p>
+]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>持久化</tag>
       </tags>
   </entry>
   <entry>
@@ -2588,11 +2633,12 @@
 <p>现在标准：<strong>在最大吞吐量优先的情况下，降低停顿时间。</strong></p>
 <p>1999年随JDK1.3.1一起来的是串行方式的Serial GC，它是第一款GC。ParNew垃圾收集器是Serial收集器的多线程版本<br>2002年2月26日，Parallel GC和Concurrent Mark Sweep GC跟随JDK1.4.2一起发布Parallel GC在JDK6之后成为HotSpot默认GC。<br>2012年，在JDK1.7u4版本中，G1可用。<br>2017年，<strong>JDK9中G1变成默认的垃圾收集器，以替代CMS。</strong><br>2018年3月，JDK10中G1垃圾回收器的并行完整垃圾回收，实现并行性来改善最坏情况下的延迟。<br>2018年9月，JDK11发布。引入Epsilon 垃圾回收器，又被称为 “No-Op(无操作)“ 回收器。同时，引入ZGC：可伸缩的低延迟垃圾回收器（Experimental）<br>2019年3月，JDK12发布。增强G1，自动返回未用堆内存给操作系统。同时，引入Shenandoah GC：低停顿时间的GC（Experimental）。<br>2019年9月，JDK13发布。增强ZGC，自动返回未用堆内存给操作系统。<br><strong>2020年3月，JDK14发布。删除CMS垃圾回收器</strong>。扩展ZGC在macOS和Windows上的应用</p>
 <p>7款经典的垃圾收集器<br><strong>串行回收器：Serial、Serial old</strong><br><strong>并行回收器：ParNew、Parallel Scavenge、Parallel old</strong><br><strong>并发回收器：CMS、G1</strong></p>
-<p><img src="image-20210802151315089.png"></p>
-<p><img src="image-20210802151245677.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/DeJERlKAhL34BoQ.png" alt="image-20210802151315089"></p>
+<p><img src="https://i.loli.net/2021/08/05/9rHwzoCX1SKYuag.png" alt="image-20210802151245677"></p>
 <p>为什么要有很多收集器，一个不够吗？因为Java的使用场景很多，移动端，服务器等。所以就需要针对不同的场景，提供不同的垃圾收集器，提高垃圾收集的性能。</p>
 <p>JDK 8 中默认使用 ParallelGC 和 ParallelOldGC 的组合。</p>
-<h3 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h3><h3 id="Parnew"><a href="#Parnew" class="headerlink" title="Parnew"></a>Parnew</h3><p>如果说Serial GC是年轻代中的单线程垃圾收集器，那么<strong>ParNew收集器则是Serial收集器的多线程版本。</strong><br>Par是Parallel的缩写，New：只能处理新生代<br>ParNew 收集器除了采用<strong>并行回收</strong>的方式执行内存回收外，两款垃圾收集器之间几乎没有任何区别。ParNew收集器在年轻代中同样也是采用复制算法、”Stop-the-World”机制。<br>ParNew 是很多JVM运行在Server模式下新生代的默认垃圾收集器。</p>
+<h3 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h3><p>串行的。</p>
+<h3 id="Parnew"><a href="#Parnew" class="headerlink" title="Parnew"></a>Parnew</h3><p>如果说Serial GC是年轻代中的单线程垃圾收集器，那么<strong>ParNew收集器则是Serial收集器的多线程版本。</strong><br>Par是Parallel的缩写，New：只能处理新生代<br>ParNew 收集器除了采用<strong>并行回收</strong>的方式执行内存回收外，两款垃圾收集器之间几乎没有任何区别。ParNew收集器在年轻代中同样也是采用复制算法、”Stop-the-World”机制。<br>ParNew 是很多JVM运行在Server模式下新生代的默认垃圾收集器。</p>
 <p>对于新生代，回收次数频繁，<strong>使用并行方式高效</strong>。<br>对于老年代，回收次数少，<strong>使用串行方式节省资源</strong>。（CPU并行需要切换线程，串行可以省去切换线程的资源）</p>
 <p><strong>ParNew 回收器与 Serial 回收器比较</strong></p>
 <p>Q：由于ParNew收集器基于并行回收，那么是否可以断定ParNew收集器的回收效率在任何场景下都会比Serial收集器更高效？</p>
@@ -2610,7 +2656,7 @@
 <p>CMS收集器的关注点是尽可能缩短垃圾收集时用户线程的停顿时间。停顿时间越短（低延迟）就越适合与用户交互的程序，良好的响应速度能提升用户体验。</p>
 <p>目前很大一部分的Java应用集中在互联网站或者B/S系统的服务端上，这类应用尤其重视服务的响应速度，希望系统停顿时间最短，以给用户带来较好的体验。CMS收集器就非常符合这类应用的需求。</p>
 <p>CMS的垃圾收集算法采用<strong>标记-清除算法</strong>，并且也会”Stop-the-World”，不幸的是，CMS作为老年代的收集器，却无法与JDK1.4.0中已经存在的新生代收集器Parallel Scavenge配合工作（因为实现的框架不一样，没办法兼容使用），<strong>所以在JDK1.5中使用CMS来收集老年代的时候，新生代只能选择ParNew或者Serial收集器中的一个。</strong><br>在G1出现之前，CMS使用还是非常广泛的。一直到今天，仍然有很多系统使用CMS GC。</p>
-<p><img src="image-20210802151828157.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/u6cqdol4AvgW8eK.png" alt="image-20210802151828157"></p>
 <h4 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h4><p>CMS整个过程比之前的收集器要复杂，整个过程分为4个主要阶段，即初始标记阶段、并发标记阶段、重新标记阶段和并发清除阶段。(涉及STW的阶段主要是：初始标记 和 重新标记)</p>
 <p><strong>初始标记（Initial-Mark）阶段</strong>：在这个阶段中，程序中所有的工作线程都将会因为“Stop-the-World”机制而出现<strong>短暂的暂停</strong>，这个阶段的主要任务仅仅只是标记出GC Roots能直接关联到的对象。一旦标记完成之后就会恢复之前被暂停的所有应用线程。由于直接关联对象比较小，所以这里的速度非常快。</p>
 <p><strong>并发标记（Concurrent-Mark）阶段</strong>：从GC Roots的直接关联对象开始遍历整个对象图的过程，这个过程耗时较长但是不需要停顿用户线程，可以与垃圾收集线程一起并发运行。</p>
@@ -2637,7 +2683,7 @@
 <p><strong>1，并行与并发兼备</strong></p>
 <p>并行性：G1在回收期间，可以有多个GC线程同时工作，有效利用多核计算能力。此时用户线程STW<br>并发性：G1拥有与应用程序交替执行的能力，部分工作可以和应用程序同时执行，因此，一般来说，不会在整个回收阶段发生完全阻塞应用程序的情况<br><strong>2，分代收集</strong></p>
 <p>从分代上看，G1依然属于分代型垃圾回收器，它会区分年轻代和老年代，年轻代依然有Eden区和Survivor区。但从堆的结构上看，它不要求整个Eden区、年轻代或者老年代都是连续的，也不再坚持固定大小和固定数量。<br>将堆空间分为若干个区域（Region），这些区域中包含了逻辑上的年轻代和老年代。<br><strong>和之前的各类回收器不同，它同时兼顾年轻代和老年代。</strong>对比其他回收器，或者工作在年轻代，或者工作在老年代；</p>
-<p><img src="image-20210802152854640.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/KFNiqT1SUnylwGc.png" alt="image-20210802152854640"></p>
 <p><strong>3，空间整合</strong><br>CMS：“标记-清除”算法、内存碎片、若干次GC后进行一次碎片整理</p>
 <p>G1将内存划分为一个个的region。<strong>内存的回收是以region作为基本单位的</strong>。Region之间是复制算法，但整体上实际可看作是标记-压缩（Mark-Compact）算法，两种算法都可以避免内存碎片。这种特性有利于程序长时间运行，分配大对象时不会因为无法找到连续内存空间而提前触发下一次GC。<strong>尤其是当Java堆非常大的时候，G1的优势更加明显。</strong></p>
 <p><strong>4，可预测的停顿时间模型（软实时soft real-time）</strong></p>
@@ -2657,7 +2703,7 @@
 <p>虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，它们都是一部分Region（不需要连续）的集合。通过Region的动态分配方式实现逻辑上的连续。</p>
 <p>一个Region有可能属于Eden，Survivor或者Old/Tenured内存区域。但是一个Region只可能属于一个角色。</p>
 <p>G1垃圾收集器还增加了一种新的内存区域，<strong>叫做Humongous内存区域</strong>，如图中的H块。主要用于存储大对象，<strong>如果超过0.5个Region，就放到H。</strong></p>
-<p><img src="image-20210802153249024.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/Drv4WB8nqwNjigm.png" alt="image-20210802153249024"></p>
 <h4 id="设置-H-的原因"><a href="#设置-H-的原因" class="headerlink" title="设置 H 的原因"></a>设置 H 的原因</h4><p>对于堆中的大对象，默认直接会被分配到老年代，但是如果它是一个短期存在的大对象就会对垃圾收集器造成负面影响。</p>
 <p>为了解决这个问题，G1划分了一个Humongous区，它用来专门存放大对象。如果一个H区装不下一个大对象，那么G1会寻找连续的H区来存储。为了能找到连续的H区，有时候不得不启动Full GC。<strong>G1的大多数行为都把H区作为老年代的一部分来看待。</strong></p>
 <p><strong>每个Region都是通过指针碰撞来分配空间</strong></p>
@@ -2699,7 +2745,7 @@
 <h3 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC?"></a>ZGC?</h3><p>ZGC收集器是一款<strong>基于Region内存布局</strong>的，（暂时）不设分代的，使用了<strong>读屏障、染色指针和内存多重映射</strong>等技术来实现可并发的标记-压缩算法的，以低延迟为首要目标的一款垃圾收集器。</p>
 <p>ZGC的工作过程可以分为4个阶段：<strong>并发标记 - 并发预备重分配 - 并发重分配 - 并发重映射</strong> 等。</p>
 <p>ZGC几乎在所有地方并发执行的，<strong>除了初始标记的是STW的</strong>。所以停顿时间几乎就耗费在初始标记上，这部分的实际时间是非常少的。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="image-20210802154953900.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="https://i.loli.net/2021/08/05/haoOkViNCXmSW6Z.png" alt="image-20210802154953900"></p>
 ]]></content>
       <categories>
         <category>JVM</category>
@@ -2790,7 +2836,7 @@
 <h4 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h4><p>引用计数算法（Reference Counting）比较简单，对每个对象保存一个整型的<strong>引用计数器属性</strong>。用于记录对象被引用的情况。</p>
 <p>对于一个对象A，只要有任何一个对象引用了A，则A的引用计数器就加1；当引用失效时，引用计数器就减1。只要对象A的引用计数器的值为0，即表示对象A不可能再被使用，可进行回收。<br>优点：实现简单，垃圾对象便于辨识；判定效率高，回收没有延迟性。</p>
 <p><strong>缺点：</strong><br>它需要单独的字段存储计数器，这样的做法增加了存储空间的开销。<br>每次赋值都需要更新计数器，伴随着加法和减法操作，这增加了时间开销。<br>引用计数器有一个严重的问题，即<strong>无法处理循环引用的情况。这是一条致命缺陷，导致在Java的垃圾回收器中没有使用这类算法。</strong></p>
-<p><img src="image-20210802142919765.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/gWaOJqmfQGdnPV6.png" alt="image-20210802142919765"></p>
 <p>当p的指针断开的时候，内部的引用形成一个循环，计数器都还算1，无法被回收，这就是循环引用，从而造成<strong>内存泄漏。</strong></p>
 <p><strong>小结：</strong></p>
 <p>引用计数算法，是很多语言的资源回收选择，例如因人工智能而更加火热的Python，它更是同时支持引用计数和垃圾收集机制。<br>具体哪种最优是要看场景的，业界有大规模实践中仅保留引用计数机制，以提高吞吐量的尝试。<br>Java并没有选择引用计数，是因为其存在一个基本的难题，也就是很难处理循环引用关系。</p>
@@ -2843,7 +2889,7 @@
 <p>消除了标记-清除算法当中，内存区域分散的缺点，我们需要给新对象分配内存时，JVM只需要持有一个内存的起始地址即可。<br>消除了复制算法当中，内存减半的高额代价。</p>
 <p><strong>缺点</strong></p>
 <p>从效率上来说，<strong>标记-整理算法要低于复制算法。</strong><br><strong>移动对象的同时，如果对象被其他对象引用，则还需要调整引用的地址</strong>（因为HotSpot虚拟机采用的不是句柄池的方式，而是直接指针）<br>移动过程中，需要全程暂停用户应用程序。即：STW</p>
-<p><img src="image-20210802144424767.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/M7nHWifTIFvLU8o.png" alt="image-20210802144424767"></p>
 <h3 id="分带收集算法"><a href="#分带收集算法" class="headerlink" title="分带收集算法"></a>分带收集算法</h3><p>前面所有这些算法中，并没有一种算法可以完全替代其他算法，<strong>它们都具有自己独特的优势和特点。</strong>分代收集算法应运而生。</p>
 <p>分代收集算法，是基于这样一个事实：<strong>不同的对象的生命周期是不一样的</strong>。因此，不同生命周期的对象可以采取不同的收集方式，以便提高回收效率。一般是把Java堆分为新生代和老年代，这样就可以根据各个年代的特点使用不同的回收算法，以提高垃圾回收的效率。</p>
 <p>在Java程序运行的过程中，会产生大量的对象，其中有些对象是与业务信息相关:<br>比如Http请求中的Session对象、线程、Socket连接，这类对象跟业务直接挂钩，因此生命周期比较长。</p>
@@ -2860,7 +2906,7 @@
 <h3 id="分区算法"><a href="#分区算法" class="headerlink" title="分区算法"></a>分区算法</h3><p><strong>主要针对G1收集器来说的</strong></p>
 <p>一般来说，在相同条件下，堆空间越大，一次GC时所需要的时间就越长，有关GC产生的停顿也越长。为了更好地控制GC产生的停顿时间，将一块大的内存区域分割成多个小块，根据目标的停顿时间，每次合理地回收若干个小区间，而不是整个堆空间，从而减少一次GC所产生的停顿。</p>
 <p>分代算法将按照对象的生命周期长短划分成两个部分，分区算法将整个堆空间划分成连续的不同小区间。每一个小区间都独立使用，独立回收。这种算法的好处是可以控制一次回收多少个小区间。</p>
-<p><img src="image-20210802144806782.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/iIkWjETN43rCoFX.png" alt="image-20210802144806782"></p>
 ]]></content>
       <categories>
         <category>JVM</category>

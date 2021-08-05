@@ -156,6 +156,238 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="post-title-link" itemprop="url">Redis-数据类型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-30 15:12:00" itemprop="dateCreated datePublished" datetime="2021-07-30T15:12:00+08:00">2021-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-04 15:22:27" itemprop="dateModified" datetime="2021-08-04T15:22:27+08:00">2021-08-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>redis总是键值对存储。</strong></p>
+<p><strong>key总是string。</strong></p>
+<p><strong>value有五种类型。</strong></p>
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>string 数据结构是简单的 <strong>key-value</strong> 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 <strong>简单动态字符串（simple dynamic string，SDS）</strong>。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据<strong>还可以保存二进制数据</strong>，并且**获取字符串长度复杂度为 O(1)**（C 字符串为O(N)）,除此之外，Redis 的 SDS API 是安全的，不会造成缓冲区溢出。</p>
+<p><img src="https://i.loli.net/2021/08/04/zkHrifPgLS46UeR.png" alt="image-20210804150655994"></p>
+<p>常用命令： <strong>set,get,strlen,exists,decr,incr,setex</strong> 等等。</p>
+<p>应用场景： <strong>一般常用在需要计数的场景，比如用户的访问次数、热点文章的点赞转发数量等等。</strong></p>
+<p>127.0.0.1:6379&gt; set key value #设置 key-value 类型的值<br>127.0.0.1:6379&gt; get key # 根据 key 获得对应的 value<br>127.0.0.1:6379&gt; exists key  # 判断某个 key 是否存在<br>127.0.0.1:6379&gt; strlen key # 返回 key 所储存的字符串值的长度。<br>127.0.0.1:6379&gt; del key # 删除某个 key 对应的值<br>127.0.0.1:6379&gt; get key</p>
+<p>批量设置 :<br>127.0.0.1:6379&gt; mset key1 value1 key2 value2 # 批量设置 key-value 类型的值<br>127.0.0.1:6379&gt; mget key1 key2 # 批量获取多个 key 对应的 value</p>
+<p>计数器（字符串的内容为整数的时候可以使用）：<br>127.0.0.1:6379&gt; set number 1<br>127.0.0.1:6379&gt; incr number # 将 key 中储存的数字值增一<br>127.0.0.1:6379&gt; get number<br>127.0.0.1:6379&gt; decr number # 将 key 中储存的数字值减一<br>127.0.0.1:6379&gt; get number</p>
+<p>过期（默认为永不过期）：<br>127.0.0.1:6379&gt; <strong>expire</strong> key  60 # 数据在 60s 后过期<br>127.0.0.1:6379&gt; setex key 60 value # 数据在 60s 后过期 (setex:[set] + [ex]pire)<br>127.0.0.1:6379&gt; ttl key # 查看数据还有多久过期</p>
+<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p>list 即是 <strong>链表</strong>。链表是一种非常常见的数据结构，特点是易于数据元素的插入和删除并且可以灵活调整链表长度，但是链表的随机访问困难。Redis 的 list 的实现为一个 <strong>双向链表</strong>，即可以支持反向查找和遍历，更方便操作，不过带来了部分额外的内存开销。</p>
+<p>常用命令**: rpush,lpop,lpush,rpop,lrange,llen** 等。</p>
+<p>应用场景: <strong>发布与订阅或者说消息队列、慢查询。</strong></p>
+<p>通过 rpush/lpop 实现队列：<br>127.0.0.1:6379&gt; rpush myList value1 # 向 list 的头部（右边）添加元素<br>127.0.0.1:6379&gt; rpush myList value2 value3 # 向list的头部（最右边）添加多个元素<br>127.0.0.1:6379&gt; lpop myList # 将 list的尾部(最左边)元素取出<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的list列表， 0 为 start,1为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1表示倒数第一</p>
+<p>通过 rpush/rpop 实现栈：<br>127.0.0.1:6379&gt; rpush myList2 value1 value2 value3<br>127.0.0.1:6379&gt; rpop myList2 # 将 list的头部(最右边)元素取出</p>
+<p>通过 lrange 查看对应下标范围的列表元素：<br>127.0.0.1:6379&gt; rpush myList value1 value2 value3<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的list列表， 0 为 start,1为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1表示倒数第一<br>通过 lrange 命令，你可以基于 list 实现分页查询，性能非常高！</p>
+<p>通过 llen 查看链表长度：<br>127.0.0.1:6379&gt; llen myList</p>
+<h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p>hash 类似于 JDK1.8 前的 HashMap，**内部实现也差不多(数组 + 链表)**。不过，Redis 的 hash 做了更多优化。另外，hash 是一个 string 类型的 field 和 value 的映射表，特别适合用于存储对象，后续操作的时候，你可以直接仅仅修改这个对象中的某个字段的值。</p>
+<h4 id="渐进式rehash（）；"><a href="#渐进式rehash（）；" class="headerlink" title="渐进式rehash（）；"></a><strong>渐进式rehash（）；</strong></h4><p>hash 对象在扩容时使用了一种叫“<strong>渐进式 rehash</strong>”的方式，步骤如下：</p>
+<p>1）计算新表 size（*2且为2的幂次）、掩码，为新表 ht[1] 分配空间，让字典同时持有 ht[0] 和 ht[1] 两个哈希表。<br>2）将 rehash <strong>索引计数器变量 rehashidx</strong> 的值设置为 0，表示 rehash 正式开始。<br>3）在 rehash 进行期间，每次对字典执行添加、删除、査找、更新操作时，程序除了执行指定的操作以外，还会触发额外的 rehash 操作，在源码中的 _dictRehashStep 方法。</p>
+<p>_dictRehashStep：从名字也可以看出来，大意是 rehash 一步，也就是 rehash 一个索引位置。</p>
+<p>该方法会从 <strong>ht[0] 表的 rehashidx 索引位置上开始向后查找，找到第一个不为空的索引位置，将该索引位置的所有节点 rehash 到 ht[1]，当本次 rehash 工作完成之后，将 ht[0] 索引位置为 rehashidx 的节点清空，同时将 rehashidx属性的值加一。</strong></p>
+<p>4）将 rehash 分摊到每个操作上确实是非常妙的方式，但是万一此时服务器比较空闲，一直没有什么操作，难道 redis要一直持有两个哈希表吗？<br>答案当然不是的。我们知道，redis 除了文件事件外，还有时间事件，<strong>redis 会定期触发时间事件，这些时间事件用于执行一些后台操作，其中就包含 rehash 操作</strong>：当 redis 发现有字典正在进行 rehash 操作时，会花费 1 毫秒的时间，一起帮忙进行 rehash。</p>
+<p>5）随着操作的不断执行，最终在某个时间点上，<strong>ht[0] 的所有键值对都会被 rehash 至 ht[1]<strong>，此时 rehash 流程完成，会执行最后的清理工作：</strong>释放 ht[0] 的空间、将 ht[0] 指向 ht[1]、重置 ht[1]、重置 rehashidx</strong></p>
+<h4 id="渐进式-rehash-的优点"><a href="#渐进式-rehash-的优点" class="headerlink" title="渐进式 rehash 的优点"></a>渐进式 rehash 的优点</h4><p>渐进式 rehash 的好处在于它采取<strong>分而治之</strong>的方式，将 rehash 键值对所需的计算工作<strong>均摊到对字典的每个添加、删除、查找和更新操作上</strong>，从而避免了<strong>集中式 rehash 而带来的庞大计算量</strong>。</p>
+<p>在进行渐进式 rehash 的过程中，字典会同时使用 ht[0] 和 ht[1] 两个哈希表， 所以在渐进式 rehash 进行期间，字典的删除、査找、更新等操作会在两个哈希表上进行。例如，要在字典里面査找一个键的话，程序会先在 ht[0] 里面进行査找，如果没找到的话，就会继续到 ht[1] 里面进行査找，诸如此类。</p>
+<p>另外，在渐进式 rehash 执行期间，<strong>新增的键值对会被直接保存到 ht[1], ht[0] 不再进行任何添加操作，这样就保证了 ht[0] 包含的键值对数量会只减不增，并随着 rehash 操作的执行而最终变成空表。</strong></p>
+<p>常用命令： <strong>hset,hmset,hexists,hget,hgetall,hkeys,hvals 等</strong>。</p>
+<p>应用场景: 系统中对象数据的存储。 hash 数据结构来存储用户信息，商品信息等等。</p>
+<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p>set 类似于 Java 中的 HashSet 。Redis 中的 set 类型是一种<strong>无序集合</strong>，集合中的元素没有先后顺序。<strong>当你需要存储一个列表数据，又不希望出现重复数据时，set 是一个很好的选择</strong>，并且 set 提供了判断某个成员是否在一个 set 集合内的重要接口，这个也是 list 所不能提供的。</p>
+<p><strong>可以基于 set 轻易实现交集、并集、差集的操作。</strong></p>
+<p>常用命令： <strong>sadd,spop,smembers,sismember,scard,sinterstore,sunion</strong> 等。</p>
+<p>应用场景: 需要存放的数据不能重复以及需要获取多个数据源交集和并集等场景。比如：你可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。Redis 可以非常方便的实现如<strong>共同关注、共同粉丝、共同喜好等功能。</strong><br>127.0.0.1:6379&gt; smembers mySet # 查看 set 中所有的元素<br>127.0.0.1:6379&gt; scard mySet # 查看 set 的长度<br>127.0.0.1:6379&gt; sismember mySet value1 # 检查某个元素是否存在set 中，只能接收单个元素<br>127.0.0.1:6379&gt; sadd mySet2 value2 value3<br>127.0.0.1:6379&gt; sinterstore mySet3 mySet mySet2 # 获取 mySet 和 mySet2 的交集并存放在 mySet3 中</p>
+<h3 id="sorted-set"><a href="#sorted-set" class="headerlink" title="sorted set"></a>sorted set</h3><p>和 set 相比，sorted set 增加了一个<strong>权重参数 score</strong>，使得集合中的元素能够按 score 进行有序排列，还可以通过 score 的范围来获取元素的列表。有点像是 Java 中 HashMap 和 TreeSet 的结合体。</p>
+<p>常用命令： zadd,zcard,zscore,zrange,zrevrange,zrem 等。</p>
+<p>应用场景： 需要对数据根据某个权重进行排序的场景。比如在直播系统中，实时排行信息包含直播间在线用户列表，各种<strong>礼物排行榜，弹幕消息（可以理解为按消息维度的消息排行榜）等信息</strong>。</p>
+<h4 id="Sorted-Set-为什么同时使用字典和跳跃表？"><a href="#Sorted-Set-为什么同时使用字典和跳跃表？" class="headerlink" title="Sorted Set 为什么同时使用字典和跳跃表？"></a>Sorted Set 为什么同时使用字典和跳跃表？</h4><p>主要是为了提升性能。</p>
+<p>单独使用字典：在执行范围型操作，比如 zrank、zrange，字典需要进行排序，至少需要 O(NlogN) 的时间复杂度及额外 O(N) 的内存空间。<br>单独使用跳跃表：根据成员查找分值操作的复杂度从 O(1) 上升为 O(logN）</p>
+<h4 id="Sorted-Set-为什么使用跳跃表，而不是红黑树？"><a href="#Sorted-Set-为什么使用跳跃表，而不是红黑树？" class="headerlink" title="Sorted Set 为什么使用跳跃表，而不是红黑树？"></a>Sorted Set 为什么使用跳跃表，而不是红黑树？</h4><p>主要有以下几个原因：<br>1）跳表的性能和红黑树差不多。<br>2）<strong>跳表更容易实现和调试</strong>。</p>
+<h3 id="bitmap"><a href="#bitmap" class="headerlink" title="bitmap"></a>bitmap</h3><p>bitmap 存储的是连续的二进制数字（0 和 1），通过 bitmap, 只需要一个 bit 位来表示某个元素对应的值或者状态，key 就是对应元素本身 。我们知道 8 个 bit 可以组成一个 byte，所以 bitmap 本身会极大的节省储存空间。</p>
+<p>常用命令： setbit 、getbit 、bitcount、bitop</p>
+<p>应用场景： 适合需要保存状态信息（比如是否签到、是否登录…）并需要进一步对这些信息进行分析的场景。比如<strong>用户签到情况、活跃用户情况、用户行为统计（比如是否点赞过某个视频）</strong>。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Mysql-%E7%B4%A2%E5%BC%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/Mysql-%E7%B4%A2%E5%BC%95/" class="post-title-link" itemprop="url">Mysql-索引</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-30 15:11:24" itemprop="dateCreated datePublished" datetime="2021-07-30T15:11:24+08:00">2021-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-04 14:55:17" itemprop="dateModified" datetime="2021-08-04T14:55:17+08:00">2021-08-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:<strong>B+树和 Hash</strong>。<br>Hash 索引不支持顺序和范围查询。</p>
+<h2 id="B-树-amp-B-树两者有何异同呢？"><a href="#B-树-amp-B-树两者有何异同呢？" class="headerlink" title="B 树&amp; B+树两者有何异同呢？"></a>B 树&amp; B+树两者有何异同呢？</h2><p>B 树的所有节点<strong>既存放键(key) 也存放 数据(data)<strong>，而 B+树</strong>只有叶子节点存放 key 和 data</strong>，其他内节点只存放 key。</p>
+<p>B 树的叶子节点都是独立的;</p>
+<p>B+树的<strong>叶子节点有一条引用链指向与它相邻的叶子节点</strong>。</p>
+<p><img src="https://i.loli.net/2021/08/04/dm9kpsbhzaX8M2D.png" alt="image-20210804144530896"></p>
+<p>B 树的检索的过程相当于对范围内的每个节点的关键字做<strong>二分查找</strong>，可能还没有到达叶子节点，检索就结束了。</p>
+<p>而 <strong>B+树的检索效率就很稳定</strong>了，任何查找都是从根节点到叶子节点的过程，叶子节点的顺序检索很明显。</p>
+<p>MyISAM 引擎中，B+Tree 叶节点的 <strong>data 域存放的是数据记录的地址</strong>。在索引检索的时候，首先按照 B+Tree 搜索算法搜索索引，如果指定的 Key 存在，则取出其 data 域的值，然后以 data 域的值为地址读取相应的数据记录。这被称为“非聚簇索引”。</p>
+<p>InnoDB 引擎中，其<strong>数据文件本身就是索引文件</strong>。<br>相比 MyISAM，索引文件和数据文件是分离的，其表数据文件本身就是按 B+Tree 组织的一个索引结构，树的叶节点 data 域保存了完整的数据记录。这个索引的 key 是数据表的主键，<strong>因此 InnoDB 表数据文件本身就是主索引。这被称为“聚簇索引（或聚集索引）</strong>”，而其余的索引都作为<strong>辅助索引</strong>。</p>
+<p>辅助索引的 <strong>data 域存储相应记录主键的值而不是地址</strong>，这也是和 MyISAM 不同的地方。</p>
+<p>在根据主索引搜索时，直接找到 key 所在的节点即可取出数据；在根据辅助索引查找时，则需要先取出主键的值，在走一遍主索引。 </p>
+<p>因此，在设计表的时候，不建议使用过长的字段作为主键，也不建议使用非单调的字段作为主键，这样会造成主索引频繁分裂。</p>
+<h2 id="为什么-MySQL-数据库要用-B-树存储索引？而不用红黑树、Hash、B-树？"><a href="#为什么-MySQL-数据库要用-B-树存储索引？而不用红黑树、Hash、B-树？" class="headerlink" title="为什么 MySQL 数据库要用 B+树存储索引？而不用红黑树、Hash、B 树？"></a>为什么 MySQL 数据库要用 B+树存储索引？而不用红黑树、Hash、B 树？</h2><p><strong>红黑树</strong>：如果在内存中，红黑树的<strong>查找效率比 B 树更高</strong>，但是涉及到磁盘操作，B 树就更优了。因为红黑树是二叉树，数据量大时树的层数很高，从树的根结点向下寻找的过程，每读 1 个节点，都相当于一次 IO 操作，因此红黑树的 <strong>I/O 操作会比 B 树多的多</strong>。</p>
+<p><strong>B 树索引</strong>：B 树索相比于 B+树，在进行范围查询时，需要做<strong>局部的中序遍历</strong>，<strong>可能要跨层访问</strong>，跨层访问代表着要进行额外的磁盘 I/O 操作；另外，B 树的非叶子节点存放了数据记录的地址，会导致存放的节点更少，树的层数变高。</p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="主键索引-Primary-Key"><a href="#主键索引-Primary-Key" class="headerlink" title="主键索引(Primary Key)"></a>主键索引(Primary Key)</h3><p>数据表的主键列使用的就是主键索引。</p>
+<p>一张数据表有只能有一个主键，并且主键不能为 null，不能重复。</p>
+<p>在 MySQL 的 InnoDB 的表中，当没有显示的指定表的主键时，InnoDB 会自动先检查表中是否有<strong>唯一索引</strong>的字段，如果有，则选择该字段为默认的主键，否则 <strong>InnoDB 将会自动创建一个 6Byte 的自增主键。</strong></p>
+<h3 id="二级索引-辅助索引"><a href="#二级索引-辅助索引" class="headerlink" title="二级索引(辅助索引)"></a>二级索引(辅助索引)</h3><p>二级索引又称为辅助索引，是因为二级索引的叶子节点存储的数据是主键。也就是说，<strong>通过二级索引，可以定位主键的位置。</strong><br>唯一索引，普通索引，前缀索引等索引属于二级索引。</p>
+<h3 id="聚集索引的缺点"><a href="#聚集索引的缺点" class="headerlink" title="聚集索引的缺点"></a>聚集索引的缺点</h3><p><strong>依赖于有序的数据</strong> ：因为 B+树是多路平衡树，如果索引的数据不是有序的，那么就需要在插入时排序，如果数据是整型还好，否则类似于字符串或 <strong>UUID</strong> 这种又长又难比较的数据，插入或查找的速度肯定比较慢。</p>
+<p><strong>更新代价大</strong> ： 如果对索引列的数据被修改时，那么对应的索引也将会被修改， 而且况聚集索引的叶子节点还存放着数据，修改代价肯定是较大的， 所以对于主键索引来说，主键一般都是不可被修改的。</p>
+<p>非聚集索引的叶子节点并不一定存放数据的指针， <strong>因为二级索引的叶子节点就存放的是主键，根据主键再回表查数据。</strong></p>
+<h3 id="什么是回表查询？"><a href="#什么是回表查询？" class="headerlink" title="什么是回表查询？"></a>什么是回表查询？</h3><p>InnoDB 中，对于<strong>主键索引，只需要走一遍主键索引的查询就能在叶子节点拿到数据。</strong><br>而对于普通索引，叶子节点存储的是 key + 主键值，因此需要再走一次主键索引，通过主键索引找到行记录，这就是所谓的回表查询，先定位主键值，再定位行记录。</p>
+<h3 id="走普通索引，一定会出现回表查询吗？"><a href="#走普通索引，一定会出现回表查询吗？" class="headerlink" title="走普通索引，一定会出现回表查询吗？"></a>走普通索引，一定会出现回表查询吗？</h3><p>不一定，如果查询语句所要求的字段全部命中了索引，那么就不必再进行回表查询。<br>有一个 user 表，主键为 id，name 为普通索引，则再执行：<br>select id, name from user where name =’joonwhee’ 时，通过 name 的索引就能拿到 id 和 name。</p>
+<h3 id="覆盖索引。"><a href="#覆盖索引。" class="headerlink" title="覆盖索引。"></a>覆盖索引。</h3><p>当索引上<strong>包含了查询语句中的所有列</strong>时，我们无需进行回表查询就能拿到所有的请求数据，因此速度会很快。当 explain 的输出结果 Extra 字段为 <strong>Using index</strong> 时，则代表触发覆盖索引。</p>
+<h3 id="联合索引（复合索引）的底层实现？最佳左前缀原则？"><a href="#联合索引（复合索引）的底层实现？最佳左前缀原则？" class="headerlink" title="联合索引（复合索引）的底层实现？最佳左前缀原则？"></a>联合索引（复合索引）的底层实现？最佳左前缀原则？</h3><p>联合索引底层还是使用 B+树索引，并且还是只有<strong>一棵树</strong>，只是此时的排序会：首先按照第一个索引排序，在第一个索引相同的情况下，再按第二个索引排序，依次类推。</p>
+<p>这也是为什么有“最佳左前缀原则”的原因，<strong>因为右边（后面）的索引都是在左边（前面）的索引排序的基础上进行排序的，如果没有左边的索引，单独看右边的索引，其实是无序的</strong></p>
+<h3 id="B-树中一个节点到底多大合适？"><a href="#B-树中一个节点到底多大合适？" class="headerlink" title="B+树中一个节点到底多大合适？"></a>B+树中一个节点到底多大合适？</h3><p>1 页或页的倍数最为合适。因为如果一个节点的大小小于 1 页，那么读取这个节点的时候其实也会读出 1 页，造成资源的浪费。所以为了不造成浪费，所以最后把一个节点的大小控制在 1 页、2 页、3 页等倍数页大小最为合适。<br>这里说的“页”是 MySQL 自定义的单位（和操作系统类似），MySQL 的 Innodb 引擎中 <strong>1 页的默认大小是 16k。</strong></p>
+<h3 id="为什么一个节点为-1-页就够了？"><a href="#为什么一个节点为-1-页就够了？" class="headerlink" title="为什么一个节点为 1 页就够了？"></a>为什么一个节点为 1 页就够了？</h3><p>Innodb 中，B+树中的一个节点存储的内容是：</p>
+<ul>
+<li>非叶子节点：key + 指针</li>
+<li>叶子节点：数据行（key 通常是数据的主键）<br>对于叶子节点：我们假设 1 行数据大小为 1k（对于普通业务绝对够了），那么 1 页能存 16 条数据。对于非叶子节点：key 使用 bigint 则为 8 字节，指针在 MySQL 中为 6 字节，一共是 14 字节，则 16k 能存放 16 * 1024 / 14 = 1170 个。那么一颗高度为 3 的 B+树能存储的数据为：1170 * 1170 * 16 = 21902400（千万级）。</li>
+</ul>
+<h3 id="什么是-Buffer-Pool？"><a href="#什么是-Buffer-Pool？" class="headerlink" title="什么是 Buffer Pool？"></a>什么是 Buffer Pool？</h3><p>Buffer Pool 是 InnoDB 维护的一个<strong>缓存区域</strong>，用来<strong>缓存数据和索引在内存中</strong>，主要用来加速数据的读写，如果 BufferPool 越大，那么 MySQL 就越像一个内存数据库，默认大小为 <strong>128M</strong>。<br>InnoDB 会将那些热点数据和一些 InnoDB 认为即将访问到的数据存在 Buffer Pool 中，以提升数据的读取性能。<br>InnoDB 在修改数据时，如果数据的页在 Buffer Pool 中，则会直接修改 Buffer Pool，此时我们称这个页为脏页，InnoDB 会以一定的频率将脏页刷新到磁盘，这样可以尽量减少磁盘 I/O，提升性能。</p>
+<h3 id="非聚集索引不一定回表查询。"><a href="#非聚集索引不一定回表查询。" class="headerlink" title="非聚集索引不一定回表查询。"></a>非聚集索引不一定回表查询。</h3><p>用户准备使用 SQL 查询用户名，而用户名字段正好建立了索引。<br> SELECT name FROM table WHERE name=’guang19’;<br>那么这个索引的 key 本身就是 name，查到对应的 name 直接返回就行了，无需回表查询。</p>
+<h3 id="联合索引命中规则："><a href="#联合索引命中规则：" class="headerlink" title="联合索引命中规则："></a>联合索引命中规则：</h3><ol>
+<li>MySQL联合索引遵循最<strong>左前缀匹配规则</strong>，即从联合索引的最左列开始向右匹配，直到遇到匹配终止条件。</li>
+<li> 例如联合索引(col1, col2, col3), where条件为col1=a AND col2=b可命中该联合索引的(col1,col2)前缀部分, where条件为col2=b AND col3=c不符合最左前缀匹配，不能命中该联合索引。</li>
+<li>**匹配终止条件为范围操作符(如&gt;, &lt;, between, like等)或函数等不能应用索引的情况**。例如联合索引(col1, col2, col3), where条件为col1=a AND col2&gt;1 AND col3=c, 在col2列上为范围查询，匹配即终止，只会匹配到col1，不能匹配到(col1, col2, col3)。</li>
+<li><strong>where条件中的顺序不影响索引命中</strong>。例如联合索引(col1, col2, col3), where条件为col3=c AND col2=b AND col1=a, MySQL优化器会自行进行优化，可命中联合索引(col1, col2, col3)。</li>
+</ol>
+<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="共享锁和排他锁？"><a href="#共享锁和排他锁？" class="headerlink" title="共享锁和排他锁？"></a>共享锁和排他锁？</h3><p><strong>共享锁</strong>又称为<strong>读锁，简称 S 锁</strong>，顾名思义，共享锁就是多个事务对于同一数据可以共享一把锁，都能访问到数据，但是只能读不能修改。</p>
+<p><strong>排他锁</strong>又称为<strong>写锁，简称 X 锁，</strong>顾名思义，排他锁就是不能与其他锁并存，如一个事务获取了一个数据行的排他锁，其他事务就不能再获取该行的其他锁，包括共享锁和排他锁，但是获取排他锁的事务可以对数据就行读取和修改。<br>常见的几种 SQL 语句的加锁情况如下：<br>select * from table：不加锁<br>update/insert/delete：排他锁<br> select * from table where id = 1 for update：id 为索引，加排他锁<br> select * from table where id = 1 lock in share mode：id 为索引，加共享锁</p>
+<h3 id="MySQL-如何实现悲观锁和乐观锁？"><a href="#MySQL-如何实现悲观锁和乐观锁？" class="headerlink" title="MySQL 如何实现悲观锁和乐观锁？"></a>MySQL 如何实现悲观锁和乐观锁？</h3><p>乐观锁：<strong>更新时带上版本号（cas 更新）</strong><br>悲观锁：<strong>使用共享锁和排它锁</strong>，select…lock in share mode，select…for update。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Mysql-%E4%BA%8B%E5%8A%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -701,7 +933,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-03 22:36:49" itemprop="dateModified" datetime="2021-08-03T22:36:49+08:00">2021-08-03</time>
+                <time title="修改时间：2021-08-05 14:24:24" itemprop="dateModified" datetime="2021-08-05T14:24:24+08:00">2021-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -733,16 +965,40 @@
 <h4 id="实现："><a href="#实现：" class="headerlink" title="实现："></a>实现：</h4><p><img src="https://i.loli.net/2021/08/03/Qdk7pGoAtMq1NmJ.png" alt="image-20210803205028306"></p>
 <h3 id="信号量semaphore"><a href="#信号量semaphore" class="headerlink" title="信号量semaphore"></a>信号量semaphore</h3><p>信号量，用来控制同时访问特定资源的线程数量，它通过协调各个线程以保证合理的使用公共资源，可以用做流量控制，譬如数据库连接场景控制等；</p>
 <p>Semaphore 的构造方法 Semaphore(int permits) 接收一个整型参数，表示可用的许可证数量，即<strong>最大并发数量</strong>，使用方法就是在线程里面首先调用 acquire 方法获取一个许可，使用完后接着调用 <strong>release 归还一个许可，</strong>还可以使用 <strong>tryAcquire 尝试获取许可</strong>。</p>
-<h3 id="倒计时门栓countdownlatch"><a href="#倒计时门栓countdownlatch" class="headerlink" title="倒计时门栓countdownlatch"></a>倒计时门栓countdownlatch</h3><p>允许<strong>一个或者多个线程</strong>等待其他线程完成操作。</p>
-<p>平时我们在主线程等待其他线程结束一般都是在主线程调用其他 Thread 的 join 方法进行阻塞等待，而 join 的实质就是循环判断线程 isAlive 就进行 wait 操作，直到被 join 的线程终止后线程的 this.notifyAll 方法（JVM实现，外部不可见）会被调用进而触发 wait 结束而使 join 阻塞退出；</p>
-<p>并发包提供的 CountDownLatch 也可以实现 join 的功能，而且还提供了比 join 更多的功能。</p>
-<p>CountDownLatch 构造函数<strong>接收一个 int 参数作为计数器</strong>，如果你想等待 N 个计数点完成就传 N，当我们每个点完成时调用 CountDownLatch 的 <strong>countDown</strong> 方法则 N 就会自动减一，CountDownLatch 的 <strong>await 会阻塞当前线程直到 N 变为零为止</strong>，其采用 CAS 和 AQS（AbstractQueuedSynchronizer）实现。</p>
-<h3 id="循环栅栏cyclicbarrier"><a href="#循环栅栏cyclicbarrier" class="headerlink" title="循环栅栏cyclicbarrier"></a>循环栅栏cyclicbarrier</h3><p><strong>同步可循换使用</strong>的屏障，让一组线程<strong>到达一个屏障（同步点）时被阻塞</strong>，直到最后一个线程到达屏障时才会开门，所有被屏障拦截的线程才会继续干活；</p>
-<p>CyclicBarrier 默认的构造方法是 CyclicBarrier(int parties)，其参数表示<strong>屏障拦截的线程数量</strong>，每个线程调用 <strong>await 方法告诉 CyclicBarrier 我已经到达了屏障</strong>，然后当前线程被阻塞；</p>
-<p>CyclicBarrier 还提供一个高级构造函数 CyclicBarrier(int parties, Runnable barrierAction) 用于在线程到达屏障时优先执行 barrierAction，方便处理复杂的业务场景；</p>
-<p>CyclicBarrier 适合<strong>并发计算数据汇总场景</strong>，每个线程负责一部分计算，然后在栅栏处等待，到齐后交换数据结果，进行下一次迭代。</p>
+<h3 id="倒计时门栓countdownlatch"><a href="#倒计时门栓countdownlatch" class="headerlink" title="倒计时门栓countdownlatch"></a>倒计时门栓countdownlatch</h3><p>CountDownLatch <strong>允许 count 个线程阻塞在一个地方</strong>，直至所有线程的任务都执行完毕。</p>
+<p>CountDownLatch 是共享锁的一种实现,它默认构造 AQS 的 state 值为 count。</p>
+<p>线程使用 <strong>countDown()</strong> 方法时,使用了tryReleaseShared方法以 CAS 的操作来<strong>减少 state</strong>,直至 state 为 0 。</p>
+<p>当调用 <strong>await() 方法</strong>的时候，如果 state 不为 0，那就证明任务还没有执行完毕，await() 方法就会一直阻塞，也就是说 <strong>await() 方法之后的语句不会被执行</strong>。然后，CountDownLatch 会自旋 CAS 判断 state == 0，如果 state == 0 的话，就会释放所有等待的线程，await() 方法之后的语句得到执行。</p>
+<h4 id="CountDownLatch-的两种典型用法"><a href="#CountDownLatch-的两种典型用法" class="headerlink" title="CountDownLatch 的两种典型用法"></a>CountDownLatch 的两种典型用法</h4><p>1、某一线程在开始运行前等待 n 个线程执行完毕。</p>
+<p>将 CountDownLatch 的计数器初始化为 n （new CountDownLatch(n)），每当一个任务线程执行完毕，就将计数器减 1 （countdownlatch.countDown()），当计数器的值变为 0 时，在 CountDownLatch 上 await() 的线程就会被唤醒。一个典型应用场景就是<strong>启动一个服务时，主线程需要等待多个组件加载完毕</strong>，之后再继续执行。</p>
+<p>2、实现多个线程开始执行任务的<strong>最大并行性。</strong></p>
+<p>注意是并行性，不是并发，强调的是<strong>多个线程在某一时刻同时开始执行</strong>。类似于赛跑，将多个线程放到起点，等待发令枪响，然后同时开跑。做法是初始化一个共享的 CountDownLatch 对象，将其计数器初始化为 1 （new CountDownLatch(1)），多个线程在开始执行任务前首先 coundownlatch.await()，当主线程调用 countDown() 时，计数器变为 0，多个线程同时被唤醒。</p>
+<h4 id="CountDownLatch-的不足"><a href="#CountDownLatch-的不足" class="headerlink" title="CountDownLatch 的不足"></a>CountDownLatch 的不足</h4><p>CountDownLatch 是一次性的，计数器的值只能在构造方法中初始化一次，之后没有任何机制再次对其设置值，当 CountDownLatch 使用完毕后，它不能再次被使用。</p>
+<h3 id="循环栅栏cyclicbarrier"><a href="#循环栅栏cyclicbarrier" class="headerlink" title="循环栅栏cyclicbarrier"></a>循环栅栏cyclicbarrier</h3><p>CountDownLatch 的实现是基于 AQS 的，而 CycliBarrier 是基于 ReentrantLock(ReentrantLock 也属于 AQS 同步器)和 Condition 的。</p>
+<p>CyclicBarrier 的字面意思是<strong>可循环使用（Cyclic）的屏障（Barrier）</strong>。它要做的事情是：让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续干活。</p>
+<p>CyclicBarrier 默认的构造方法是 CyclicBarrier(int parties)，其参数表示屏障拦截的线程数量，每个线程调用 <strong>await() 方法告诉 CyclicBarrier 我已经到达了屏障，然后当前线程被阻塞。</strong></p>
+<p>CyclicBarrier 内部通过一个 <strong>count 变量作为计数器</strong>，count 的初始值为 parties 属性的初始化值，每当一个线程到了栅栏这里了，那么就将计数器减一。如果 count 值为 0 了，表示这是这一代最后一个线程到达栅栏，就尝试执行我们构造方法中输入的任务。</p>
+<h4 id="CyclicBarrier-的应用场景"><a href="#CyclicBarrier-的应用场景" class="headerlink" title="CyclicBarrier 的应用场景"></a>CyclicBarrier 的应用场景</h4><p>CyclicBarrier 可以用于<strong>多线程计算数据，最后合并计算结果的应用场景</strong>。比如我们用一个 Excel 保存了用户所有银行流水，每个 Sheet 保存一个帐户近一年的每笔银行流水，现在需要统计用户的日均银行流水，先用多线程处理每个 sheet 里的银行流水，都执行完之后，得到每个 sheet 的日均银行流水，最后，再用 barrierAction 用这些线程的计算结果，计算出整个 Excel 的日均银行流水。</p>
+<p>CyclicBarrier 还提供一个更高级的构造函数 CyclicBarrier(int parties, Runnable barrierAction)，用于在线程到达屏障时，优先执行 barrierAction，方便处理更复杂的业务场景。</p>
 <h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p><img src="https://i.loli.net/2021/08/03/OP6kMEHuTK14R89.png" alt="image-20210803210950957"></p>
-<h2 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h2><h2 id="future-futuretask"><a href="#future-futuretask" class="headerlink" title="future/futuretask"></a>future/futuretask</h2>
+<p>CountDownLatch 是计数器，<strong>只能使用一次</strong>，而 CyclicBarrier 的计数器提供 reset 功能，<strong>可以多次使用</strong>。</p>
+<p>CountDownLatch: <strong>一个或者多个线程</strong>，等待<strong>其他多个线程完成某件事情之后</strong>才能执行；</p>
+<p>CyclicBarrier : <strong>多个线程互相等待，直到到达同一个同步点，再继续一起执行。</strong></p>
+<p>对于 CountDownLatch 来说，重点是“<strong>一个线程（多个线程）等待</strong>”，而其他的 N 个线程在完成“某件事情”之后，可以终止，也可以等待。</p>
+<p>而对于 CyclicBarrier，重点是<strong>多个线程，在任意一个线程没有完成，所有的线程都必须等待。</strong></p>
+<p>CountDownLatch 是计数器，线程完成一个记录一个，只不过计数不是递增而是递减，而 CyclicBarrier 更像是一个阀门，需要所有线程都到达，阀门才能打开，然后继续执行。</p>
+<h2 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h2><p><img src="https://i.loli.net/2021/08/05/vjqPYt4JX1xfGlk.png" alt="image-20210805141923139"></p>
+<p>线程 1 往阻塞队列中添加元素，而线程 2 从阻塞队列中移除元素</p>
+<p><strong>当阻塞队列是空时</strong>，从队列中获取元素的操作将会被阻塞。</p>
+<p><strong>当阻塞队列是满时</strong>，从队列中添加元素的操作将会被阻塞。</p>
+<p>试图从空的阻塞队列中获取元素的线程将会阻塞，直到其他的线程往空的队列插入新的元素，同样，试图往已满的阻塞队列添加新元素的线程同样也会阻塞，直到其他的线程从列中移除一个或多个元素或者完全清空队列后继续新增。</p>
+<h3 id="为什么要用阻塞队列，有什么好处吗"><a href="#为什么要用阻塞队列，有什么好处吗" class="headerlink" title="为什么要用阻塞队列，有什么好处吗"></a>为什么要用阻塞队列，有什么好处吗</h3><p>在多线程领域：所谓阻塞，是指在某些情况下会<strong>挂起线程（即阻塞）</strong>，一旦条件满足，<strong>被挂起的线程又会自动被唤醒。</strong></p>
+<p>好处是我们<strong>不需要关心什么时候需要阻塞线程，什么时候需要唤醒线程，因为这些 BlockingQueue 都包办了。</strong></p>
+<p>在 concurrent 包发布以前，多线程环境下，我们每个程序员都必须自己去实现这些细节，尤其还要兼顾效率和线程安全，这会给我们的程序带来不小的复杂性。</p>
+<p>JDK 提供了 7 个阻塞队列。分别是</p>
+<p>ArrayBlockingQueue ：一个由数组结构组成的有界阻塞队列<br>LinkedBlockingQueue ：一个由链表结构组成的有界阻塞队列<br>PriorityBlockingQueue ：一个支持优先级排序的无界阻塞队列<br>DelayQueue：一个使用优先级队列实现的无界阻塞队列<br>SynchronousQueue：一个不存储元素的阻塞队列<br>LinkedTransferQueue：一个由链表结构组成的无界阻塞队列（实现了继承于 BlockingQueue的 TransferQueue）<br>LinkedBlockingDeque：一个由链表结构组成的双向阻塞队列</p>
+<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><p><img src="https://i.loli.net/2021/08/05/dv943bwnZLAeIKt.png" alt="image-20210805142222849"></p>
+<h2 id="future-futuretask"><a href="#future-futuretask" class="headerlink" title="future/futuretask"></a>future/futuretask</h2>
       
     </div>
 
@@ -923,7 +1179,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-03 19:23:07" itemprop="dateModified" datetime="2021-08-03T19:23:07+08:00">2021-08-03</time>
+                <time title="修改时间：2021-08-05 14:06:23" itemprop="dateModified" datetime="2021-08-05T14:06:23+08:00">2021-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -946,10 +1202,30 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>synchronized</p>
-<p>CAS</p>
-<p>AQS</p>
-<p><img src="https://i.loli.net/2021/08/03/ovkD8F5rExbgpBq.png" alt="image-20210803192200462"></p>
+          <h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p>见《线程安全的机制》</p>
+<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。</p>
+<p>CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。</p>
+<p>CAS虽然很高效的解决了原子操作问题，但是CAS仍然存在三大问题。</p>
+<p><strong>循环时间长开销很大。</strong><br><strong>只能保证一个共享变量的原子操作。</strong><br><strong>ABA问题。</strong></p>
+<p><strong>如果CAS失败，会一直进行尝试</strong>。如果CAS长时间一直不成功，可能会给CPU带来很大的开销。</p>
+<p>当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候就可以用锁来保证原子性。</p>
+<p>如果值曾经被改成了B，后来又被改回为A，那CAS操作就会误认为它从来没有被改变过。这个漏洞称为CAS操作的“ABA”问题。</p>
+<p>Java并发包为了解决这个问题，提供了一个<strong>带有标记的原子引用类“AtomicStampedReference”，</strong>它可以通过<strong>控制变量值的版本</strong>来保证CAS的正确性。因此，在使用CAS前要考虑清楚“ABA”问题是否会影响程序并发的正确性，如果需要解决ABA问题，改用传统的互斥同步可能会比原子类更高效。</p>
+<h3 id="AQS-抽象队列同步器"><a href="#AQS-抽象队列同步器" class="headerlink" title="AQS-抽象队列同步器"></a>AQS-抽象队列同步器</h3><p><img src="https://i.loli.net/2021/08/03/ovkD8F5rExbgpBq.png" alt="image-20210803192200462"></p>
+<p><strong>AQS 核心思想是，</strong>如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设置为锁定状态。<strong>如果被请求的共享资源被占用</strong>，那么就需要一套线程阻塞等待以及被唤醒时锁分配的机制，这个机制 AQS 是用 <strong>CLH 队列锁</strong>实现的，即将暂时获取不到锁的线程加入到队列中。</p>
+<p>CLH(Craig,Landin,and Hagersten)队列是一个<strong>虚拟的双向队列</strong>（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将<strong>每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点</strong>（Node）来实现锁的分配。</p>
+<p><img src="https://i.loli.net/2021/08/05/FMUxJCKm7Gkn8Hv.png" alt="image-20210805140155989"></p>
+<p>AQS 使用一个 int 成员变量来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。</p>
+<h4 id="AQS-对资源的共享方式"><a href="#AQS-对资源的共享方式" class="headerlink" title="AQS 对资源的共享方式"></a>AQS 对资源的共享方式</h4><p><strong>AQS 定义两种资源共享方式</strong></p>
+<h5 id="Exclusive（独占）"><a href="#Exclusive（独占）" class="headerlink" title="Exclusive（独占）"></a>Exclusive（独占）</h5><p><strong>只有一个线程能执行</strong>，如 ReentrantLock。又可分为公平锁和非公平锁，ReentrantLock 同时支持两种锁，下面以 ReentrantLock 对这两种锁的定义做介绍：</p>
+<p>公平锁 ：<strong>按照线程在队列中的排队顺序，先到者先拿到锁</strong><br>非公平锁 ：当线程要获取锁时，先通过<strong>两次 CAS 操作去抢锁</strong>，如果没抢到，当前线程再加入到队列中等待唤醒。</p>
+<p>ReentrantLock 默认采用<strong>非公平锁</strong>，<strong>因为考虑获得更好的性能</strong>，通过 boolean 来决定是否用公平锁（传入 true 用公平锁）。</p>
+<p>非公平锁在<strong>调用 lock</strong> 后，首先就会调用 CAS 进行一次抢锁，如果这个时候恰巧锁没有被占用，那么直接就获取到锁返回了。<br>非公平锁<strong>在 CAS 失败后</strong>，和公平锁一样都会进入到 <strong>tryAcquire 方法</strong>，在 tryAcquire 方法中，如果发现锁这个时候被释放了（state == 0），<strong>非公平锁会直接 CAS 抢锁</strong>，<strong>但是公平锁会判断等待队列是否有线程处于等待状态，如果有则不去抢锁，乖乖排到后面。</strong></p>
+<p>公平锁和非公平锁就这两点区别，<strong>如果这两次 CAS 都不成功，那么后面非公平锁和公平锁是一样的，都要进入到阻塞队列等待唤醒。</strong></p>
+<p>相对来说，<strong>非公平锁会有更好的性能，因为它的吞吐量比较大</strong>。当然，非公平锁让获取锁的时间变得更加不确定，可能会导致在阻塞队列中的线程长期处于饥饿状态。</p>
+<h5 id="Share（共享）"><a href="#Share（共享）" class="headerlink" title="Share（共享）"></a>Share（共享）</h5><p>多个线程可同时执行，如Semaphore、CountDownLatCh、 CyclicBarrier、ReadWriteLock 。</p>
+<p>ReentrantReadWriteLock 可以看成是组合式，因为 ReentrantReadWriteLock 也就是读写锁允许多个线程同时对某一资源进行读。</p>
+<p>不同的<strong>自定义同步器</strong>争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队/唤醒出队等），AQS 已经在上层已经帮我们实现好了。</p>
 
       
     </div>
@@ -1000,7 +1276,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-03 22:08:02" itemprop="dateModified" datetime="2021-08-03T22:08:02+08:00">2021-08-03</time>
+                <time title="修改时间：2021-08-05 14:31:08" itemprop="dateModified" datetime="2021-08-05T14:31:08+08:00">2021-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1056,8 +1332,16 @@
 <p>直接执行run就相当于执行main中的普通方法了，就不是多线程了。</p>
 <p><strong>实现runnable接口</strong>，重写run，启动start。</p>
 <p>java只支持单继承，因此引入runnable接口。</p>
-<p><strong>实现callable接口</strong>，覆盖call（）方法。</p>
+<p><strong>通过 Callable 和 Future 创建线程。</strong>覆盖call（）方法。</p>
 <p>可以获得任务执行返回值；</p>
+<ol>
+<li><strong>创建 Callable 接口的实现类</strong>，并实现 call() 方法，该 call() 方法将作为线程执行体，并且有返回值。</li>
+<li>创建 <strong>Callable 实现类的实例</strong>，使用 <strong>FutureTask 类来包装 Callable 对象</strong>，该 FutureTask 对象封装了该 Callable 对象的 call() 方法的返回值。</li>
+<li>使用 <strong>FutureTask 对象作为 Thread 对象的 target</strong> 创建并启动新线程。</li>
+<li>调用 <strong>FutureTask 对象的 get() 方法来获得子线程执行结束后的返回值</strong>。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class CallableThreadTest implements Callable&lt;Integer&gt; &#123;</span><br><span class="line">    public static void main(String[] args)&#123;  </span><br><span class="line">        CallableThreadTest ctt = new CallableThreadTest();  </span><br><span class="line">        FutureTask&lt;Integer&gt; ft = new FutureTask&lt;&gt;(ctt);  </span><br><span class="line">        for(int i = 0;i &lt; 100;i++)&#123;  </span><br><span class="line">            System.out.println(Thread.currentThread().getName()+&quot; 的循环变量i的值&quot;+i);  </span><br><span class="line">            if(i==20)&#123;  </span><br><span class="line">                new Thread(ft,&quot;有返回值的线程&quot;).start();  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;try&#123;  </span><br><span class="line">            System.out.println(&quot;子线程的返回值：&quot;+ft.get());  </span><br><span class="line">        &#125; catch (InterruptedException e)&#123;  </span><br><span class="line">            e.printStackTrace();  </span><br><span class="line">        &#125; catch (ExecutionException e)&#123;  </span><br><span class="line">            e.printStackTrace();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br><span class="line">    @Override  </span><br><span class="line">    public Integer call() throws Exception&#123;  </span><br><span class="line">        int i = 0;  </span><br><span class="line">        for(;i&lt;100;i++)&#123;  </span><br><span class="line">            System.out.println(Thread.currentThread().getName()+&quot; &quot;+i);  </span><br><span class="line">        &#125;  </span><br><span class="line">        return i;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>通过与Future的结合，可以实现利用Future来跟踪异步计算的结果。</p>
 <p>JDK5.0新特性。需要借助Future接口的唯一实现类<strong>FutureTask</strong>辅助线程的对象创建和返回值获取（FutureTask还实现了Runnable接口），再创建Thread对象，将FutureTask类的对象作为构造器参数传入，完成线程的创建，最后调用start()方法完成线程启动。</p>
 <p><strong>Runnable和Callable的区别：</strong></p>
@@ -1095,429 +1379,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/" class="post-title-link" itemprop="url">Java虚拟机-垃圾回收器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-30 15:07:42" itemprop="dateCreated datePublished" datetime="2021-07-30T15:07:42+08:00">2021-07-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-02 15:51:32" itemprop="dateModified" datetime="2021-08-02T15:51:32+08:00">2021-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><h4 id="评估-GC-的性能指标"><a href="#评估-GC-的性能指标" class="headerlink" title="评估 GC 的性能指标"></a>评估 GC 的性能指标</h4><p><strong>吞吐量</strong>：运行用户代码的时间占总运行时间的比例（总运行时间 = 程序的运行时间 + 内存回收的时间）<br>垃圾收集开销：吞吐量的补数，垃圾收集所用时间与总运行时间的比例。<br><strong>暂停时间</strong>：执行垃圾收集时，程序的工作线程被暂停的时间。<br>收集频率：相对于应用程序的执行，收集操作发生的频率。<br>内存占用：Java堆区所占的内存大小。<br>快速：一个对象从诞生到被回收所经历的时间。</p>
-<p><strong>吞吐量、暂停时间、内存占用</strong>这三者共同构成一个“不可能三角”。三者总体的表现会随着技术进步而越来越好。一款优秀的收集器通常最多同时满足其中的两项。</p>
-<p>这三项里，<strong>暂停时间的重要性日益凸显</strong>。因为随着硬件发展，内存占用多些越来越能容忍，硬件性能的提升也有助于降低收集器运行时对应用程序的影响，即提高了吞吐量。而内存的扩大，对延迟反而带来负面效果。</p>
-<p>简单来说，主要抓住两点：<br><strong>吞吐量</strong><br><strong>暂停时间</strong></p>
-<h4 id="吞吐量-vs-暂停时间"><a href="#吞吐量-vs-暂停时间" class="headerlink" title="吞吐量 vs 暂停时间"></a>吞吐量 vs 暂停时间</h4><p><strong>高吞吐量较好</strong>因为这会让应用程序的最终用户感觉只有应用程序线程在做“生产性”工作。直觉上，吞吐量越高程序运行越快。</p>
-<p><strong>低暂停时间（低延迟）较好</strong>，是从最终用户的角度来看，不管是GC还是其他原因导致一个应用被挂起始终是不好的。这取决于应用程序的类型，有时候甚至短暂的200毫秒暂停都可能打断终端用户体验。因此，具有较低的暂停时间是非常重要的，特别是对于一个<strong>交互式应用程序</strong>（就是和用户交互比较多的场景）。</p>
-<p>不幸的是”高吞吐量”和”低暂停时间”是一对相互竞争的目标（矛盾）。</p>
-<p>因为如果选择以<strong>吞吐量优先，那么必然需要降低内存回收的执行频率，但是这样会导致GC需要更长的暂停时间来执行内存回收。</strong><br>相反的，如果选择以低延迟优先为原则，那么为了降低每次执行内存回收时的暂停时间，也只能频繁地执行内存回收，但这又引起了年轻代内存的缩减和导致程序吞吐量的下降。<br>在设计（或使用）GC算法时，我们必须确定我们的目标：一个GC算法只可能针对两个目标之一（即只专注于较大吞吐量或最小暂停时间），或尝试找到一个二者的折中。</p>
-<p>现在标准：<strong>在最大吞吐量优先的情况下，降低停顿时间。</strong></p>
-<p>1999年随JDK1.3.1一起来的是串行方式的Serial GC，它是第一款GC。ParNew垃圾收集器是Serial收集器的多线程版本<br>2002年2月26日，Parallel GC和Concurrent Mark Sweep GC跟随JDK1.4.2一起发布Parallel GC在JDK6之后成为HotSpot默认GC。<br>2012年，在JDK1.7u4版本中，G1可用。<br>2017年，<strong>JDK9中G1变成默认的垃圾收集器，以替代CMS。</strong><br>2018年3月，JDK10中G1垃圾回收器的并行完整垃圾回收，实现并行性来改善最坏情况下的延迟。<br>2018年9月，JDK11发布。引入Epsilon 垃圾回收器，又被称为 “No-Op(无操作)“ 回收器。同时，引入ZGC：可伸缩的低延迟垃圾回收器（Experimental）<br>2019年3月，JDK12发布。增强G1，自动返回未用堆内存给操作系统。同时，引入Shenandoah GC：低停顿时间的GC（Experimental）。<br>2019年9月，JDK13发布。增强ZGC，自动返回未用堆内存给操作系统。<br><strong>2020年3月，JDK14发布。删除CMS垃圾回收器</strong>。扩展ZGC在macOS和Windows上的应用</p>
-<p>7款经典的垃圾收集器<br><strong>串行回收器：Serial、Serial old</strong><br><strong>并行回收器：ParNew、Parallel Scavenge、Parallel old</strong><br><strong>并发回收器：CMS、G1</strong></p>
-<p><img src="image-20210802151315089.png"></p>
-<p><img src="image-20210802151245677.png"></p>
-<p>为什么要有很多收集器，一个不够吗？因为Java的使用场景很多，移动端，服务器等。所以就需要针对不同的场景，提供不同的垃圾收集器，提高垃圾收集的性能。</p>
-<p>JDK 8 中默认使用 ParallelGC 和 ParallelOldGC 的组合。</p>
-<h3 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h3><h3 id="Parnew"><a href="#Parnew" class="headerlink" title="Parnew"></a>Parnew</h3><p>如果说Serial GC是年轻代中的单线程垃圾收集器，那么<strong>ParNew收集器则是Serial收集器的多线程版本。</strong><br>Par是Parallel的缩写，New：只能处理新生代<br>ParNew 收集器除了采用<strong>并行回收</strong>的方式执行内存回收外，两款垃圾收集器之间几乎没有任何区别。ParNew收集器在年轻代中同样也是采用复制算法、”Stop-the-World”机制。<br>ParNew 是很多JVM运行在Server模式下新生代的默认垃圾收集器。</p>
-<p>对于新生代，回收次数频繁，<strong>使用并行方式高效</strong>。<br>对于老年代，回收次数少，<strong>使用串行方式节省资源</strong>。（CPU并行需要切换线程，串行可以省去切换线程的资源）</p>
-<p><strong>ParNew 回收器与 Serial 回收器比较</strong></p>
-<p>Q：由于ParNew收集器基于并行回收，那么是否可以断定ParNew收集器的回收效率在任何场景下都会比Serial收集器更高效？</p>
-<p>A：不能<br>ParNew收集器运行在多CPU的环境下，由于可以充分利用多CPU、多核心等物理硬件资源优势，可以更快速地完成垃圾收集，提升程序的吞吐量。<br>但是在单个CPU的环境下，ParNew收集器不比Serial收集器更高效。虽然Serial收集器是基于串行回收，但是由于CPU不需要频繁地做任务切换，因此可以有效避免多线程交互过程中产生的一些额外开销。<br><strong>除Serial外，目前只有ParNew GC能与CMS收集器配合工作</strong></p>
-<h3 id="Parallel"><a href="#Parallel" class="headerlink" title="Parallel"></a>Parallel</h3><p>HotSpot的年轻代中除了拥有ParNew收集器是基于并行回收的以外，Parallel Scavenge收集器同样也采用了复制算法、并行回收和”Stop the World”机制。</p>
-<p><strong>那么Parallel收集器的出现是否多此一举？</strong></p>
-<p>和ParNew收集器不同，Parallel Scavenge收集器的目标则是达到一个<strong>可控制的吞吐量（Throughput）</strong>，它也被称为<strong>吞吐量优先的垃圾收集器。</strong></p>
-<p><strong>自适应调节策略</strong>也是Parallel Scavenge与ParNew一个重要区别。（<strong>动态调整内存分配情况，以达到一个最优的吞吐量或低延迟</strong>）</p>
-<p>高吞吐量则可以高效率地利用CPU时间，<strong>尽快完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务。因此，常见在服务器环境中使用。</strong>例如，那些执行批量处理、订单处理、工资支付、科学计算的应用程序。</p>
-<p>Parallel收集器在JDK1.6时提供了用于执行老年代垃圾收集的Parallel Old收集器，用来代替老年代的Serial Old收集器。</p>
-<p>Parallel Old收集器采用了<strong>标记-压缩算</strong>法，但同样也是基于并行回收和”Stop-the-World”机制。</p>
-<p>在程序吞吐量优先的应用场景中，Parallel收集器和Parallel Old收集器的组合，在server模式下的内存回收性能很不错。</p>
-<p><strong>在Java8中，默认是此垃圾收集器。</strong></p>
-<h3 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h3><p>在JDK1.5时期，Hotspot推出了一款在<strong>强交互应用</strong>中（就是和用户打交道的引用）几乎可认为有划时代意义的垃圾收集器：CMS（Concurrent-Mark-Sweep）收集器，这款收集器是HotSpot虚拟机中第一款真正意义上的并发收集器，<strong>它第一次实现了让垃圾收集线程与用户线程同时工作。</strong></p>
-<p>CMS收集器的关注点是尽可能缩短垃圾收集时用户线程的停顿时间。停顿时间越短（低延迟）就越适合与用户交互的程序，良好的响应速度能提升用户体验。</p>
-<p>目前很大一部分的Java应用集中在互联网站或者B/S系统的服务端上，这类应用尤其重视服务的响应速度，希望系统停顿时间最短，以给用户带来较好的体验。CMS收集器就非常符合这类应用的需求。</p>
-<p>CMS的垃圾收集算法采用<strong>标记-清除算法</strong>，并且也会”Stop-the-World”，不幸的是，CMS作为老年代的收集器，却无法与JDK1.4.0中已经存在的新生代收集器Parallel Scavenge配合工作（因为实现的框架不一样，没办法兼容使用），<strong>所以在JDK1.5中使用CMS来收集老年代的时候，新生代只能选择ParNew或者Serial收集器中的一个。</strong><br>在G1出现之前，CMS使用还是非常广泛的。一直到今天，仍然有很多系统使用CMS GC。</p>
-<p><img src="image-20210802151828157.png"></p>
-<h4 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h4><p>CMS整个过程比之前的收集器要复杂，整个过程分为4个主要阶段，即初始标记阶段、并发标记阶段、重新标记阶段和并发清除阶段。(涉及STW的阶段主要是：初始标记 和 重新标记)</p>
-<p><strong>初始标记（Initial-Mark）阶段</strong>：在这个阶段中，程序中所有的工作线程都将会因为“Stop-the-World”机制而出现<strong>短暂的暂停</strong>，这个阶段的主要任务仅仅只是标记出GC Roots能直接关联到的对象。一旦标记完成之后就会恢复之前被暂停的所有应用线程。由于直接关联对象比较小，所以这里的速度非常快。</p>
-<p><strong>并发标记（Concurrent-Mark）阶段</strong>：从GC Roots的直接关联对象开始遍历整个对象图的过程，这个过程耗时较长但是不需要停顿用户线程，可以与垃圾收集线程一起并发运行。</p>
-<p><strong>重新标记（Remark）阶段</strong>：由于在并发标记阶段中，<strong>程序的工作线程会和垃圾收集线程同时运行或者交叉运行，因此为了修正并发标记期间</strong>，因用户程序继续运作而<strong>导致标记产生变动的那一部分对象的标记记录</strong>，这个阶段的停顿时间通常会比初始标记阶段稍长一些，并且也会导致“Stop-the-World”的发生，但也远比并发标记阶段的时间短。</p>
-<p><strong>并发清除（Concurrent-Sweep）阶段</strong>：此阶段清理删除掉标记阶段判断的已经死亡的对象，释放内存空间。由于不需要移动存活对象，所以这个阶段也是可以与用户线程同时并发的</p>
-<p>CMS分析</p>
-<p>尽管CMS收集器采用的是并发回收（非独占式），<strong>但是在其初始化标记和再次标记这两个阶段中仍然需要执行“Stop-the-World”机制暂停程序中的工作线程，不过暂停时间并不会太长</strong>，因此可以说明目前所有的垃圾收集器都做不到完全不需要“Stop-the-World”，只是尽可能地缩短暂停时间。</p>
-<p>由于<strong>最耗费时间的并发标记与并发清除阶段</strong>都不需要暂停工作，所以整体的回收是低停顿的。</p>
-<p>CMS收集器的垃圾收集算法采用的是<strong>标记清除算法</strong>，这意味着每次执行完内存回收后，由于被执行内存回收的无用对象所占用的内存空间极有可能是不连续的一些内存块，不可避免地将会产生一些内存碎片。那么CMS在为新对象分配内存空间时，将无法使用指针碰撞（Bump the Pointer）技术，而只能够选择<strong>空闲列表（Free List）执行内存分配。</strong></p>
-<p>为什么 CMS 不采用标记-压缩算法呢？</p>
-<p>答案其实很简答，因为当并发清除的时候，用Compact整理内存的话，原来的用户线程使用的内存还怎么用呢？要保证用户线程能继续执行，前提的它运行的资源不受影响。Mark Compact更适合“stop the world”这种场景下使用。</p>
-<h4 id="CMS-的优点与弊端"><a href="#CMS-的优点与弊端" class="headerlink" title="CMS 的优点与弊端"></a>CMS 的优点与弊端</h4><p>优点</p>
-<p><strong>并发收集</strong><br><strong>低延迟</strong></p>
-<p>弊端</p>
-<p><strong>会产生内存碎片</strong>，导致并发清除后，用户线程可用的空间不足。在无法分配大对象的情况下，不得不提前触发Full GC。</p>
-<p>CMS收集器对<strong>CPU资源非常敏感</strong>。在并发阶段，它虽然不会导致用户停顿，但是会因为占用了一部分线程而导致应用程序变慢，总吞吐量会降低。<br>CMS收集器<strong>无法处理浮动垃圾</strong>。可能出现“Concurrent Mode Failure”失败而导致另一次Full GC的产生。在并发标记阶段由于程序的工作线程和垃圾收集线程是同时运行或者交叉运行的，那么在并发标记阶段如果产生新的垃圾对象，CMS将无法对这些垃圾对象进行标记，最终会导致这些新产生的垃圾对象没有被及时回收，从而只能在下一次执行GC时释放这些之前未被回收的内存空间。</p>
-<h3 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h3><p>G1 回收器：<strong>区域化分代式</strong></p>
-<p>应用程序所应对的业务越来越庞大、复杂，用户越来越多，没有GC就不能保证应用程序正常进行，而经常造成STW的GC又跟不上实际的需求，所以才会不断地尝试对GC进行优化。<br>G1（Garbage-First）垃圾回收器是在Java7 update4之后引入的一个新的垃圾回收器，是当今收集器技术发展的最前沿成果之一。<br>与此同时，<strong>为了适应现在不断扩大的内存和不断增加的处理器数量，进一步降低暂停时间（pause time），同时兼顾良好的吞吐量。</strong><br>官方给G1设定的目标是<strong>在延迟可控的情况下获得尽可能高的吞吐量</strong>，所以才担当起“全功能收集器”的重任与期望。</p>
-<p>为什么名字叫**Garbage First(G1)**呢？</p>
-<p>因为G1是一个并行回收器，它把堆内存分割为很多不相关的区域（Region）（物理上不连续的）。使用不同的Region来表示Eden、幸存者0区，幸存者1区，老年代等。<br>G1 GC有计划地避免在整个Java堆中进行全区域的垃圾收集。<strong>G1跟踪各个Region里面的垃圾堆积的价值大小（回收所获得的空间大小以及回收所需时间的经验值），在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region。</strong><br>由于这种方式的侧重点在于回收垃圾最大量的区间（Region），所以我们给G1一个名字：垃圾优先（Garbage First）。</p>
-<p>G1（Garbage-First）是一款<strong>面向服务端应用</strong>的垃圾收集器，主要针对配备<strong>多核CPU及大容量内存的机器</strong>，以极高概率满足GC停顿时间的同时，还兼具高吞吐量的性能特征。</p>
-<p>在JDK1.7版本正式启用，移除了Experimental的标识，是JDK9以后的默认垃圾回收器，取代了CMS回收器以及Parallel+Parallel Old组合。被Oracle官方称为“全功能的垃圾收集器”。<br>与此同时，CMS已经在JDK9中被标记为废弃（deprecated）。G1在JDK8中还不是默认的垃圾回收器，需要使用-XX:+UseG1GC来启用。</p>
-<h4 id="G1-回收器的优势"><a href="#G1-回收器的优势" class="headerlink" title="G1 回收器的优势"></a>G1 回收器的优势</h4><p>与其他GC收集器相比，G1使用了全新的分区算法，其特点如下所示：</p>
-<p><strong>1，并行与并发兼备</strong></p>
-<p>并行性：G1在回收期间，可以有多个GC线程同时工作，有效利用多核计算能力。此时用户线程STW<br>并发性：G1拥有与应用程序交替执行的能力，部分工作可以和应用程序同时执行，因此，一般来说，不会在整个回收阶段发生完全阻塞应用程序的情况<br><strong>2，分代收集</strong></p>
-<p>从分代上看，G1依然属于分代型垃圾回收器，它会区分年轻代和老年代，年轻代依然有Eden区和Survivor区。但从堆的结构上看，它不要求整个Eden区、年轻代或者老年代都是连续的，也不再坚持固定大小和固定数量。<br>将堆空间分为若干个区域（Region），这些区域中包含了逻辑上的年轻代和老年代。<br><strong>和之前的各类回收器不同，它同时兼顾年轻代和老年代。</strong>对比其他回收器，或者工作在年轻代，或者工作在老年代；</p>
-<p><img src="image-20210802152854640.png"></p>
-<p><strong>3，空间整合</strong><br>CMS：“标记-清除”算法、内存碎片、若干次GC后进行一次碎片整理</p>
-<p>G1将内存划分为一个个的region。<strong>内存的回收是以region作为基本单位的</strong>。Region之间是复制算法，但整体上实际可看作是标记-压缩（Mark-Compact）算法，两种算法都可以避免内存碎片。这种特性有利于程序长时间运行，分配大对象时不会因为无法找到连续内存空间而提前触发下一次GC。<strong>尤其是当Java堆非常大的时候，G1的优势更加明显。</strong></p>
-<p><strong>4，可预测的停顿时间模型（软实时soft real-time）</strong></p>
-<p>这是G1相对于CMS的另一大优势，G1除了追求低停顿外，<strong>还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒。</strong></p>
-<p>由于分区的原因，G1可以只选取部分区域进行内存回收，这样缩小了回收的范围，因此对于全局停顿情况的发生也能得到较好的控制。</p>
-<p>G1跟踪各个Region里面的垃圾堆积的价值大小（回收所获得的空间大小以及回收所需时间的经验值），在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region。保证了G1收集器在有限的时间内可以获取尽可能高的收集效率。</p>
-<p>相比于CMS GC，G1未必能做到CMS在最好情况下的延时停顿，但是最差情况要好很多。</p>
-<h4 id="G1-回收器的缺点"><a href="#G1-回收器的缺点" class="headerlink" title="G1 回收器的缺点"></a>G1 回收器的缺点</h4><p>相较于CMS，G1还不具备全方位、压倒性优势。比如在用户程序运行过程中，G1无论是<strong>为了垃圾收集产生的内存占用（Footprint）还是程序运行时的额外执行负载（overload）都要比CMS要高</strong>。</p>
-<p>从经验上来说，在小内存应用上CMS的表现大概率会优于G1，而G1在大内存应用上则发挥其优势。平衡点在6-8GB之间。</p>
-<h4 id="G1-的适用场景"><a href="#G1-的适用场景" class="headerlink" title="G1 的适用场景"></a>G1 的适用场景</h4><p>面向服务端应用，针对具有<strong>大内存、多处理器</strong>的机器。<br>最主要的应用是需要低GC延迟，并具有大堆的应用程序提供解决方案；</p>
-<p>如：在堆大小约6GB或更大时，可预测的暂停时间可以低于0.5秒；（G1通过每次只清理一部分而不是全部的Region的增量式清理来保证每次GC停顿时间不会过长）。</p>
-<p>用来替换掉JDK1.5中的CMS收集器；在下面的情况时，使用G1可能比CMS好：</p>
-<p>超过50%的Java堆被活动数据占用；<br>对象分配频率或年代提升频率变化很大；<br>GC停顿时间过长（长于0.5至1秒）</p>
-<p>HotSpot垃圾收集器里，除了G1以外，其他的垃圾收集器均使用内置的JVM线程执行GC的多线程操作，而G1 GC可以采用应用线程承担后台运行的GC工作，即当JVM的GC线程处理速度慢时，系统会调用应用程序线程帮助加速垃圾回收过程。</p>
-<p><strong>分区 Region：化整为零</strong></p>
-<p>使用G1收集器时，它将整个Java堆划分成<strong>约2048个大小相同的独立Region块</strong>，每个Region块大小根据堆空间的实际大小而定，<strong>整体被控制在1MB到32MB之间</strong>，<strong>且为2的N次幂，即1MB，2MB，4MB，8MB，16MB，32MB。</strong>可以通过XX:G1HeapRegionSize设定。所有的Region大小相同，且在JVM生命周期内不会被改变。</p>
-<p>虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，它们都是一部分Region（不需要连续）的集合。通过Region的动态分配方式实现逻辑上的连续。</p>
-<p>一个Region有可能属于Eden，Survivor或者Old/Tenured内存区域。但是一个Region只可能属于一个角色。</p>
-<p>G1垃圾收集器还增加了一种新的内存区域，<strong>叫做Humongous内存区域</strong>，如图中的H块。主要用于存储大对象，<strong>如果超过0.5个Region，就放到H。</strong></p>
-<p><img src="image-20210802153249024.png"></p>
-<h4 id="设置-H-的原因"><a href="#设置-H-的原因" class="headerlink" title="设置 H 的原因"></a>设置 H 的原因</h4><p>对于堆中的大对象，默认直接会被分配到老年代，但是如果它是一个短期存在的大对象就会对垃圾收集器造成负面影响。</p>
-<p>为了解决这个问题，G1划分了一个Humongous区，它用来专门存放大对象。如果一个H区装不下一个大对象，那么G1会寻找连续的H区来存储。为了能找到连续的H区，有时候不得不启动Full GC。<strong>G1的大多数行为都把H区作为老年代的一部分来看待。</strong></p>
-<p><strong>每个Region都是通过指针碰撞来分配空间</strong></p>
-<p>G1为每一个Region设 计了两个名为TAMS（Top at Mark Start）的指针，把Region中的一部分空间划分出来用于并发回收过程中的新对象分配，并发回收时新分配的对象地址都必须要在这两个指针位置以上。</p>
-<h4 id="G1-GC的垃圾回收过程"><a href="#G1-GC的垃圾回收过程" class="headerlink" title="G1 GC的垃圾回收过程"></a>G1 GC的垃圾回收过程</h4><p>年轻代GC（Young GC）</p>
-<p>老年代并发标记过程（Concurrent Marking）</p>
-<p>混合回收（Mixed GC）<br>（如果需要，单线程、独占式、高强度的Full GC还是继续存在的。它针对GC的评估失败提供了一种失败保护机制，即强力回收。）</p>
-<p>应用程序分配内存，当年轻代的Eden区用尽时开始年轻代回收过程；<strong>G1的年轻代收集阶段是一个并行的独占式收集器。</strong>在年轻代回收期，G1 GC暂停所有应用程序线程，启动多线程执行年轻代回收。然后从年轻代区间移动存活对象到Survivor区间或者老年区间，也有可能是两个区间都会涉及。</p>
-<p><strong>当堆内存使用达到一定值（默认45%）时，开始老年代并发标记过程。</strong></p>
-<p>标记完成马上开始<strong>混合回收过程</strong>。对于一个混合回收期，G1 GC从老年区间移动存活对象到空闲区间，这些空闲区间也就成为了老年代的一部分。和年轻代不同，老年代的G1回收器和其他GC不同，G1的老年代回收器不需要整个老年代被回收，一次只需要扫描/回收一小部分老年代的Region就可以了。同时，这个老年代Region是和年轻代一起被回收的。</p>
-<h4 id="Remembered-Set（记忆集）"><a href="#Remembered-Set（记忆集）" class="headerlink" title="Remembered Set（记忆集）"></a>Remembered Set（记忆集）</h4><p>无论G1还是其他分代收集器，JVM都是使用<strong>Remembered Set来避免全堆扫描；</strong><br>每个Region都有一个对应的<strong>Remembered Set</strong><br>每次Reference类型数据写操作时，都会产生一个Write Barrier暂时中断操作；<br>然后检查<strong>将要写入的引用指向的对象是否和该Reference类型数据在不同的Region</strong>（其他收集器：检查老年代对象是否引用了新生代对象）；<br>如果不同，通过CardTable把相关引用信息记录到引用指向对象的所在Region对应的Remembered Set中；<br>当进行垃圾收集时，<strong>在GC根节点的枚举范围加入Remembered Set；就可以保证不进行全局扫描，也不会有遗漏。</strong></p>
-<h4 id="G1回收过程一：年轻代-GC"><a href="#G1回收过程一：年轻代-GC" class="headerlink" title="G1回收过程一：年轻代 GC"></a>G1回收过程一：年轻代 GC</h4><p>JVM启动时，G1先准备好Eden区，程序在运行过程中不断创建对象到Eden区，当Eden空间耗尽时，G1会启动一次年轻代垃圾回收过程。<br>年轻代回收<strong>只回收Eden区和Survivor区</strong><br>YGC时，首先G1停止应用程序的执行（Stop-The-World），G1创建回收集（Collection Set），回收集是指需要被回收的内存分段的集合，年轻代回收过程的回收集包含<strong>年轻代Eden区和Survivor区所有的内存分段。</strong></p>
-<p>第一阶段，<strong>扫描根</strong><br>根是指GC Roots，根引用连同RSet记录的外部引用作为扫描存活对象的入口。</p>
-<p>第二阶段，<strong>更新RSet</strong></p>
-<p>第三阶段，<strong>处理RSet</strong><br><strong>识别被老年代对象指向的Eden中的对象，这些被指向的Eden中的对象被认为是存活的对象。</strong></p>
-<p>第四阶段，<strong>复制对象。</strong><br>此阶段，对象树被遍历，Eden区内存段中存活的对象会被复制到Survivor区中空的内存分段，Survivor区内存段中存活的对象，如果年龄未达阈值，年龄会加1，达到阀值会被会被复制到Old区中空的内存分段。如果Survivor空间不够，Eden空间的部分数据会直接晋升到老年代空间。</p>
-<p>第五阶段，<strong>处理引用</strong><br>处理Soft，Weak，Phantom，Final，JNI Weak 等引用。<strong>最终Eden空间的数据为空，GC停止工作</strong>，而目标内存中的对象都是连续存储的，没有碎片，所以复制过程可以达到内存整理的效果，减少碎片。</p>
-<h4 id="G1回收过程二：并发标记过程"><a href="#G1回收过程二：并发标记过程" class="headerlink" title="G1回收过程二：并发标记过程"></a>G1回收过程二：并发标记过程</h4><p><strong>初始标记阶段</strong>：标记从根节点直接可达的对象。这个阶段是STW的，并且会触发一次年轻代GC。正是由于该阶段时STW的，所以我们只扫描根节点可达的对象，以节省时间。</p>
-<p><strong>根区域扫描（Root Region Scanning）</strong>：G1 GC扫描Survivor区直接可达的老年代区域对象，并标记被引用的对象。这一过程必须在Young GC之前完成，因为Young GC会使用复制算法对Survivor区进行GC。</p>
-<p><strong>并发标记（Concurrent Marking）</strong>：在整个堆中进行并发标记（和应用程序并发执行），此过程可能被Young GC中断。在并发标记阶段，若发现区域对象中的所有对象都是垃圾，那这个区域会被立即回收。同时，并发标记过程中，<strong>会计算每个区域的对象活性（区域中存活对象的比例）。</strong></p>
-<p><strong>再次标记（Remark）：</strong>由于应用程序持续进行，<strong>需要修正上一次的标记结果</strong>。是STW的。G1中采用了比CMS更快的原始快照算法：<strong>Snapshot-At-The-Beginning（SATB）。</strong></p>
-<p><strong>独占清理（cleanup，STW）</strong>：<strong>计算各个区域的存活对象和GC回收比例，并进行排序，识别可以混合回收的区域</strong>。为下阶段做铺垫。是STW的。这个阶段并不会实际上去做垃圾的收集</p>
-<p><strong>并发清理阶段：</strong>识别并清理完全空闲的区域。</p>
-<h4 id="G1回收过程三：混合回收过程"><a href="#G1回收过程三：混合回收过程" class="headerlink" title="G1回收过程三：混合回收过程"></a>G1回收过程三：混合回收过程</h4><p>当越来越多的对象晋升到老年代Old Region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即Mixed GC，该算法并不是一个Old GC，<strong>除了回收整个Young Region，还会回收一部分的Old Region。</strong>这里需要注意：<strong>是一部分老年代，而不是全部老年代</strong>。可以选择哪些Old Region进行收集，从而可以对垃圾回收的耗时时间进行控制。也要注意的是Mixed GC并不是Full GC。</p>
-<p><strong>混合回收的细节</strong></p>
-<p>并发标记结束以后，老年代中百分百为垃圾的内存分段被回收了，部分为垃圾的内存分段被计算了出来。默认情况下，这些老年代的内存分段会分8次（可以通过-XX:G1MixedGCCountTarget设置）被回收。【意思就是一个Region会被分为8个内存段】</p>
-<p>混合回收的回收集（Collection Set）包括<strong>八分之一的老年代内存分段，Eden区内存分段，Survivor区内存分段</strong>。混合回收的算法和年轻代回收的算法完全一样，只是回收集多了老年代的内存分段。具体过程请参考上面的年轻代回收过程。</p>
-<p>由于老年代中的内存分段默认分8次回收，G1会优先回收垃圾多的内存分段。<strong>垃圾占内存分段比例越高的，越会被先回收。</strong></p>
-<p>并且有一个阈值会决定内存分段是否被回收。XX:G1MixedGCLiveThresholdPercent，默认为65%<strong>，意思是垃圾占内存分段比例要达到65%才会被回收</strong>。如果垃圾占比太低，意味着存活的对象占比高，在复制的时候会花费更多的时间。</p>
-<p>混合回收并不一定要进行8次。有一个阈值-XX:G1HeapWastePercent，默认值为10%，<strong>意思是允许整个堆内存中有10%的空间被浪费</strong>，意味着如果发现可以回收的垃圾占堆内存的比例低于10%，则不再进行混合回收。因为GC会花费很多的时间但是回收到的内存却很少。</p>
-<h4 id="G1-回收可选的过程四：Full-GC"><a href="#G1-回收可选的过程四：Full-GC" class="headerlink" title="G1 回收可选的过程四：Full GC"></a>G1 回收可选的过程四：Full GC</h4><p>G1的初衷就是要避免Full GC的出现。但是如果上述方式不能正常工作，G1会停止应用程序的执行（Stop-The-World），使用单线程的内存回收算法进行垃圾回收，性能会非常差，应用程序停顿时间会很长。</p>
-<p>要避免Full GC的发生，一旦发生Full GC，需要对JVM参数进行调整。什么时候会发生Ful1GC呢？比如堆内存太小，当G1在复制存活对象的时候没有空的内存分段可用，则会回退到Full GC，这种情况可以通过增大内存解决。</p>
-<p>导致G1 Full GC的原因可能有两个：<br><strong>EVacuation的时候没有足够的to-space来存放晋升的对象；</strong><br><strong>并发处理过程完成之前空间耗尽。</strong></p>
-<p><strong>G1 回收器的优化建议</strong></p>
-<p>年轻代大小<br>避免使用-Xmn或-XX:NewRatio等相关选项显式设置年轻代大小，因为固定年轻代的大小会覆盖可预测的暂停时间目标。<strong>我们让G1自己去调整</strong></p>
-<p><strong>暂停时间目标不要太过严苛</strong></p>
-<p>G1 GC的吞吐量目标是90%的应用程序时间和10%的垃圾回收时间<br>评估G1 GC的吞吐量时，暂停时间目标不要太严苛。目标太过严苛表示你愿意承受更多的垃圾回收开销，而这些会直接影响到吞吐量。</p>
-<p><strong>第一步：开启G1垃圾收集器</strong><br><strong>第二步：设置堆的最大内存</strong><br><strong>第三步：设置最大的停顿时间</strong></p>
-<h3 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC?"></a>ZGC?</h3><p>ZGC收集器是一款<strong>基于Region内存布局</strong>的，（暂时）不设分代的，使用了<strong>读屏障、染色指针和内存多重映射</strong>等技术来实现可并发的标记-压缩算法的，以低延迟为首要目标的一款垃圾收集器。</p>
-<p>ZGC的工作过程可以分为4个阶段：<strong>并发标记 - 并发预备重分配 - 并发重分配 - 并发重映射</strong> 等。</p>
-<p>ZGC几乎在所有地方并发执行的，<strong>除了初始标记的是STW的</strong>。所以停顿时间几乎就耗费在初始标记上，这部分的实际时间是非常少的。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="image-20210802154953900.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">Java虚拟机-垃圾回收算法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-30 15:07:34" itemprop="dateCreated datePublished" datetime="2021-07-30T15:07:34+08:00">2021-07-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-02 14:56:13" itemprop="dateModified" datetime="2021-08-02T14:56:13+08:00">2021-08-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><h4 id="垃圾？"><a href="#垃圾？" class="headerlink" title="垃圾？"></a>垃圾？</h4><p>Java 和 C++语言的区别，就在于<strong>垃圾收集技术和内存动态分配</strong>上，C++语言没有垃圾收集技术，需要程序员手动的收集。</p>
-<p><strong>什么是垃圾？</strong></p>
-<p>垃圾是指在运行程序中<strong>没有任何指针指向的对象</strong>，这个对象就是需要被回收的垃圾。</p>
-<p>如果不及时对内存中的垃圾进行清理，那么，这些垃圾对象所占的内存空间会一直保留到应用程序结束，被保留的空间无法被其他对象使用。甚至可能导致内存溢出。</p>
-<h4 id="System-gc-的理解"><a href="#System-gc-的理解" class="headerlink" title="System.gc() 的理解"></a>System.gc() 的理解</h4><p>在默认情况下，通过System.gc()者Runtime.getRuntime().gc() 的调用，会显式触发Full GC，同时对老年代和新生代进行回收，尝试释放被丢弃对象占用的内存。</p>
-<p>然而System.gc()调用附带一个免责声明，<strong>无法保证对垃圾收集器的调用(不能确保立即生效)</strong></p>
-<p>JVM实现者可以通过System.gc() 调用来决定JVM的GC行为。而一般情况下，垃圾回收应该是自动进行的，无须手动触发，否则就太过于麻烦了。在一些特殊情况下，如我们正在编写一个性能基准，我们可以在运行之间调用System.gc()</p>
-<h4 id="内存溢出"><a href="#内存溢出" class="headerlink" title="内存溢出"></a>内存溢出</h4><p>Javadoc中对OutofMemoryError的解释是，没有空闲内存，并且垃圾收集器也无法提供更多内存。</p>
-<p><strong>内存溢出（OOM）原因分析</strong></p>
-<p>首先说没有空闲内存的情况：说明Java虚拟机的堆内存不够。原因有二：<br><strong>Java虚拟机的堆内存设置不够。</strong><br>比如：可能存在内存泄漏问题；也很有可能就是堆的大小不合理，比如我们要处理比较可观的数据量，但是没有显式指定JVM堆大小或者指定数值偏小。我们可以通过参数-Xms 、-Xmx来调整。</p>
-<p><strong>代码中创建了大量大对象，并且长时间不能被垃圾收集器收集（存在被引用）</strong><br>对于老版本的Oracle JDK，因为永久代的大小是有限的，并且JVM对永久代垃圾回收（如，常量池回收、卸载不再需要的类型）非常不积极，所以当我们不断添加新类型的时候，永久代出现OutOfMemoryError也非常多见。尤其是在运行时存在大量动态类型生成的场合；类似intern字符串缓存占用太多空间，也会导致OOM问题。对应的异常信息，会标记出来和永久代相关：“java.lang.OutOfMemoryError:PermGen space”。</p>
-<p>随着元数据区的引入，方法区内存已经不再那么窘迫，所以相应的OOM有所改观，出现OOM，异常信息则变成了：“java.lang.OutofMemoryError:Metaspace”。直接内存不足，也会导致OOM。<br>这里面隐含着一层意思是，在抛出OutofMemoryError之前，通常垃圾收集器会被触发，尽其所能去清理出空间。</p>
-<p>当然，也不是在任何情况下垃圾收集器都会被触发的<br>比如，我们去分配一个超大对象，类似一个超大数组超过堆的最大值，JVM可以判断出垃圾收集并不能解决这个问题，所以直接抛出OutofMemoryError。</p>
-<h4 id="内存泄漏（leak）"><a href="#内存泄漏（leak）" class="headerlink" title="内存泄漏（leak）"></a>内存泄漏（leak）</h4><p>也称作“存储渗漏”。严格来说，<strong>只有对象不会再被程序用到了，但是GC又不能回收他们的情况，</strong>才叫内存泄漏。</p>
-<p>但实际情况很多时候一些不太好的实践（或疏忽）会导致对象的生命周期变得很长甚至导致OOM，也可以叫做宽泛意义上的“内存泄漏”。</p>
-<p>尽管内存泄漏并不会立刻引起程序崩溃，<strong>但是一旦发生内存泄漏，程序中的可用内存就会被逐步蚕食</strong>，直至耗尽所有内存，最终出现OutofMemory异常，导致程序崩溃。</p>
-<p><strong>单例模式</strong><br>单例的生命周期和应用程序是一样长的，所以在单例程序中，如果持有对外部对象的引用的话，那么这个外部对象是不能被回收的，则会导致内存泄漏的产生。</p>
-<p><strong>一些提供close()的资源未关闭导致内存泄漏</strong><br>数据库连接 dataSourse.getConnection()，网络连接socket和io连接必须手动close，否则是不能被回收的。</p>
-<h4 id="Stop-the-World"><a href="#Stop-the-World" class="headerlink" title="Stop the World"></a>Stop the World</h4><p>Stop-the-World，简称STW，指的是GC事件发生过程中，会产生应用程序的停顿。停顿产生时整个应用程序线程都会被暂停，没有任何响应，有点像卡死的感觉，这个停顿称为STW。</p>
-<p>可达性分析算法中枚举根节点（GC Roots）会导致所有Java执行线程停顿，为什么需要停顿所有 Java 执行线程呢？</p>
-<p>分析工作必须在一个能确保一致性的快照中进行<br>一致性指整个分析期间整个执行系统看起来像被冻结在某个时间点上<br>如果出现分析过程中对象引用关系还在不断变化，则分析结果的准确性无法保证</p>
-<p>被STW中断的应用程序线程会在完成GC之后恢复，频繁中断会让用户感觉像是网速不快造成电影卡带一样，所以我们需要减少STW的发生。</p>
-<p>STW事件和采用哪款GC无关，所有的GC都有这个事件。</p>
-<p>哪怕是G1也不能完全避免Stop-the-world情况发生，只能说垃圾回收器越来越优秀，回收效率越来越高，尽可能地缩短了暂停时间。</p>
-<p>STW是JVM在后台自动发起和自动完成的。在用户不可见的情况下，把用户正常的工作线程全部停掉。</p>
-<p>开发中不要用System.gc() ，这会导致Stop-the-World的发生。</p>
-<h4 id="安全点（Safepoint）"><a href="#安全点（Safepoint）" class="headerlink" title="安全点（Safepoint）"></a>安全点（Safepoint）</h4><p>程序执行时并非在所有地方都能停顿下来开始GC，<strong>只有在特定的位置才能停顿下来开始GC，这些位置称为“安全点（Safepoint）”。</strong></p>
-<p>Safe Point的选择很重要，如果太少可能导致GC等待的时间太长，如果太频繁可能导致运行时的性能问题。大部分指令的执行时间都非常短暂，通常会根据“是否具有让程序长时间执行的特征”为标准。比如：<strong>选择一些执行时间较长的指令作为Safe Point</strong>，如方法调用、循环跳转和异常跳转等。</p>
-<p>如何在GC发生时，检查所有线程都跑到最近的安全点停顿下来呢？</p>
-<p>抢先式中断：（目前没有虚拟机采用了）首先中断所有线程。如果还有线程不在安全点，就恢复线程，让线程跑到安全点。</p>
-<p>主动式中断：<strong>设置一个中断标志</strong>，各个线程运行到Safe Point的时候主动轮询这个标志，如果中断标志为真，则将自己进行中断挂起。</p>
-<h4 id="安全区域（Safe-Region）"><a href="#安全区域（Safe-Region）" class="headerlink" title="安全区域（Safe Region）"></a>安全区域（Safe Region）</h4><p>Safepoint 机制保证了程序执行时，在不太长的时间内就会遇到可进入GC的Safepoint。但是，程序“不执行”的时候呢？</p>
-<p>例如<strong>线程处于Sleep状态或Blocked 状态</strong>，这时候线程无法响应JVM的中断请求，JVM也不太可能等待线程被唤醒。对于这种情况，就需要安全区域（Safe Region）来解决。<br>安全区域是指在一段代码片段中，对象的引用关系不会发生变化，在这个区域中的任何位置开始GC都是安全的。我们也可以把Safe Region看做是被扩展了的Safepoint。</p>
-<p>安全区域的执行流程</p>
-<p>当线程运行到Safe Region的代码时，首先标识已经进入了Safe Region，如果这段时间内发生GC，JVM会忽略标识为Safe Region状态的线程（开始GC）<br>当线程即将离开Safe Region时，会检查JVM是否已经完成根节点枚举（即GC Roots的枚举），如果完成了，则继续运行用户线程，否则线程必须等待直到收到可以安全离开Safe Region的信号为止；</p>
-<h4 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h4><p>我们希望能描述这样一类对象：当内存空间还足够时，则能保留在内存中；如果内存空间在进行垃圾收集后还是很紧张，则可以抛弃这些对象。</p>
-<p>强引用、软引用、弱引用、虚引用有什么区别？具体使用场景是什么？</p>
-<p>在JDK1.2版之后，Java对引用的概念进行了扩充，将引用分为：</p>
-<p>强引用（Strong Reference）<br>软引用（Soft Reference）<br>弱引用（Weak Reference）<br>虚引用（Phantom Reference）<br>这4种引用强度依次逐渐减弱。除强引用外，其他3种引用均可以在java.lang.ref包中找到它们的身影。如下图，显示了这3种引用类型对应的类，开发人员可以在应用程序中直接使用它们。</p>
-<p>Reference子类中只有终结器引用是包内可见的，其他3种引用类型均为public，可以在应用程序中直接使用。</p>
-<p><strong>强引用（StrongReference）</strong>：最传统的“引用”的定义，是指在程序代码之中普遍存在的引用赋值，即类似“object obj=new Object()”这种引用关系。无论任何情况下，<strong>只要强引用关系还存在，垃圾收集器就永远不会回收掉被引用的对象。</strong></p>
-<p><strong>软引用（SoftReference）</strong>：在系统将要发生内存溢出之前，将会把这些对象列入回收范围之中进行第二次回收。如果这次回收后还没有足够的内存，才会抛出内存溢出异常。</p>
-<p><strong>弱引用（WeakReference）</strong>：被弱引用关联的对象<strong>只能生存到下一次垃圾收集之前。当垃圾收集器工作时，无论内存空间是否足够，都会回收掉被弱引用关联的对象。</strong></p>
-<p><strong>虚引用（PhantomReference）</strong>：一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来获得一个对象的实例。为<strong>一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知。</strong></p>
-<p><strong>再谈引用：强引用</strong></p>
-<p>在Java程序中，最常见的引用类型是强引用（普通系统99%以上都是强引用），也就是我们最常见的普通对象引用，也是默认的引用类型。</p>
-<p>当在Java语言中使用new操作符创建一个新的对象，并将其赋值给一个变量的时候，这个变量就成为指向该对象的一个强引用。</p>
-<p>只要强引用的对象是可触及的，垃圾收集器就永远不会回收掉被引用的对象。只要强引用的对象是可达的，jvm宁可报OOM，也不会回收强引用。</p>
-<p>对于一个普通的对象，如果没有其他的引用关系，只要超过了引用的作用域或者显式地将相应（强）引用赋值为null，就是可以当做垃圾被收集了，当然具体回收时机还是要看垃圾收集策略。</p>
-<p>相对的，软引用、弱引用和虚引用的对象是软可触及、弱可触及和虚可触及的，在一定条件下，都是可以被回收的。所以，强引用是造成Java内存泄漏的主要原因之一。</p>
-<p>强引用具备以下特点：</p>
-<p>强引用可以直接访问目标对象。<br>强引用所指向的对象在任何时候都不会被系统回收，虚拟机宁愿抛出OOM异常，也不会回收强引用所指向对象。<br>强引用可能导致内存泄漏。</p>
-<p><strong>再谈引用：软引用</strong><br>软引用（Soft Reference）：<strong>内存不足即回收</strong></p>
-<p>软引用是用来描述一些还有用，但非必需的对象。只被软引用关联着的对象，在系统将要发生内存溢出异常前，会把这些对象列进回收范围之中进行第二次回收，如果这次回收还没有足够的内存，才会抛出内存溢出异常。注意，这里的第一次回收是不可达的对象</p>
-<p>软引用通常用来实现内存敏感的缓存。比如：高速缓存就有用到软引用。如果还有空闲内存，就可以暂时保留缓存，当内存不足时清理掉，这样就保证了使用缓存的同时，不会耗尽内存。</p>
-<p>垃圾回收器在某个时刻决定回收软可达的对象的时候，会清理软引用，并可选地把引用存放到一个引用队列（Reference Queue）。</p>
-<p>类似弱引用，只不过Java虚拟机会尽量让软引用的存活时间长一些，迫不得已才清理。</p>
-<p>一句话概括：当内存足够时，不会回收软引用可达的对象。内存不够时，会回收软引用的可达对象</p>
-<p><strong>再谈引用：弱引用</strong><br>弱引用（Weak Reference）<strong>发现即回收</strong></p>
-<p>弱引用也是用来描述那些非必需对象，只被弱引用关联的对象只能生存到下一次垃圾收集发生为止。在系统GC时，只要发现弱引用，不管系统堆空间使用是否充足，都会回收掉只被弱引用关联的对象。</p>
-<p>但是，由于垃圾回收器的线程通常优先级很低，因此，并不一定能很快地发现持有弱引用的对象。在这种情况下，弱引用对象可以存在较长的时间。</p>
-<p>弱引用和软引用一样，在构造弱引用时，也可以指定一个引用队列，当弱引用对象被回收时，就会加入指定的引用队列，通过这个队列可以跟踪对象的回收情况。</p>
-<p>软引用、弱引用都非常适合来保存那些可有可无的缓存数据。如果这么做，当系统内存不足时，这些缓存数据会被回收，不会导致内存溢出。而当内存资源充足时，这些缓存数据又可以存在相当长的时间，从而起到加速系统的作用。</p>
-<p>在JDK1.2版之后提供了WeakReference类来实现弱引用</p>
-<p>弱引用对象与软引用对象的最大不同就在于，当GC在进行回收时，需要通过算法检查是否回收软引用对象，而对于弱引用对象，GC总是进行回收。弱引用对象更容易、更快被GC回收。</p>
-<p>WeakHashMap？弱引用！</p>
-<p><strong>再谈引用：虚引用</strong><br>虚引用（Phantom Reference）：<strong>对象回收跟踪</strong></p>
-<p>也称为“幽灵引用”或者“幻影引用”，是所有引用类型中最弱的一个</p>
-<p>一个对象是否有虚引用的存在，完全不会决定对象的生命周期。如果一个对象仅持有虚引用，那么它和没有引用几乎是一样的，随时都可能被垃圾回收器回收。</p>
-<p>它不能单独使用，也无法通过虚引用来获取被引用的对象。当试图通过虚引用的get()方法取得对象时，总是null 。即通过虚引用无法获取到我们的数据</p>
-<p>为一个对象设置虚引用关联的唯一目的在于跟踪垃圾回收过程。比如：能在这个对象被收集器回收时收到一个系统通知。</p>
-<p>虚引用必须和引用队列一起使用。虚引用在创建时必须提供一个引用队列作为参数。当垃圾回收器准备回收一个对象时，如果发现它还有虚引用，就会在回收对象后，将这个虚引用加入引用队列，以通知应用程序对象的回收情况。</p>
-<p>由于虚引用可以跟踪对象的回收时间，因此，也可以将一些资源释放操作放置在虚引用中执行和记录。</p>
-<p>在JDK1.2版之后提供了PhantomReference类来实现虚引用。</p>
-<h3 id="标记阶段"><a href="#标记阶段" class="headerlink" title="标记阶段"></a>标记阶段</h3><p><strong>标记阶段的目的</strong><br>垃圾标记阶段：主要是为了判断对象是否存活</p>
-<p>在堆里存放着几乎所有的Java对象实例，在GC执行垃圾回收之前，首先需要区分出内存中哪些是存活对象，哪些是已经死亡的对象。只有被标记为己经死亡的对象，GC才会在执行垃圾回收时，释放掉其所占用的内存空间，因此这个过程我们可以称为垃圾标记阶段。<br>那么在JVM中究竟是如何标记一个死亡对象呢？简单来说，当一个对象已经不再被任何的存活对象继续引用时，就可以宣判为已经死亡。</p>
-<h4 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h4><p>引用计数算法（Reference Counting）比较简单，对每个对象保存一个整型的<strong>引用计数器属性</strong>。用于记录对象被引用的情况。</p>
-<p>对于一个对象A，只要有任何一个对象引用了A，则A的引用计数器就加1；当引用失效时，引用计数器就减1。只要对象A的引用计数器的值为0，即表示对象A不可能再被使用，可进行回收。<br>优点：实现简单，垃圾对象便于辨识；判定效率高，回收没有延迟性。</p>
-<p><strong>缺点：</strong><br>它需要单独的字段存储计数器，这样的做法增加了存储空间的开销。<br>每次赋值都需要更新计数器，伴随着加法和减法操作，这增加了时间开销。<br>引用计数器有一个严重的问题，即<strong>无法处理循环引用的情况。这是一条致命缺陷，导致在Java的垃圾回收器中没有使用这类算法。</strong></p>
-<p><img src="image-20210802142919765.png"></p>
-<p>当p的指针断开的时候，内部的引用形成一个循环，计数器都还算1，无法被回收，这就是循环引用，从而造成<strong>内存泄漏。</strong></p>
-<p><strong>小结：</strong></p>
-<p>引用计数算法，是很多语言的资源回收选择，例如因人工智能而更加火热的Python，它更是同时支持引用计数和垃圾收集机制。<br>具体哪种最优是要看场景的，业界有大规模实践中仅保留引用计数机制，以提高吞吐量的尝试。<br>Java并没有选择引用计数，是因为其存在一个基本的难题，也就是很难处理循环引用关系。</p>
-<p>Python如何解决循环引用？<br>手动解除：很好理解，就是在合适的时机，解除引用关系。<br>使用弱引用weakref，weakref是Python提供的标准库，旨在解决循环引用。</p>
-<h4 id="可达性分析法"><a href="#可达性分析法" class="headerlink" title="可达性分析法"></a>可达性分析法</h4><p>可达性分析算法：也可以称为<strong>根搜索算法、追踪性垃圾收集</strong></p>
-<p>相对于引用计数算法而言，可达性分析算法不仅同样具备实现简单和执行高效等特点，更重要的是该算法可以有效地解决在引用计数算法中循环引用的问题，防止内存泄漏的发生。<br>相较于引用计数算法，这里的可达性分析就是Java、C#选择的。这种类型的垃圾收集通常也叫作追踪性垃圾收集（Tracing Garbage Collection）</p>
-<p><strong>其基本思路如下：</strong></p>
-<p>可达性分析算法是以<strong>根对象集合（GCRoots）</strong>为起始点，按照从上至下的方式搜索被根对象集合所连接的目标对象是否可达。<br>使用可达性分析算法后，内存中的存活对象都会被根对象集合直接或间接连接着，搜索所走过的路径称为引用链（Reference Chain）<br>如果目标对象没有任何引用链相连，则是不可达的，就意味着该对象己经死亡，可以标记为垃圾对象。<br>在可达性分析算法中，只有能够被根对象集合直接或者间接连接的对象才是存活对象。</p>
-<p>堆空间的周边，比如：<strong>虚拟机栈、本地方法栈、方法区、字符串常量池</strong>等地方对堆空间进行引用的，都可以作为GC Roots进行可达性分析。</p>
-<h5 id="GCroots可以是什么？"><a href="#GCroots可以是什么？" class="headerlink" title="GCroots可以是什么？"></a>GCroots可以是什么？</h5><p>1，虚拟机栈中引用的对象：各个线程被调用方法中使用的参数局部变量。<br>2，本地方法中引用的对象。<br>3，静态属性的对象<br>4，常量池里的引用<br>5，被sychronized持有的对象<br>6，系统内部的引用，异常的类等等。</p>
-<p>除了这些固定的GC Roots集合以外，根据<strong>用户所选用的垃圾收集器以及当前回收的内存区域不同</strong>，还可以有其他对象“临时性”地加入，共同构成完整GC Roots集合。比如：<strong>分代收集和局部回收（PartialGC）</strong>。</p>
-<p>如果只针对Java堆中的某一块区域进行垃圾回收（比如：典型的只针对新生代），必须考虑到内存区域是虚拟机自己的实现细节，更不是孤立封闭的，<strong>这个区域的对象完全有可能被其他区域的对象所引用</strong>，这时候就需要一并将关联的区域对象也加入GC Roots集合中去考虑，才能保证可达性分析的准确性。</p>
-<p>如果要使用可达性分析算法来判断内存是否可回收，那么<strong>分析工作必须在一个能保障一致性的快照中进行</strong>。这点不满足的话分析结果的准确性就无法保证。</p>
-<p>这点也是导致GC进行时必须“Stop The World”的一个重要原因。即使是号称（几乎）不会发生停顿的CMS收集器中，枚举根节点时也是必须要停顿的。</p>
-<h5 id="对象的-finalization-机制"><a href="#对象的-finalization-机制" class="headerlink" title="对象的 finalization 机制"></a>对象的 finalization 机制</h5><p>finalize() 方法机制<br>对象销毁前的回调函数：finalize()</p>
-<p>Java语言提供了<strong>对象终止（finalization）机制</strong>来允许开发人员提供对象被销毁之前的自定义处理逻辑。</p>
-<p>当垃圾回收器发现没有引用指向一个对象，即：垃圾回收此对象之前，总会先调用这个对象的finalize()方法。</p>
-<p>finalize() 方法允许在子类中被重写，用于在对象被回收时进行资源释放。通常在这个方法中进行一些资源释放和清理的工作，比如关闭文件、套接字和数据库连接等。</p>
-<p>Object 类中 finalize() 源码<br>// 等待被重写<br>protected void finalize() throws Throwable { }</p>
-<p>永远不要主动调用某个对象的finalize()方法，应该交给垃圾回收机制调用。理由包括下面三点：<br>在finalize()时可能会导致对象复活。<br>finalize()方法的执行时间是没有保障的，它完全由GC线程决定，极端情况下，若不发生GC，则finalize()方法将没有执行机会。<br>一个糟糕的finalize()会严重影响GC的性能。比如finalize是个死循环</p>
-<p>从功能上来说，finalize()方法与C++中的<strong>析构函数</strong>比较相似，但是Java采用的是基于垃圾回收器的自动内存管理机制，所以finalize()方法在本质上不同于C++中的析构函数。<br>finalize()方法对应了一个finalize线程，<strong>因为优先级比较低，即使主动调用该方法，也不会因此就直接进行回收</strong></p>
-<p>由于finalize()方法的存在，虚拟机中的对象一般处于三种可能的状态。</p>
-<p>如果从所有的根节点都无法访问到某个对象，说明对象己经不再使用了。一般来说，此对象需要被回收。但事实上，也并非是“非死不可”的，这时候它们暂时处于“<strong>缓刑</strong>”阶段。一个无法触及的对象有可能在某一个条件下“复活”自己，如果这样，那么对它立即进行回收就是不合理的。为此，定义虚拟机中的对象可能的三种状态。如下：<br><strong>可触及的：</strong>从根节点开始，可以到达这个对象。<br><strong>可复活的：</strong>对象的所有引用都被释放，但是对象有可能在finalize()中复活。<br><strong>不可触及的：</strong>对象的finalize()被调用，并且没有复活，那么就会进入不可触及状态。不可触及的对象不可能被复活，因为finalize()只会被调用一次。</p>
-<p>以上3种状态中，是由于finalize()方法的存在，进行的区分。只有在对象不可触及时才可以被回收。</p>
-<h5 id="具体过程"><a href="#具体过程" class="headerlink" title="具体过程"></a><strong>具体过程</strong></h5><p>判定一个对象objA是否可回收，至少要经历<strong>两次标记</strong>过程：</p>
-<p>如果对象objA到GC Roots没有引用链，则进行第一次标记。</p>
-<p>进行筛选，<strong>判断此对象是否有必要执行finalize()方法</strong><br>如果对象objA没有重写finalize()方法，或者finalize()方法已经被虚拟机调用过，则虚拟机视为“没有必要执行”，objA被判定为不可触及的。</p>
-<p>如果对象objA重写了finalize()方法，且还未执行过，那么objA会被插入到<strong>F-Queue队列</strong>中，由一个虚拟机自动创建的、低优先级的Finalizer线程触发其finalize()方法执行。</p>
-<p>finalize()方法是<strong>对象逃脱死亡的最后机会</strong>，稍后GC会对F-Queue队列中的对象进行第二次标记。如果objA在finalize()方法中与引用链上的任何一个对象建立了联系，那么在第二次标记时，objA会被移出“即将回收”集合。之后，对象会再次出现没有引用存在的情况。在这个情况下，finalize()方法不会被再次调用，对象会直接变成不可触及的状态，也就是说，一个对象的finalize()方法只会被调用一次。</p>
-<h3 id="清除阶段"><a href="#清除阶段" class="headerlink" title="清除阶段"></a>清除阶段</h3><h4 id="标记清除"><a href="#标记清除" class="headerlink" title="标记清除"></a>标记清除</h4><p><strong>执行过程</strong><br>当堆中的有效内存空间（available memory）被耗尽的时候，就会停止整个程序（也被称为stop the world），然后进行两项工作，第一项则是标记，第二项则是清除</p>
-<p>标记：Collector从引用根节点开始遍历，标记所有被引用的对象。一般是在对象的Header中记录为可达对象。<br>标记的是被引用的对象，也就是可达对象，并非标记的是即将被清除的垃圾对象</p>
-<p>清除：Collector对堆内存从头到尾进行线性的遍历，如果发现某个对象在其Header中没有标记为可达对象，则将其回收</p>
-<h5 id="标记-清除算法的缺点"><a href="#标记-清除算法的缺点" class="headerlink" title="标记-清除算法的缺点"></a>标记-清除算法的缺点</h5><p>标记清除算法的效率不算高<br>在进行GC的时候，需要停止整个应用程序，用户体验较差（stw）<br>这种方式清理出来的空闲内存是不连续的，<strong>产生内碎片</strong>，需要维护一个空闲列表</p>
-<h5 id="何为清除？"><a href="#何为清除？" class="headerlink" title="何为清除？"></a>何为清除？</h5><p>这里所谓的清除并不是真的置空，<strong>而是把需要清除的对象地址保存在空闲的地址列表里。下次有新对象需要加载时，判断垃圾的位置空间是否够，如果够，就存放（也就是覆盖原有的地址）</strong>。</p>
-<p>关于空闲列表是在为对象分配内存的时候：<br><strong>如果内存规整，采用指针碰撞的方式进行内存分配</strong><br><strong>如果内存不规整，虚拟机需要维护一个空闲列表采用空闲列表分配内存</strong></p>
-<h4 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h4><p>将活着的内存空间分为两块，<strong>每次只使用其中一块</strong>，在垃圾回收时将正在使用的内存中的存活对象复制到未被使用的内存块中，之后清除正在使用的内存块中的所有对象，交换两个内存的角色，最后完成垃圾回收。</p>
-<p><strong>新生代里面就用到了复制算法，Eden区和S0区存活对象整体复制到S1区。</strong></p>
-<h5 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h5><p>没有标记和清除过程，实现简单，运行高效<br>复制过去以后保证空间的连续性，不会出现“碎片”问题。</p>
-<h5 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h5><p>此算法的缺点也是很明显的，<strong>就是需要两倍的内存空间。</strong><br>对于G1这种分拆成为大量region的GC，复制而不是移动，意味着GC需要维护region之间对象引用关系，不管是内存占用或者时间开销也不小</p>
-<p><strong>特别：</strong><br>如果系统中的垃圾对象很多，<strong>复制算法需要复制的存活对象数量太大，效率变低。</strong></p>
-<p>在新生代，对象，朝生夕死，一次通常可以回收70% - 99% 的内存空间。回收性价比很高。所以现在的商业虚拟机都是用这种收集算法回收新生代。</p>
-<h4 id="标记压缩"><a href="#标记压缩" class="headerlink" title="标记压缩"></a>标记压缩</h4><p><strong>标记-压缩（或标记-整理、Mark - Compact）算法</strong></p>
-<p>复制算法的高效性是建立在<strong>存活对象少、垃圾对象多</strong>的前提下的。这种情况在新生代经常发生，但是在老年代，更常见的情况是大部分对象都是存活对象。如果依然使用复制算法，由于存活对象较多，复制的成本也将很高。</p>
-<p>标记-清除算法的确可以<strong>应用在老年代</strong>中，但是该算法不仅执行效率低下，而且在执行完内存回收后还会产生内存碎片，所以JVM的设计者需要在此基础之上进行改进。标记-压缩（Mark-Compact）算法由此诞生。</p>
-<p>执行过程<br>第一阶段和标记清除算法一样，<strong>从根节点开始标记所有被引用对象</strong><br>第二阶段将<strong>所有的存活对象压缩到内存的一端，按顺序排放。之后，清理边界外所有的空间。</strong></p>
-<h5 id="标记-压缩算法与标记-清除算法的比较"><a href="#标记-压缩算法与标记-清除算法的比较" class="headerlink" title="标记-压缩算法与标记-清除算法的比较"></a>标记-压缩算法与标记-清除算法的比较</h5><p>标记-压缩算法的最终效果等同于标记-清除算法执行完成后，再进行一次内存碎片整理，因此，也可以把它称为<strong>标记-清除-压缩</strong>（Mark-Sweep-Compact）算法。</p>
-<p>二者的本质差异在于标记-清除算法是一种非移动式的回收算法，标记-压缩是移动式的。是否移动回收后的存活对象是一项优缺点并存的风险决策。</p>
-<p>可以看到，标记的存活对象将会被整理，按照内存地址依次排列，而未被标记的内存会被清理掉。如此一来，当我们需要给新对象分配内存时，<strong>JVM只需要持有一个内存的起始地址即可，这比维护一个空闲列表显然少了许多开销。</strong></p>
-<p><strong>优点</strong></p>
-<p>消除了标记-清除算法当中，内存区域分散的缺点，我们需要给新对象分配内存时，JVM只需要持有一个内存的起始地址即可。<br>消除了复制算法当中，内存减半的高额代价。</p>
-<p><strong>缺点</strong></p>
-<p>从效率上来说，<strong>标记-整理算法要低于复制算法。</strong><br><strong>移动对象的同时，如果对象被其他对象引用，则还需要调整引用的地址</strong>（因为HotSpot虚拟机采用的不是句柄池的方式，而是直接指针）<br>移动过程中，需要全程暂停用户应用程序。即：STW</p>
-<p><img src="image-20210802144424767.png"></p>
-<h3 id="分带收集算法"><a href="#分带收集算法" class="headerlink" title="分带收集算法"></a>分带收集算法</h3><p>前面所有这些算法中，并没有一种算法可以完全替代其他算法，<strong>它们都具有自己独特的优势和特点。</strong>分代收集算法应运而生。</p>
-<p>分代收集算法，是基于这样一个事实：<strong>不同的对象的生命周期是不一样的</strong>。因此，不同生命周期的对象可以采取不同的收集方式，以便提高回收效率。一般是把Java堆分为新生代和老年代，这样就可以根据各个年代的特点使用不同的回收算法，以提高垃圾回收的效率。</p>
-<p>在Java程序运行的过程中，会产生大量的对象，其中有些对象是与业务信息相关:<br>比如Http请求中的Session对象、线程、Socket连接，这类对象跟业务直接挂钩，因此生命周期比较长。</p>
-<p>但是还有一些对象，主要是程序运行过程中生成的临时变量，这些对象生命周期会比较短，比如：String对象，由于其不变类的特性，系统会产生大量的这些对象，有些对象甚至只用一次即可回收。<br>目前几乎所有的GC都采用分代收集算法 执行垃圾回收的</p>
-<p>在HotSpot中，基于分代的概念，GC所使用的内存回收算法必须结合年轻代和老年代各自的特点。</p>
-<p><strong>年轻代（Young Gen）</strong><br>年轻代特点：区域相对老年代较小，<strong>对象生命周期短、存活率低，回收频繁。</strong><br>这种情况<strong>复制算法的回收整理，速度是最快的。</strong>复制算法的效率只和当前存活对象大小有关，因此很适用于年轻代的回收。<strong>而复制算法内存利用率不高的问题，通过hotspot中的两个survivor的设计得到缓解</strong>。</p>
-<p><strong>老年代（Tenured Gen）</strong><br>老年代特点：区域较大，对象生命周期长、存活率高，回收不及年轻代频繁。<br>这种情况存在大量存活率高的对象，复制算法明显变得不合适。一般是由<strong>标记-清除或者是标记-清除与标记-整理的混合实现。</strong></p>
-<p>Mark阶段的开销与<strong>存活对象的数量成正比。</strong>（遍历所有对象）<br>Sweep阶段的开销与所<strong>管理区域的大小成正相关</strong>。<br>Compact阶段的开销与<strong>存活对象的数量成正比。</strong></p>
-<p>以HotSpot中的<strong>CMS回收器为例，CMS是基于Mark-Sweep实现的</strong>，对于对象的回收效率很高。对于碎片问题，CMS采用基于<strong>Mark-Compact算法的Serial Old回收器作为补偿措施</strong>：当内存回收不佳（碎片导致的Concurrent Mode Failure时），将采用Serial Old执行Full GC以达到对老年代内存的整理。</p>
-<p>分代的思想被现有的虚拟机广泛使用。几乎所有的垃圾回收器都区分新生代和老年代。</p>
-<h3 id="增量收集算法"><a href="#增量收集算法" class="headerlink" title="增量收集算法"></a>增量收集算法</h3><p>如果一次性将所有的垃圾进行处理，需要造成系统长时间的停顿，那么就可以让垃圾收集线程和应用程序线程交替执行。每次，<strong>垃圾收集线程只收集一小片区域的内存空间，接着切换到应用程序线程。依次反复，直到垃圾收集完成。</strong></p>
-<p>总的来说，增量收集算法的基础仍是<strong>传统的标记-清除和复制算法</strong>。增量收集算法通过对线程间冲突的妥善处理，允许垃圾收集线程以分阶段的方式完成标记、清理或复制工作</p>
-<p><strong>增量收集算法的缺点</strong><br>使用这种方式，由于在垃圾回收过程中，间断性地还执行了应用程序代码，所以能减少系统的停顿时间。<strong>但是，因为线程切换和上下文转换的消耗，会使得垃圾回收的总体成本上升，造成系统吞吐量的下降。</strong></p>
-<h3 id="分区算法"><a href="#分区算法" class="headerlink" title="分区算法"></a>分区算法</h3><p><strong>主要针对G1收集器来说的</strong></p>
-<p>一般来说，在相同条件下，堆空间越大，一次GC时所需要的时间就越长，有关GC产生的停顿也越长。为了更好地控制GC产生的停顿时间，将一块大的内存区域分割成多个小块，根据目标的停顿时间，每次合理地回收若干个小区间，而不是整个堆空间，从而减少一次GC所产生的停顿。</p>
-<p>分代算法将按照对象的生命周期长短划分成两个部分，分区算法将整个堆空间划分成连续的不同小区间。每一个小区间都独立使用，独立回收。这种算法的好处是可以控制一次回收多少个小区间。</p>
-<p><img src="image-20210802144806782.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1585,20 +1450,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-count">48</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
