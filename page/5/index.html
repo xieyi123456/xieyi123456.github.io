@@ -156,6 +156,140 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" class="post-title-link" itemprop="url">计算机网络-IO多路复用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-30 15:05:11" itemprop="dateCreated datePublished" datetime="2021-07-30T15:05:11+08:00">2021-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-06 10:43:51" itemprop="dateModified" datetime="2021-08-06T10:43:51+08:00">2021-08-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="解释名词"><a href="#解释名词" class="headerlink" title="解释名词"></a>解释名词</h3><h4 id="用户空间内核空间"><a href="#用户空间内核空间" class="headerlink" title="用户空间内核空间"></a>用户空间内核空间</h4><p>现在操作系统都是采用虚拟存储技术，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。为了保证用户进程不能直接操作内核（kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G字节，供内核使用，称为内核空间，而将较低的3G字节（从虚拟地址0x00000000到0xBFFFFFFF），供各个进程使用，称为用户空间。</p>
+<p>每个进程可以通过<strong>系统调用</strong>进入内核，因此，Linux内核由系统内的所有进程共享。于是，从具体进程的角度来看，每个进程可以拥有4G字节的虚拟空间。</p>
+<h4 id="系统调用："><a href="#系统调用：" class="headerlink" title="系统调用："></a>系统调用：</h4><ul>
+<li>设备管理</li>
+<li>文件管理</li>
+<li>进程控制</li>
+<li>进程通信</li>
+<li>内存管理</li>
+</ul>
+<h4 id="进程上下文切换"><a href="#进程上下文切换" class="headerlink" title="进程上下文切换"></a>进程上下文切换</h4><p>为控制进程的执行，操作系统内核挂起正在CPU上运行的进程，并恢复以前挂起的某个进程的执行，这种行为称为上下文切换（context switch）。通过上下文切换技术，即使在单处理器系统上也能够并发执行多个任务。</p>
+<p>进程切换的原因：</p>
+<ol>
+<li>在CPU上运行进程的<strong>时间片耗尽</strong>，便会被操作系统挂起，调度器选择其他进程执行。</li>
+<li>在CPU上运行进程被<strong>更高优先级的进程抢占</strong>。</li>
+<li>在CPU上运行进程需要<strong>等待某种设备资源时</strong>，进程会被挂起，从运行状态（TASK_RUNNING）改为就绪状态（TASK_INTERRUPTIBLE）。</li>
+<li>在CPU上运行进程的时间片尚未耗尽时，<strong>发生硬件中断</strong>，CPU中断当前执行的进程，转而去调用对应的中断处理程序处理中断。</li>
+</ol>
+<p>进程切换细节：</p>
+<ul>
+<li>保存处理机上下文，包括程序计数器和其他寄存器。</li>
+<li>更新PCB信息。</li>
+<li>把进程的PCB移入相应的队列，如就绪、在某事件阻塞等队列。</li>
+<li>选择另一个进程执行，并更新其PCB。</li>
+<li>更新内存管理的数据结构。</li>
+<li>恢复处理机上下文。</li>
+</ul>
+<p>进程的阻塞是进程自身的一种<strong>主动行为</strong>，也因此只有处于运行态的进程（获得CPU），才可能将其转为阻塞状态。当进程进入阻塞状态，是<strong>不占用CPU资源的</strong>。</p>
+<h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>文件描述符形式上是一个非负整数。它是一个<strong>索引值</strong>，指向内核为每一个进程所维护的该进程打开文件的记录表。</p>
+<p>当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。在程序设计中，一些涉及底层的程序编写往往会围绕着文件描述符展开。但是文件描述符这一概念往往只适用于UNIX、Linux这样的操作系统。</p>
+<h4 id="缓存IO"><a href="#缓存IO" class="headerlink" title="缓存IO"></a>缓存IO</h4><p>缓存 I/O 又被称作标准 I/O，大多数文件系统的默认 I/O 操作都是缓存 I/O。在 Linux 的缓存 I/O 机制中，操作系统会将 I/O 的数据缓存在文件系统的页缓存（ page cache ）中，也就是说，<strong>数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间。</strong></p>
+<p>缺点：<br>数据在传输过程中需要<strong>在应用程序地址空间和内核进行多次数据拷贝操作</strong>，这些数据拷贝操作所带来的 CPU 以及内存开销是非常大的。</p>
+<h4 id="阻塞IO"><a href="#阻塞IO" class="headerlink" title="阻塞IO"></a>阻塞IO</h4><p>当用户进程调用了recvfrom这个系统调用，内核就开始了IO的第一个阶段：<strong>准备数据</strong>（对于网络IO来说，很多时候数据在一开始还没有到达。比如，还没有收到一个完整的UDP包。这个时候内核就要等待足够的数据到来）。这个过程需要等待，也就是说数据被拷贝到操作系统内核的缓冲区中是需要一个过程的。而在用户进程这边，整个进程会被阻塞（当然，是进程自己选择的阻塞）。当内核一直等到数据准备好了，它就会<strong>将数据从kernel中拷贝到用户内存</strong>，然后kernel返回结果，用户进程才解除block的状态，重新运行起来。</p>
+<p><strong>两个阶段都被阻塞。</strong></p>
+<h4 id="非阻塞IO"><a href="#非阻塞IO" class="headerlink" title="非阻塞IO"></a>非阻塞IO</h4><p>当用户进程发出read操作时，如果内核中的数据还没有准备好，那么它并不会block用户进程，而是立刻返回一个error。从用户进程角度讲 ，它发起一个read操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个error时，它就知道数据还没有准备好，于是它可以再次发送read操作。一旦内核中的数据准备好了，并且又再次收到了用户进程的system call，那么它马上就将数据拷贝到了用户内存，然后返回。</p>
+<p>所以，nonblocking IO的特点是<strong>用户进程需要不断的主动询问内核</strong></p>
+<p>NIO在一些<strong>短业务线，访问量高</strong>的程序中使用，会提高系统的吞吐量，但是对于业务线长，且访问量低的程序来说，就未必是件好事，使用BIO可能会更好一些，<strong>不然线程就会空转，浪费CPU。</strong></p>
+<h4 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h4><p>优点：<strong>一个进程可以同时处理多个连接。</strong></p>
+<p>I/O 多路复用的特点是通过一种机制<strong>一个进程能同时等待多个文件描述符</strong>，而这些文件描述符（套接字描述符）其中的任意一个进入读就绪状态，select()函数就可以返回。</p>
+<h4 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h4><p>异步（线程自己不去获得结果，而是由其他的线程送来结果）</p>
+<p><img src="https://i.loli.net/2021/08/06/UxFNmyufwlKnLhE.png" alt="image-20210731094812802">异步情况下一定是非阻塞的。</p>
+<p>异步意味着：在进行读写操作时，线程不必等待结果，而是通过回调的方式由另外的线程来获取。linux在2.6底层通过多路复用模拟了异步IO。windows通过IOCP真正实现了异步IO。</p>
+<p>select，poll，epoll本质上都是<strong>同步I/O</strong>，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会由其他线程负责把数据从内核拷贝到用户空间。</p>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>select 实现多路复⽤的⽅式：</p>
+<p>将已连接的 Socket 都放到⼀个<strong>⽂件描述符集合</strong>，然后调⽤ select 函数<strong>将⽂件描述符集合拷⻉到内核</strong>⾥，让内核来检查是否有⽹络事件产⽣，检查的⽅式很粗暴，就是通过遍历⽂件描述符集合的⽅式，当检查到有事件产⽣后，将此 Socket 标记为可读或可写。</p>
+<p>接着<strong>再把整个⽂件描述符集合拷⻉回⽤户态</strong>⾥，然后⽤户态还需要再通过遍历的⽅法找到可读或可写的 Socket，然后再对其处理。</p>
+<p>对于 select 这种⽅式，需要进⾏ 2 次「遍历」⽂件描述符集合，⼀次是在内核态⾥，⼀个次是在⽤户态⾥ ，⽽且还会发⽣ 2 次「拷⻉」⽂件描述符集合，先从⽤户空间传⼊内核空间，由内核修改后，再传出到⽤户空间中。</p>
+<p>select 使⽤3个固定⻓度的 BitsMap（表示可读，可写，except），表示⽂件描述符集合，⽽且所⽀持的⽂件描述符的个数是有限制的，在Linux 系统中，由内核中的 FD_SETSIZE 限制， 默认最⼤值为 <strong>1024</strong> ，只能监听 0~1023 的⽂件描述符。</p>
+<p>select<strong>目前几乎在所有的平台上支持，</strong>其良好跨平台支持也是它的一个优点。select的一 个缺点在于单个进程能够监视的文件描述符的数量存在最大限制，<strong>在Linux上一般为1024，</strong>可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但 是这样也会造成效率的降低。</p>
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><p>poll 不再⽤ BitsMap 来存储所关注的⽂件描述符，取⽽代之⽤<strong>动态数组，以链表形式来组织</strong>，（pollfd的指针）突破了select 的⽂件描述符个数限制，当然还会受到系统⽂件描述符限制。</p>
+<p><img src="https://i.loli.net/2021/08/06/2kPGI6thcdoiLUe.png" alt="image-20210731095816033"></p>
+<p>但是 poll 和 select 并没有太⼤的本质区别，都是使⽤「线性结构」存储进程关注的 Socket 集合，因此都需要遍历⽂件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，⽽且也需要在⽤户态与内核态之间拷⻉⽂件描述符集合，这种⽅式随着并发数上来，性能的损耗会呈指数级增⻓。</p>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>第⼀点，epoll 在内核⾥使⽤<strong>红⿊树</strong>来跟踪进程所有待检测的⽂件描述字，把需要监控的 socket 通过epoll_ctl() 函数加⼊内核中的红⿊树⾥，红⿊树是个⾼效的数据结构，增删查⼀般时间复杂度是O(logn) ，通过对这棵⿊红树进⾏操作，这样就不需要像 select/poll 每次操作时都传⼊整个 socket 集合，只需要传⼊⼀个待检测的 socket，减少了内核和⽤户空间⼤量的数据拷⻉和内存分配。</p>
+<p>第⼆点， epoll 使⽤<strong>事件驱动的机制</strong>，内核⾥维护了⼀个链表来记录就绪事件，当某个 socket 有事件发⽣时，通过回调函数内核会将其加⼊到这个就绪事件列表中，<strong>当⽤户调⽤ epoll_wait() 函数时</strong>，只会返回有事件发⽣的⽂件描述符，不需要像 select/poll 那样轮询扫描整个 socket 集合，⼤⼤提⾼了检测的效率。</p>
+<p><img src="E:\Hexo\source_posts\计算机网络-IO多路复用\image-20210731100147054.png" alt="image-20210731100147054"></p>
+<p>epoll对文件描述符的操作有两种模式：LT（level trigger）和ET（edge trigger）。LT模式是默认模式，LT模式与ET模式的区别如下：</p>
+<p>LT模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。<strong>下次调用epoll_wait时，会再次响应应用程序并通知此事件。</strong></p>
+<p>ET模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，<strong>下次调用epoll_wait时，不会再次响应应用程序并通知此事件。</strong></p>
+<p>LT(level triggered)是缺省的工作方式，并且同时支持block和no-block socket.在这种做法中，内核告诉你一个文件描述符是否就绪了，然后你可以对这个就绪的fd进行IO操作。如果你不作任何操作，内核还是会继续通知你的。</p>
+<p>ET(edge-triggered)是<strong>高速工作方式，</strong>只支持<strong>no-block socket</strong>。在这种模式下，当描述符从未就绪变为就绪时，内核通过epoll告诉你。然后<strong>它会假设你知道文件描述符已经就绪，</strong>并且不会再为那个文件描述符发送更多的就绪通知，直到你做了某些操作导致那个文件描述符不再为就绪状态了。但是请注意，如果一直不对这个fd作IO操作(从而导致它再次变成未就绪)，<strong>内核不会发送更多的通知(only once)</strong></p>
+<p>ET模式在很大程度上<strong>减少了epoll事件被重复触发的次数</strong>，因此效率要比LT模式高。</p>
+<p>（会循环从⽂件描述符读写数据，那么<strong>如果⽂件描述符是阻塞的，没有数据可读写时，进程会阻塞在读写函数那⾥</strong>，程序就没办法继续往下执⾏。所以，<strong>边缘触发模式⼀般和⾮阻塞 I/O 搭配使⽤</strong>，程序会⼀直执⾏ I/O 操作，直到系统调⽤（如 read 和write ）返回错误。）</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-tcp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -187,7 +321,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-31 15:10:47" itemprop="dateModified" datetime="2021-07-31T15:10:47+08:00">2021-07-31</time>
+                <time title="修改时间：2021-08-05 16:06:24" itemprop="dateModified" datetime="2021-08-05T16:06:24+08:00">2021-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -218,7 +352,7 @@
 </ul>
 <p>服务端最⼤并发 TCP 连接数远不能达到理论上限。</p>
 <p>主要是⽂件描述符限制，Socket 都是⽂件，所以⾸先要通过 ulimit 配置⽂件描述符的数⽬。<br>另⼀个是内存限制，每个 TCP 连接都要占⽤⼀定内存，操作系统的内存是有限的。</p>
-<h4 id="头部格式"><a href="#头部格式" class="headerlink" title="头部格式"></a>头部格式</h4><p><img src="image-20210731112848824.png"></p>
+<h4 id="头部格式"><a href="#头部格式" class="headerlink" title="头部格式"></a>头部格式</h4><p><img src="https://i.loli.net/2021/08/05/LJjRVuwsymNHSn3.png" alt="image-20210731112848824"></p>
 <p>序列号：在建⽴连接时由计算机⽣成的随机数作为其初始值，通过 SYN 包传给接收端主机，每发送⼀次数据，就「累加」⼀次该「数据字节数」的⼤⼩。⽤来解决⽹络包乱序问题。</p>
 <p>确认应答号：指下⼀次「期望」收到的数据的序列号，发送端收到这个确认应答以后可以认为在这个序号以前的数据都已经被正常接收。⽤来解决不丢包的问题。</p>
 <p>控制位：</p>
@@ -228,16 +362,23 @@
 <li>SYN：该位为 1 时，表示希望建⽴连接，并在其「序列号」的字段进⾏序列号初始值的设定。</li>
 <li>FIN：该位为 1 时，表示今后不会再有数据发送，希望断开连接。当通信结束希望断开连接时，通信双⽅的主机之间就可以相互交换 FIN 位为 1 的 TCP 段。</li>
 </ul>
-<h4 id="TCP-vs-UDP"><a href="#TCP-vs-UDP" class="headerlink" title="TCP vs UDP"></a>TCP vs UDP</h4><p><img src="image-20210731113120885.png"></p>
+<h4 id="TCP-vs-UDP"><a href="#TCP-vs-UDP" class="headerlink" title="TCP vs UDP"></a>TCP vs UDP</h4><p><img src="https://i.loli.net/2021/08/05/dJwpgNLSEkFMq84.png" alt="image-20210731113120885"></p>
 <p>TCP 和 UDP 区别：</p>
 <ol>
-<li>连接<br>TCP 是⾯向连接的传输层协议，传输数据前先要建⽴连接。<br>UDP 是不需要连接，即刻传输数据。</li>
-<li>服务对象<br>TCP 是⼀对⼀的两点服务，即⼀条连接只有两个端点。<br>UDP ⽀持⼀对⼀、⼀对多、多对多的交互通信</li>
-<li>可靠性<br>TCP 是可靠交付数据的，数据可以⽆差错、不丢失、不᯿复、按需到达。<br>UDP 是尽最⼤努⼒交付，不保证可靠交付数据。</li>
-<li>拥塞控制、流量控制<br>TCP 有拥塞控制和流ᰁ控制机制，保证数据传输的安全性。UDP 则没有，即使⽹络⾮常拥堵了，也不会影响 UDP 的发送速率。</li>
-<li>⾸部开销<br>TCP ⾸部⻓度较⻓，会有⼀定的开销，⾸部在没有使⽤「选项」字段时是 20 个字节，如果使⽤了「选项」字段则会变⻓的。<br>UDP ⾸部只有 8 个字节，并且是固定不变的，开销较⼩。</li>
-<li>传输⽅式<br>TCP 是流式传输，没有边界，但保证顺序和可靠。<br>UDP 是⼀个包⼀个包的发送，是有边界的，但可能会丢包和乱序。</li>
-<li>分⽚不同<br>TCP 的数据⼤⼩如果⼤于 MSS ⼤⼩，则会在传输层进⾏分⽚，⽬标主机收到后，也同样在传输层组装 TCP数据包，如果中途丢失了⼀个分⽚，只需要传输丢失的这个分⽚。</li>
+<li><p>连接<br>TCP 是⾯向连接的传输层协议，传输数据前先要建⽴连接。<br>UDP 是不需要连接，即刻传输数据。</p>
+</li>
+<li><p>服务对象<br>TCP 是⼀对⼀的两点服务，即⼀条连接只有两个端点。<br>UDP ⽀持⼀对⼀、⼀对多、多对多的交互通信</p>
+</li>
+<li><p>可靠性<br>TCP 是可靠交付数据的，数据可以⽆差错、不丢失、不᯿复、按需到达。<br>UDP 是尽最⼤努⼒交付，不保证可靠交付数据。</p>
+</li>
+<li><p>拥塞控制、流量控制<br>TCP 有拥塞控制和流ᰁ控制机制，保证数据传输的安全性。UDP 则没有，即使⽹络⾮常拥堵了，也不会影响 UDP 的发送速率。</p>
+</li>
+<li><p>⾸部开销<br>TCP ⾸部⻓度较⻓，会有⼀定的开销，⾸部在没有使⽤「选项」字段时是 20 个字节，如果使⽤了「选项」字段则会变⻓的。<br>UDP ⾸部只有 8 个字节，并且是固定不变的，开销较⼩。</p>
+</li>
+<li><p>传输⽅式<br>TCP 是流式传输，没有边界，但保证顺序和可靠。<br>UDP 是⼀个包⼀个包的发送，是有边界的，但可能会丢包和乱序。</p>
+</li>
+<li><p>分⽚不同<br>TCP 的数据⼤⼩如果⼤于 MSS ⼤⼩，则会在传输层进⾏分⽚，⽬标主机收到后，也同样在传输层组装 TCP数据包，如果中途丢失了⼀个分⽚，只需要传输丢失的这个分⽚。</p>
+</li>
 </ol>
 <p> UDP 的数据⼤⼩如果⼤于 MTU ⼤⼩，则会在 IP 层进⾏分⽚，⽬标主机收到后，在 IP 层组装完数据，接着再传给传输层，但是如果中途丢了⼀个分⽚，在实现可靠传输的 UDP 时则就需要重传所有的数据包，这样传输效率⾮常差，所以通常 UDP 的报⽂应该⼩于 MTU。</p>
 <ol start="8">
@@ -245,7 +386,7 @@
 <p>  由于 UDP ⾯向⽆连接，它可以随时发送数据，再加上UDP本身的处理既简单⼜⾼效，因此经常⽤于：<br>  包总数较少的通信，如 DNS 、 SNMP 等<br>  视频、⾳频等多媒体通信<br>  ⼴播通信</p>
 </li>
 </ol>
-<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><img src="image-20210731113603327.png"></p>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><img src="https://i.loli.net/2021/08/05/tFSzZdBAvgEK27o.png" alt="image-20210731113603327"></p>
 <p>注意序列号和确认应答号的变化。<br>第三次握手可以携带数据。</p>
 <p>注意序列号和确认应答号的变化。</p>
 <p>第三次握手可以携带数据。</p>
@@ -268,14 +409,14 @@
 <li>当接收⽅发现 TCP 报⽂（头部 + 数据）的某⼀⽚丢失后，则不会响应 ACK 给对⽅，那么发送⽅的 TCP 在超时后，就会重发「整个 TCP 报⽂（头部 + 数据）」。</li>
 </ul>
 <h4 id="什么是-SYN-攻击？如何避免-SYN-攻击？"><a href="#什么是-SYN-攻击？如何避免-SYN-攻击？" class="headerlink" title="什么是 SYN 攻击？如何避免 SYN 攻击？"></a>什么是 SYN 攻击？如何避免 SYN 攻击？</h4><p>攻击者短时间伪造不同 IP 地址的 SYN 报⽂，服务端每接收到⼀个 SYN 报⽂，就进⼊ SYN_RCVD 状态，但服务端发送出去的 ACK + SYN 报⽂，⽆法得到未知 IP 主机的ACK 应答，久⽽久之就会占满服务端的 SYN 接收队列（未连接队列），使得服务器不能为正常⽤户服务。</p>
-<p><img src="image-20210731145537881.png"></p>
-<p><img src="image-20210731145610582.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/CE9ZOqDpnFK4joB.png" alt="image-20210731145537881"></p>
+<p><img src="https://i.loli.net/2021/08/05/QZeGdAhMkUXjLYt.png" alt="image-20210731145610582"></p>
 <p><strong>解决办法：</strong></p>
 <p>控制该队列的最⼤值：SYN_RCVD 状态连接的最⼤个数：net.core.netdev_max_backlog</p>
 <ul>
 <li>tcp_syncookies 的⽅式可以应对 SYN 攻击的⽅法：<br>net.ipv4.tcp_syncookies = 1<br>当 「 SYN 队列」满之后，后续服务器收到 SYN 包，不进⼊「 SYN 队列」；<br>计算出⼀个 cookie 值，再以 SYN + ACK 中的「序列号」返回客户端，<br>服务端接收到客户端的应答报⽂时，服务器会检查这个 ACK 包的合法性。如果合法，直接放⼊到「Accept队列」。</li>
 </ul>
-<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><img src="image-20210731145722373.png"></p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><img src="https://i.loli.net/2021/08/05/FsewJVSbrgqBzUp.png" alt="image-20210731145722373"></p>
 <p>关闭连接时，客户端向服务端发送 FIN 时，仅仅表示客户端不再发送数据了<strong>但是还能接收数据</strong>。服务器收到客户端的 FIN 报⽂时，先回⼀个 ACK 应答报⽂，⽽<strong>服务端可能还有数据需要处理和发送</strong>，等服务端不再发送数据时，才发送 <strong>FIN 报⽂给客户端来表示同意现在关闭连接</strong>。</p>
 <h4 id="为什么-TIME-WAIT-等待的时间是-2MSL"><a href="#为什么-TIME-WAIT-等待的时间是-2MSL" class="headerlink" title="为什么 TIME_WAIT 等待的时间是 2MSL"></a>为什么 TIME_WAIT 等待的时间是 2MSL</h4><p>MSL 是 Maximum Segment Lifetime，报⽂最⼤⽣存时间，它是任何报⽂在⽹络上存在的最⻓时间，超过这个时间报⽂将被丢弃。<br>⽹络中可能存在来⾃发送⽅的数据包，当这些发送⽅的数据包被接收⽅处理后⼜会向对⽅发送响应，所以⼀来⼀回需要等待 2 倍的时间。<br>⽐如如果被动关闭⽅没有收到断开连接的最后的 ACK 报⽂，就会触发超时重发 Fin 报⽂，另⼀⽅接收到 FIN 后，会重发 ACK 给被动关闭⽅， ⼀来⼀去正好 2 个 MSL。<br>在 Linux 系统⾥ 2MSL 默认是 60 秒，那么⼀个 MSL 也就是 30 秒。Linux 系统停留在 TIME_WAIT 的时间为固定的 60 秒。</p>
 <h4 id="需要-TIME-WAIT-状态"><a href="#需要-TIME-WAIT-状态" class="headerlink" title="需要 TIME-WAIT 状态"></a>需要 TIME-WAIT 状态</h4><ul>
@@ -283,25 +424,41 @@
 <li>保证「被动关闭连接」的⼀⽅能被正确的关闭，即保证最后的 ACK 能让被动关闭⽅接收。</li>
 </ul>
 <h4 id="如果已经建⽴了连接，但是客户端突然出现故障了怎么办？"><a href="#如果已经建⽴了连接，但是客户端突然出现故障了怎么办？" class="headerlink" title="如果已经建⽴了连接，但是客户端突然出现故障了怎么办？"></a>如果已经建⽴了连接，但是客户端突然出现故障了怎么办？</h4><p>TCP 有⼀个机制是<strong>保活机制</strong>。这个机制的原理是这样的：ping-pong<br>定义⼀个时间段，在这个时间段内，如果没有任何连接相关的活动，TCP 保活机制会开始作⽤，每隔⼀个时间间隔，发送⼀个探测报⽂，该探测报⽂包含的数据⾮常少，如果连续⼏个探测报⽂都没有得到响应，则认为当前的TCP 连接已经死亡，系统内核将错误信息通知给上层应⽤程序。</p>
-<h3 id="socket编程？"><a href="#socket编程？" class="headerlink" title="socket编程？"></a>socket编程？</h3><h4 id="连接过程"><a href="#连接过程" class="headerlink" title="连接过程"></a>连接过程</h4><p><img src="image-20210731150237375.png"></p>
+<h3 id="socket编程？"><a href="#socket编程？" class="headerlink" title="socket编程？"></a>socket编程？</h3><h4 id="连接过程"><a href="#连接过程" class="headerlink" title="连接过程"></a>连接过程</h4><p><img src="https://i.loli.net/2021/08/05/cXSudR6i82maxOI.png" alt="image-20210731150237375"></p>
 <h4 id="listen-时候参数-backlog-的意义？"><a href="#listen-时候参数-backlog-的意义？" class="headerlink" title="listen 时候参数 backlog 的意义？"></a>listen 时候参数 backlog 的意义？</h4><p>参数⼀ socketfd 为 socketfd ⽂件描述符<br>参数⼆ <strong>backlog</strong>，这参数在历史版本有⼀定的变化<br>在早期 Linux 内核 backlog 是 <strong>SYN 队列⼤⼩</strong>，也就是未完成的队列⼤⼩。<br>在 Linux 内核 2.2 之后，backlog 变成 <strong>accept 队列</strong>，也就是已完成连接建⽴的队列⻓度，所以现在通常认为backlog 是 accept 队列长度</p>
 <p>客户端 connect 成功返回是在第⼆次握⼿，服务端 accept 成功返回是在三次握⼿成功之后。</p>
 <h3 id="可靠传输"><a href="#可靠传输" class="headerlink" title="可靠传输"></a>可靠传输</h3><p><strong>序列号、确认应答、重发控制、连接管理以及窗⼝控制等。</strong></p>
 <h4 id="自动重传请求（Automatic-Repeat-reQuest，ARQ）"><a href="#自动重传请求（Automatic-Repeat-reQuest，ARQ）" class="headerlink" title="自动重传请求（Automatic Repeat-reQuest，ARQ）"></a>自动重传请求（Automatic Repeat-reQuest，ARQ）</h4><p>OSI模型中数据链路层的错误纠正协议之一。它通过使用<strong>确认和超时</strong>这两个机制，在不可靠服务的基础上实现可靠的信息传输。<strong>如果发送方在发送后一段时间之内没有收到确认帧，它通常会重新发送。</strong><br>当发送窗口和接收窗口的大小都等于 1时，就是停止等待协议。<br>当发送窗口大于1，接收窗口等于1时，就是回退N步协议。<br>当发送窗口和接收窗口的大小均大于1时，就是选择重发协议</p>
 <h4 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h4><p>序列号与确认应答！</p>
 <p><strong>超时重传</strong>-数据包丢失，确认应答丢失。</p>
-<p><img src="image-20210731150635851.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/OFfCLUwdjGsRPZI.png" alt="image-20210731150635851"></p>
 <p>当超时时间 RTO 较⼤时，重发就慢，没有效率，性能差；<br>当超时时间 RTO 较⼩时，会导致可能并没有丢就重发。<br>超时重传时间 RTO 的值应该略⼤于报⽂往返 RTT 的值。<br>如果超时重发的数据，再次超时的时候，TCP 的策略是超时间隔加倍。<br>也就是每当遇到⼀次超时重传的时候，都会将下⼀次超时时间间隔设为先前值的两倍。两次超时，就说明⽹络环境差，不宜频繁反复发送。</p>
 <p><strong>快速重传</strong><br>三次同样的ACK。</p>
 <p><strong>SACK</strong><br> SACK （ Selective Acknowledgment 选择性确认）。<br>这种⽅式需要在 <strong>TCP 头部「选项」字段⾥加⼀个 SACK</strong> 的东⻄，它可以将缓存的地图发送给发送⽅，这样<strong>发送⽅就可以知道哪些数据收到了，哪些数据没收到，</strong>知道了这些信息，就可以只重传丢失的数据。<br>D-SACK</p>
 <h4 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h4><p>窗⼝⼤⼩就是指⽆需等待确认应答，⽽可以继续发送数据的最⼤值。</p>
 <p><strong>累计确认：</strong></p>
-<p><img src="image-20210731150833402.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/To93btGQDuPNFpl.png" alt="image-20210731150833402"></p>
 <h4 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h4><p>怎么让发送⽅<strong>避免发送⼩数据呢？</strong><br>发送⽅通常的策略:<br>使⽤ <strong>Nagle 算法</strong>，该算法的思路是延时处理，它满⾜以下两个条件中的⼀条才可以发送数据：<br>窗⼝⼤⼩ &gt;= MSS 或是 数据⼤⼩ &gt;= MSS<br>收到之前发送数据的 ack 回包<br>只要没满⾜上⾯条件中的⼀条，发送⽅⼀直在囤积数据，直到满⾜上⾯的发送条件。<br>另外，Nagle 算法默认是打开的，可以在 <strong>Socket 设置 TCP_NODELAY</strong> 选项来关闭这个算法。</p>
 <h4 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h4><p><strong>什么是拥塞窗⼝？和发送窗⼝有什么关系呢？</strong><br>拥塞窗⼝ cwnd是发送⽅维护的⼀个的状态变量，它会根据⽹络的拥塞程度动态变化的。<br>我们在前⾯提到过发送窗⼝ swnd 和接收窗⼝ rwnd 是约等于的关系，那么由于加⼊了拥塞窗⼝的概念后，此时发送窗⼝的值是swnd = min(cwnd, rwnd)，也就是拥塞窗⼝和接收窗⼝中的最⼩值。<br><strong>只要⽹络中没有出现拥塞， cwnd 就会增⼤；</strong><br><strong>但⽹络中出现了拥塞， cwnd 就减少</strong>；</p>
 <p><strong>那么怎么知道当前⽹络是否出现了拥塞呢？</strong><br>其实只要「发送⽅」没有在规定时间内接收到 ACK 应答报⽂，也就是<strong>发⽣了超时重传</strong>，就会认为⽹络出现了⽤拥塞。</p>
-<p><strong>拥塞控制有哪些控制算法？</strong><br><strong>慢启动</strong><br><strong>拥塞避免</strong><br><strong>快重传</strong><br><strong>快恢复</strong></p>
-<p><img src="image-20210731151028278.png"></p>
+<h5 id="拥塞控制有哪些控制算法？"><a href="#拥塞控制有哪些控制算法？" class="headerlink" title="拥塞控制有哪些控制算法？"></a><strong>拥塞控制有哪些控制算法？</strong></h5><p><strong>慢启动开始</strong></p>
+<p>1.开始时发送方cwnd=1，发送报文段M1，如果收到确认M1，那么此时增大cwnd=2，并发送M2，M3</p>
+<p>2.要注意，发送方每收到一个确认报文段，cwnd+1（不包括缺失重传的确认）</p>
+<p>也就是说，<strong>每经过一个传输伦次（RTT时间）</strong>，cwnd加倍。</p>
+<p>但是，为了防止拥塞窗口cwnd增长过大而引起网络拥塞，<strong>设置一个慢开始门限ssthresh</strong>。</p>
+<p>1.当cwnd&lt;ssthresh，使用上述的慢开始算法</p>
+<p>2.当cwnd&gt;ssthresh，停止使用慢开始，使用拥塞避免算法</p>
+<p>3.当cwnd==ssthresh，两者都可以使用</p>
+<p><strong>拥塞避免</strong></p>
+<p>拥塞避免算法的思路是让拥塞窗口cwnd缓慢增大，即每经过一个往返时间RTT就把发送方的拥塞窗口<strong>cwnd+1，</strong>而不是加倍，这样cwnd就按线性增大。</p>
+<p><strong>快重传</strong></p>
+<p>快重传规定，发送方只要连续收到3个重复确认，立即重传对方发来的M3。</p>
+<p><img src="https://i.loli.net/2021/08/05/zJP16DFvGAOWirM.png" alt="image-20210805160153353"></p>
+<p><strong>快恢复</strong></p>
+<p>当发送方连续收到三个重复确认，执行乘法减小，ssthresh减半</p>
+<p>1，由于发送方可能认为网络现在没有拥塞，因此与慢开始不同，把cwnd值设置为ssthresh减半之后的值，然后执行拥塞避免算法，线性增大cwnd。</p>
+<p>2，既然发送方收到<strong>三个重复的确认</strong>，就表明有三个分组已经离开了网络。这三个分组不再消耗网络的资源而是停留在接收方的缓存中。可见现在网络中并不是堆积了分组而是减少了三个分组。因此可以适当把拥塞窗口扩大了些。</p>
+<p><img src="https://i.loli.net/2021/08/05/pvt5AOQLyq2WUa8.png" alt="image-20210731151028278"></p>
 
       
     </div>
@@ -352,7 +509,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-31 21:25:18" itemprop="dateModified" datetime="2021-07-31T21:25:18+08:00">2021-07-31</time>
+                <time title="修改时间：2021-08-06 10:43:10" itemprop="dateModified" datetime="2021-08-06T10:43:10+08:00">2021-08-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -449,6 +606,18 @@
 <h4 id="安全幂等？"><a href="#安全幂等？" class="headerlink" title="安全幂等？"></a>安全幂等？</h4><p>在 HTTP 协议⾥，所谓的「安全」是指请求⽅法不会「破坏」服务器上的资源。</p>
 <p>所谓的「幂等」，意思是<strong>多次执⾏相同的操作</strong>，结果都是「相同」的。</p>
 <p>那么很明显 <strong>GET ⽅法就是安全且幂等</strong>的，因为它是「只读」操作，⽆论操作多少次，服务器上的数据都是安全的，且每次的结果都是相同的。<strong>POST</strong> 因为是「新增或提交数据」的操作，会修改服务器上的资源，所以是<strong>不安全</strong>的，且多次提交数据就会创建多个资源，所以<strong>不是幂等的</strong>。</p>
+<h3 id="HTTP-是不保存状态的协议-如何保存用户状态"><a href="#HTTP-是不保存状态的协议-如何保存用户状态" class="headerlink" title="HTTP 是不保存状态的协议,如何保存用户状态?"></a>HTTP 是不保存状态的协议,如何保存用户状态?</h3><p><img src="https://i.loli.net/2021/08/06/PvL5K2BYp18URHu.png" alt="image-20210806103941528"></p>
+<p>HTTP 是一种不保存状态，即无状态（stateless）协议。也就是说 HTTP 协议自身不对请求和响应之间的通信状态进行保存。</p>
+<p><strong>Session 机制</strong>的存在就是为了解决这个问题，Session 的主要作用就是<strong>通过服务端记录用户的状态</strong>。典型的场景是购物车，当你要添加商品到购物车的时候，系统不知道是哪个用户操作的，因为 HTTP 协议是无状态的。</p>
+<p>服务端给特定的用户创建特定的 Session 之后就可以标识这个用户并且跟踪这个用户了（一般情况下，服务器会在一定时间内保存这个 Session，过了时间限制，就会销毁这个 Session）。</p>
+<p>在服务端保存 Session 的方法很多，最常用的就是内存和数据库(比如是使用内存数据库 redis 保存)。既然 Session 存放在服务器端，那么我们如何实现 Session 跟踪呢？大部分情况下，<strong>我们都是通过在 Cookie 中附加一个 Session ID 来方式来跟踪。</strong></p>
+<p>Cookie 被禁用怎么办?</p>
+<p><strong>最常用的就是利用 URL 重写把 Session ID 直接附加在 URL 路径的后面。</strong></p>
+<h3 id="Cookie-的作用是什么-和-Session-有什么区别？"><a href="#Cookie-的作用是什么-和-Session-有什么区别？" class="headerlink" title="Cookie 的作用是什么?和 Session 有什么区别？"></a>Cookie 的作用是什么?和 Session 有什么区别？</h3><p>Cookie 和 Session 都是用来跟踪浏览器用户身份的会话方式，但是两者的应用场景不太一样。</p>
+<p>Cookie 一般用来保存用户信息 比如 ① 我们在 Cookie 中保存已经登录过得用户信息，下次访问网站的时候页面可以自动帮你登录的一些基本信息给填了；② 一般的网站都会有保持登录也就是说下次你再访问网站的时候就不需要重新登录了，这是因为用户登录的时候我们可以存放了一个 Token 在 Cookie 中，下次登录的时候只需要根据 Token 值来查找用户即可(为了安全考虑，重新登录一般要将 Token 重写)；③ 登录一次网站后访问网站其他页面不需要重新登录。Session 的主要作用就是通过服务端记录用户的状态。 典型的场景是购物车，当你要添加商品到购物车的时候，系统不知道是哪个用户操作的，因为 HTTP 协议是无状态的。服务端给特定的用户创建特定的 Session 之后就可以标识这个用户并且跟踪这个用户了。</p>
+<p>Cookie 数据保存在客户端(浏览器端)，Session 数据保存在服务器端。</p>
+<p>Cookie 存储在客户端中，而 Session 存储在服务器上，相对来说 Session 安全性更高。如果要在 Cookie 中存储一些敏感信息，不要直接写入 Cookie 中，最好能将 Cookie 信息加密然后使用到的时候再去服务器端解密。</p>
+<p>单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。</p>
 <h2 id="https"><a href="#https" class="headerlink" title="https"></a>https</h2><table>
 <thead>
 <tr>
@@ -477,7 +646,7 @@
 <p>摘要算法实现完整性：每份数据都生成独一无二的指纹。</p>
 <p>服务器公钥放到数字证书中</p>
 <p><img src="image-20210731111936519.png"></p>
-<h2 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h2><h3 id="http-1-1"><a href="#http-1-1" class="headerlink" title="http 1.1"></a>http 1.1</h3><p>长连接</p>
+<h2 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h2><h3 id="http-1-1"><a href="#http-1-1" class="headerlink" title="http 1.1"></a>http 1.1</h3><p><strong>长连接</strong></p>
 <p>管道传输</p>
 <p>不能压缩首部，只能压缩body。</p>
 <p>首部冗长。</p>
@@ -547,7 +716,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-31 11:01:51" itemprop="dateModified" datetime="2021-07-31T11:01:51+08:00">2021-07-31</time>
+                <time title="修改时间：2021-08-06 10:35:10" itemprop="dateModified" datetime="2021-08-06T10:35:10+08:00">2021-08-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -597,11 +766,18 @@
 <p>ARP==<strong>ip地址到硬件地址的动态映射</strong>-ARP高速缓存。</p>
 <p><strong>物理层</strong></p>
 <p>为链路层提供二进制传输服务。</p>
-<h3 id="打开百度到显示具体过程？"><a href="#打开百度到显示具体过程？" class="headerlink" title="打开百度到显示具体过程？"></a>打开百度到显示具体过程？</h3><p><img src="image-20210731103105388.png"></p>
+<h3 id="打开百度到显示具体过程？"><a href="#打开百度到显示具体过程？" class="headerlink" title="打开百度到显示具体过程？"></a>打开百度到显示具体过程？</h3><p><strong>解析URL</strong></p>
+<p><strong>DNS 解析</strong></p>
+<p><strong>TCP 连接</strong></p>
+<p><strong>发送 HTTP 请求</strong></p>
+<p><strong>服务器处理请求并返回 HTTP 报文</strong></p>
+<p><strong>浏览器解析渲染页面</strong></p>
+<p><strong>连接结束</strong></p>
+<p><img src="https://i.loli.net/2021/08/06/pIaiW62BMZtPrmS.png" alt="image-20210806103355600"></p>
 <p><strong>解析url</strong></p>
 <p><strong>生成http消息</strong></p>
 <p><strong>真实地址查询dns</strong></p>
-<p><img src="image-20210731105736261.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/imGRJ3j4PqUerE7.png" alt="image-20210731105736261"></p>
 <p><strong>应⽤程序（浏览器）通过调⽤ Socket 库，来委托协议栈⼯作。</strong></p>
 <p>协议栈的上半部分有两块，是负责收发数据的TCP 和 UDP 协议，它们两会接受应⽤层的委托执⾏收发数据的操作。</p>
 <p>协议栈的下⾯⼀半是⽤ IP 协议控制⽹络包收发操作，在互联⽹上传数据时，数据会被切分成⼀块块的⽹络包，⽽<br>将⽹络包发送给对⽅的操作就是由 IP 负责的。</p>
@@ -613,8 +789,8 @@
 <p><strong>先查询 ARP 缓存</strong>，如果其中已经保存了对⽅的 MAC 地址，就不需要发送 ARP 查询，直接使⽤ ARP 缓存中 的地址。 ⽽当 ARP 缓存中不存在对⽅ MAC 地址时，则发送 ARP <strong>⼴播查询。</strong></p>
 <p><strong>出⼝ ⽹卡</strong></p>
 <p>⽹卡驱动从 IP 模块获取到包之后，会将其复制到⽹卡内的缓存区中，接着会在其开头加上报头和起始帧分界符， 在末尾加上⽤于检测错误的帧校验序列</p>
-<p><img src="image-20210731104901289.png"></p>
-<p><img src="image-20210731104830860.png"></p>
+<p><img src="https://i.loli.net/2021/08/05/gpoRLKxYM84Xcwn.png" alt="image-20210731104901289"></p>
+<p><img src="https://i.loli.net/2021/08/05/74mbiBgpHStlhnx.png" alt="image-20210731104830860"></p>
 
       
     </div>
@@ -665,7 +841,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-04 21:38:40" itemprop="dateModified" datetime="2021-08-04T21:38:40+08:00">2021-08-04</time>
+                <time title="修改时间：2021-08-05 20:18:27" itemprop="dateModified" datetime="2021-08-05T20:18:27+08:00">2021-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -722,10 +898,15 @@
 <h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><h3 id="ArrayList-和-Vector-的区别"><a href="#ArrayList-和-Vector-的区别" class="headerlink" title="ArrayList 和 Vector 的区别"></a>ArrayList 和 Vector 的区别</h3><p>Vector 和 ArrayList 的实现几乎是一样的，区别在于：</p>
 <p>1）最重要的的区别：Vector 在方法上使用了 synchronized 来保证线程安全，同时由于这个原因，在性能上 ArrayList会有更好的表现。</p>
 <p>2） Vector 扩容后容量默认变为原来 2 倍，而 ArrayList 为原来的 1.5 倍。</p>
-<h3 id="ArrayList-和-LinkedList-的区别？"><a href="#ArrayList-和-LinkedList-的区别？" class="headerlink" title="ArrayList 和 LinkedList 的区别？"></a>ArrayList 和 LinkedList 的区别？</h3><p>1、ArrayList 底层基于动态数组实现，LinkedList 底层基于双向链表实现。</p>
-<p>2、对于随机访问（按 index 访问，get/set 方法）：ArrayList 通过 index 直接定位到数组对应位置的节点，而 LinkedList需要从头结点或尾节点开始遍历，直到寻找到目标节点，<strong>在效率上 ArrayList 优于 LinkedList</strong>。</p>
-<p>3、对于随机插入和删除：ArrayList 需要移动目标节点后面的节点（使用 System.arraycopy 方法移动节点），而LinkedList 只需修改目标节点前后节点的 next 或 prev 属性即可，因此在效率上 LinkedList 优于 ArrayList。</p>
-<p>4、对于顺序插入和删除：由于 ArrayList 不需要移动节点，因此在效率上比 LinkedList 更好。这也是为什么在实际使用中 ArrayList 更多，因为<strong>大部分情况下我们的使用都是顺序插入。</strong></p>
+<h3 id="ArrayList-和-LinkedList-的区别？"><a href="#ArrayList-和-LinkedList-的区别？" class="headerlink" title="ArrayList 和 LinkedList 的区别？"></a>ArrayList 和 LinkedList 的区别？</h3><h4 id="arraylist扩容"><a href="#arraylist扩容" class="headerlink" title="arraylist扩容"></a>arraylist扩容</h4><p>第一种情况，当ArrayList的容量为0时，此时添加元素的话，需要扩容，三种构造方法创建的ArrayList在扩容时略有不同：</p>
+<p>1.无参构造，创建ArrayList后容量为0，添加第一个元素后，<strong>容量变为10</strong>，此后若需要扩容，则正常扩容。</p>
+<p>2.传容量构造，当参数为0时，创建ArrayList后容量为0，添加第一个元素后，容量为1，此时ArrayList是满的，下次添加元素时需正常扩容。</p>
+<p>3.传列表构造，当列表为空时，创建ArrayList后容量为0，添加第一个元素后，容量为1，此时ArrayList是满的，下次添加元素时需正常扩容。</p>
+<p>第二种情况，当ArrayList的容量大于0，并且ArrayList是满的时，此时添加元素的话，进行正常扩容，每次扩容<strong>到原来的1.5倍。</strong></p>
+<p>1、ArrayList 底层基于<strong>动态数组</strong>实现，LinkedList 底层基于<strong>双向链表</strong>实现。</p>
+<p>2、对于<strong>随机访问（按 index 访问，get/set 方法）</strong>：ArrayList 通过 index 直接定位到数组对应位置的节点，而 LinkedList需要从头结点或尾节点开始遍历，直到寻找到目标节点，<strong>在效率上 ArrayList 优于 LinkedList</strong>。</p>
+<p>3、对于<strong>随机插入和删除</strong>：ArrayList 需要移动目标节点后面的节点（使用 System.arraycopy 方法移动节点），而LinkedList 只需修改目标节点前后节点的 next 或 prev 属性即可，因此在效率上 LinkedList 优于 ArrayList。</p>
+<p>4、对于<strong>顺序插入和删除：由于 ArrayList 不需要移动节点，因此在效率上比 LinkedList 更好</strong>。这也是为什么在实际使用中 ArrayList 更多，因为<strong>大部分情况下我们的使用都是顺序插入。</strong></p>
 <p>5、两者都不是线程安全的。</p>
 <p>6、内存空间占用： ArrayList 的空 间浪费主要体现在在 list 列表的结尾会<strong>预留一定的容量空间</strong>，而 LinkedList 的空间花费则体现在它的每一个元素都需要消耗比 ArrayList 更多的空间（因为要存放直接后继和直接前驱以及数据）。</p>
 <h3 id="hashmap对比hashtable"><a href="#hashmap对比hashtable" class="headerlink" title="hashmap对比hashtable"></a>hashmap对比hashtable</h3><p>线程安全：hashmap不安全，hashtable安全（方法被synchronized修饰过）。</p>
@@ -734,6 +915,31 @@
 <p>扩容：hashtable初始：不指定的话为11，之后变为原来的2n+1。hashmap初始16，每次扩充两倍。hashmap在指定了初始容量后会扩充为2的幂次大小。</p>
 <p>底层：解决hash冲突，hashmap在链表大于8会转化成红黑树（如果数组长度小于64，会先进性扩容）。</p>
 <h3 id="List、Set、Map-三者的区别"><a href="#List、Set、Map-三者的区别" class="headerlink" title="List、Set、Map 三者的区别?"></a>List、Set、Map 三者的区别?</h3><p>List（对付<strong>顺序</strong>的好帮手）： 存储的对象是可重复的、有序的。<br>Set（注重<strong>独一无二</strong>的性质）：存储的对象是不可重复的、无序的。<br>Map（<strong>用 Key 来搜索的专业户</strong>）: 存储键值对（key-value），不能包含重复的键（key），每个键只能映射到一个值</p>
+<h3 id="map遍历方式："><a href="#map遍历方式：" class="headerlink" title="map遍历方式："></a>map遍历方式：</h3><p>HashMap 遍历从大的方向来说，可分为以下 4 类：</p>
+<p><strong>迭代器（Iterator）方式遍历；</strong></p>
+<p><strong>For Each 方式遍历；</strong></p>
+<p><strong>Lambda 表达式遍历（JDK 1.8+）;</strong></p>
+<p><strong>Streams API 遍历（JDK 1.8+）。</strong></p>
+<p>使用迭代器（Iterator）<strong>EntrySet</strong> 的方式进行遍历；</p>
+<p>使用迭代器（Iterator）<strong>KeySet</strong> 的方式进行遍历；</p>
+<p>使用 For Each <strong>EntrySet</strong> 的方式进行遍历；</p>
+<p>使用 For Each <strong>KeySet</strong> 的方式进行遍历；</p>
+<p>使用 Lambda 表达式的方式进行遍历；</p>
+<p>使用 Streams API <strong>单线程</strong>的方式进行遍历；</p>
+<p>使用 Streams API <strong>多线程</strong>的方式进行遍历</p>
+<p><img src="https://i.loli.net/2021/08/05/ZP9ot578UVrd2RN.png" alt="计算机生成了可选文字: Iterator(Map. Entry(Integer, Strlng»  (iterator.hasNext()) {  Map. Strlng) entry  ma p ． entrySet() ． iterator();  iterator ． n 巳 〔 ） ；  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/jNw9YtiOlCLV2Bf.png" alt="计算机生成了可选文字: map.keyset().iterator();  Iterator(Integer) Iterator  (iterator.hasNext()) {  Integer key  iterator ． n 巳 〔 ） ；  Sysæn. out ． println(key);  Sysæn. out.println(map• get 〔 k ey ） ); "></p>
+<p><img src="https://i.loli.net/2021/08/05/7qwG2cHSj514gf3.png" alt="计算机生成了可选文字: (Map.Entry(lnteger, String) entry ： ma p ． entrySet()) {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/qfBMmXg3ljFUEko.png" alt="计算机生成了可选文字: 〔 Integer key ： map.keySet()) {  Sysæn. out ． println(key);  Sysæn. out.println(map• get 〔 k ey ） ); "></p>
+<p><img src="https://i.loli.net/2021/08/05/hrf2daRyeQqODsx.png" alt="计算机生成了可选文字: map.forEach((key, value) 一 》 {  Sysæn. out ． println(key);  Sysæn. out ． println(ualue) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/oKvs6jBOxzQUZhJ.png" alt="计算机生成了可选文字: ma p ． entrySet().stream(). forEach((entry) 一 》 {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/KMzILTYf1nwu8ci.png" alt="计算机生成了可选文字: ma p ． entrySet().para11e1Stream(). forEach((entry) 一 》 {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><strong>EntrySet</strong> 之所以比 <strong>KeySet</strong> 的性能高是因为，**KeySet 在循环时使用了 map.get(key)**，而 map.get(key) 相当于又遍历了一遍 Map 集合去查询 key 所对应的值。为什么要用“又”这个词？那是因为在使用迭代器或者 for 循环时，其实已经遍历了一遍 Map 集合了，因此再使用 map.get(key) 查询时，相当于遍历了两遍。</p>
+<p>而 <strong>EntrySet</strong> 只遍历了一遍 Map 集合，之后通过代码“Entry&lt;Integer, String&gt; entry = iterator.next()”把对象的 key 和 value 值都放入到了 Entry 对象中，因此再获取 key 和 value 值时就无需再遍历 Map 集合，只需要从 Entry 对象中取值就可以了。</p>
+<p>所以，<strong>EntrySet 的性能比 KeySet 的性能高出了一倍</strong>，因为 KeySet 相当于循环了两遍 Map 集合，而 EntrySet 只循环了一遍。</p>
+<p>我们不能在<strong>遍历中使用</strong>集合 map.remove() 来删除数据，这是非安全的操作方式，但我们可以使用迭代器的 <strong>iterator.remove() 的方法来删除数据</strong>，这是安全的删除集合的方式。</p>
+<p>同样的我们也可以使用 Lambda 中的 removeIf 来提前删除数据，或者是使用 Stream 中的 filter 过滤掉要删除的数据进行循环，这样都是安全的，当然我们也可以在 for 循环前删除数据在遍历也是线程安全的。</p>
+<p>综合性能和安全性来看，我们应该尽量使用<strong>迭代器（Iterator）来遍历 EntrySet 的遍历方式来操作 Map 集合</strong>，这样就会既安全又高效。</p>
 <h3 id="Comparable-和-Comparator-比较？"><a href="#Comparable-和-Comparator-比较？" class="headerlink" title="Comparable 和 Comparator 比较？"></a>Comparable 和 Comparator 比较？</h3><p>1、Comparable 是<strong>排序接口</strong>，一个类实现了 Comparable 接口，意味着“该类支持排序”。Comparator 是<strong>比较器，我们可以实现该接口，自定义比较算法，创建一个 “该类的比较器” 来进行排序</strong>。</p>
 <p>2、Comparable 相当于“内部比较器”，而 Comparator 相当于“外部比较器”。</p>
 <p>3、Comparable 的耦合性更强，<strong>Comparator 的灵活性和扩展性更优。</strong></p>
@@ -800,7 +1006,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-05 13:52:40" itemprop="dateModified" datetime="2021-08-05T13:52:40+08:00">2021-08-05</time>
+                <time title="修改时间：2021-08-05 20:08:35" itemprop="dateModified" datetime="2021-08-05T20:08:35+08:00">2021-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -823,7 +1029,20 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="关键字总结"><a href="#关键字总结" class="headerlink" title="关键字总结"></a>关键字总结</h3><h4 id="final-关键字"><a href="#final-关键字" class="headerlink" title="final 关键字"></a>final 关键字</h4><p>final 关键字，意思是<strong>最终的、不可修改的</strong>，用来修饰类、方法和变量，具有以下特点：</p>
+          <h3 id="Java数据类型"><a href="#Java数据类型" class="headerlink" title="Java数据类型"></a>Java数据类型</h3><p>Java 中有 8 种基本数据类型，分别为：</p>
+<p>6 种数字类型 ：byte-1、short-2、int-4、long-8、float-4、double-8<br>1 种字符类型：char-2<br>1 种布尔型：boolean-1位</p>
+<p>这八种基本类型都有对应的包装类分别为：Byte、Short、Integer、Long、Float、Double、Character、Boolean 。</p>
+<p>包装类型不赋值就是 Null ，而基本类型有默认值且不是 Null。</p>
+<p>基本数据类型直接存放在 <strong>Java 虚拟机栈中的局部变量表</strong>中，而包装类型属于<strong>对象类型</strong>，我们知道对象实例都存在于堆中。相比于对象类型， 基本数据类型占用的空间非常小。</p>
+<p><strong>自动装箱与拆箱</strong></p>
+<p>装箱：将基本类型用它们对应的引用类型包装起来；<br>拆箱：将包装类型转换为基本数据类型；</p>
+<p>从字节码中，我们发现装箱其实就是调用了 <strong>包装类的valueOf()方法，拆箱其实就是调用了 xxxValue()方法</strong>。</p>
+<p>因此，</p>
+<p>Integer i = 10 等价于 Integer i = Integer.valueOf(10)<br>int n = i 等价于 int n = i.intValue();</p>
+<h4 id="为什么存在这两种类型呢？"><a href="#为什么存在这两种类型呢？" class="headerlink" title="为什么存在这两种类型呢？"></a>为什么存在这两种类型呢？</h4><p>我们都知道在Java语言中，new一个对象存储在堆里，我们通过栈中的引用来使用这些对象；但是对于经常用到的一系列类型如int，如果我们用new将其存储在堆里就不是很有效——特别是简单的小的变量。所以就出现了基本类型，同C++一样，Java采用了相似的做法，对于这些类型不是用new关键字来创建，而是直接将变量的值存储在栈中，因此更加高效。</p>
+<h4 id="有了基本类型为什么还要有包装类型呢？"><a href="#有了基本类型为什么还要有包装类型呢？" class="headerlink" title="有了基本类型为什么还要有包装类型呢？"></a>有了基本类型为什么还要有包装类型呢？</h4><p>我们知道Java是一个面相对象的编程语言，基本类型并不具有对象的性质，为了让基本类型也具有对象的特征，就出现了包装类型（如我们在使用集合类型Collection时就一定要使用包装类型而非基本类型），它相当于将基本类型“包装起来”，使得它具有了对象的性质，并且为其添加了属性和方法，丰富了基本类型的操作。</p>
+<p>另外，当需要往ArrayList，HashMap中放东西时，像int，double这种基本类型是放不进去的，因为容器都是装object的，这是就需要这些基本类型的包装器类了。</p>
+<h3 id="关键字总结"><a href="#关键字总结" class="headerlink" title="关键字总结"></a>关键字总结</h3><h4 id="final-关键字"><a href="#final-关键字" class="headerlink" title="final 关键字"></a>final 关键字</h4><p>final 关键字，意思是<strong>最终的、不可修改的</strong>，用来修饰类、方法和变量，具有以下特点：</p>
 <p>final 修饰的类<strong>不能被继承</strong>，final 类中的所有成员方法都会被隐式的指定为 final 方法；</p>
 <p>final 修饰的方法<strong>不能被重写</strong>；</p>
 <p>final <strong>修饰的变量是常量</strong>，如果是基本数据类型的变量，则其数值一旦在初始化之后便不能更改；如果是引用类型的变量，则在对其初始化之后便不能让其指向另一个对象。</p>
@@ -844,6 +1063,12 @@
 <p><strong>this、super 不能用在 static 方法中。</strong></p>
 <p>被 static 修饰的成员属于类，不属于单个这个类的某个对象，被类中所有对象共享。</p>
 <p><strong>而 this 代表对本类对象的引用，指向本类对象；而 super 代表对父类对象的引用，指向父类对象</strong>；所以， this 和 super 是属于对象范畴的东西，而静态方法是属于类范畴的东西。</p>
+<h3 id="权限修饰符"><a href="#权限修饰符" class="headerlink" title="权限修饰符"></a>权限修饰符</h3><p><img src="https://i.loli.net/2021/08/05/Dg8pvr4FJswPIGn.png" alt="image-20210805171804390"></p>
+<h3 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h3><p>Java 泛型（generics）是 JDK 5 中引入的一个新特性, 泛型提供了<strong>编译时类型安全检测机制</strong>，该机制允许程序员在编译时检测到非法的类型。泛型的本质是<strong>参数化类型</strong>，也就是说所操作的数据类型被指定为一个参数。</p>
+<p>Java 的泛型是伪泛型，这是因为 Java 在编译期间，所有的泛型信息都会被擦掉，这也就是通常所说类型擦除 。</p>
+<p>泛型一般有三种使用方式:泛型类、泛型接口、泛型方法。</p>
+<p>假定我们有这样一个需求：写一个排序方法，能够对整型数组、字符串数组甚至其他任何类型的数组进行排序，该如何实现？</p>
+<p>使用 Java 泛型的概念，我们可以写一个泛型方法来对一个对象数组排序。然后，调用该泛型方法来对整型数组、浮点数数组、字符串数组等进行排序。</p>
 <h3 id="与equals"><a href="#与equals" class="headerlink" title="==与equals()?"></a>==与equals()?</h3><p>==判断两个对象的<strong>地址</strong>是不是相等，<strong>对于基本数据类型：值。引用数据类型：内存地址。</strong><br>equals()没有被覆盖重写，与==一样。</p>
 <p><strong>可以覆盖重写比较引用对象值的大小。</strong><br>举例：String中的equals方法是被重写过的。</p>
 <h4 id="hashcode（）与equal（）？hashset去重？"><a href="#hashcode（）与equal（）？hashset去重？" class="headerlink" title="hashcode（）与equal（）？hashset去重？"></a>hashcode（）与equal（）？hashset去重？</h4><p><strong>为什么要有hashcode？</strong></p>
@@ -865,10 +1090,60 @@
 <p>  方法名，参数列表必须一样。</p>
 <p>  抛出异常范围小于父类。<br>  访问修饰符可以降低限制。</p>
 <p>  <strong>父类方法由private，final，static修饰时不能被重写。</strong></p>
+<h3 id="抽象类与接口"><a href="#抽象类与接口" class="headerlink" title="抽象类与接口"></a>抽象类与接口</h3><p><strong>抽象类和接口的区别</strong></p>
+<p>接口(interface)和抽象类(abstract class)是<strong>支持抽象类定义的两种机制。</strong></p>
+<p><strong>接口是公开的</strong>，不能有私有的方法或变量，<strong>接口中的所有方法都没有方法体</strong>，通过关键字interface实现。</p>
+<p><strong>抽象类</strong>是可以有私有方法或私有变量的，通过把类或者类中的方法声明为abstract来表示一个类是抽象类，<strong>被声明为抽象的方法不能包含方法体</strong>。子类实现方法必须含有相同的或者更低的访问级别(public-&gt;protected-&gt;private)。抽象类的子类为父类中所有抽象方法的具体实现，否则也是抽象类。</p>
+<p><strong>接口可以被看作是抽象类的变体</strong>，接口中所有的方法都是抽象的，<strong>可以通过接口来间接的实现多重继承</strong>。接口中的成员变量都是static final类型，<strong>由于抽象类可以包含部分方法的实现</strong>，所以，在一些场合下抽象类比接口更有优势。</p>
+<p><strong>相同点</strong></p>
+<p><strong>接口的实现类</strong>或<strong>抽象类的子类</strong>都只有实现了接口或抽象类中的方法后才能实例化。</p>
+<p><strong>不同点</strong></p>
+<p><img src="https://i.loli.net/2021/08/05/thjlgoUynpEJR4P.png" alt="image-20210805171623086"></p>
+<p>抽象类就是为了继承而存在的，如果你定义了一个抽象类，却不去继承它，那么等于白白创建了这个抽象类，因为你不能用它来做任何事情。对于一个父类，如果它的某个方法在父类中实现出来没有任何意义，必须根据子类的实际需求来进行不同的实现，那么就可以将这个方法声明为abstract方法，此时这个类也就成为abstract类了。</p>
+<p>在抽象类中，抽象方法本质上是定义接口规范：即规定高层类的接口，从而保证所有子类都有相同的接口实现，这样，多态就能发挥出威力。</p>
+<p>如果一个抽象类没有字段，所有方法全部都是抽象方法：就可以把该抽象类改写为接口：interface。</p>
+<p><strong>那么接口的作用是什么呢？</strong></p>
+<p>1、Java单继承的原因所以需要曲线救国 作为继承关系的一个补充。</p>
+<p>2、把程序模块进行固化的契约,降低偶合。把若干功能拆分出来，按照契约来进行实现和依赖。（依赖倒置原则）</p>
+<p>3、定义接口有利于代码的规范。（接口分离原则）</p>
+<p><strong>abstract class 表示的是is a关系</strong>，<strong>interface表示的是like a关系。</strong></p>
+<p><strong>抽象类强调的是从属关系，接口强调的是功能。</strong></p>
+<p>抽象类作为很多子类的父类，它是一种<strong>模板式</strong>设计。</p>
+<p>而接口是一种<strong>行为规范</strong>，它是一种辐射式设计。</p>
+<p>对于抽象类，如果需要添加新的方法，可以直接在抽象类中添加具体的实现，子类可以不进行变更；</p>
+<p>而对于接口则不行，如果接口进行了变更，则所有实现这个接口的类都必须进行相应的改动。</p>
 <h3 id="成员变量与局部变量？"><a href="#成员变量与局部变量？" class="headerlink" title="成员变量与局部变量？"></a>成员变量与局部变量？</h3><p>根据定义变量位置的不同，可以将变量分为成员变量和局部变量<br>     成员变量是在<strong>类范围</strong>内定义的变量<br>     局部变量是在<strong>一个方法内</strong>定义的变量<br>1，成员变量可以分为：<br>     实例属性 （不用static修饰）<br>            随着实例属性的存在而存在<br>     类属性 （static修饰）<br>            随着类的存在而存在<br>成员变量无需显式初始化，系统会自动对其进行默认初始化</p>
 <p>2，局部变量可分为：<br>     形参（形式参数）<br>            在整个方法内有效<br>     方法局部变量 （方法内定义）<br>            从定义这个变量开始到方法结束这一段时间内有效<br>     代码块局部变量 （代码块内定义）<br>            从定义这个变量开始到代码块结束这一段时间内有效</p>
 <p><strong>局部变量除了形参外</strong>，<strong>都必须显示初始化</strong>，也就是要指定一个初始值，否则不能访问。<br>java允许局部变量和成员变量重名，<strong>局部变量会覆盖成员变量的值</strong></p>
-<h3 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h3><p><strong>面向过程：以事件为中心，一步一步实现每个步骤。以步骤划分。</strong></p>
+<h3 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h3><h4 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h4><ol>
+<li>单一职责原则（Single Responsibility Principle）</li>
+</ol>
+<p>每一个类应该专注于做一件事情。</p>
+<ol start="2">
+<li>里氏替换原则（Liskov Substitution Principle）</li>
+</ol>
+<p>超类存在的地方，子类是可以替换的。</p>
+<ol start="3">
+<li>依赖倒置原则（Dependence Inversion Principle）</li>
+</ol>
+<p>实现尽量依赖抽象，不依赖具体实现。</p>
+<ol start="4">
+<li>接口隔离原则（Interface Segregation Principle）</li>
+</ol>
+<p>应当为客户端提供尽可能小的单独的接口，而不是提供大的总的接口。</p>
+<ol start="5">
+<li>迪米特法则（Law Of Demeter）</li>
+</ol>
+<p>又叫最少知识原则，一个软件实体应当尽可能少的与其他实体发生相互作用。</p>
+<ol start="6">
+<li>开闭原则（Open Close Principle）</li>
+</ol>
+<p>面向扩展开放，面向修改关闭。</p>
+<ol start="7">
+<li>组合/聚合复用原则（Composite/Aggregate Reuse Principle CARP）</li>
+</ol>
+<p>尽量使用合成/聚合达到复用，尽量少用继承。原则： 一个类中有另一个类的对象。</p>
+<p><strong>面向过程：以事件为中心，一步一步实现每个步骤。以步骤划分。</strong></p>
 <p>任务明确</p>
 <p>效率高</p>
 <p>扩展性差，复用性弱，逻辑需要深入思考。</p>
@@ -927,6 +1202,52 @@
 <p>为何有了字节流，还要有字符流？</p>
 <p><strong>字符流是由java虚拟机将字节流转化而成。这个过程耗时，也容易出错。</strong></p>
 <p>所以提供了字符流，对于字符进行流操作。<br>而对于音频，图片等等推荐字节流。</p>
+<h4 id="编码转换"><a href="#编码转换" class="headerlink" title="编码转换"></a>编码转换</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// 以GBK格式,读取文件</span><br><span class="line">FileInputStream fis = new FileInputStream(file);</span><br><span class="line">InputStreamReader isr = new InputStreamReader(fis, &quot;GBK&quot;);</span><br><span class="line">BufferedReader br = new BufferedReader(isr);</span><br><span class="line">String str = null;</span><br><span class="line">// 创建StringBuffer字符串缓存区</span><br><span class="line">StringBuffer sb = new StringBuffer();</span><br><span class="line">// 通过readLine()方法遍历读取文件</span><br><span class="line">while ((str = br.readLine()) != null) &#123;</span><br><span class="line">// 使用readLine()方法无法进行换行,需要手动在原本输出的字符串后面加&quot;\n&quot;或&quot;\r&quot;</span><br><span class="line">	str += &quot;\n&quot;;</span><br><span class="line">	sb.append(str);</span><br><span class="line">&#125;</span><br><span class="line">String str2 = sb.toString();</span><br><span class="line">// 以UTF-8格式写入文件,file.getAbsolutePath()即该文件的绝对路径,false代表不追加直接覆盖,true代表追加文件</span><br><span class="line">FileOutputStream fos = new FileOutputStream(file.getAbsolutePath(), false);</span><br><span class="line">OutputStreamWriter osw = new OutputStreamWriter(fos, &quot;UTF-8&quot;);</span><br><span class="line">osw.write(str2);</span><br><span class="line">osw.flush();</span><br><span class="line">osw.close();</span><br><span class="line">fos.close();</span><br><span class="line">br.close();</span><br><span class="line">isr.close();</span><br><span class="line">fis.close();</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="java-8新特性"><a href="#java-8新特性" class="headerlink" title="java 8新特性"></a>java 8新特性</h3><h4 id="Lambda-表达式"><a href="#Lambda-表达式" class="headerlink" title="Lambda 表达式"></a>Lambda 表达式</h4><p>首先看看在老版本的Java中是如何排列字符串的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; names = Arrays.asList(&quot;peter&quot;, &quot;anna&quot;, &quot;mike&quot;, &quot;xenia&quot;);</span><br><span class="line"></span><br><span class="line">Collections.sort(names, new Comparator&lt;String&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public int compare(String a, String b) &#123;</span><br><span class="line">        return b.compareTo(a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+<p>只需要给静态方法 Collections.sort 传入一个List对象以及一个比较器来按指定顺序排列。通常做法都是创建一个匿名的比较器对象然后将其传递给sort方法。</p>
+<p>在Java 8 中你就没必要使用这种传统的匿名对象的方式了，Java 8提供了更简洁的语法，lambda表达式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Collections.sort(names, (String a, String b) -&gt; &#123;</span><br><span class="line">    return b.compareTo(a);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+<p>看到了吧，代码变得更段且更具有可读性，但是实际上还可以写得更短：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Collections.sort(names, (String a, String b) -&gt; b.compareTo(a));</span><br></pre></td></tr></table></figure>
+
+
+<p>对于函数体只有一行代码的，你可以去掉大括号{}以及return关键字，但是你还可以写得更短点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Collections.sort(names, (a, b) -&gt; b.compareTo(a));</span><br></pre></td></tr></table></figure>
+
+<p>Java编译器可以自动推导出参数类型，所以你可以不用再写一次类型。</p>
+<h4 id="函数式接口"><a href="#函数式接口" class="headerlink" title="函数式接口"></a>函数式接口</h4><p>什么叫函数式编程？</p>
+<p>就可以理解成用什么参数执行了一件什么事情，这就是函数式编程，它是匿名内部类进一步的简化，可以让代码更加的简洁。</p>
+<p>但它有一个使用的前提，接口得是函数式接口。</p>
+<p>有且仅有一个抽象方法需要被重写的接口。</p>
+<p>这个怎么理解？很简单，函数式编程和匿名内部类相比，它省略了啥？</p>
+<p>它省略了接口中的方法名，为什么可以省略？</p>
+<p>因为就只有一个方法，那就算省略了方法名字，也知道是用的那个方法。</p>
+<p><strong>函数式接口：</strong> <strong>只有一个方法的接口。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@FunctionalInterface</span><br><span class="line"></span><br><span class="line">public interface Runnable &#123;</span><br><span class="line"></span><br><span class="line">public abstract void run();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>// <strong>简化编程模型</strong>，在新版本的框架底层大量应用！</p>
+<p><img src="https://i.loli.net/2021/08/05/pbTIZtNPr8Q5v63.png" alt="image-20210805191320866"></p>
+<p>　</p>
+<p><strong>浏览器在接收到html文件后，会分几个步骤html文件转化成界面，这个过程就是渲染。</strong></p>
+<p>　　1、解析html</p>
+<p>　　2、构建dom树</p>
+<p>　　3、dom树结合css文件，构建呈现树</p>
+<p>　　4、布局</p>
+<p>　　5、绘制</p>
+<p>1、解析html和构建dom树是同步进行的，这个过程就是逐行解析代码，包括html标签和js动态生成的标签，最终生成dom树。</p>
+<p>2、构建呈现树，就是把css文件和style标签的中的内容，结合dom树的模型，构建一个呈现树，写到内存，等待进一步生成界面。呈现树一定依赖dom树，呈现节点一定会有对应的dom节点，但是dom节点不一定会有对应的呈现节点，比如，被隐藏的一个div。</p>
+<p>3、布局，这一步就是结合呈现树，把dom节点的大小、位置计算出来。虽然呈现节点已经附着在都没节点上，会有对元素大小、位置的定义，但是浏览器还需要根据实际窗口大小进行计算，比如对auto的处理。</p>
+<p>4、绘制，把css中有关颜色的设置，背景、字体颜色等呈现出来。</p>
+<h3 id="深拷贝浅拷贝"><a href="#深拷贝浅拷贝" class="headerlink" title="深拷贝浅拷贝"></a>深拷贝浅拷贝</h3><p>浅拷贝：对基本数据类型进行值传递，对引用数据类型进行引用传递般的拷贝，此为浅拷贝。<br>深拷贝：对基本数据类型进行值传递，对引用数据类型，创建一个新的对象，并复制其内容，此为深拷贝。</p>
+<p><img src="https://i.loli.net/2021/08/05/PkHUFX6xJNeTbt2.png" alt="image-20210805200519957"></p>
 
       
     </div>
@@ -1095,222 +1416,6 @@
 
 <h5 id="字符串有多少个回文子串"><a href="#字符串有多少个回文子串" class="headerlink" title="字符串有多少个回文子串"></a>字符串有多少个回文子串</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        String s = sc.next();</span><br><span class="line">        System.out.println(maxLength(s));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">maxLength</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[s.length()][s.length()];</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = s.length() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &lt; s.length(); j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (j - i &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">                        res++;</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dp[i + <span class="number">1</span>][j - <span class="number">1</span>]) &#123;</span><br><span class="line">                        res++;</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/29/helloword/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/29/helloword/" class="post-title-link" itemprop="url">helloword</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-29 19:34:10" itemprop="dateCreated datePublished" datetime="2021-07-29T19:34:10+08:00">2021-07-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-01 20:40:23" itemprop="dateModified" datetime="2021-08-01T20:40:23+08:00">2021-08-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%9D%82%E6%9D%82/" itemprop="url" rel="index"><span itemprop="name">杂杂</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Java基础"><a href="#Java基础" class="headerlink" title="Java基础"></a>Java基础</h3><p>面向对象三大特性？</p>
-<p>面向对象的设计原则？</p>
-<p>抽象类与接口？抽象类中可以有具体方法？</p>
-<p>重写与重载？</p>
-<p>权限修饰符？</p>
-<p>策略模式的实现？</p>
-<p>设计模式六大原则？</p>
-<p>常见设计模式？单例模式，工厂模式？观察者模式？装饰着模式？</p>
-<p>基本数据类型（几个字节）以及包装类（自动装箱，自动拆箱？）为什么要有包装类？</p>
-<p>java8的新特性？</p>
-<p>浏览器怎么渲染html的？</p>
-<p>java IO把UTF8编码文件转化为GBK？</p>
-<p>final类？</p>
-<p>static修饰符？</p>
-<p>深拷贝浅拷贝？</p>
-<p>动态代理的实现方式？</p>
-<p>String的存储方式，线程安全，字符串相加产生新的实例？append（）对象是否变化？</p>
-<p>Arraylist扩容机制？，如何避免平凡的回收和申请？</p>
-<p>Arraylist vs Linkedlist遍历效率？</p>
-<p>Java容器框架（List，Set，Map）</p>
-<p>Map的遍历方式？</p>
-<p>hashmap底层结构？</p>
-<p>HashMap扩容为什么是两倍？（2的n次方问题）</p>
-<p>hashmap和concurenthashmap？</p>
-<p>集合类的线程安全类？</p>
-<h3 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h3><p>16g机器怎么分配JVM内存？</p>
-<p>机器慢了怎么排查？</p>
-<p>java编译为什么生成字节码，不生成二进制文件？（跨平台性）</p>
-<p>字节码文件的最小粒度？</p>
-<p>类加载机制？</p>
-<p>初始化顺序？</p>
-<p>（非静态：默认初始化-显示初始化-代码块初始化-无参构造初始化or有参构造初始化）</p>
-<p>（静态：默认-显示-静态代码块-非静态代码块-无参构造初始化or有参构造初始化）</p>
-<p>A类引用了B,C,C引用B，程序入口A，类加载顺序？（？BCA）</p>
-<p>双亲委派模型？怎样将两个全路径相同的类加载到内存？（类相同还需类加载器相同，自定义类加载器即可）</p>
-<p>java打破双亲委派机制?举例子？</p>
-<p>栈溢出？什么情况导致？</p>
-<p>虚拟机栈空间大小可以设置吗？</p>
-<p>jvm内存模型？</p>
-<p>字符串存在哪里？内存泄漏？</p>
-<p>方法区在jdk版本不同的变化？</p>
-<p>方法区的垃圾回收？</p>
-<p>堆空间的垃圾回收?</p>
-<p>G1和CMS？详细过程，为什么要最终标记？</p>
-<p>（垃圾回收–标记（引用计数，可达性分析（gc roots）-二次标记（finalize）-垃圾回收算法-回收策略-回收器（G1，CMS）））</p>
-<p>jvm哪些会出现oom，sof？</p>
-<h3 id="Java并发"><a href="#Java并发" class="headerlink" title="Java并发"></a>Java并发</h3><p>进程与线程？</p>
-<p>线程有哪些状态？</p>
-<p>创建线程的方式（实现Runnable，继承Thread，实现Callable）</p>
-<p>run()和start()的区别？</p>
-<p>wait()和slepp（）的区别？</p>
-<p>Java线程同步协作机制？（synchronized，reentrantlock（显式锁），wait/notify，join（），await/signal，协作工具类（信号量，倒计时门栓，循环栅栏，阻塞队列…））</p>
-<p>10个数据，1000个线程争抢？（限流，并发？）</p>
-<p>volatile的理解？vs sychronized？</p>
-<p>reentrantlock？</p>
-<p>AQS?有哪些状态？</p>
-<p>线程阻塞有几种情况，如何自己实现阻塞队列？</p>
-<p>Threadlocal，如何实现本地缓存？</p>
-<p>创建线程池？的方式？</p>
-<p>线程池的主要参数？（核心线程数，最大线程数，阻塞队列，超时时间，单位，线程工厂，拒绝策略）</p>
-<p>核心线程数怎么确定？（4核CPU？计算密集？IO密集型）</p>
-<p>Java有哪些锁？共享锁？CAS?乐观锁悲观锁？synchronized底层实现？锁升级？死锁？破解死锁？</p>
-<h3 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h3><p>bean的生命周期，对象创建了放在哪？</p>
-<p>两个类A注入B，B注入，有问题吗？</p>
-<p>AOP?如何实现？</p>
-<p>requsetmapping（）具体用法？</p>
-<h3 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h3><p>写SQL？</p>
-<p>char  vachar？</p>
-<p>行级锁表级锁？</p>
-<p>Mysql架构？为什么要分层设计？</p>
-<p>Mysql事务？rr级别可以解决幻读？MVCC?</p>
-<p>主键索引，唯一索引？</p>
-<p>innoDB索引结构？</p>
-<p>B树和B+树在查询上的优势？磁盘结构？</p>
-<p>SSD时代，B树的意义？</p>
-<p>查询多个字段要注意什么？</p>
-<p>（a，b）索引？a，b，c三列，不走索引的查询（除了a，ab）</p>
-<p>学号姓名+学号成绩=合并-姓名成绩？</p>
-<p>mysql优化手段？？</p>
-<p>数据库死锁定义？避免？</p>
-<h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><p>数据结构？</p>
-<p>跳表底层实现以及复杂度？为何不用红黑树？</p>
-<p>对同一个key的读写是否有竞争，如何避免？</p>
-<p>redis和Mysql的主从复制?</p>
-<p>集群？如何处理宕机？redis同步策略？</p>
-<p>集群部署？</p>
-<p>redis会出现多线程导致数据错乱吗？</p>
-<p>redis快？</p>
-<p>redis6.0引入多线程？？（应对愈加复杂qps要求）</p>
-<p>缓存击穿，雪崩，穿透？</p>
-<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><p>n个节点二叉树有几种形态？</p>
-<p>布隆过滤器（大量文件去重）</p>
-<p>数据结构及其特点？链表增删快，如何提高查询效率？（跳表，B+树）</p>
-<p>大顶堆，小顶堆（优先队列）？</p>
-<p>外部排序，多路归并？</p>
-<p>排序算法的时间空间复杂度（最好，最坏）？稳定性？</p>
-<p>动态规划，分治算法？</p>
-<p>三数之和？</p>
-<p>Arrays.sort（）为何一部分用快排？不用堆排？快排的好处？</p>
-<p>解决hash冲突的各个方法，以及优缺点？</p>
-<p>字符串在文本中出现的次数？</p>
-<p>top k？</p>
-<h3 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h3><p>OSI七层模型？</p>
-<p>TCP、IP的理解？</p>
-<p>TCP，UDP头部有多大？有什么？udp怎么用的？</p>
-<p>TCP可靠性保证？</p>
-<p>TCP流量控制？拥塞控制？</p>
-<p>TCP安全性如何实现？两台服务器之间可以同时建立多条TCP连接吗？</p>
-<p>TCP，UDP的区别？</p>
-<p>设计协议保证UDP可靠传输？</p>
-<p>http是无状态的？如何知道多个请求来自一个用户？</p>
-<p>http状态码？</p>
-<p>https的加密过程？</p>
-<p>数字证书的作用？包含什么？</p>
-<p>访问https站点，弹出广告，是https劫持吗？</p>
-<p>服务器处理一个http请求的过程？</p>
-<p>输入网址到得到返回的网络传输过程？</p>
-<p>长地址请求到服务端，服务端重定向短地址到客户端，如何实现长短地址的相互映射？</p>
-<p>三次握手，两次行不行？</p>
-<p>time-waited为什么是2msl？</p>
-<p>四次挥手？三次行不行？（也可以）</p>
-<p>cookie，session？</p>
-<p>socket？函数调用对应于TCP连接哪一步？</p>
-<p>调用socket返回的是什么？</p>
-<p>监听socket文件描述符具体在内核中怎么实现？</p>
-<p>accept（）过程？调用之后服务端获得了什么？</p>
-<p>服务端怎么判断某条连接建立？客户端调用connect返回什么？怎么判断连接建立？</p>
-<p>阻塞IO-非阻塞IO-多路复用进化过程？</p>
-<h3 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h3><p>用户态和内核态？</p>
-<p>内存管理机制？</p>
-<p>页面淘汰算法？LRU？如何实现？应用场景？</p>
-<p>进程间通信方式（管道，消息队列，共享内存，信号量，信号，socket）</p>
-<p>文件系统？没有文件系统会怎样？</p>
-<p>fork（）？</p>
-<h3 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h3><p>什么是分布式？为什么要分布式？有哪些问题？分布式如何实现事务？</p>
-<p>cp原理？分布式框架？</p>
-<p>consul，zookeeper服务发现机制，区别？</p>
-<p>raft协议？</p>
-<p>服务注册的时候发现没有注册成功是什么原因？</p>
-<p>rpc和service mesh的关系？</p>
-<h3 id="个人"><a href="#个人" class="headerlink" title="个人"></a>个人</h3><p>项目遇到的难题，怎么解决？</p>
-<p>最近看什么书？</p>
-<p>个人规划？</p>
 
       
     </div>

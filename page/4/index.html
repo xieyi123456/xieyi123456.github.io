@@ -156,6 +156,144 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Java并发-常见基础</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-30 15:08:27" itemprop="dateCreated datePublished" datetime="2021-07-30T15:08:27+08:00">2021-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-05 14:31:08" itemprop="dateModified" datetime="2021-08-05T14:31:08+08:00">2021-08-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="线程与进程"><a href="#线程与进程" class="headerlink" title="线程与进程"></a>线程与进程</h3><p><strong>进程是程序的一次执行过程，是系统资源分配的基本单位</strong>。进程间基本上是独立的。</p>
+<p>线程是更小的运行单位。线程是调度执行的基本单位。线程间极有可能相互影响。</p>
+<p>多个线程可以共享同一块内存空间与系统资源（<strong>堆，方法区（元空间）</strong>），也有自己独立的<strong>程序计数器与虚拟机栈，本地方法栈</strong>。</p>
+<p>线程的切换负担要小很多。也被称为轻量级的进程。</p>
+<p>程序计数器：为了线程切换后可以恢复到正确的执行位置。<br>虚拟机栈：方法调用对应着栈帧，存储着局部变量表，操作数栈，常量池。方法调用执行完成对应着栈帧的入栈与出栈。–<strong>保证局部变量私有</strong>。<br>堆：最大的一块，存放对象。<br>方法区：已被<strong>加载的类信息，常量，静态变量</strong>等等。<br>上下文切换：cpu时间片切换。</p>
+<p>一个java应用程序实际上至少有三个线程，<strong>main主线程，gc()垃圾回收机制的运行线程，异常处理线程。</strong></p>
+<p><strong>线程分为两类：用户线程和守护线程</strong>。守护线程适用于服务用户线程的。<strong>用户线程结束，守护线程也就结束</strong>，所以守护线程是依赖于用户线程的。举个例子：java程序中，main是用户线程，垃圾回收就是守护线程。可以利用thread.setDaemon(true)将用户线程变成守护线程。</p>
+<p><strong>线程的相关方法：</strong></p>
+<p>sleep-</p>
+<p>yield-让出cpu，当然实际情况得看调度器</p>
+<p>join-调用join的线程会让其他线程等待他结束后再结束。</p>
+<h4 id="sleep-与wait-方法的区别"><a href="#sleep-与wait-方法的区别" class="headerlink" title="sleep()与wait()方法的区别"></a>sleep()与wait()方法的区别</h4><ol>
+<li>sleep方法不会释放锁，wait方法会释放。</li>
+<li>都可以暂停线程。</li>
+<li>wait用于线程交互，sleep用于暂停。</li>
+<li>wait被调用后，线程不会自动苏醒（无超时等待），需要notify()。</li>
+</ol>
+<h4 id="java线程的状态"><a href="#java线程的状态" class="headerlink" title="java线程的状态"></a><strong>java线程的状态</strong></h4><ul>
+<li><strong>new</strong>：线程创建，还没调用start方法。</li>
+<li><strong>runnable</strong>：（操作系统中的就绪，运行）new–调用start–ready-<strong>-获得cpu时间片</strong>–running</li>
+<li><strong>blocked</strong>：阻塞。调用同步方法，在没获取到锁的情况下会阻塞。</li>
+<li><strong>waitting</strong>：等待其他线程做一些操作。wait</li>
+<li><strong>time_waiting</strong>：超时等待。-wait，sleep，超时时间到后，进入runnable。</li>
+<li><strong>terminated</strong>：线程执行完毕。</li>
+</ul>
+<p><strong>wait/notify属于Object类。</strong></p>
+<p><img src="https://i.loli.net/2021/08/03/BhDXCyWdjGSMvuR.png" alt="image-20210803151242958"></p>
+<h3 id="创建线程的方式"><a href="#创建线程的方式" class="headerlink" title="创建线程的方式"></a>创建线程的方式</h3><p><strong>继承thread类</strong>，重写run（）方法，调用子类的start（）。</p>
+<p>为什么调用的是start，执行的确是run?</p>
+<p>start表示启动该线程，进入就绪状态，成为单独的执行流。操作系统会分配相关资源。</p>
+<p>直接执行run就相当于执行main中的普通方法了，就不是多线程了。</p>
+<p><strong>实现runnable接口</strong>，重写run，启动start。</p>
+<p>java只支持单继承，因此引入runnable接口。</p>
+<p><strong>通过 Callable 和 Future 创建线程。</strong>覆盖call（）方法。</p>
+<p>可以获得任务执行返回值；</p>
+<ol>
+<li><strong>创建 Callable 接口的实现类</strong>，并实现 call() 方法，该 call() 方法将作为线程执行体，并且有返回值。</li>
+<li>创建 <strong>Callable 实现类的实例</strong>，使用 <strong>FutureTask 类来包装 Callable 对象</strong>，该 FutureTask 对象封装了该 Callable 对象的 call() 方法的返回值。</li>
+<li>使用 <strong>FutureTask 对象作为 Thread 对象的 target</strong> 创建并启动新线程。</li>
+<li>调用 <strong>FutureTask 对象的 get() 方法来获得子线程执行结束后的返回值</strong>。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class CallableThreadTest implements Callable&lt;Integer&gt; &#123;</span><br><span class="line">    public static void main(String[] args)&#123;  </span><br><span class="line">        CallableThreadTest ctt = new CallableThreadTest();  </span><br><span class="line">        FutureTask&lt;Integer&gt; ft = new FutureTask&lt;&gt;(ctt);  </span><br><span class="line">        for(int i = 0;i &lt; 100;i++)&#123;  </span><br><span class="line">            System.out.println(Thread.currentThread().getName()+&quot; 的循环变量i的值&quot;+i);  </span><br><span class="line">            if(i==20)&#123;  </span><br><span class="line">                new Thread(ft,&quot;有返回值的线程&quot;).start();  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;try&#123;  </span><br><span class="line">            System.out.println(&quot;子线程的返回值：&quot;+ft.get());  </span><br><span class="line">        &#125; catch (InterruptedException e)&#123;  </span><br><span class="line">            e.printStackTrace();  </span><br><span class="line">        &#125; catch (ExecutionException e)&#123;  </span><br><span class="line">            e.printStackTrace();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br><span class="line">    @Override  </span><br><span class="line">    public Integer call() throws Exception&#123;  </span><br><span class="line">        int i = 0;  </span><br><span class="line">        for(;i&lt;100;i++)&#123;  </span><br><span class="line">            System.out.println(Thread.currentThread().getName()+&quot; &quot;+i);  </span><br><span class="line">        &#125;  </span><br><span class="line">        return i;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过与Future的结合，可以实现利用Future来跟踪异步计算的结果。</p>
+<p>JDK5.0新特性。需要借助Future接口的唯一实现类<strong>FutureTask</strong>辅助线程的对象创建和返回值获取（FutureTask还实现了Runnable接口），再创建Thread对象，将FutureTask类的对象作为构造器参数传入，完成线程的创建，最后调用start()方法完成线程启动。</p>
+<p><strong>Runnable和Callable的区别：</strong></p>
+<p>1、Callable规定的方法是call(),  Runnable规定的方法是run()<br>2、Callable的任务执行后可返回值，而Runnable的任务是不能返回值<br>3、call方法可以抛出异常，run方法不可以<br>4、运行Callable任务可以拿到一个Future对象，<strong>表示异步计算的结果。</strong>它提供了检查计算是否完成的方法，以等待计算的完成，并检索计算的结果。通过Future对象可以了解任务执行情况，可取消任务的执行，还可获取执行结果</p>
+<p><strong>使用线程池。</strong></p>
+<p>使用线程池，提前创建好多个线程放入线程池中，使用时直接获取，使用完放回线程池中。可以做到提高响应速度（减少线程创建的时间）和降低资源消耗（可重复利用线程）。利用Executors工具类创建线程池，然后提供Runnable(excute())或Callable(submit())接口的实现类的对象，执行指定线程的操作。最后，关闭线程池shutdown()。</p>
+<h3 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h3><h4 id="为什么会有内存屏障"><a href="#为什么会有内存屏障" class="headerlink" title="为什么会有内存屏障"></a>为什么会有内存屏障</h4><p>每个CPU都会有自己的缓存（有的甚至L1,L2,L3），缓存的目的就是为了提高性能，避免每次都要向内存取。但是这样的弊端也很明显<strong>：不能实时的和内存发生信息交换</strong>，分在不同CPU执行的不同线程对同一个变量的缓存值不同。</p>
+<p>用volatile关键字修饰变量可以解决上述问题，那么volatile是如何做到这一点的呢？那就是<strong>内存屏障</strong>，内存屏障是硬件层的概念，不同的硬件平台实现内存屏障的手段并不是一样，java通过屏蔽这些差异，统一由jvm来生成内存屏障的指令。</p>
+<h4 id="内存屏障是什么"><a href="#内存屏障是什么" class="headerlink" title="内存屏障是什么"></a>内存屏障是什么</h4><p>硬件层的内存屏障分为两种：Load Barrier 和 Store Barrier即<strong>读屏障和写屏障。</strong></p>
+<p><strong>内存屏障有两个作用：</strong></p>
+<p>阻止屏障两侧的指令重排序；<br>强制把写缓冲区/高速缓存中的脏数据等写回主内存，让缓存中相应的数据失效。</p>
+<p>对于Load Barrier来说，在指令前插入Load Barrier，可以让高速缓存中的数据失效，强制从新从主内存加载数据；<br>对于Store Barrier来说，在指令后插入Store Barrier，能让写入缓存中的最新数据更新写入主内存，让其他线程可见。</p>
+<h4 id="java内存屏障"><a href="#java内存屏障" class="headerlink" title="java内存屏障"></a>java内存屏障</h4><p>java的内存屏障通常所谓的四种即LoadLoad,StoreStore,LoadStore,StoreLoad实际上也是上述两种的组合，完成一系列的屏障和数据同步功能。</p>
+<p><strong>volatile语义中的内存屏障</strong></p>
+<p>volatile的内存屏障策略非常严格保守，<strong>非常悲观</strong>：<br>在每个volatile写操作前插入StoreStore屏障，在写操作后插入StoreLoad屏障；<br>在每个volatile读操作前插入LoadLoad屏障，在读操作后插入LoadStore屏障；</p>
+<p><strong>由于内存屏障的作用，避免了volatile变量和其它指令重排序、线程之间实现了通信，使得volatile表现出了锁的特性</strong>。</p>
+<h4 id="final语义中的内存屏障"><a href="#final语义中的内存屏障" class="headerlink" title="final语义中的内存屏障"></a>final语义中的内存屏障</h4><p>对于final域，编译器和CPU会遵循两个排序规则：</p>
+<p>新建对象过程中，构造体中对final域的初始化写入和这个对象赋值给其他引用变量，这两个操作不能重排序；</p>
+<p>初次读包含final域的对象引用和读取这个final域，这两个操作不能重排序；（晦涩，意思就是先赋值引用，再调用final值）</p>
+<p>​    必需保证一个对象的所有final域被写入完毕后才能引用和读取。这也是内存屏障的起的作用：</p>
+<p>​    写final域：在编译器写final域完毕，构造体结束之前，会插入一个StoreStore屏障，保证前面的对final写入对其他线程/CPU可见，并阻止重排序。</p>
+<p>​    读final域：读final域前插入了LoadLoad屏障。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -607,7 +745,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-02 11:27:11" itemprop="dateModified" datetime="2021-08-02T11:27:11+08:00">2021-08-02</time>
+                <time title="修改时间：2021-08-06 10:57:45" itemprop="dateModified" datetime="2021-08-06T10:57:45+08:00">2021-08-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -635,8 +773,7 @@
 <p>任何时间一个线程都只有一个方法在执行，也就是所谓的当前方法。程序计数器会存储当前线程正在执行的Java方法的JVM指令地址；或者，如果是在执行native方法，则是未指定值（undefned）。</p>
 <p>它是程序控制流的指示器，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。</p>
 <p>字节码解释器工作时就是<strong>通过改变这个计数器的值来选取下一条需要执行的字节码指令。</strong><br>它是唯一一个在Java虚拟机规范中<strong>没有规定任何OutofMemoryError情况的区域。没有垃圾回收。</strong></p>
-<p><strong>PC寄存器的作用</strong></p>
-<p>PC寄存器用来<strong>存储指向下一条指令的地址</strong>，也即将要执行的指令代码。由执行引擎读取下一条指令，并执行该指令。</p>
+<h4 id="PC寄存器的作用"><a href="#PC寄存器的作用" class="headerlink" title="PC寄存器的作用"></a><strong>PC寄存器的作用</strong></h4><p>PC寄存器用来<strong>存储指向下一条指令的地址</strong>，也即将要执行的指令代码。由执行引擎读取下一条指令，并执行该指令。</p>
 <p><strong>使用PC寄存器存储字节码指令地址有什么用呢？或者问为什么使用 PC 寄存器来记录当前线程的执行地址呢？</strong></p>
 <p>因为CPU需要不停的切换各个线程，这时候切换回来以后，就得知道接着从哪开始继续执行。<br>JVM的字节码解释器就需要通过改变PC寄存器的值来明确下一条应该执行什么样的字节码指令。</p>
 <p><strong>PC寄存器为什么被设定为私有的？</strong></p>
@@ -653,9 +790,9 @@
 <h4 id="虚拟机栈的异常"><a href="#虚拟机栈的异常" class="headerlink" title="虚拟机栈的异常"></a>虚拟机栈的异常</h4><p>Java 虚拟机规范允许Java栈的大小是动态的或者是固定不变的。<br>1，如果采用<strong>固定大小的Java虚拟机栈</strong>，那每一个线程的Java虚拟机栈容量可以在线程创建的时候独立选定。如果线程请求分配的栈容量超过Java虚拟机栈允许的最大容量，Java虚拟机将会抛出一个<strong>StackoverflowErro</strong>r 异常。<br>2，如果Java虚拟机栈可以<strong>动态扩展，</strong>并且在尝试扩展的时候无法申请到足够的内存，或者在创建新的线程时没有足够的内存去创建对应的虚拟机栈，那Java虚拟机将会抛出一个 <strong>OutofMemoryError</strong> 异常。<br>我们可以使用参数 -Xss 选项来设置<strong>线程的最大栈空间</strong>，栈的大小直接决定了<strong>函数调用的最大可达深度。</strong></p>
 <h4 id="栈中存储什么？"><a href="#栈中存储什么？" class="headerlink" title="栈中存储什么？"></a>栈中存储什么？</h4><p>每个线程都有自己的栈，栈中的数据都是以<strong>栈帧</strong>（Stack Frame）的格式存在<br>在这个线程上正在执行的<strong>每个方法都各自对应一个栈帧</strong>（Stack Frame）。<br>栈帧是一个内存区块，是一个数据集，维系着方法执行过程中的各种数据信息。</p>
 <h4 id="栈运行原理"><a href="#栈运行原理" class="headerlink" title="栈运行原理"></a>栈运行原理</h4><p>JVM直接对Java栈的操作只有两个，就是对栈帧的压栈和出栈，遵循先进后出（后进先出）原则。<br>在一条活动线程中，一个时间点上，只会有一个活动的栈帧。<strong>即只有当前正在执行的方法的栈帧（栈顶栈帧）是有效的。</strong>这个栈帧被称为当前栈帧（Current Frame），与当前栈帧相对应的方法就是当前方法（Current Method），定义这个方法的类就是当前类（Current Class）<br>执行引擎运行的所有字节码指令只针对当前栈帧进行操作。<br><strong>如果在该方法中调用了其他方法，对应的新的栈帧会被创建出来，放在栈的顶端，成为新的当前帧</strong>。</p>
-<p><img src="image-20210801231432286.png"></p>
-<p>1，不同线程中所包含的栈帧是<strong>不允许存在相互引用的</strong>，即不可能在一个栈帧之中引用另外一个线程的栈帧。<br>2，如果当前方法调用了其他方法，方法返回之际，当前栈帧会传回此方法的执行结果给前一个栈帧，接着，虚拟机会丢弃当前栈帧，<strong>使得前一个栈帧重新成为当前栈帧。</strong><br>3，Java方法有两种返回函数的方式。<br>一种是正常的函数返回，使用return指令。<br>另一种是方法执行中出现未捕获处理的异常，以抛出异常的方式结束。<br>但不管使用哪种方式，都会导致栈帧被弹出。</p>
-<h4 id="栈帧的内部结构"><a href="#栈帧的内部结构" class="headerlink" title="栈帧的内部结构"></a>栈帧的内部结构</h4><p>每个栈帧中存储着：<br><strong>局部变量表</strong>（Local Variables）LV</p>
+<p><img src="https://i.loli.net/2021/08/06/j8AtPN7dDumSIwV.png" alt="image-20210801231432286">1，不同线程中所包含的栈帧是<strong>不允许存在相互引用的</strong>，即不可能在一个栈帧之中引用另外一个线程的栈帧。<br>2，如果当前方法调用了其他方法，方法返回之际，当前栈帧会传回此方法的执行结果给前一个栈帧，接着，虚拟机会丢弃当前栈帧，<strong>使得前一个栈帧重新成为当前栈帧。</strong><br>3，Java方法有两种返回函数的方式。<br>一种是正常的函数返回，使用return指令。<br>另一种是方法执行中出现未捕获处理的异常，以抛出异常的方式结束。<br>但不管使用哪种方式，都会导致栈帧被弹出。</p>
+<h4 id="栈帧的内部结构"><a href="#栈帧的内部结构" class="headerlink" title="栈帧的内部结构"></a>栈帧的内部结构</h4><p><img src="C:\Users\26431\AppData\Roaming\Typora\typora-user-images\image-20210806105335465.png" alt="image-20210806105335465"></p>
+<p>每个栈帧中存储着：<br><strong>局部变量表</strong>（Local Variables）LV</p>
 <p>1，局部变量表也被称之为<strong>局部变量数组或本地变量表</strong><br>2，定义为一个数字数组，主要用于<strong>存储方法参数和定义在方法体内的局部变量</strong>，这些数据类型包括各类基本数据类型、对象引用（reference），以及returnAddress返回值类型。<br>3，由于局部变量表是建立在线程的栈上，是线程的私有数据，因此不存在数据安全问题<br>4，局部变量表所需的容量大小是在编译期确定下来的，并保存在方法的Code属性的maximum local variables数据项中。在方法运行期间是不会改变局部变量表的大小的。<br>5，方法嵌套调用的次数由栈的大小决定。一般来说，栈越大，方法嵌套调用次数越多。<br>对一个函数而言，<strong>它的参数和局部变量越多，使得局部变量表膨胀，</strong>它的栈帧就越大，以满足方法调用所需传递的信息增大的需求。<br>进而函数调用就会占用更多的栈空间，导致其嵌套调用次数就会减少。<br>6，局部变量表中的变量<strong>只在当前方法调用中有效。</strong><br>在方法执行时，虚拟机通过使用局部变量表<strong>完成参数值到参数变量列表的传递过程。</strong><br>当方法调用结束后，随着方法栈帧的销毁，局部变量表也会随之销毁。</p>
 <p><strong>关于Slot的理解</strong><br>参数值的存放总是从局部变量数组索引 0 的位置开始，到数组长度-1的索引结束。<br><strong>局部变量表，最基本的存储单元是Slot（变量槽）</strong>，局部变量表中存放编译期可知的各种基本数据类型（8种），引用类型（reference），returnAddress类型的变量。<br>在局部变量表里，32位以内的类型只占用一个slot（包括returnAddress类型），64位的类型占用两个slot（<strong>long和double 8字节</strong>）。<br>byte、short、char在储存前被转换为int，boolean也被转换为int，0表示false，非0表示true<br>long和double则占据两个slot</p>
 <p>JVM会为局部变量表中的<strong>每一个Slot都分配一个访问索引</strong>，通过这个索引即可成功访问到局部变量表中指定的局部变量值<br>当一个实例方法被调用的时候，它的方法参数和方法体内部定义的局部变量将会按照顺序被复制到局部变量表中的每一个slot上<br><strong>如果需要访问局部变量表中一个64bit的局部变量值时，只需要使用前一个索引即可</strong>。（比如：访问long或double类型变量）<br>如果当前帧是由<strong>构造方法或者实例方法</strong>创建的，那么该对象引用this将会存放在index为0的slot处，其余的参数按照参数表顺序继续排列。（this也相当于一个变量）<br><strong>静态方法中不可使用this，因为this方法变量不存在与当前方法的局部变量表中。</strong></p>
@@ -685,7 +822,7 @@
 <p>本质上，方法的退出就是<strong>当前栈帧出栈的过程</strong>。此时，需要<strong>恢复上层方法的局部变量表、操作数栈、将返回值压入调用者栈帧的操作数栈、设置PC寄存器值等</strong>，让调用者方法继续执行下去。<br>正常完成出口和异常完成出口的区别在于：通过异常完成出口退出的不会给他的上层调用者产生任何的返回值。</p>
 <p><strong>一些附加信息</strong></p>
 <p>并行每个线程下的<strong>栈都是私有的</strong>，因此每个线程都有自己各自的栈，并且每个栈里面都有很多栈帧，栈帧的大小主要由<strong>局部变量表 和 操作数栈</strong>决定的</p>
-<h4 id="OOM垃圾回收区域"><a href="#OOM垃圾回收区域" class="headerlink" title="OOM垃圾回收区域"></a>OOM垃圾回收区域</h4><p><img src="image-20210802104057341.png"></p>
+<h4 id="OOM垃圾回收区域"><a href="#OOM垃圾回收区域" class="headerlink" title="OOM垃圾回收区域"></a>OOM垃圾回收区域</h4><p><img src="https://i.loli.net/2021/08/06/cFv9Y7izj52xyU4.png" alt="image-20210802104057341"></p>
 <h4 id="方法中定义的局部变量是否线程安全？"><a href="#方法中定义的局部变量是否线程安全？" class="headerlink" title="方法中定义的局部变量是否线程安全？"></a>方法中定义的局部变量是否线程安全？</h4><p>如果只有一个线程才可以操作此数据，则必是线程安全的。<br>如果有多个线程操作此数据，则此数据是共享数据。如果不考虑同步机制的话，会存在线程安全问题。<br>如果对象是在内部产生，并在内部消亡，没有返回到外部，那么它就是线程安全的，反之则是线程不安全的。</p>
 <h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p><strong>一个运行时数据区只有一个堆和一个方法区。但是进程包含多个线程，他们是共享同一堆空间的。</strong></p>
 <p>一个JVM实例只存在一个堆内存，堆也是Java内存管理的核心区域。</p>
@@ -693,7 +830,7 @@
 <p>《Java虚拟机规范》规定，堆可以处于物理上不连续的内存空间中，但在逻辑上它应该被视为连续的。<br>所有的线程共享Java堆，在这里还可以划分<strong>线程私有的缓冲区</strong>（Thread Local Allocation Buffer，TLAB）。</p>
 <p>从实际使用角度看：“几乎”所有的对象实例都在堆分配内存，但并非全部。<strong>因为还有一些对象是在栈上分配的（逃逸分析，标量替换）</strong></p>
 <p>数组和对象可能永远不会存储在栈上（不一定），因为栈帧中保存引用（局部变量表），这个引用指向对象或者数组在堆中的位置。</p>
-<h4 id="堆详细组成"><a href="#堆详细组成" class="headerlink" title="堆详细组成"></a>堆详细组成</h4><p><img src="image-20210802104533244.png"></p>
+<h4 id="堆详细组成"><a href="#堆详细组成" class="headerlink" title="堆详细组成"></a>堆详细组成</h4><p><img src="https://i.loli.net/2021/08/06/CUuzaty7VlhNKYx.png" alt="image-20210802104533244"></p>
 <p>-Xms用于表示堆区的起始内存，等价于**-XX:InitialHeapSize**<br>-Xmx则用于表示堆区的最大内存，等价于**-XX:MaxHeapSize**</p>
 <p>一旦堆区中的内存大小超过“-Xmx”所指定的最大内存时，将会抛出OutofMemoryError异常。</p>
 <p><strong>通常会将-Xms和-Xmx两个参数配置相同的值</strong></p>
@@ -717,7 +854,7 @@
 <p>1，如果来了一个新对象，先看看 Eden 是否放的下？<br>如果 Eden 放得下，则直接放到 Eden 区<br>如果 Eden 放不下，则<strong>触发 YGC</strong> ，执行垃圾回收，看看还能不能放下？</p>
 <p>2，将对象放到老年区又有两种情况：<br>如果 Eden 执行了 YGC 还是无法放不下该对象，那没得办法，只能说明是超大对象，<strong>只能直接放到老年代</strong><br>那万一老年代都放不下，则先触发FullGC ，再看看能不能放下，放得下最好，但如果还是放不下，那只能报 OOM</p>
 <p>3，如果 Eden 区满了，将对象往幸存区拷贝时，发现幸存区放不下啦，那只能便宜了某些新对象，<strong>让他们直接晋升至老年区</strong></p>
-<p><img src="image-20210802105500931.png"></p>
+<p><img src="https://i.loli.net/2021/08/06/J83YveI9lOK5HEU.png" alt="image-20210802105500931"></p>
 <p>JVM的调优的一个环节，也就是垃圾收集，我们需要尽量的避免垃圾回收，因为在垃圾回收的过程中，容易出现STW（Stop the World）的问题，而 <strong>Major GC 和 Full GC出现STW的时间，是Minor GC的10倍以上</strong>。</p>
 <p>JVM在进行GC时，并非每次都对上面三个内存区域（新生代，老年代：方法区（元空间））一起回收的，大部分时候回收的都是指新生代。针对Hotspot VM的实现，它里面的GC按照回收区域又分为两大种类型：一种是部分收集（Partial GC），一种是整堆收集（FullGC）</p>
 <p>部分收集：不是完整收集整个Java堆的垃圾收集。其中又分为：<br><strong>新生代收集（Minor GC/Young GC）：只是新生代（Eden，s0，s1）的垃圾收集</strong><br><strong>老年代收集（Major GC/Old GC）：只是老年代的圾收集。</strong><br>目前，只有<strong>CMS GC会有单独收集老年代的行为</strong>。</p>
@@ -745,12 +882,11 @@
 <p>一个极端的例子，就是经过逃逸分析之后，发现没有一个对象是不逃逸的。那这个逃逸分析的过程就白白浪费掉了。</p>
 <p>虽然这项技术并不十分成熟，但是它也是即时编译器优化技术中一个十分重要的手段。</p>
 <p>注意到有一些观点，认为通过逃逸分析，JVM会在栈上分配那些不会逃逸的对象，这在理论上是可行的，但是取决于JVM设计者的选择。据我所知，Oracle Hotspot JVM中并未这么做，这一点在逃逸分析相关的文档里已经说明，所以可以明确在HotSpot虚拟机上，所有的对象实例都是创建在堆上。</p>
-<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p><img src="image-20210802111019642.png"></p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p><img src="https://i.loli.net/2021/08/06/Vteg5IxdSWq3YzB.png" alt="image-20210802111019642"></p>
 <p><strong>方法区可以看作是一块独立于Java堆的内存空间。</strong></p>
 <p>方法区主要存放的是 <strong>Class</strong>，而堆中主要存放的是<strong>实例化的对象</strong></p>
 <p>它用于存储已被虚拟机<strong>加载的类型信息、常量、静态变量、即时编译器编译后的代码缓存等。</strong></p>
-<p><img src="image-20210802111459872.png"></p>
-<p>方法区（Method Area）与Java堆一样，是各个线程共享的内存区域。多个线程同时加载统一个类时，只能有一个线程能加载该类，其他线程只能等等待该线程加载完毕，然后直接使用该类，即类只能加载一次。</p>
+<p><img src="https://i.loli.net/2021/08/06/pV7TD1gZ9F2G5Hf.png" alt="image-20210802111459872">方法区（Method Area）与Java堆一样，是各个线程共享的内存区域。多个线程同时加载统一个类时，只能有一个线程能加载该类，其他线程只能等等待该线程加载完毕，然后直接使用该类，即类只能加载一次。</p>
 <p>方法区在JVM启动的时候被创建，并且它的实际的物理内存空间中和Java堆区一样都可以是不连续的。<br>方法区的大小，跟堆空间一样，可以选择固定大小或者可扩展。</p>
 <p>方法区的大小决定了系统可以保存多少个类，如果系统定义了太多的类，导致方法区溢出，虚拟机同样会抛出内存溢出错误：java.lang.OutofMemoryError:PermGen space或者java.lang.OutOfMemoryError:Metaspace</p>
 <p>加载大量的第三方的jar包<br>Tomcat部署的工程过多（30~50个）<br>大量动态的生成反射类<br>关闭JVM就会释放这个区域的内存。</p>
@@ -768,9 +904,9 @@
 <h5 id="运行时常量池-1"><a href="#运行时常量池-1" class="headerlink" title="运行时常量池"></a>运行时常量池</h5><p>运行时常量池（Runtime Constant Pool）是方法区的一部分。<br>常量池表（Constant Pool Table）是Class字节码文件的一部分，用于存放编译期生成的各种字面量与符号引用，这部分内容将在类加载后存放到方法区的运行时常量池中。（运行时常量池就是常量池在程序运行时的称呼）</p>
 <p>运行时常量池，在加载类和接口到虚拟机后，就会创建对应的运行时常量池。<br>JVM为<strong>每个已加载的类型（类或接口）都维护一个常量池。</strong>池中的数据项像数组项一样，是通过索引访问的。<br>运行时常量池中包含多种不同的常量，包括编译期就已经明确的数值字面量，也包括到运行期解析后才能够获得的方法或者字段引用。此时不再是常量池中的符号地址了，这里换为真实地址。</p>
 <p>运行时常量池，相对于Class文件常量池的另一重要特征是：<strong>具备动态性。</strong><br>运行时常量池类似于传统编程语言中的符号表（symbol table），但是它所包含的数据却比符号表要更加丰富一些。<br>当创建类或接口的运行时常量池时，如果构造运行时常量池所需的内存空间超过了方法区所能提供的最大值，则JVM会抛OutofMemoryError异常。</p>
-<h4 id="演变"><a href="#演变" class="headerlink" title="演变"></a>演变</h4><p><img src="image-20210802112049728.png"></p>
-<p><img src="image-20210802112157518.png"></p>
-<p><img src="image-20210802112217395.png"></p>
+<h4 id="演变"><a href="#演变" class="headerlink" title="演变"></a>演变</h4><p><img src="https://i.loli.net/2021/08/06/mRx7bBa6FAvY4VW.png"></p>
+<p><img src="https://i.loli.net/2021/08/06/KRXj9QPzFIArn5V.png" alt="image-20210802112157518"></p>
+<p><img src="https://i.loli.net/2021/08/06/sWImGdC3lBzveau.png" alt="image-20210802112217395"></p>
 <h4 id="永久代为什么要被元空间替代？"><a href="#永久代为什么要被元空间替代？" class="headerlink" title="永久代为什么要被元空间替代？"></a>永久代为什么要被元空间替代？</h4><p>随着Java8的到来，HotSpot VM中再也见不到永久代了。但是这并不意味着类的元数据信息也消失了。这些数据被<strong>移到了一个与堆不相连的本地内存区域，这个区域叫做元空间（Metaspace）。</strong></p>
 <p>由于类的元数据分配在本地内存中，元空间的最大可分配空间就是<strong>系统可用内存空间</strong>。</p>
 <p>这项改动是很有必要的，原因有：<br><strong>1，永久代设置空间大小是很难确定的。</strong>在某些场景下，如果动态加载类过多，容易产生Perm区的OOM。比如某个实际Web工程中，因为功能点比较多，在运行过程中，要不断动态加载很多类，经常出现致命错误。Exception in thread ‘dubbo client x.x connector’ java.lang.OutOfMemoryError:PermGen space而元空间和永久代之间最大的区别在于：元空间并不在虚拟机中，而是使用本地内存。 因此，默认情况下，元空间的大小仅受本地内存限制。</p>
@@ -837,7 +973,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-01 22:48:47" itemprop="dateModified" datetime="2021-08-01T22:48:47+08:00">2021-08-01</time>
+                <time title="修改时间：2021-08-05 20:48:00" itemprop="dateModified" datetime="2021-08-05T20:48:00+08:00">2021-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -860,7 +996,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h3><h4 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h4><p>通过一个<strong>类的全限定名</strong>获取定义此类的二进制字节流<br>将这个字节流所代表的静态存储结构转化为<strong>方法区的运行时数据结构</strong><br>在内存中生成一个代表这个类的<strong>java.lang.Class对象</strong>，作为方法区这个类的各种数据的访问入口</p>
+          <h3 id="初始化顺序？"><a href="#初始化顺序？" class="headerlink" title="初始化顺序？"></a>初始化顺序？</h3><p>（非静态：默认初始化-显示初始化-代码块初始化-无参构造初始化or有参构造初始化）</p>
+<p>（静态：默认-显示-静态代码块-非静态代码块-无参构造初始化or有参构造初始化）</p>
+<h3 id="A类引用了B-C-C引用B，程序入口A，类加载顺序？"><a href="#A类引用了B-C-C引用B，程序入口A，类加载顺序？" class="headerlink" title="A类引用了B,C,C引用B，程序入口A，类加载顺序？"></a>A类引用了B,C,C引用B，程序入口A，类加载顺序？</h3><p>BCA，先加载父类。</p>
+<h3 id="怎样将两个全路径相同的类加载到内存？"><a href="#怎样将两个全路径相同的类加载到内存？" class="headerlink" title="怎样将两个全路径相同的类加载到内存？"></a>怎样将两个全路径相同的类加载到内存？</h3><p>类相同还需类加载器相同，自定义类加载器即可</p>
+<h3 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h3><h4 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h4><p>通过一个<strong>类的全限定名</strong>获取定义此类的二进制字节流<br>将这个字节流所代表的静态存储结构转化为<strong>方法区的运行时数据结构</strong><br>在内存中生成一个代表这个类的<strong>java.lang.Class对象</strong>，作为方法区这个类的各种数据的访问入口</p>
 <p><strong>加载class文件的方式：</strong></p>
 <p>从<strong>本地系统</strong>中直接加载<br>通过<strong>网络获取</strong>，典型场景：Web Applet<br>从zip压缩包中读取，成为日后jar、war格式的基础<br><strong>运行时计算生成</strong>，使用最多的是：动态代理技术<br>由其他文件生成，典型场景：JSP应用从专有数据库中提取.class文件，比较少见<br>从<strong>加密文件中获取</strong>，典型的防Class文件被反编译的保护措施</p>
 <h4 id="链接（验证-准备-解析）"><a href="#链接（验证-准备-解析）" class="headerlink" title="链接（验证-准备-解析）"></a>链接（验证-准备-解析）</h4><p>链接分为三个子阶段：<strong>验证 —&gt; 准备 —&gt; 解析</strong></p>
@@ -891,6 +1031,12 @@
 <h4 id="如何判断两个class对象是否相同？"><a href="#如何判断两个class对象是否相同？" class="headerlink" title="如何判断两个class对象是否相同？"></a>如何判断两个class对象是否相同？</h4><p>在JVM中表示两个class对象是否为同一个类存在两个必要条件：<br>1，<strong>类的完整类名必须一致，包括包名</strong><br>2，加载这个类的<strong>ClassLoader（指ClassLoader实例对象）必须相同</strong></p>
 <p>换句话说，在JVM中，即使这两个类对象（class对象）来源同一个Class文件，被同一个虚拟机所加载，但只要加载它们的ClassLoader实例对象不同，那么这两个类对象也是不相等的</p>
 <p><strong>对类加载器的引用</strong><br>JVM必须知道一个类型是由启动加载器加载的还是由用户类加载器加载的<br>如果一个类型是由用户类加载器加载的，那么JVM会将这个类加载器的一个引用作为类型信息的一部分保存在方法区中<br>当解析一个类型到另一个类型的引用的时候，<strong>JVM需要保证这两个类型的类加载器是相同的。</strong></p>
+<h4 id="打破双亲委派机制？"><a href="#打破双亲委派机制？" class="headerlink" title="打破双亲委派机制？"></a>打破双亲委派机制？</h4><p>打破双亲委派机制的场景有很多：JDBC、Tomcat等</p>
+<p>为什么JDBC需要破坏双亲委派模式，原因是原生的JDBC中Driver驱动本身只是一个接口，并没有具体的实现，具体的实现是由不同数据库类型去实现的。例如，MySQL的mysql-connector-.jar中的Driver类具体实现的。 </p>
+<p>原生的JDBC中的类是放在rt.jar包的，是由<strong>启动类加载器</strong>进行类加载的，在JDBC中的Driver类中需要动态去加载不同数据库类型的Driver类，而mysql-connector-.jar中的Driver类是用户自己写的代码，那启动类加载器肯定是不能进行加载的，既然是自己编写的代码，那就需要由<strong>应用程序启动类去进行类加载</strong>。</p>
+<p>于是乎，这个时候就<strong>引入线程上下文件类加载器(Thread Context ClassLoader</strong>)。有了这个东西之后，程序就可以把原本需要由启动类加载器进行加载的类，由应用程序类加载器去进行加载了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">private static Connection getConnection(</span><br><span class="line">        String url, java.util.Properties info, Class&lt;?&gt; caller) throws SQLException &#123;</span><br><span class="line">        /*</span><br><span class="line">         * When callerCl is null, we should check the application&#x27;s</span><br><span class="line">         * (which is invoking this class indirectly)</span><br><span class="line">         * classloader, so that the JDBC driver class outside rt.jar</span><br><span class="line">         * can be loaded from here.</span><br><span class="line">         */</span><br><span class="line">        //callerCL为空的时候，其实说明这个ClassLoader是启动类加载器，但是这个启动类加载并不能识别rt.jar之外的类，这个时候就把callerCL赋值为Thread.currentThread().getContextClassLoader();也就是应用程序启动类</span><br><span class="line">        ClassLoader callerCL = caller != null ? caller.getClassLoader() : null;</span><br><span class="line">        synchronized(DriverManager.class) &#123;</span><br><span class="line">            // synchronize loading of the correct classloader.</span><br><span class="line">            if (callerCL == null) &#123;</span><br><span class="line">                callerCL = Thread.currentThread().getContextClassLoader();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if(url == null) &#123;</span><br><span class="line">            throw new SQLException(&quot;The url cannot be null&quot;, &quot;08001&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        println(&quot;DriverManager.getConnection(\&quot;&quot; + url + &quot;\&quot;)&quot;);</span><br><span class="line"></span><br><span class="line">        // Walk through the loaded registeredDrivers attempting to make a connection.</span><br><span class="line">        // Remember the first exception that gets raised so we can reraise it.</span><br><span class="line">        SQLException reason = null;</span><br><span class="line"></span><br><span class="line">        for(DriverInfo aDriver : registeredDrivers) &#123;</span><br><span class="line">            // If the caller does not have permission to load the driver then</span><br><span class="line">            // skip it.</span><br><span class="line">            //继续看这里 </span><br><span class="line">            if(isDriverAllowed(aDriver.driver, callerCL)) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    println(&quot;    trying &quot; + aDriver.driver.getClass().getName());</span><br><span class="line">                    Connection con = aDriver.driver.connect(url, info);</span><br><span class="line">                    if (con != null) &#123;</span><br><span class="line">                        // Success!</span><br><span class="line">                        println(&quot;getConnection returning &quot; + aDriver.driver.getClass().getName());</span><br><span class="line">                        return (con);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (SQLException ex) &#123;</span><br><span class="line">                    if (reason == null) &#123;</span><br><span class="line">                        reason = ex;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                println(&quot;    skipping: &quot; + aDriver.getClass().getName());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // if we got here nobody could connect.</span><br><span class="line">        if (reason != null)    &#123;</span><br><span class="line">            println(&quot;getConnection failed: &quot; + reason);</span><br><span class="line">            throw reason;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        println(&quot;getConnection: no suitable driver found for &quot;+ url);</span><br><span class="line">        throw new SQLException(&quot;No suitable driver found for &quot;+ url, &quot;08001&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static boolean isDriverAllowed(Driver driver, ClassLoader classLoader) &#123;</span><br><span class="line">        boolean result = false;</span><br><span class="line">        if(driver != null) &#123;</span><br><span class="line">            Class&lt;?&gt; aClass = null;</span><br><span class="line">            try &#123;</span><br><span class="line">                //这一步会对类进行初始化的动作，而初始化之前自然也要进行的类的加载工作</span><br><span class="line">                aClass =  Class.forName(driver.getClass().getName(), true, classLoader);</span><br><span class="line">            &#125; catch (Exception ex) &#123;</span><br><span class="line">                result = false;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">             result = ( aClass == driver.getClass() ) ? true : false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -941,7 +1087,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-05 14:33:41" itemprop="dateModified" datetime="2021-08-05T14:33:41+08:00">2021-08-05</time>
+                <time title="修改时间：2021-08-05 20:36:00" itemprop="dateModified" datetime="2021-08-05T20:36:00+08:00">2021-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -965,6 +1111,13 @@
 
       
           <p><img src="https://i.loli.net/2021/08/05/y2G1hPE34wWgxtm.png" alt="image-20210805143306994"></p>
+<h3 id="jvm内存分配："><a href="#jvm内存分配：" class="headerlink" title="jvm内存分配："></a>jvm内存分配：</h3><p>-Xms    初始堆大小    <strong>物理内存的1/64</strong>(&lt;1GB)    </p>
+<p>-Xmx    最大堆大小    <strong>物理内存的1/4(&lt;1GB)</strong>    </p>
+<p>-Xmn    年轻代大小    <strong>整个堆的3/8</strong>    （eden+ 2 survivor space)</p>
+<p>-Xss    <strong>每个线程的堆栈大小</strong>         JDK5.0以后每个线程堆栈大小为**1M,**以前每个线程堆栈大小为256K<br>一般小的应用， 如果栈不是很深， 应该是128k够用的 大的应用建议使用256k。这个选项对性能影响比较大，需要严格的测试</p>
+<p>-XX:NewRatio    年轻代与年老代的比值    =4 年轻代占整个堆栈的1/5</p>
+<p>-XX:SurvivorRatio    Eden区与Survivor区的大小比值    设置为8,则两个Survivor区与一个Eden区的比值为2:8</p>
+<p>-XX:TLABWasteTargetPercent    TLAB占eden区的百分比    1%</p>
 <h3 id="jvm与java体系结构"><a href="#jvm与java体系结构" class="headerlink" title="jvm与java体系结构"></a>jvm与java体系结构</h3><h4 id="跨平台的语言"><a href="#跨平台的语言" class="headerlink" title="跨平台的语言"></a>跨平台的语言</h4><p><img src="https://i.loli.net/2021/08/05/i34EhPRJe9w6j1y.png" alt="image-20210805143331921"></p>
 <h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>一次编译，到处运行<br>自动内存管理<br>自动垃圾回收功能<br>JVM是运行在操作系统之上的，它与硬件没有直接的交互。</p>
 <h3 id="运行时数据区以及线程"><a href="#运行时数据区以及线程" class="headerlink" title="运行时数据区以及线程"></a>运行时数据区以及线程</h3><p><strong>线程独有：独立包括程序计数器、栈、本地方法栈</strong><br><strong>线程间共享：堆、堆外内存（永久代或元空间、代码缓存（方法区））</strong></p>
@@ -972,7 +1125,12 @@
 <h4 id="线程："><a href="#线程：" class="headerlink" title="线程："></a>线程：</h4><p>1，线程是一个程序里的<strong>运行单元</strong>。JVM允许一个应用有多个线程并行的执行<br>2，在Hotspot JVM里，<strong>每个线程都与操作系统的本地线程直接映射</strong><br>当一个Java线程准备好执行以后，此时一个操作系统的本地线程也同时创建。Java线程执行终止后，本地线程也会回收<br>3，操作系统负责将线程安排调度到任何一个可用的CPU上。一旦本地线程初始化成功，它就会调用Java线程中的run()方法</p>
 <h4 id="JVM-系统线程"><a href="#JVM-系统线程" class="headerlink" title="JVM 系统线程"></a>JVM 系统线程</h4><p>如果你使用jconsole或者是任何一个调试工具（内存监控工具），都能看到在后台有许多线程在运行。这些后台线程不包括调用public static void main(String[])的main线程以及所有这个main线程自己创建的线程。</p>
 <p>这些主要的后台系统线程在Hotspot JVM里主要是以下几个：<br><strong>虚拟机线程：</strong>这种线程的操作是需要JVM达到安全点才会出现。这些操作必须在不同的线程中发生的原因是他们都需要JVM达到安全点，这样堆才不会变化。这种线程的执行类型括”stop-the-world”的垃圾收集，线程栈收集，线程挂起以及偏向锁撤销<br><strong>周期任务线程：</strong>这种线程是时间周期事件的体现（比如中断），他们一般用于周期性操作的调度执行<br><strong>GC线程：</strong>这种线程对在JVM里不同种类的垃圾收集行为提供了支持<br><strong>编译线程：</strong>这种线程在运行时会将字节码编译成到本地代码<br><strong>信号调度线程：</strong>这种线程接收信号并发送给JVM，在它内部通过调用适当的方法进行处理</p>
-
+<h3 id="机器慢了怎么查"><a href="#机器慢了怎么查" class="headerlink" title="机器慢了怎么查"></a>机器慢了怎么查</h3><h4 id="使用-top-命令检查-CPU-负载"><a href="#使用-top-命令检查-CPU-负载" class="headerlink" title="使用 top 命令检查 CPU 负载"></a>使用 top 命令检查 CPU 负载</h4><p>除了上述检查的情况之外，还可以使用命令 top 来检查 CPU 负载，将实时显示 process 的动态。资源使用最高的进程排在最前面。</p>
+<h4 id="机器的io读写和网络情况，sar"><a href="#机器的io读写和网络情况，sar" class="headerlink" title="机器的io读写和网络情况，sar"></a>机器的io读写和网络情况，sar</h4><h4 id="查看具体是哪个进程有占用资源高的问题，ps"><a href="#查看具体是哪个进程有占用资源高的问题，ps" class="headerlink" title="查看具体是哪个进程有占用资源高的问题，ps"></a>查看具体是哪个进程有占用资源高的问题，ps</h4><p>Ps -mp pid -o THREAD,tid,time</p>
+<p>再通过ps命令查看这个程序的线程信息,tid代码线程ID，time代表这个线程的已运行时间</p>
+<h4 id="jstack查看进程信息"><a href="#jstack查看进程信息" class="headerlink" title="jstack查看进程信息"></a>jstack查看进程信息</h4><p>有了线程ID的16进制后，再在jstack中查看进程堆栈信息(之所有拿到TID信息，主要是为了查找方便)</p>
+<p>通过jstack -pid 再grep查询。</p>
+<h4 id="本地代码问题排查"><a href="#本地代码问题排查" class="headerlink" title="本地代码问题排查"></a>本地代码问题排查</h4>
       
     </div>
 
@@ -1022,7 +1180,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-01 22:25:28" itemprop="dateModified" datetime="2021-08-01T22:25:28+08:00">2021-08-01</time>
+                <time title="修改时间：2021-08-06 10:16:18" itemprop="dateModified" datetime="2021-08-06T10:16:18+08:00">2021-08-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1069,7 +1227,7 @@
 </li>
 </ul>
 <h4 id="多级反馈队列"><a href="#多级反馈队列" class="headerlink" title="多级反馈队列"></a>多级反馈队列</h4><p>  是「时间⽚轮转算法」和「最⾼优先级算法」的综合和发展。</p>
-<p><img src="image-20210801222105298.png"></p>
+<p><img src="https://i.loli.net/2021/08/06/6ziUqckShIRCQFN.png" alt="image-20210801222105298"></p>
 <ul>
 <li>设置了多个队列，赋予每个队列不同的优先级，每个队列优先级从⾼到低，同时优先级越⾼时间⽚越短；</li>
 <li>新的进程会被放⼊到第⼀级队列的末尾，按先来先服务的原则排队等待被调度，如果在第⼀级队列规定的时间⽚没运⾏完成，则将其转⼊到第⼆级队列的末尾，以此类推，直⾄完成；</li>
@@ -1228,7 +1386,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-01 22:15:28" itemprop="dateModified" datetime="2021-08-01T22:15:28+08:00">2021-08-01</time>
+                <time title="修改时间：2021-08-06 10:30:40" itemprop="dateModified" datetime="2021-08-06T10:30:40+08:00">2021-08-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1312,7 +1470,7 @@
 <li><p>信号量来实现多进程<strong>同步的⽅式</strong>，我们可以<strong>初始化信号量为 0</strong> 。</p>
 </li>
 </ul>
-<p><img src="image-20210801220932770.png"></p>
+<p><img src="https://i.loli.net/2021/08/06/puJzalWFGyTfjmt.png" alt="image-20210801220932770"></p>
 <h4 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h4><ul>
 <li>对于<strong>异常情况下的⼯作模式</strong>，就需要⽤「信号」的⽅式来通知进程。</li>
 <li>信号事件的来源主要有<strong>硬件来源</strong>（如键盘 Cltr+C ）和<strong>软件来源</strong>（如 kill 命令）。</li>
@@ -1325,7 +1483,7 @@
 <li><strong>实现 UDP 数据报通信</strong>： socket 类型是 AF_INET 和 SOCK_DGRAM；</li>
 <li><strong>实现本地进程间通信：</strong> 「本地字节流 socket 」类型是 AF_LOCAL 和 SOCK_STREAM，「本地数据报 socket 」类型是 AF_LOCAL 和 SOCK_DGRAM。另外，AF_UNIX 和 AF_LOCAL 是等价的，所以AF_UNIX 也属于本地 socket。</li>
 </ul>
-<h4 id="TCP"><a href="#TCP" class="headerlink" title="TCP:"></a>TCP:</h4><ul>
+<h5 id="TCP"><a href="#TCP" class="headerlink" title="TCP:"></a>TCP:</h5><ul>
 <li>服务端和客户端初始化 socket ，得到⽂件描述符；</li>
 <li><strong>服务端调⽤ bind</strong> ，将绑定在 IP 地址和端⼝;</li>
 <li><strong>服务端调⽤ listen</strong> ，进⾏监听；</li>
@@ -1335,7 +1493,7 @@
 <li>客户端调⽤ write 写⼊数据；服务端调⽤ read 读取数据；</li>
 <li>客户端断开连接时，会调⽤ close ，那么服务端 read 读取数据的时候，就会读取到了 EOF ，待处理完数据后，服务端调⽤ close ，表示连接关闭。</li>
 </ul>
-<h4 id="UDP"><a href="#UDP" class="headerlink" title="UDP:"></a>UDP:</h4><ul>
+<h5 id="UDP"><a href="#UDP" class="headerlink" title="UDP:"></a>UDP:</h5><ul>
 <li>每⼀个 UDP 的 socket 都需要 bind 。</li>
 </ul>
 <h3 id="进程同步"><a href="#进程同步" class="headerlink" title="进程同步"></a>进程同步</h3><h4 id="哲学家就餐"><a href="#哲学家就餐" class="headerlink" title="哲学家就餐"></a>哲学家就餐</h4><p>⽤⼀个数组 state 来记录每⼀位哲学家在<strong>进程、思考还是饥饿状态</strong>（正在试图拿叉⼦）。那么，⼀个哲学家只有在两个邻居都没有进餐时，才可以进⼊进餐状态。</p>
@@ -1404,7 +1562,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-01 21:57:29" itemprop="dateModified" datetime="2021-08-01T21:57:29+08:00">2021-08-01</time>
+                <time title="修改时间：2021-08-06 10:29:40" itemprop="dateModified" datetime="2021-08-06T10:29:40+08:00">2021-08-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1427,9 +1585,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h3><p><img src="image-20210801212559233.png"></p>
-<h3 id="分段管理"><a href="#分段管理" class="headerlink" title="分段管理"></a>分段管理</h3><p><img src="image-20210801214351270.png"></p>
-<p>段表：段号=段基地址=段长。<br>缺点：</p>
+          <h3 id="分段管理"><a href="#分段管理" class="headerlink" title="分段管理"></a>分段管理</h3><p><img src="https://i.loli.net/2021/08/06/gY7BE1UoqzbDnLO.png" alt="image-20210801212559233"></p>
+<p><img src="https://i.loli.net/2021/08/06/EevMmVO14PZa8gF.png" alt="image-20210801214351270"></p>
+<p>进程的地址空间：按照程序自身的<strong>逻辑关系划分</strong>（代码段，数据段….）为若干个段，每个段都有一个段名（在低级语言中，程序员使用段名来编程），每段从0开始编址。<br>内存分配规则：以段为单位进行分配，每个段在内存中占据连续空间，但各段之间可以不相邻。</p>
+<p>由于是按逻辑功能模块划分，用户编程更方便，程序可读性更高。</p>
+<p><strong>逻辑地址</strong>：段号：段内地址</p>
+<p><strong>段表</strong>：段号=段基地址=段长。<br>缺点：</p>
 <ul>
 <li><strong>内存碎片。</strong></li>
 <li><strong>内存交换效率低。</strong></li>
@@ -1438,13 +1599,13 @@
 <li><p><strong>固定分区会产生碎片</strong>。把内存划分为很多块，作为进程内存分配的最小单位。</p>
 </li>
 <li><p>页面大小要权衡，应该是2的幂次。太大会产生页内碎片，太小，页表会占用大量内存，降低换入换出效率。<br><strong>分页管理的地址结构：页号：页内偏移量</strong></p>
-<p>为32位，0-11为页内偏移，12-31为页号。</p>
-<p>每页大小2^12=4kb。</p>
+<p>为32位，<strong>0-11为页内偏移，12-31为页号。</strong></p>
+<p>每页大小2^12=<strong>4kb。</strong></p>
 </li>
 <li><p>为了方便每个进程<strong>在内存中找到每个页面对应的物理块</strong>，会为每个进程创建一张<strong>页表</strong>（存储在内存中===访问一次数据需要<strong>访问两次内存</strong>）。<br>页表由<strong>页表项</strong>组成<strong>第一部分是，页号，第二部分是物理块号。</strong></p>
 </li>
 </ul>
-<p><img src="image-20210801213808642.png"></p>
+<p><img src="https://i.loli.net/2021/08/06/CjPalYZUGqMAsEn.png" alt="image-20210801213808642"></p>
 <h4 id="分页管理问题："><a href="#分页管理问题：" class="headerlink" title="分页管理问题："></a>分页管理问题：</h4><ul>
 <li>每次访问内存<strong>都需要进行地址的转换</strong>。速度受限制。</li>
 <li><strong>页表不能太大</strong>，否则内存利用率会降低。</li>
@@ -1466,14 +1627,14 @@
 </li>
 </ul>
 <p>建立多级页表：建立索引，不用去存储无用页表项，也不用去盲目的查找页表项。</p>
-<p><img src="image-20210801213945467.png"></p>
+<p><img src="https://i.loli.net/2021/08/06/ZQH2XSo81gRuCa7.png" alt="image-20210801213945467"></p>
 <h3 id="段页式管理"><a href="#段页式管理" class="headerlink" title="段页式管理"></a>段页式管理</h3><ul>
 <li>分段<strong>利于反应程序的逻辑结构以及段的共享</strong>。</li>
 <li>先将程序划分为<strong>多个有逻辑意义的段</strong>，接着再把<strong>每个段划分为多个⻚</strong>，也就是对分段划分出来的连续空间，再划分固定⼤⼩的⻚；</li>
 <li>地址结构就由<strong>段号、段内⻚号和⻚内位移</strong>三部分组成。</li>
 <li>⽤于段⻚式地址变换的数据结构是每⼀个程序⼀张段表，每个段⼜建⽴⼀张⻚表，段表中的地址是⻚表的起始地址，⽽⻚表中的地址则为某⻚的物理⻚号。</li>
 </ul>
-<p><img src="image-20210801214844351.png"></p>
+<p><img src="https://i.loli.net/2021/08/06/knoWqyRxGDMKC1P.png" alt="image-20210801214844351"></p>
 <ul>
 <li>第⼀次访问段表，得到<strong>⻚表起始地址；</strong></li>
 <li>第⼆次访问⻚表，得到<strong>物理⻚号；</strong></li>
@@ -1489,141 +1650,6 @@
 <p>再来，为了解决简单分⻚产⽣的<strong>⻚表过⼤的问题</strong>，就有了<strong>多级⻚表</strong>，它解决了空间上的问题，但这就会导<br>致 CPU 在寻址的过程中，需要有很多层表参与，加⼤了时间上的开销。于是根据程序的局部性原理，在<br>CPU 芯⽚中加⼊了 <strong>TLB，负责缓存最近常被访问的⻚表项，⼤⼤提⾼了地址的转换速度。</strong></p>
 <p><strong>Linux 系统主要采⽤了分⻚管理</strong>，但是由于 Intel 处理器的发展史，Linux 系统⽆法避免分段管理。于是<br>Linux 就把<strong>所有段的基地址设为 0</strong> ，也就意味着所有程序的地址空间都是线性地址空间（虚拟地址），相<br>当于屏蔽了 CPU 逻辑地址的概念，所以段只被⽤于访问控制和内存保护。</p>
 <p>另外，Linxu 系统中虚拟空间分布可分为<strong>⽤户态和内核态</strong>两部分，其中⽤户态的分布：<strong>代码段、全局变量、</strong><br><strong>BSS、函数栈、堆内存、映射区</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" class="post-title-link" itemprop="url">计算机网络-IO多路复用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-30 15:05:11" itemprop="dateCreated datePublished" datetime="2021-07-30T15:05:11+08:00">2021-07-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-31 10:13:15" itemprop="dateModified" datetime="2021-07-31T10:13:15+08:00">2021-07-31</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="解释名词"><a href="#解释名词" class="headerlink" title="解释名词"></a>解释名词</h3><h4 id="用户空间内核空间"><a href="#用户空间内核空间" class="headerlink" title="用户空间内核空间"></a>用户空间内核空间</h4><p>现在操作系统都是采用虚拟存储技术，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。为了保证用户进程不能直接操作内核（kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G字节，供内核使用，称为内核空间，而将较低的3G字节（从虚拟地址0x00000000到0xBFFFFFFF），供各个进程使用，称为用户空间。</p>
-<p>每个进程可以通过<strong>系统调用</strong>进入内核，因此，Linux内核由系统内的所有进程共享。于是，从具体进程的角度来看，每个进程可以拥有4G字节的虚拟空间。</p>
-<h4 id="系统调用："><a href="#系统调用：" class="headerlink" title="系统调用："></a>系统调用：</h4><ul>
-<li>设备管理</li>
-<li>文件管理</li>
-<li>进程控制</li>
-<li>进程通信</li>
-<li>内存管理</li>
-</ul>
-<h4 id="进程上下文切换"><a href="#进程上下文切换" class="headerlink" title="进程上下文切换"></a>进程上下文切换</h4><p>为控制进程的执行，操作系统内核挂起正在CPU上运行的进程，并恢复以前挂起的某个进程的执行，这种行为称为上下文切换（context switch）。通过上下文切换技术，即使在单处理器系统上也能够并发执行多个任务。</p>
-<p>进程切换的原因：</p>
-<ol>
-<li>在CPU上运行进程的<strong>时间片耗尽</strong>，便会被操作系统挂起，调度器选择其他进程执行。</li>
-<li>在CPU上运行进程被<strong>更高优先级的进程抢占</strong>。</li>
-<li>在CPU上运行进程需要<strong>等待某种设备资源时</strong>，进程会被挂起，从运行状态（TASK_RUNNING）改为就绪状态（TASK_INTERRUPTIBLE）。</li>
-<li>在CPU上运行进程的时间片尚未耗尽时，<strong>发生硬件中断</strong>，CPU中断当前执行的进程，转而去调用对应的中断处理程序处理中断。</li>
-</ol>
-<p>进程切换细节：</p>
-<ul>
-<li>保存处理机上下文，包括程序计数器和其他寄存器。</li>
-<li>更新PCB信息。</li>
-<li>把进程的PCB移入相应的队列，如就绪、在某事件阻塞等队列。</li>
-<li>选择另一个进程执行，并更新其PCB。</li>
-<li>更新内存管理的数据结构。</li>
-<li>恢复处理机上下文。</li>
-</ul>
-<p>进程的阻塞是进程自身的一种<strong>主动行为</strong>，也因此只有处于运行态的进程（获得CPU），才可能将其转为阻塞状态。当进程进入阻塞状态，是<strong>不占用CPU资源的</strong>。</p>
-<h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>文件描述符形式上是一个非负整数。它是一个<strong>索引值</strong>，指向内核为每一个进程所维护的该进程打开文件的记录表。</p>
-<p>当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。在程序设计中，一些涉及底层的程序编写往往会围绕着文件描述符展开。但是文件描述符这一概念往往只适用于UNIX、Linux这样的操作系统。</p>
-<h4 id="缓存IO"><a href="#缓存IO" class="headerlink" title="缓存IO"></a>缓存IO</h4><p>缓存 I/O 又被称作标准 I/O，大多数文件系统的默认 I/O 操作都是缓存 I/O。在 Linux 的缓存 I/O 机制中，操作系统会将 I/O 的数据缓存在文件系统的页缓存（ page cache ）中，也就是说，<strong>数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间。</strong></p>
-<p>缺点：<br>数据在传输过程中需要<strong>在应用程序地址空间和内核进行多次数据拷贝操作</strong>，这些数据拷贝操作所带来的 CPU 以及内存开销是非常大的。</p>
-<h4 id="阻塞IO"><a href="#阻塞IO" class="headerlink" title="阻塞IO"></a>阻塞IO</h4><p>当用户进程调用了recvfrom这个系统调用，内核就开始了IO的第一个阶段：<strong>准备数据</strong>（对于网络IO来说，很多时候数据在一开始还没有到达。比如，还没有收到一个完整的UDP包。这个时候内核就要等待足够的数据到来）。这个过程需要等待，也就是说数据被拷贝到操作系统内核的缓冲区中是需要一个过程的。而在用户进程这边，整个进程会被阻塞（当然，是进程自己选择的阻塞）。当内核一直等到数据准备好了，它就会<strong>将数据从kernel中拷贝到用户内存</strong>，然后kernel返回结果，用户进程才解除block的状态，重新运行起来。</p>
-<p><strong>两个阶段都被阻塞。</strong></p>
-<h4 id="非阻塞IO"><a href="#非阻塞IO" class="headerlink" title="非阻塞IO"></a>非阻塞IO</h4><p>当用户进程发出read操作时，如果内核中的数据还没有准备好，那么它并不会block用户进程，而是立刻返回一个error。从用户进程角度讲 ，它发起一个read操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个error时，它就知道数据还没有准备好，于是它可以再次发送read操作。一旦内核中的数据准备好了，并且又再次收到了用户进程的system call，那么它马上就将数据拷贝到了用户内存，然后返回。</p>
-<p>所以，nonblocking IO的特点是<strong>用户进程需要不断的主动询问内核</strong></p>
-<p>NIO在一些<strong>短业务线，访问量高</strong>的程序中使用，会提高系统的吞吐量，但是对于业务线长，且访问量低的程序来说，就未必是件好事，使用BIO可能会更好一些，<strong>不然线程就会空转，浪费CPU。</strong></p>
-<h4 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h4><p>优点：<strong>一个进程可以同时处理多个连接。</strong></p>
-<p>I/O 多路复用的特点是通过一种机制<strong>一个进程能同时等待多个文件描述符</strong>，而这些文件描述符（套接字描述符）其中的任意一个进入读就绪状态，select()函数就可以返回。</p>
-<h4 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h4><p>异步（线程自己不去获得结果，而是由其他的线程送来结果）</p>
-<p><img src="image-20210731094812802.png"></p>
-<p>异步情况下一定是非阻塞的。</p>
-<p>异步意味着：在进行读写操作时，线程不必等待结果，而是通过回调的方式由另外的线程来获取。linux在2.6底层通过多路复用模拟了异步IO。windows通过IOCP真正实现了异步IO。</p>
-<p>select，poll，epoll本质上都是<strong>同步I/O</strong>，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会由其他线程负责把数据从内核拷贝到用户空间。</p>
-<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>select 实现多路复⽤的⽅式：</p>
-<p>将已连接的 Socket 都放到⼀个<strong>⽂件描述符集合</strong>，然后调⽤ select 函数<strong>将⽂件描述符集合拷⻉到内核</strong>⾥，让内核来检查是否有⽹络事件产⽣，检查的⽅式很粗暴，就是通过遍历⽂件描述符集合的⽅式，当检查到有事件产⽣后，将此 Socket 标记为可读或可写。</p>
-<p>接着<strong>再把整个⽂件描述符集合拷⻉回⽤户态</strong>⾥，然后⽤户态还需要再通过遍历的⽅法找到可读或可写的 Socket，然后再对其处理。</p>
-<p>对于 select 这种⽅式，需要进⾏ 2 次「遍历」⽂件描述符集合，⼀次是在内核态⾥，⼀个次是在⽤户态⾥ ，⽽且还会发⽣ 2 次「拷⻉」⽂件描述符集合，先从⽤户空间传⼊内核空间，由内核修改后，再传出到⽤户空间中。</p>
-<p>select 使⽤3个固定⻓度的 BitsMap（表示可读，可写，except），表示⽂件描述符集合，⽽且所⽀持的⽂件描述符的个数是有限制的，在Linux 系统中，由内核中的 FD_SETSIZE 限制， 默认最⼤值为 <strong>1024</strong> ，只能监听 0~1023 的⽂件描述符。</p>
-<p>select<strong>目前几乎在所有的平台上支持，</strong>其良好跨平台支持也是它的一个优点。select的一 个缺点在于单个进程能够监视的文件描述符的数量存在最大限制，<strong>在Linux上一般为1024，</strong>可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但 是这样也会造成效率的降低。</p>
-<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><p>poll 不再⽤ BitsMap 来存储所关注的⽂件描述符，取⽽代之⽤<strong>动态数组，以链表形式来组织</strong>，（pollfd的指针）突破了select 的⽂件描述符个数限制，当然还会受到系统⽂件描述符限制。</p>
-<p><img src="image-20210731095816033.png"></p>
-<p>但是 poll 和 select 并没有太⼤的本质区别，都是使⽤「线性结构」存储进程关注的 Socket 集合，因此都需要遍历⽂件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，⽽且也需要在⽤户态与内核态之间拷⻉⽂件描述符集合，这种⽅式随着并发数上来，性能的损耗会呈指数级增⻓。</p>
-<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>第⼀点，epoll 在内核⾥使⽤<strong>红⿊树</strong>来跟踪进程所有待检测的⽂件描述字，把需要监控的 socket 通过epoll_ctl() 函数加⼊内核中的红⿊树⾥，红⿊树是个⾼效的数据结构，增删查⼀般时间复杂度是O(logn) ，通过对这棵⿊红树进⾏操作，这样就不需要像 select/poll 每次操作时都传⼊整个 socket 集合，只需要传⼊⼀个待检测的 socket，减少了内核和⽤户空间⼤量的数据拷⻉和内存分配。</p>
-<p>第⼆点， epoll 使⽤<strong>事件驱动的机制</strong>，内核⾥维护了⼀个链表来记录就绪事件，当某个 socket 有事件发⽣时，通过回调函数内核会将其加⼊到这个就绪事件列表中，<strong>当⽤户调⽤ epoll_wait() 函数时</strong>，只会返回有事件发⽣的⽂件描述符，不需要像 select/poll 那样轮询扫描整个 socket 集合，⼤⼤提⾼了检测的效率。</p>
-<p><img src="image-20210731100147054.png"></p>
-<p>epoll对文件描述符的操作有两种模式：LT（level trigger）和ET（edge trigger）。LT模式是默认模式，LT模式与ET模式的区别如下：</p>
-<p>LT模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。<strong>下次调用epoll_wait时，会再次响应应用程序并通知此事件。</strong></p>
-<p>ET模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，<strong>下次调用epoll_wait时，不会再次响应应用程序并通知此事件。</strong></p>
-<p>LT(level triggered)是缺省的工作方式，并且同时支持block和no-block socket.在这种做法中，内核告诉你一个文件描述符是否就绪了，然后你可以对这个就绪的fd进行IO操作。如果你不作任何操作，内核还是会继续通知你的。</p>
-<p>ET(edge-triggered)是<strong>高速工作方式，</strong>只支持<strong>no-block socket</strong>。在这种模式下，当描述符从未就绪变为就绪时，内核通过epoll告诉你。然后<strong>它会假设你知道文件描述符已经就绪，</strong>并且不会再为那个文件描述符发送更多的就绪通知，直到你做了某些操作导致那个文件描述符不再为就绪状态了。但是请注意，如果一直不对这个fd作IO操作(从而导致它再次变成未就绪)，<strong>内核不会发送更多的通知(only once)</strong></p>
-<p>ET模式在很大程度上<strong>减少了epoll事件被重复触发的次数</strong>，因此效率要比LT模式高。</p>
-<p>（会循环从⽂件描述符读写数据，那么<strong>如果⽂件描述符是阻塞的，没有数据可读写时，进程会阻塞在读写函数那⾥</strong>，程序就没办法继续往下执⾏。所以，<strong>边缘触发模式⼀般和⾮阻塞 I/O 搭配使⽤</strong>，程序会⼀直执⾏ I/O 操作，直到系统调⽤（如 read 和write ）返回错误。）</p>
 
       
     </div>

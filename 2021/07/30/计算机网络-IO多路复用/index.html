@@ -27,15 +27,15 @@
 <meta property="og:site_name" content="Yiblog">
 <meta property="og:description" content="解释名词用户空间内核空间现在操作系统都是采用虚拟存储技术，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。为了保证用户进程不能直接操作内核（kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G字节，供内核使用，称为内核空间，而将较低的3G字节（从虚拟地址0x00000000到0xB">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/image-20210731094812802.png">
-<meta property="og:image" content="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/image-20210731095816033.png">
-<meta property="og:image" content="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/image-20210731100147054.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/06/UxFNmyufwlKnLhE.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/06/2kPGI6thcdoiLUe.png">
+<meta property="og:image" content="e:/Hexo/source_posts/计算机网络-IO多路复用/image-20210731100147054.png">
 <meta property="article:published_time" content="2021-07-30T07:05:11.000Z">
-<meta property="article:modified_time" content="2021-07-31T02:13:15.814Z">
+<meta property="article:modified_time" content="2021-08-06T02:43:51.429Z">
 <meta property="article:author" content="Xieyi">
 <meta property="article:tag" content="概念">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/image-20210731094812802.png">
+<meta name="twitter:image" content="https://i.loli.net/2021/08/06/UxFNmyufwlKnLhE.png">
 
 <link rel="canonical" href="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">
 
@@ -196,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-31 10:13:15" itemprop="dateModified" datetime="2021-07-31T10:13:15+08:00">2021-07-31</time>
+                <time title="修改时间：2021-08-06 10:43:51" itemprop="dateModified" datetime="2021-08-06T10:43:51+08:00">2021-08-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -258,8 +258,7 @@
 <h4 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h4><p>优点：<strong>一个进程可以同时处理多个连接。</strong></p>
 <p>I/O 多路复用的特点是通过一种机制<strong>一个进程能同时等待多个文件描述符</strong>，而这些文件描述符（套接字描述符）其中的任意一个进入读就绪状态，select()函数就可以返回。</p>
 <h4 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h4><p>异步（线程自己不去获得结果，而是由其他的线程送来结果）</p>
-<p><img src="image-20210731094812802.png"></p>
-<p>异步情况下一定是非阻塞的。</p>
+<p><img src="https://i.loli.net/2021/08/06/UxFNmyufwlKnLhE.png" alt="image-20210731094812802">异步情况下一定是非阻塞的。</p>
 <p>异步意味着：在进行读写操作时，线程不必等待结果，而是通过回调的方式由另外的线程来获取。linux在2.6底层通过多路复用模拟了异步IO。windows通过IOCP真正实现了异步IO。</p>
 <p>select，poll，epoll本质上都是<strong>同步I/O</strong>，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会由其他线程负责把数据从内核拷贝到用户空间。</p>
 <h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>select 实现多路复⽤的⽅式：</p>
@@ -269,11 +268,11 @@
 <p>select 使⽤3个固定⻓度的 BitsMap（表示可读，可写，except），表示⽂件描述符集合，⽽且所⽀持的⽂件描述符的个数是有限制的，在Linux 系统中，由内核中的 FD_SETSIZE 限制， 默认最⼤值为 <strong>1024</strong> ，只能监听 0~1023 的⽂件描述符。</p>
 <p>select<strong>目前几乎在所有的平台上支持，</strong>其良好跨平台支持也是它的一个优点。select的一 个缺点在于单个进程能够监视的文件描述符的数量存在最大限制，<strong>在Linux上一般为1024，</strong>可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但 是这样也会造成效率的降低。</p>
 <h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><p>poll 不再⽤ BitsMap 来存储所关注的⽂件描述符，取⽽代之⽤<strong>动态数组，以链表形式来组织</strong>，（pollfd的指针）突破了select 的⽂件描述符个数限制，当然还会受到系统⽂件描述符限制。</p>
-<p><img src="image-20210731095816033.png"></p>
+<p><img src="https://i.loli.net/2021/08/06/2kPGI6thcdoiLUe.png" alt="image-20210731095816033"></p>
 <p>但是 poll 和 select 并没有太⼤的本质区别，都是使⽤「线性结构」存储进程关注的 Socket 集合，因此都需要遍历⽂件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，⽽且也需要在⽤户态与内核态之间拷⻉⽂件描述符集合，这种⽅式随着并发数上来，性能的损耗会呈指数级增⻓。</p>
 <h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>第⼀点，epoll 在内核⾥使⽤<strong>红⿊树</strong>来跟踪进程所有待检测的⽂件描述字，把需要监控的 socket 通过epoll_ctl() 函数加⼊内核中的红⿊树⾥，红⿊树是个⾼效的数据结构，增删查⼀般时间复杂度是O(logn) ，通过对这棵⿊红树进⾏操作，这样就不需要像 select/poll 每次操作时都传⼊整个 socket 集合，只需要传⼊⼀个待检测的 socket，减少了内核和⽤户空间⼤量的数据拷⻉和内存分配。</p>
 <p>第⼆点， epoll 使⽤<strong>事件驱动的机制</strong>，内核⾥维护了⼀个链表来记录就绪事件，当某个 socket 有事件发⽣时，通过回调函数内核会将其加⼊到这个就绪事件列表中，<strong>当⽤户调⽤ epoll_wait() 函数时</strong>，只会返回有事件发⽣的⽂件描述符，不需要像 select/poll 那样轮询扫描整个 socket 集合，⼤⼤提⾼了检测的效率。</p>
-<p><img src="image-20210731100147054.png"></p>
+<p><img src="E:\Hexo\source_posts\计算机网络-IO多路复用\image-20210731100147054.png" alt="image-20210731100147054"></p>
 <p>epoll对文件描述符的操作有两种模式：LT（level trigger）和ET（edge trigger）。LT模式是默认模式，LT模式与ET模式的区别如下：</p>
 <p>LT模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。<strong>下次调用epoll_wait时，会再次响应应用程序并通知此事件。</strong></p>
 <p>ET模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，<strong>下次调用epoll_wait时，不会再次响应应用程序并通知此事件。</strong></p>

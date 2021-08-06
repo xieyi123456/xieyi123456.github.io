@@ -27,13 +27,13 @@
 <meta property="og:site_name" content="Yiblog">
 <meta property="og:description" content="进程与线程进程更好的描述和控制程序的并发执行。PCB进程控制块-进程存在的唯一标志。程序的一次执行过程。拥有资源的基本单位。状态：运行，就绪，阻塞，创建，结束 线程一个基本的CPU执行单元。是系统独立调度派的基本单位。一个进程中可以有多个线程。线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。 进程调度 ⼀旦操作系统把进程切换到运⾏状态，也就意味着该进程占⽤着 CPU 在执⾏">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B/image-20210801220932770.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/06/puJzalWFGyTfjmt.png">
 <meta property="article:published_time" content="2021-07-30T07:05:47.000Z">
-<meta property="article:modified_time" content="2021-08-01T14:15:28.645Z">
+<meta property="article:modified_time" content="2021-08-06T02:30:40.865Z">
 <meta property="article:author" content="Xieyi">
 <meta property="article:tag" content="概念">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B/image-20210801220932770.png">
+<meta name="twitter:image" content="https://i.loli.net/2021/08/06/puJzalWFGyTfjmt.png">
 
 <link rel="canonical" href="http://example.com/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B/">
 
@@ -194,7 +194,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-01 22:15:28" itemprop="dateModified" datetime="2021-08-01T22:15:28+08:00">2021-08-01</time>
+                <time title="修改时间：2021-08-06 10:30:40" itemprop="dateModified" datetime="2021-08-06T10:30:40+08:00">2021-08-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -278,7 +278,7 @@
 <li><p>信号量来实现多进程<strong>同步的⽅式</strong>，我们可以<strong>初始化信号量为 0</strong> 。</p>
 </li>
 </ul>
-<p><img src="image-20210801220932770.png"></p>
+<p><img src="https://i.loli.net/2021/08/06/puJzalWFGyTfjmt.png" alt="image-20210801220932770"></p>
 <h4 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h4><ul>
 <li>对于<strong>异常情况下的⼯作模式</strong>，就需要⽤「信号」的⽅式来通知进程。</li>
 <li>信号事件的来源主要有<strong>硬件来源</strong>（如键盘 Cltr+C ）和<strong>软件来源</strong>（如 kill 命令）。</li>
@@ -291,7 +291,7 @@
 <li><strong>实现 UDP 数据报通信</strong>： socket 类型是 AF_INET 和 SOCK_DGRAM；</li>
 <li><strong>实现本地进程间通信：</strong> 「本地字节流 socket 」类型是 AF_LOCAL 和 SOCK_STREAM，「本地数据报 socket 」类型是 AF_LOCAL 和 SOCK_DGRAM。另外，AF_UNIX 和 AF_LOCAL 是等价的，所以AF_UNIX 也属于本地 socket。</li>
 </ul>
-<h4 id="TCP"><a href="#TCP" class="headerlink" title="TCP:"></a>TCP:</h4><ul>
+<h5 id="TCP"><a href="#TCP" class="headerlink" title="TCP:"></a>TCP:</h5><ul>
 <li>服务端和客户端初始化 socket ，得到⽂件描述符；</li>
 <li><strong>服务端调⽤ bind</strong> ，将绑定在 IP 地址和端⼝;</li>
 <li><strong>服务端调⽤ listen</strong> ，进⾏监听；</li>
@@ -301,7 +301,7 @@
 <li>客户端调⽤ write 写⼊数据；服务端调⽤ read 读取数据；</li>
 <li>客户端断开连接时，会调⽤ close ，那么服务端 read 读取数据的时候，就会读取到了 EOF ，待处理完数据后，服务端调⽤ close ，表示连接关闭。</li>
 </ul>
-<h4 id="UDP"><a href="#UDP" class="headerlink" title="UDP:"></a>UDP:</h4><ul>
+<h5 id="UDP"><a href="#UDP" class="headerlink" title="UDP:"></a>UDP:</h5><ul>
 <li>每⼀个 UDP 的 socket 都需要 bind 。</li>
 </ul>
 <h3 id="进程同步"><a href="#进程同步" class="headerlink" title="进程同步"></a>进程同步</h3><h4 id="哲学家就餐"><a href="#哲学家就餐" class="headerlink" title="哲学家就餐"></a>哲学家就餐</h4><p>⽤⼀个数组 state 来记录每⼀位哲学家在<strong>进程、思考还是饥饿状态</strong>（正在试图拿叉⼦）。那么，⼀个哲学家只有在两个邻居都没有进餐时，才可以进⼊进餐状态。</p>
@@ -403,7 +403,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">进程与线程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">线程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="nav-number">2.</span> <span class="nav-text">进程调度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1"><span class="nav-number">3.</span> <span class="nav-text">进程通信</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%A1%E9%81%93"><span class="nav-number">3.1.</span> <span class="nav-text">管道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-number">3.2.</span> <span class="nav-text">消息队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98"><span class="nav-number">3.3.</span> <span class="nav-text">共享内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="nav-number">3.4.</span> <span class="nav-text">信号量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7"><span class="nav-number">3.5.</span> <span class="nav-text">信号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#socket"><span class="nav-number">3.6.</span> <span class="nav-text">socket</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP"><span class="nav-number">3.7.</span> <span class="nav-text">TCP:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UDP"><span class="nav-number">3.8.</span> <span class="nav-text">UDP:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5"><span class="nav-number">4.</span> <span class="nav-text">进程同步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%B2%E5%AD%A6%E5%AE%B6%E5%B0%B1%E9%A4%90"><span class="nav-number">4.1.</span> <span class="nav-text">哲学家就餐</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85"><span class="nav-number">4.2.</span> <span class="nav-text">生产者消费者</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E9%94%81"><span class="nav-number">5.</span> <span class="nav-text">死锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%9A%84%E9%94%81"><span class="nav-number">6.</span> <span class="nav-text">其他的锁</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">进程与线程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">线程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="nav-number">2.</span> <span class="nav-text">进程调度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1"><span class="nav-number">3.</span> <span class="nav-text">进程通信</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%A1%E9%81%93"><span class="nav-number">3.1.</span> <span class="nav-text">管道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-number">3.2.</span> <span class="nav-text">消息队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98"><span class="nav-number">3.3.</span> <span class="nav-text">共享内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="nav-number">3.4.</span> <span class="nav-text">信号量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7"><span class="nav-number">3.5.</span> <span class="nav-text">信号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#socket"><span class="nav-number">3.6.</span> <span class="nav-text">socket</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#TCP"><span class="nav-number">3.6.1.</span> <span class="nav-text">TCP:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#UDP"><span class="nav-number">3.6.2.</span> <span class="nav-text">UDP:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5"><span class="nav-number">4.</span> <span class="nav-text">进程同步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%B2%E5%AD%A6%E5%AE%B6%E5%B0%B1%E9%A4%90"><span class="nav-number">4.1.</span> <span class="nav-text">哲学家就餐</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85"><span class="nav-number">4.2.</span> <span class="nav-text">生产者消费者</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E9%94%81"><span class="nav-number">5.</span> <span class="nav-text">死锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%9A%84%E9%94%81"><span class="nav-number">6.</span> <span class="nav-text">其他的锁</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

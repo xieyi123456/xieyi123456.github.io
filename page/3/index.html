@@ -156,6 +156,111 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">Redis-线程模型,事务</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-30 15:12:19" itemprop="dateCreated datePublished" datetime="2021-07-30T15:12:19+08:00">2021-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-04 17:20:53" itemprop="dateModified" datetime="2021-08-04T17:20:53+08:00">2021-08-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="redis为什么快"><a href="#redis为什么快" class="headerlink" title="redis为什么快"></a>redis为什么快</h2><p><strong>1、基于内存的操作</strong><br><strong>2、使用了 I/O 多路复用模型，select、epoll 等，基于 reactor 模式开发了自己的网络事件处理器</strong><br><strong>3、单线程可以避免不必要的上下文切换和竞争条件，减少了这方面的性能消耗。</strong><br><strong>4、以上这三点是 redis 性能高的主要原因，其他的还有一些小优化，例如：对数据结构进行了优化，简单动态字符串、压缩列表等</strong></p>
+<h3 id="完全基于内存"><a href="#完全基于内存" class="headerlink" title="完全基于内存"></a>完全基于内存</h3><p>Redis<strong>完全基于内存</strong>，大部分都是简单的存取操作，大量的时间花费在IO上。Redis绝大部分操作时间复杂度为O(1)，所以速度十分快。</p>
+<h3 id="非阻塞IO、多路IO复用模型"><a href="#非阻塞IO、多路IO复用模型" class="headerlink" title="非阻塞IO、多路IO复用模型"></a>非阻塞IO、多路IO复用模型</h3><p>Redis采用<strong>多路IO复用</strong>模型，在内部采用<strong>epoll代理</strong>。多路是指多个网络连接，IO复用是指复用同一个线程。<strong>epoll会同时监察多个流的IO事件，</strong>在空闲时，当前线程进入阻塞，如果有IO事件时，线程会被唤醒，并且epoll会通知线程是哪个流发生了IO事件，然后按照顺序处理，减少了网络IO的时间消耗，避免了大量的无用操作。</p>
+<h3 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h3><p>对于单线程来讲，<strong>不存在上下文切换问题，也不用考虑锁的问题，不存在加锁释放锁的操作，没有因为可能出现死锁而导致的性能消耗</strong>。虽然单线程无法发挥出多个CPU的性能，但是可以<strong>在单机开启多个Redis实例解决这个问题。</strong>reids的单线程是指<strong>处理网络请求只有一个线程</strong>。</p>
+<p>每次上下文切换都需要花费几十纳秒到数微秒的CPU时间，也就是说如果<strong>频繁的进行上下文切换会导致CPU大部分时间被浪费。</strong></p>
+<p>在关系型数据库中，会通过加锁来保证数据的一致性，这种锁被称为悲观锁。Redis为了近可能的减少客户端等待，使用WATCH命令对数据加锁，<strong>只会在数据被其他客户端修改时，才会通知执行WATCH的客户端</strong>，之后的事务不会执行。这种加锁方式被称为乐观锁，极大的提升了Redis的性能。</p>
+<h3 id="数据结构简单"><a href="#数据结构简单" class="headerlink" title="数据结构简单"></a>数据结构简单</h3><p>数据结构设计简单，对数据的操作也简单，Redis中的数据结构是专门进行设计的。Redis的数据结构有<strong>简单动态字符串、链表、字典、跳跃表、整数集合、压缩字典。</strong></p>
+<p>简单动态字符串<br>Redis并没有使用C语言的字符串，而是使用了简单动态字符串(SDS)。相对于C语言的字符串来讲，SDS记录了自身使用和未使用的长度，时间复杂度为O(1),而C语言则要遍历整个空间，时间复杂度为O(N)。<br>SDS可以通过自身长度来判断字符串是否结束，这样可以实现二进制数据的存储。</p>
+<p>链表<br>Redis的链表为双端链表，链表节点带有perv和next指针，链表还带有head和tail指针，使得获取链表某节点前后置节点的时间复杂度都是O(1)。并且Redis链表无环，prev和next指针指向null，对链表的访问以null作为截至的判断条件。<br>链表中有记录自身长度的属性len，并且链表使用void*指针来保存节点值，可以通过list 结构的dup、free、match三个属性为节点值设置类型特定函数，所以链表可以用来保存各种不同类型的值。</p>
+<p>字典<br>字典由哈希表组成，而哈希表又由哈希结点组成。</p>
+<p>跳跃表<br>跳跃表是一种有序数据结构，通过在每个结点中维持多个指向其它结点的指针，从而达到快速访问结点的目的。Redis中在有序集合键和集群结点中的内部数据结构都用到了跳跃表。</p>
+<p>整数集合<br>Redis用于保存整数值的集合抽象数据结构，它可以保存类型为 int16_t、int32_t 或者int64_t的整数值，并且保证集合中不会出现重复元素。</p>
+<p>压缩列表<br>压缩列表是Redis为了节约内存而开发的，是由一系列特殊编码的连续内存块组成的<strong>顺序型数据结构</strong>。一个压缩列表可以包含任意个结点，每个结点可以保存一个字节数或者一个整数值。</p>
+<h3 id="Redis优秀的过期策略和内存淘汰机制"><a href="#Redis优秀的过期策略和内存淘汰机制" class="headerlink" title="Redis优秀的过期策略和内存淘汰机制"></a>Redis优秀的过期策略和内存淘汰机制</h3><p><strong>定时删除</strong>：在设置键的过期时间的同时，创建一个定时器，让定时器在键的过期时间来临时，立即执行对键的删除操作。对内存最友好，<strong>对 CPU 时间最不友好。</strong></p>
+<p><strong>惰性删除</strong>：<strong>放任键过期不管，但是每次获取键时，都检査键是否过期，如果过期的话，就删除该键</strong>；如果没有过期，就返回该键。对 CPU 时间最优化，对内存最不友好。</p>
+<p><strong>定期删除</strong>：<strong>每隔一段时间，默认 100ms，程序就对数据库进行一次检査，删除里面的过期键</strong>。至 于要删除多少过期键，以及要检査多少个数据库，则由算法决定。前两种策略的折中，对 CPU 时间和内存的友好程度较平衡。</p>
+<p>Redis 使用<strong>惰性删除和定期删除</strong></p>
+<h4 id="内存淘汰机制"><a href="#内存淘汰机制" class="headerlink" title="内存淘汰机制"></a>内存淘汰机制</h4><p>Redis的内存淘汰机制有六种：</p>
+<p>volatile-lru：内存不足时，删除<strong>设置了过期时间的键空间</strong>中最近最少使用的key<br>allkeys-lru：内存不足时，在<strong>键空间</strong>中删除最少使用的key<br>volatile-random：内存不足时，随机删除在<strong>设置了过期时间</strong>的键空间中的key<br>allkeys-random：内存不足时，随即删除在<strong>键空间</strong>中的key<br>volatile-ttl：内存不足时，在设<strong>置了过期时间</strong>的键空间中，优先移除<strong>更早过期时间的key</strong><br>noeviction：永不过期，返回错误</p>
+<p><strong>还有两种4.0新增的：基于LFU.</strong></p>
+<p>在以上的淘汰策略中，使用allkeys-lru较好。</p>
+<h3 id="在-redis-6-0-之前，redis-的核心操作是单线程的。"><a href="#在-redis-6-0-之前，redis-的核心操作是单线程的。" class="headerlink" title="在 redis 6.0 之前，redis 的核心操作是单线程的。"></a>在 redis 6.0 之前，redis 的核心操作是单线程的。</h3><p>因为 redis 是完全基于内存操作的，通常情况下 CPU 不会是 redis 的瓶颈，redis 的瓶颈最有可能是机器内存的大小或者网络带宽。<br>既然 CPU 不会成为瓶颈，那就顺理成章地采用单线程的方案了，因为如果使用多线程的话会更复杂，同时需要引入上下文切换、加锁等等，会带来额外的性能消耗。<br>而随着近些年互联网的不断发展，大家对于缓存的性能要求也越来越高了，因此 redis 也开始在逐渐往多线程方向发展。</p>
+<p>最近的 <strong>6.0 版本</strong>就对核心流程引入了多线程，主要用于解决 redis 在<strong>网络 I/O 上的性能瓶颈。而对于核心的命令</strong><br><strong>执行阶段，目前还是单线程的。</strong></p>
+<h2 id="Redis-的网络事件处理器（Reactor-模式）"><a href="#Redis-的网络事件处理器（Reactor-模式）" class="headerlink" title="Redis 的网络事件处理器（Reactor 模式）"></a>Redis 的网络事件处理器（Reactor 模式）</h2><p>redis 基于 reactor 模式开发了自己的网络事件处理器，由 4 个部分组成：<strong>套接字、I/O 多路复用程序、文件事件分 派器（dispatcher）、以及事件处理器。</strong></p>
+<p><img src="https://i.loli.net/2021/08/04/fG5ONWZAVCUr69X.png" alt="image-20210804153454233"></p>
+<p><strong>套接字</strong>：socket 连接，也就是客户端连接。当一个套接字准备好执行连接、写入、读取、关闭等操作时， 就会产生一个相应的文件事件。因为一个服务器通常会连接多个套接字， 所以多个文件事件有可能会并发地出现。</p>
+<p><strong>I/O 多路复用程序</strong>：提供 select、epoll、evport、kqueue 的实现，会根据当前系统自动选择最佳的方式。负责监听多个套接字，当套接字产生事件时，会向文件事件分派器传送那些产生了事件的套接字。当多个文件事件并发出现时， <strong>I/O 多路复用程序会将所有产生事件的套接字都放到一个队列里面，</strong>然后通过这个队列，以有序、同步、每次一个套接字的方式向文件事件分派器传送套接字：当上一个套接字产生的事件被处理完毕之后，才会继续传送下一个套接字。</p>
+<p><strong>文件事件分派器</strong>：接收 I/O 多路复用程序传来的套接字， 并根据套接字产生的事件的类型， 调用相应的事件处理器。</p>
+<p><strong>事件处理器：</strong>事件处理器就是一个个函数， 定义了某个事件发生时， 服务器应该执行的动作。例如：建立连接、命令查询、命令写入、连接关闭等等</p>
+<h2 id="Redis-事务的实现"><a href="#Redis-事务的实现" class="headerlink" title="Redis 事务的实现"></a>Redis 事务的实现</h2><p>一个事务从开始到结束通常会经历以下 3 个阶段：</p>
+<p>1）事务开始：<strong>multi</strong> 命令将执行该命令的客户端从非事务状态切换至事务状态，底层通过 flags 属性标识。<br>2）命令入队：当客户端处于事务状态时，服务器会根据客户端发来的命令执行不同的操作：<br>exec、discard、watch、multi 命令会被立即执行<br>其他命令不会立即执行，而是将命令放入到一个事务队列，然后向客户端返回 QUEUED 回复。<br>3）事务执行：当一个处于事务状态的客户端向服务器发送 <strong>exec</strong> 命令时，服务器会遍历事务队列，执行队列中的所有命令，最后将结果全部返回给客户端。</p>
+<p>不过 redis 的事务<strong>并不推荐在实际中使用</strong>，如果要使用事务，推荐使用 Lua 脚本，redis 会保证一个 Lua 脚本里的所有命令的原子性。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -303,7 +408,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-04 14:55:17" itemprop="dateModified" datetime="2021-08-04T14:55:17+08:00">2021-08-04</time>
+                <time title="修改时间：2021-08-05 21:12:19" itemprop="dateModified" datetime="2021-08-05T21:12:19+08:00">2021-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -338,6 +443,13 @@
 <p>辅助索引的 <strong>data 域存储相应记录主键的值而不是地址</strong>，这也是和 MyISAM 不同的地方。</p>
 <p>在根据主索引搜索时，直接找到 key 所在的节点即可取出数据；在根据辅助索引查找时，则需要先取出主键的值，在走一遍主索引。 </p>
 <p>因此，在设计表的时候，不建议使用过长的字段作为主键，也不建议使用非单调的字段作为主键，这样会造成主索引频繁分裂。</p>
+<h3 id="B-树磁盘"><a href="#B-树磁盘" class="headerlink" title="B+树磁盘"></a>B+树磁盘</h3><p>所以一次访盘请求（读/写）完成过程由三个动作组成：</p>
+<p>寻道（时间）：磁头移动定位到指定磁道<br>旋转延迟（时间）：等待指定扇区从磁头下旋转经过<br>数据传输（时间）：数据在磁盘与内存之间的实际传输<br>而总时间就是 寻到时间+旋转延迟+n×数据传输时间。</p>
+<p>但是这个节点到底应该多大?虽然磁盘是以<strong>扇区</strong>为大小进行读写的，但是磁盘和操作系统却是用块为单位进行交互的。<br>块的大小必须是扇区大小的2的n次方。比如<strong>4k</strong>，一个页的大小也4k。</p>
+<p>所以b树基本上可以说是为机械硬盘量身定制的，<strong>b树的层数决定了在磁盘上查找的次数</strong>，而越小的次数，带来的就是更高的效率。</p>
+<p>然而在固态硬盘中，虽然也是以整数倍读写，但是它并不用移动磁头之类的机械操作，固态硬盘使用闪存进行存储，所以它的寻址效率和内存是一个数量级的，使用电位进行寻址，类似内存本身每一个存储空间都有一个地址，直接通过电门运算就找到那个地址了 。</p>
+<p>但是从数据结构上来说，索引毕竟是索引，肯定要比遍历快很多，<strong>所以虽然ssd的随机读写很快，但是毕竟没有内存快。所以使用b树还是很有意义</strong>，再加上很多优化的算法都是基于磁盘的，这种历史包袱也不是说丢就能丢的。</p>
+<p>因为旋转的受限，所以就算是顺序读写，固态硬盘也要比机械硬盘快，但是快的不是特别明显，毕竟如果是顺序读写，都可以有预判，可以提前做优化。这也就是为什么即使是固态硬盘本身，顺序读也要比随机读快。</p>
 <h2 id="为什么-MySQL-数据库要用-B-树存储索引？而不用红黑树、Hash、B-树？"><a href="#为什么-MySQL-数据库要用-B-树存储索引？而不用红黑树、Hash、B-树？" class="headerlink" title="为什么 MySQL 数据库要用 B+树存储索引？而不用红黑树、Hash、B 树？"></a>为什么 MySQL 数据库要用 B+树存储索引？而不用红黑树、Hash、B 树？</h2><p><strong>红黑树</strong>：如果在内存中，红黑树的<strong>查找效率比 B 树更高</strong>，但是涉及到磁盘操作，B 树就更优了。因为红黑树是二叉树，数据量大时树的层数很高，从树的根结点向下寻找的过程，每读 1 个节点，都相当于一次 IO 操作，因此红黑树的 <strong>I/O 操作会比 B 树多的多</strong>。</p>
 <p><strong>B 树索引</strong>：B 树索相比于 B+树，在进行范围查询时，需要做<strong>局部的中序遍历</strong>，<strong>可能要跨层访问</strong>，跨层访问代表着要进行额外的磁盘 I/O 操作；另外，B 树的非叶子节点存放了数据记录的地址，会导致存放的节点更少，树的层数变高。</p>
 <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="主键索引-Primary-Key"><a href="#主键索引-Primary-Key" class="headerlink" title="主键索引(Primary Key)"></a>主键索引(Primary Key)</h3><p>数据表的主键列使用的就是主键索引。</p>
@@ -369,6 +481,15 @@
 <h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="共享锁和排他锁？"><a href="#共享锁和排他锁？" class="headerlink" title="共享锁和排他锁？"></a>共享锁和排他锁？</h3><p><strong>共享锁</strong>又称为<strong>读锁，简称 S 锁</strong>，顾名思义，共享锁就是多个事务对于同一数据可以共享一把锁，都能访问到数据，但是只能读不能修改。</p>
 <p><strong>排他锁</strong>又称为<strong>写锁，简称 X 锁，</strong>顾名思义，排他锁就是不能与其他锁并存，如一个事务获取了一个数据行的排他锁，其他事务就不能再获取该行的其他锁，包括共享锁和排他锁，但是获取排他锁的事务可以对数据就行读取和修改。<br>常见的几种 SQL 语句的加锁情况如下：<br>select * from table：不加锁<br>update/insert/delete：排他锁<br> select * from table where id = 1 for update：id 为索引，加排他锁<br> select * from table where id = 1 lock in share mode：id 为索引，加共享锁</p>
 <h3 id="MySQL-如何实现悲观锁和乐观锁？"><a href="#MySQL-如何实现悲观锁和乐观锁？" class="headerlink" title="MySQL 如何实现悲观锁和乐观锁？"></a>MySQL 如何实现悲观锁和乐观锁？</h3><p>乐观锁：<strong>更新时带上版本号（cas 更新）</strong><br>悲观锁：<strong>使用共享锁和排它锁</strong>，select…lock in share mode，select…for update。</p>
+<h3 id="避免死锁？"><a href="#避免死锁？" class="headerlink" title="避免死锁？"></a>避免死锁？</h3><h5 id="事务之间对资源访问顺序的交替"><a href="#事务之间对资源访问顺序的交替" class="headerlink" title="事务之间对资源访问顺序的交替"></a>事务之间对资源访问顺序的交替</h5><p>一个用户A 访问表A（锁住了表A），然后又访问表B；另一个用户B 访问表B（锁住了表B），然后企图访问表A；这时用户A由于用户B已经锁住表B，它必须等待用户B释放表B才能继续，同样用户B要等用户A释放表A才能继续，这就死锁就产生了。</p>
+<h5 id="并发修改同一记录"><a href="#并发修改同一记录" class="headerlink" title="并发修改同一记录"></a>并发修改同一记录</h5><p>主要是由于没有一次性申请够权限的锁导致的。</p>
+<p>用户A查询一条纪录，然后修改该条纪录；这时用户B修改该条纪录，这时用户A的事务里锁的性质由查询的共享锁企图上升到独占锁，而用户B里的独占锁由于A有共享锁存在所以必须等A释放掉共享锁，而A由于B的独占锁而无法上升的独占锁也就不可能释放共享锁，于是出现了死锁。</p>
+<p>乐观锁，实现写-写并发</p>
+<h4 id="何尽可能的避免死锁呢？"><a href="#何尽可能的避免死锁呢？" class="headerlink" title="何尽可能的避免死锁呢？"></a>何尽可能的避免死锁呢？</h4><p>1）以固定的顺序访问表和行。即按顺序申请锁，这样就不会造成互相等待的场面。</p>
+<p>2）大事务拆小。大事务更倾向于死锁，如果业务允许，将大事务拆小。</p>
+<p>3）在同一个事务中，尽可能做到一次锁定所需要的所有资源，减少死锁概率。</p>
+<p>4）降低隔离级别。如果业务允许，将隔离级别调低也是较好的选择，比如将隔离级别从RR调整为RC，可以避免掉很多因为gap锁造成的死锁。</p>
+<p>5）为表添加合理的索引。如果不走索引将会为表的每一行记录添加上锁，死锁的概率大大增大。</p>
 
       
     </div>
@@ -1048,7 +1169,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-03 22:36:15" itemprop="dateModified" datetime="2021-08-03T22:36:15+08:00">2021-08-03</time>
+                <time title="修改时间：2021-08-05 20:57:23" itemprop="dateModified" datetime="2021-08-05T20:57:23+08:00">2021-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1128,7 +1249,10 @@
 <p>通过 ctl 得到 workerCount 则更简单了，只需通过位操作：c &amp; CAPACITY</p>
 <h3 id="在我们实际使用中，线程池的大小配置多少合适？"><a href="#在我们实际使用中，线程池的大小配置多少合适？" class="headerlink" title="在我们实际使用中，线程池的大小配置多少合适？"></a>在我们实际使用中，线程池的大小配置多少合适？</h3><p>要想合理的配置线程池大小，首先我们需要区分任务是<strong>计算密集型还是 I/O 密集型</strong>。</p>
 <p>对于计算密集型，设置 线程数 = <strong>CPU 数 + 1</strong>，通常能实现最优的利用率。</p>
-<p>对于 I/O 密集型，网上常见的说法是设置 线程数 = CPU 数 * 2 ，这个做法是可以的，但个人觉得不是最优的。<br>在我们日常的开发中，我们的任务几乎是离不开 I/O 的，常见的网络 I/O（RPC 调用）、磁盘 I/O（数据库操作），并且 I/O 的等待时间通常会占整个任务处理时间的很大一部分，在这种情况下，开启更多的线程可以让 CPU 得到更充分的使用，一个较合理的计算公式如下：<br>线程数 = <strong>CPU 数 * CPU 利用率 * (任务等待时间 / 任务计算时间 + 1)</strong><br>例如我们有个定时任务，部署在 4 核的服务器上，该任务有 100ms 在计算，900ms 在 I/O 等待，则线程数约为：4 * 1 * (1 + 900 / 100) = 40 个。<br>当然，具体我们还要结合实际的使用场景来考虑。如果要求比较精确，可以通过压测来获取一个合理的值</p>
+<p>对于 I/O 密集型，网上常见的说法是设置 线程数 = <strong>CPU 数 * 2</strong> ，这个做法是可以的，但个人觉得不是最优的。</p>
+<p>在我们日常的开发中，我们的任务几乎是离不开 I/O 的，常见的网络 I/O（RPC 调用）、磁盘 I/O（数据库操作），并且 I/O 的等待时间通常会占整个任务处理时间的很大一部分，在这种情况下，开启更多的线程可以让 CPU 得到更充分的使用，一个较合理的计算公式如下：<br>线程数 = <strong>CPU 数 * CPU 利用率 * (任务等待时间 / 任务计算时间 + 1)</strong></p>
+<p>例如我们有个定时任务，部署在 4 核的服务器上，该任务有 100ms 在计算，900ms 在 I/O 等待，则线程数约为：4 * 1 * (1 + 900 / 100) = 40 个。</p>
+<p>当然，具体我们还要结合实际的使用场景来考虑。如果要求比较精确，可以通过压测来获取一个合理的值。</p>
 
       
     </div>
@@ -1179,7 +1303,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-05 14:06:23" itemprop="dateModified" datetime="2021-08-05T14:06:23+08:00">2021-08-05</time>
+                <time title="修改时间：2021-08-05 21:04:04" itemprop="dateModified" datetime="2021-08-05T21:04:04+08:00">2021-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1216,6 +1340,12 @@
 <p>CLH(Craig,Landin,and Hagersten)队列是一个<strong>虚拟的双向队列</strong>（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将<strong>每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点</strong>（Node）来实现锁的分配。</p>
 <p><img src="https://i.loli.net/2021/08/05/FMUxJCKm7Gkn8Hv.png" alt="image-20210805140155989"></p>
 <p>AQS 使用一个 int 成员变量来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。</p>
+<h4 id="节点状态"><a href="#节点状态" class="headerlink" title="节点状态"></a>节点状态</h4><p>nt waitStatus：</p>
+<p>1、<strong>CANCELLED</strong>，值为1 。场景：当该线程<strong>等待超时或者被中断，需要从同步队列中取消等待</strong>，则该线程被置1，即被取消（这里该线程在取消之前是等待状态）。节点进入了取消状态则不再变化；</p>
+<p>2、<strong>SIGNAL</strong>，值为-1。场景：<strong>后继的节点处于等待状态</strong>，当前节点的线程如果释放了同步状态或者被取消（当前节点状态置为-1），将会通知后继节点，使后继节点的线程得以运行；</p>
+<p>3、<strong>CONDITION</strong>，值为-2。场景：<strong>节点处于等待队列中，节点线程等待在Condition上，</strong>当其他线程对Condition调用了signal()方法后，该节点从等待队列中转移到同步队列中，加入到对同步状态的获取中；</p>
+<p>4、<strong>PROPAGATE</strong>，值为-3。场景：表示<strong>下一次的共享状态会被无条件的传播下去</strong>；</p>
+<p>5、<strong>INITIAL</strong>，值为0，初始状态。</p>
 <h4 id="AQS-对资源的共享方式"><a href="#AQS-对资源的共享方式" class="headerlink" title="AQS 对资源的共享方式"></a>AQS 对资源的共享方式</h4><p><strong>AQS 定义两种资源共享方式</strong></p>
 <h5 id="Exclusive（独占）"><a href="#Exclusive（独占）" class="headerlink" title="Exclusive（独占）"></a>Exclusive（独占）</h5><p><strong>只有一个线程能执行</strong>，如 ReentrantLock。又可分为公平锁和非公平锁，ReentrantLock 同时支持两种锁，下面以 ReentrantLock 对这两种锁的定义做介绍：</p>
 <p>公平锁 ：<strong>按照线程在队列中的排队顺序，先到者先拿到锁</strong><br>非公平锁 ：当线程要获取锁时，先通过<strong>两次 CAS 操作去抢锁</strong>，如果没抢到，当前线程再加入到队列中等待唤醒。</p>
@@ -1226,144 +1356,30 @@
 <h5 id="Share（共享）"><a href="#Share（共享）" class="headerlink" title="Share（共享）"></a>Share（共享）</h5><p>多个线程可同时执行，如Semaphore、CountDownLatCh、 CyclicBarrier、ReadWriteLock 。</p>
 <p>ReentrantReadWriteLock 可以看成是组合式，因为 ReentrantReadWriteLock 也就是读写锁允许多个线程同时对某一资源进行读。</p>
 <p>不同的<strong>自定义同步器</strong>争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队/唤醒出队等），AQS 已经在上层已经帮我们实现好了。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">Java并发-常见基础</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-30 15:08:27" itemprop="dateCreated datePublished" datetime="2021-07-30T15:08:27+08:00">2021-07-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-05 14:31:08" itemprop="dateModified" datetime="2021-08-05T14:31:08+08:00">2021-08-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="线程与进程"><a href="#线程与进程" class="headerlink" title="线程与进程"></a>线程与进程</h3><p><strong>进程是程序的一次执行过程，是系统资源分配的基本单位</strong>。进程间基本上是独立的。</p>
-<p>线程是更小的运行单位。线程是调度执行的基本单位。线程间极有可能相互影响。</p>
-<p>多个线程可以共享同一块内存空间与系统资源（<strong>堆，方法区（元空间）</strong>），也有自己独立的<strong>程序计数器与虚拟机栈，本地方法栈</strong>。</p>
-<p>线程的切换负担要小很多。也被称为轻量级的进程。</p>
-<p>程序计数器：为了线程切换后可以恢复到正确的执行位置。<br>虚拟机栈：方法调用对应着栈帧，存储着局部变量表，操作数栈，常量池。方法调用执行完成对应着栈帧的入栈与出栈。–<strong>保证局部变量私有</strong>。<br>堆：最大的一块，存放对象。<br>方法区：已被<strong>加载的类信息，常量，静态变量</strong>等等。<br>上下文切换：cpu时间片切换。</p>
-<p>一个java应用程序实际上至少有三个线程，<strong>main主线程，gc()垃圾回收机制的运行线程，异常处理线程。</strong></p>
-<p><strong>线程分为两类：用户线程和守护线程</strong>。守护线程适用于服务用户线程的。<strong>用户线程结束，守护线程也就结束</strong>，所以守护线程是依赖于用户线程的。举个例子：java程序中，main是用户线程，垃圾回收就是守护线程。可以利用thread.setDaemon(true)将用户线程变成守护线程。</p>
-<p><strong>线程的相关方法：</strong></p>
-<p>sleep-</p>
-<p>yield-让出cpu，当然实际情况得看调度器</p>
-<p>join-调用join的线程会让其他线程等待他结束后再结束。</p>
-<h4 id="sleep-与wait-方法的区别"><a href="#sleep-与wait-方法的区别" class="headerlink" title="sleep()与wait()方法的区别"></a>sleep()与wait()方法的区别</h4><ol>
-<li>sleep方法不会释放锁，wait方法会释放。</li>
-<li>都可以暂停线程。</li>
-<li>wait用于线程交互，sleep用于暂停。</li>
-<li>wait被调用后，线程不会自动苏醒（无超时等待），需要notify()。</li>
-</ol>
-<h4 id="java线程的状态"><a href="#java线程的状态" class="headerlink" title="java线程的状态"></a><strong>java线程的状态</strong></h4><ul>
-<li><strong>new</strong>：线程创建，还没调用start方法。</li>
-<li><strong>runnable</strong>：（操作系统中的就绪，运行）new–调用start–ready-<strong>-获得cpu时间片</strong>–running</li>
-<li><strong>blocked</strong>：阻塞。调用同步方法，在没获取到锁的情况下会阻塞。</li>
-<li><strong>waitting</strong>：等待其他线程做一些操作。wait</li>
-<li><strong>time_waiting</strong>：超时等待。-wait，sleep，超时时间到后，进入runnable。</li>
-<li><strong>terminated</strong>：线程执行完毕。</li>
-</ul>
-<p><strong>wait/notify属于Object类。</strong></p>
-<p><img src="https://i.loli.net/2021/08/03/BhDXCyWdjGSMvuR.png" alt="image-20210803151242958"></p>
-<h3 id="创建线程的方式"><a href="#创建线程的方式" class="headerlink" title="创建线程的方式"></a>创建线程的方式</h3><p><strong>继承thread类</strong>，重写run（）方法，调用子类的start（）。</p>
-<p>为什么调用的是start，执行的确是run?</p>
-<p>start表示启动该线程，进入就绪状态，成为单独的执行流。操作系统会分配相关资源。</p>
-<p>直接执行run就相当于执行main中的普通方法了，就不是多线程了。</p>
-<p><strong>实现runnable接口</strong>，重写run，启动start。</p>
-<p>java只支持单继承，因此引入runnable接口。</p>
-<p><strong>通过 Callable 和 Future 创建线程。</strong>覆盖call（）方法。</p>
-<p>可以获得任务执行返回值；</p>
-<ol>
-<li><strong>创建 Callable 接口的实现类</strong>，并实现 call() 方法，该 call() 方法将作为线程执行体，并且有返回值。</li>
-<li>创建 <strong>Callable 实现类的实例</strong>，使用 <strong>FutureTask 类来包装 Callable 对象</strong>，该 FutureTask 对象封装了该 Callable 对象的 call() 方法的返回值。</li>
-<li>使用 <strong>FutureTask 对象作为 Thread 对象的 target</strong> 创建并启动新线程。</li>
-<li>调用 <strong>FutureTask 对象的 get() 方法来获得子线程执行结束后的返回值</strong>。</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class CallableThreadTest implements Callable&lt;Integer&gt; &#123;</span><br><span class="line">    public static void main(String[] args)&#123;  </span><br><span class="line">        CallableThreadTest ctt = new CallableThreadTest();  </span><br><span class="line">        FutureTask&lt;Integer&gt; ft = new FutureTask&lt;&gt;(ctt);  </span><br><span class="line">        for(int i = 0;i &lt; 100;i++)&#123;  </span><br><span class="line">            System.out.println(Thread.currentThread().getName()+&quot; 的循环变量i的值&quot;+i);  </span><br><span class="line">            if(i==20)&#123;  </span><br><span class="line">                new Thread(ft,&quot;有返回值的线程&quot;).start();  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;try&#123;  </span><br><span class="line">            System.out.println(&quot;子线程的返回值：&quot;+ft.get());  </span><br><span class="line">        &#125; catch (InterruptedException e)&#123;  </span><br><span class="line">            e.printStackTrace();  </span><br><span class="line">        &#125; catch (ExecutionException e)&#123;  </span><br><span class="line">            e.printStackTrace();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br><span class="line">    @Override  </span><br><span class="line">    public Integer call() throws Exception&#123;  </span><br><span class="line">        int i = 0;  </span><br><span class="line">        for(;i&lt;100;i++)&#123;  </span><br><span class="line">            System.out.println(Thread.currentThread().getName()+&quot; &quot;+i);  </span><br><span class="line">        &#125;  </span><br><span class="line">        return i;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>通过与Future的结合，可以实现利用Future来跟踪异步计算的结果。</p>
-<p>JDK5.0新特性。需要借助Future接口的唯一实现类<strong>FutureTask</strong>辅助线程的对象创建和返回值获取（FutureTask还实现了Runnable接口），再创建Thread对象，将FutureTask类的对象作为构造器参数传入，完成线程的创建，最后调用start()方法完成线程启动。</p>
-<p><strong>Runnable和Callable的区别：</strong></p>
-<p>1、Callable规定的方法是call(),  Runnable规定的方法是run()<br>2、Callable的任务执行后可返回值，而Runnable的任务是不能返回值<br>3、call方法可以抛出异常，run方法不可以<br>4、运行Callable任务可以拿到一个Future对象，<strong>表示异步计算的结果。</strong>它提供了检查计算是否完成的方法，以等待计算的完成，并检索计算的结果。通过Future对象可以了解任务执行情况，可取消任务的执行，还可获取执行结果</p>
-<p><strong>使用线程池。</strong></p>
-<p>使用线程池，提前创建好多个线程放入线程池中，使用时直接获取，使用完放回线程池中。可以做到提高响应速度（减少线程创建的时间）和降低资源消耗（可重复利用线程）。利用Executors工具类创建线程池，然后提供Runnable(excute())或Callable(submit())接口的实现类的对象，执行指定线程的操作。最后，关闭线程池shutdown()。</p>
-<h3 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h3><h4 id="为什么会有内存屏障"><a href="#为什么会有内存屏障" class="headerlink" title="为什么会有内存屏障"></a>为什么会有内存屏障</h4><p>每个CPU都会有自己的缓存（有的甚至L1,L2,L3），缓存的目的就是为了提高性能，避免每次都要向内存取。但是这样的弊端也很明显<strong>：不能实时的和内存发生信息交换</strong>，分在不同CPU执行的不同线程对同一个变量的缓存值不同。</p>
-<p>用volatile关键字修饰变量可以解决上述问题，那么volatile是如何做到这一点的呢？那就是<strong>内存屏障</strong>，内存屏障是硬件层的概念，不同的硬件平台实现内存屏障的手段并不是一样，java通过屏蔽这些差异，统一由jvm来生成内存屏障的指令。</p>
-<h4 id="内存屏障是什么"><a href="#内存屏障是什么" class="headerlink" title="内存屏障是什么"></a>内存屏障是什么</h4><p>硬件层的内存屏障分为两种：Load Barrier 和 Store Barrier即<strong>读屏障和写屏障。</strong></p>
-<p><strong>内存屏障有两个作用：</strong></p>
-<p>阻止屏障两侧的指令重排序；<br>强制把写缓冲区/高速缓存中的脏数据等写回主内存，让缓存中相应的数据失效。</p>
-<p>对于Load Barrier来说，在指令前插入Load Barrier，可以让高速缓存中的数据失效，强制从新从主内存加载数据；<br>对于Store Barrier来说，在指令后插入Store Barrier，能让写入缓存中的最新数据更新写入主内存，让其他线程可见。</p>
-<h4 id="java内存屏障"><a href="#java内存屏障" class="headerlink" title="java内存屏障"></a>java内存屏障</h4><p>java的内存屏障通常所谓的四种即LoadLoad,StoreStore,LoadStore,StoreLoad实际上也是上述两种的组合，完成一系列的屏障和数据同步功能。</p>
-<p><strong>volatile语义中的内存屏障</strong></p>
-<p>volatile的内存屏障策略非常严格保守，<strong>非常悲观</strong>：<br>在每个volatile写操作前插入StoreStore屏障，在写操作后插入StoreLoad屏障；<br>在每个volatile读操作前插入LoadLoad屏障，在读操作后插入LoadStore屏障；</p>
-<p><strong>由于内存屏障的作用，避免了volatile变量和其它指令重排序、线程之间实现了通信，使得volatile表现出了锁的特性</strong>。</p>
-<h4 id="final语义中的内存屏障"><a href="#final语义中的内存屏障" class="headerlink" title="final语义中的内存屏障"></a>final语义中的内存屏障</h4><p>对于final域，编译器和CPU会遵循两个排序规则：</p>
-<p>新建对象过程中，构造体中对final域的初始化写入和这个对象赋值给其他引用变量，这两个操作不能重排序；</p>
-<p>初次读包含final域的对象引用和读取这个final域，这两个操作不能重排序；（晦涩，意思就是先赋值引用，再调用final值）</p>
-<p>​    必需保证一个对象的所有final域被写入完毕后才能引用和读取。这也是内存屏障的起的作用：</p>
-<p>​    写final域：在编译器写final域完毕，构造体结束之前，会插入一个StoreStore屏障，保证前面的对final写入对其他线程/CPU可见，并阻止重排序。</p>
-<p>​    读final域：读final域前插入了LoadLoad屏障。</p>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><p>Java实现锁有两种语法<strong>，一种是synchronized语句，另外一种是reentrantlock关键字</strong>。</p>
+<h4 id="公平锁-非公平锁"><a href="#公平锁-非公平锁" class="headerlink" title="公平锁/非公平锁"></a>公平锁/非公平锁</h4><p>公平锁指<strong>多个线程按照申请锁的顺序获得锁。</strong></p>
+<p>非公平锁指多个线程获得锁的顺序不按照申请顺序。</p>
+<p>Java reentranthlock通过构造函数来指定锁是公平还是非公平，默认是非公平锁，对于synchronized而言，也是一种非公平锁。</p>
+<p><strong>非公平锁优点在于吞吐量比公平锁大。</strong></p>
+<h4 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h4><p>可重入锁又叫递归锁，是指同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。</p>
+<p>Synchronized也是一个可重入锁。</p>
+<p>可重入锁的优点是可以一定程度避免死锁。</p>
+<h4 id="独享锁-共享锁"><a href="#独享锁-共享锁" class="headerlink" title="独享锁/共享锁"></a>独享锁/共享锁</h4><p>独享锁是指该锁一次只能被一个线程所持有，共享锁可以被多个线程所持有。</p>
+<p>Java reentrantlock是一个独享锁，但是对于lock的另一个实现readwritelock，其读锁是一个共享锁，写锁是一个独享锁。</p>
+<p>对于synchronized是一个独享锁。</p>
+<h4 id="互斥锁-读写锁"><a href="#互斥锁-读写锁" class="headerlink" title="互斥锁/读写锁"></a>互斥锁/读写锁</h4><p>互斥锁在Java中具体实现就是reentrantlock。</p>
+<p>读写锁在Java中的具体实现就是readwritelock。</p>
+<h4 id="乐观锁-悲观锁"><a href="#乐观锁-悲观锁" class="headerlink" title="乐观锁/悲观锁"></a>乐观锁/悲观锁</h4><p>乐观锁和悲观锁不是指具体的锁类型，而是对于看待并发编程中加锁问题的角度。</p>
+<p>悲观锁认为，对于一个数据的并发操作，一定会改变数据，即使实际上数据没被改变，但是也悲观的认为被改变的可能性比较大，一定要加锁，不加锁早晚要出问题。</p>
+<p>乐观锁认为，对于一个数据的并发操作，是不会改变数据的，不加锁也不会出问题。</p>
+<p>乐观锁指java中的无所编程，适合读操作非常多的场景。</p>
+<p>悲观锁就是指java中，适合并发下写非常多的场景。</p>
+<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p>在java中，自旋锁是指尝试获取锁的线程不会立即阻塞，<strong>而是采用循环的方式去尝试获取锁</strong>，当循环条件被其他线程改变时，才能进入临界区。这样的好处是减少线程上下文切换的消耗，<strong>缺点是会消耗CPU。</strong></p>
+<p>由于自旋锁只是将当前线程不停地执行循环体，不进行线程状态的改变，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，占用CPU时间。<strong>如果线程竞争不激烈，并且保持锁的时间段。适合使用自旋锁。</strong></p>
+<h4 id="偏向锁-轻量级锁-重量级锁"><a href="#偏向锁-轻量级锁-重量级锁" class="headerlink" title="偏向锁/轻量级锁/重量级锁"></a>偏向锁/轻量级锁/重量级锁</h4><p>这三种锁，就是指锁的状态，针对synchronized。</p>
+<p>偏向锁是<strong>指一段代码一直被一个线程所访问</strong>，那么理论上，这个线程会自动获取这个锁，并一直拥有这个锁，这样就降低了获取锁的代价。</p>
+<p>轻量级锁是指当偏向锁的状态下，<strong>被另一个线程访问</strong>，偏向锁就会升级为<strong>轻量级锁</strong>，其他线程会通过自旋形式尝试获取锁，不会阻塞，提高效率。</p>
+<p>重量级锁是指在轻量级锁的状态下，<strong>另一个线程虽然自旋</strong>，但不会一直持续下去，当自旋一定次数的时候还没有获取到锁的话，<strong>就会进入阻塞</strong>，该锁就会膨胀为重量级锁，重量级锁会让其他申请的线程陷入阻塞，降低性能。</p>
 
       
     </div>
