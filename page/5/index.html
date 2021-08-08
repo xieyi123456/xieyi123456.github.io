@@ -509,7 +509,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-06 10:43:10" itemprop="dateModified" datetime="2021-08-06T10:43:10+08:00">2021-08-06</time>
+                <time title="修改时间：2021-08-08 13:52:27" itemprop="dateModified" datetime="2021-08-08T13:52:27+08:00">2021-08-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -645,27 +645,14 @@
 <p>对称加密（只有一个密钥，速度快）（通信过程中）+非对称加密（两个密钥）（通信建立前）</p>
 <p>摘要算法实现完整性：每份数据都生成独一无二的指纹。</p>
 <p>服务器公钥放到数字证书中</p>
-<p><img src="image-20210731111936519.png"></p>
-<h2 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h2><h3 id="http-1-1"><a href="#http-1-1" class="headerlink" title="http 1.1"></a>http 1.1</h3><p><strong>长连接</strong></p>
-<p>管道传输</p>
-<p>不能压缩首部，只能压缩body。</p>
-<p>首部冗长。</p>
-<p>队头阻塞。（服务器按照请求顺序响应）</p>
-<p>无请求优先级控制。</p>
-<p>请求只能从客户端开始。</p>
-<h3 id="http-2"><a href="#http-2" class="headerlink" title="http 2"></a>http 2</h3><p>基于https-安全</p>
-<p>头部压缩：HPACK算法：双方维护一个头部信息表，发送索引。</p>
-<p>二进制格式而不是文本。头信息帧，数据帧。</p>
-<p>在二进制分帧层上，HTTP 2.0 会将所有传输的信息分割为更小的消息和帧,并对它们采用二进制格式的编码 ，其中HTTP1.x的首部信息会被封装到Headers帧，而我们的request body则封装到Data帧里面。</p>
-<p>然后，HTTP 2.0 通信都在一个连接上完成，这个连接可以承载任意数量的双向数据流。相应地，每个数据流以消息的形式发送，而消息由一或多个帧组成，这些帧可以乱序发送，然后再根据每个帧首部的流标识符重新组装。</p>
-<p>数据流，可指定优先级。</p>
-<p>多路复用：一个连接中可以并发多个请求，不用按照顺序一一回应==解决了队头阻塞，降低延迟。</p>
-<p>服务器推送。</p>
-<p>复用一个TCP连接，下层的TCP不知道有几个http请求，发生丢包，就会触发重传机制。所有的http请求都必</p>
-<p>须等待这个包的重传（阻塞）。</p>
-<h3 id="http-3"><a href="#http-3" class="headerlink" title="http 3"></a>http 3</h3><p>TCP===UDP</p>
-<p>基于UDP的QUIC协议，可以实现类似的可靠传输。</p>
-<p><img src="image-20210731112531267.png"></p>
+<p><img src="https://i.loli.net/2021/08/08/YsWAFXOp5Mbx1vy.png" alt="image-20210808135009407"></p>
+<h2 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h2><h3 id="什么是HTTP-2-0"><a href="#什么是HTTP-2-0" class="headerlink" title="什么是HTTP 2.0"></a>什么是HTTP 2.0</h3><p>HTTP/2（超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP/2是HTTP协议自1999年HTTP 1.1发布后的首个更新，主要基于SPDY协议（是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。</p>
+<h3 id="与HTTP-1-1相比，主要区别包括"><a href="#与HTTP-1-1相比，主要区别包括" class="headerlink" title="与HTTP 1.1相比，主要区别包括"></a>与HTTP 1.1相比，主要区别包括</h3><p>HTTP/2<strong>采用二进制格式而非文本格式</strong><br>HTTP/2是<strong>完全多路复用的</strong>，而非有序并阻塞的——只需一个连接即可实现并行<br>使用<strong>报头压缩</strong>，HTTP/2降低了开销<br>HTTP/2让服务器可以将响应主动“推送”到客户端缓存中</p>
+<h3 id="HTTP-2为什么是二进制？"><a href="#HTTP-2为什么是二进制？" class="headerlink" title="HTTP/2为什么是二进制？"></a>HTTP/2为什么是二进制？</h3><p>比起像HTTP/1.x这样的文本协议，二进制协议解析起来更高效、“线上”更紧凑，更重要的是错误更少。</p>
+<h3 id="为什么-HTTP-2-需要多路传输"><a href="#为什么-HTTP-2-需要多路传输" class="headerlink" title="为什么 HTTP/2 需要多路传输?"></a>为什么 HTTP/2 需要多路传输?</h3><p>HTTP/1.x 有个问题叫<strong>线端阻塞</strong>(head-of-line blocking), 它是指一个连接(connection)一次只提交一个请求的效率比较高, 多了就会变慢。 HTTP/1.1 试过用流水线(pipelining)来解决这个问题, 但是效果并不理想(数据量较大或者速度较慢的响应, 会阻碍排在他后面的请求). 此外, 由于网络媒介(intermediary )和服务器不能很好的支持流水线, 导致部署起来困难重重。</p>
+<p>而多路传输(Multiplexing)能很好的解决这些问题, 因为它能同时处理多个消息的请求和响应; 甚至可以在传输过程中将一个消息跟另外一个掺杂在一起。所以客户端只需要一个连接就能加载一个页面。</p>
+<h3 id="消息头为什么需要压缩"><a href="#消息头为什么需要压缩" class="headerlink" title="消息头为什么需要压缩?"></a>消息头为什么需要压缩?</h3><p>假定一个页面有80个资源需要加载（这个数量对于今天的Web而言还是挺保守的）, 而每一次请求都有1400字节的消息头（着同样也并不少见，因为Cookie和引用等东西的存在）, 至少要7到8个来回去“在线”获得这些消息头。这还不包括响应时间——那只是从客户端那里获取到它们所花的时间而已。这全都由于TCP的慢启动机制，它会基于对已知有多少个包，来确定还要来回去获取哪些包 – 这很明显的限制了最初的几个来回可以发送的数据包的数量。相比之下，即使是头部轻微的压缩也可以是让那些请求只需一个来回就能搞定——有时候甚至一个包就可以了。这种开销是可以被节省下来的，特别是当你考虑移动客户端应用的时候，即使是良好条件下，一般也会看到几百毫秒的来回延迟。</p>
+<h3 id="服务器推送的好处是什么？"><a href="#服务器推送的好处是什么？" class="headerlink" title="服务器推送的好处是什么？"></a>服务器推送的好处是什么？</h3><p>当浏览器请求一个网页时，服务器将会发回HTML，在服务器开始发送JavaScript、图片和CSS前，服务器需要等待浏览器解析HTML和发送所有内嵌资源的请求。<strong>服务器推送服务通过“推送”那些它认为客户端将会需要的内容到客户端的缓存中，以此来避免往返的延迟。</strong></p>
 
       
     </div>
@@ -1006,7 +993,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-05 20:08:35" itemprop="dateModified" datetime="2021-08-05T20:08:35+08:00">2021-08-05</time>
+                <time title="修改时间：2021-08-08 14:06:40" itemprop="dateModified" datetime="2021-08-08T14:06:40+08:00">2021-08-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1029,7 +1016,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="Java数据类型"><a href="#Java数据类型" class="headerlink" title="Java数据类型"></a>Java数据类型</h3><p>Java 中有 8 种基本数据类型，分别为：</p>
+          <h3 id="Obiect类有哪些方法"><a href="#Obiect类有哪些方法" class="headerlink" title="Obiect类有哪些方法"></a>Obiect类有哪些方法</h3><p>1、 getClass()：获取类的class对象。<br>2、 hashCode:获取对象的hashCode值<br>3、 equals():比较对象是否相等，比较的是值和地址，子类可重写以自定义。<br>4、 clone()：克隆方法。<br>5、 toString():如果没有重写，应用对象将打印的是地址值。<br>6、 notify():随机选择一个在该对象上调用wait方法的线程，解除其阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>7、 notifyall():解除所有那些在该对象上调用wait方法的线程的阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>8、 wait():导致线程进入等待状态，直到它被其他线程通过notify()或者notifyAll唤醒。该方法只能在同步方法中调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>9、 finalize()：对象回收时调用</p>
+<h3 id="Java数据类型"><a href="#Java数据类型" class="headerlink" title="Java数据类型"></a>Java数据类型</h3><p>Java 中有 8 种基本数据类型，分别为：</p>
 <p>6 种数字类型 ：byte-1、short-2、int-4、long-8、float-4、double-8<br>1 种字符类型：char-2<br>1 种布尔型：boolean-1位</p>
 <p>这八种基本类型都有对应的包装类分别为：Byte、Short、Integer、Long、Float、Double、Character、Boolean 。</p>
 <p>包装类型不赋值就是 Null ，而基本类型有默认值且不是 Null。</p>

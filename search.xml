@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>ACM模式输入输出</title>
+    <url>/2021/07/29/ACM%E6%A8%A1%E5%BC%8F%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/</url>
+    <content><![CDATA[<h4 id="Scanner"><a href="#Scanner" class="headerlink" title="Scanner"></a>Scanner</h4><h5 id="next-与-nextLine-区别"><a href="#next-与-nextLine-区别" class="headerlink" title="next() 与 nextLine() 区别"></a><strong>next() 与 nextLine() 区别</strong></h5><h5 id="next"><a href="#next" class="headerlink" title="next():"></a>next():</h5><p>1、一定要读取到有效字符后才可以结束输入。<br>2、对输入有效字符之前遇到的空白，next() 方法会自动将其去掉。<br>3、只有输入有效字符后才将其后面<strong>输入的空白作为分隔符或者结束符</strong>。<br>next() 不能得到带有空格的字符串。</p>
+<p><strong>nextLine()：</strong></p>
+<p>1、<strong>以Enter为结束符</strong>,也就是说 nextLine()方法返回的是<strong>输入回车之前的所有字符</strong>。<br>2、<strong>可以获得空白。</strong></p>
+<p>如果要<strong>输入 int 或 float 类型的数据</strong>，在 Scanner 类中也有支持，但是在输入之前最好先使用 hasNextXxx() 方法进行验证，再使用 nextXxx() 来读取。</p>
+<h5 id="小小例子："><a href="#小小例子：" class="headerlink" title="小小例子："></a>小小例子：</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">while</span> (sc.hasNextInt()) &#123;</span><br><span class="line">            <span class="keyword">int</span> a = sc.nextInt();</span><br><span class="line">            <span class="keyword">int</span> b = sc.nextInt();</span><br><span class="line">            System.out.println(a + b);</span><br><span class="line">        &#125;</span><br><span class="line">        sc.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">2</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">5</span>    </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">while</span> (sc.hasNext()) &#123;</span><br><span class="line">            String[] abc = sc.nextLine().split(<span class="string">&quot; &quot;</span>);</span><br><span class="line">            <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; abc.length; i++) &#123;</span><br><span class="line">                res += Integer.parseInt(abc[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(res);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> </span><br><span class="line"><span class="number">1</span> <span class="number">3</span> <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="number">6</span></span><br><span class="line"><span class="number">8</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="小小实战"><a href="#小小实战" class="headerlink" title="小小实战"></a>小小实战</h5><p><strong>牛顿迭代法求立方根</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">double</span> num = sc.nextFloat();</span><br><span class="line">        sc.close();</span><br><span class="line">        System.out.println(solve(num));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">solve</span><span class="params">(<span class="keyword">double</span> num)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">double</span> x=<span class="number">1.0</span>;</span><br><span class="line">        <span class="keyword">while</span> (Math.abs(num-x*x*x)&gt;<span class="number">1e-9</span>)&#123;</span><br><span class="line">            x=x+(num-x*x*x)/(<span class="number">3</span>*x*x);</span><br><span class="line">        &#125;</span><br><span class="line">        String res = String.format(<span class="string">&quot;%.1f&quot;</span>, x);</span><br><span class="line">        <span class="keyword">return</span> Double.parseDouble(res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>拓展</strong>：<strong>同样思路可以求平方根</strong></p>
+<p>另：<strong>二分法求平方根</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">squrt</span><span class="params">(<span class="keyword">double</span> num)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">double</span> l = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">double</span> r = num;</span><br><span class="line">       <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">           <span class="keyword">double</span> mid = l + (r - l) / <span class="number">2</span>;</span><br><span class="line">           <span class="keyword">if</span> (Math.abs(mid * mid - num) &lt; <span class="number">1e-9</span>) &#123;</span><br><span class="line">               <span class="keyword">return</span> mid;</span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mid * mid &lt; num) &#123;</span><br><span class="line">               l = mid;</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               r = mid;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="字符串有多少个回文子串"><a href="#字符串有多少个回文子串" class="headerlink" title="字符串有多少个回文子串"></a>字符串有多少个回文子串</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        String s = sc.next();</span><br><span class="line">        System.out.println(maxLength(s));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">maxLength</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[s.length()][s.length()];</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = s.length() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &lt; s.length(); j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (j - i &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">                        res++;</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dp[i + <span class="number">1</span>][j - <span class="number">1</span>]) &#123;</span><br><span class="line">                        res++;</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>leetcode</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础-Java集合框架</title>
     <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<h2 id="集合框架"><a href="#集合框架" class="headerlink" title="集合框架"></a>集合框架</h2><p><img src="https://i.loli.net/2021/08/04/6xejDEtAQKSRpwv.png" alt="image-20210804212935827"></p>
@@ -104,31 +132,68 @@
       </tags>
   </entry>
   <entry>
-    <title>ACM模式输入输出</title>
-    <url>/2021/07/29/ACM%E6%A8%A1%E5%BC%8F%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/</url>
-    <content><![CDATA[<h4 id="Scanner"><a href="#Scanner" class="headerlink" title="Scanner"></a>Scanner</h4><h5 id="next-与-nextLine-区别"><a href="#next-与-nextLine-区别" class="headerlink" title="next() 与 nextLine() 区别"></a><strong>next() 与 nextLine() 区别</strong></h5><h5 id="next"><a href="#next" class="headerlink" title="next():"></a>next():</h5><p>1、一定要读取到有效字符后才可以结束输入。<br>2、对输入有效字符之前遇到的空白，next() 方法会自动将其去掉。<br>3、只有输入有效字符后才将其后面<strong>输入的空白作为分隔符或者结束符</strong>。<br>next() 不能得到带有空格的字符串。</p>
-<p><strong>nextLine()：</strong></p>
-<p>1、<strong>以Enter为结束符</strong>,也就是说 nextLine()方法返回的是<strong>输入回车之前的所有字符</strong>。<br>2、<strong>可以获得空白。</strong></p>
-<p>如果要<strong>输入 int 或 float 类型的数据</strong>，在 Scanner 类中也有支持，但是在输入之前最好先使用 hasNextXxx() 方法进行验证，再使用 nextXxx() 来读取。</p>
-<h5 id="小小例子："><a href="#小小例子：" class="headerlink" title="小小例子："></a>小小例子：</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">while</span> (sc.hasNextInt()) &#123;</span><br><span class="line">            <span class="keyword">int</span> a = sc.nextInt();</span><br><span class="line">            <span class="keyword">int</span> b = sc.nextInt();</span><br><span class="line">            System.out.println(a + b);</span><br><span class="line">        &#125;</span><br><span class="line">        sc.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">2</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">5</span>    </span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">while</span> (sc.hasNext()) &#123;</span><br><span class="line">            String[] abc = sc.nextLine().split(<span class="string">&quot; &quot;</span>);</span><br><span class="line">            <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; abc.length; i++) &#123;</span><br><span class="line">                res += Integer.parseInt(abc[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(res);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> </span><br><span class="line"><span class="number">1</span> <span class="number">3</span> <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="number">6</span></span><br><span class="line"><span class="number">8</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="小小实战"><a href="#小小实战" class="headerlink" title="小小实战"></a>小小实战</h5><p><strong>牛顿迭代法求立方根</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">double</span> num = sc.nextFloat();</span><br><span class="line">        sc.close();</span><br><span class="line">        System.out.println(solve(num));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">solve</span><span class="params">(<span class="keyword">double</span> num)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">double</span> x=<span class="number">1.0</span>;</span><br><span class="line">        <span class="keyword">while</span> (Math.abs(num-x*x*x)&gt;<span class="number">1e-9</span>)&#123;</span><br><span class="line">            x=x+(num-x*x*x)/(<span class="number">3</span>*x*x);</span><br><span class="line">        &#125;</span><br><span class="line">        String res = String.format(<span class="string">&quot;%.1f&quot;</span>, x);</span><br><span class="line">        <span class="keyword">return</span> Double.parseDouble(res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>拓展</strong>：<strong>同样思路可以求平方根</strong></p>
-<p>另：<strong>二分法求平方根</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">squrt</span><span class="params">(<span class="keyword">double</span> num)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">double</span> l = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">double</span> r = num;</span><br><span class="line">       <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">           <span class="keyword">double</span> mid = l + (r - l) / <span class="number">2</span>;</span><br><span class="line">           <span class="keyword">if</span> (Math.abs(mid * mid - num) &lt; <span class="number">1e-9</span>) &#123;</span><br><span class="line">               <span class="keyword">return</span> mid;</span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mid * mid &lt; num) &#123;</span><br><span class="line">               l = mid;</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               r = mid;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="字符串有多少个回文子串"><a href="#字符串有多少个回文子串" class="headerlink" title="字符串有多少个回文子串"></a>字符串有多少个回文子串</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        String s = sc.next();</span><br><span class="line">        System.out.println(maxLength(s));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">maxLength</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[s.length()][s.length()];</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = s.length() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &lt; s.length(); j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (j - i &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">                        res++;</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dp[i + <span class="number">1</span>][j - <span class="number">1</span>]) &#123;</span><br><span class="line">                        res++;</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+    <title>Java并发-常见关键字</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/</url>
+    <content><![CDATA[<h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p>见《线程安全的机制》</p>
+<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。</p>
+<p>CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。</p>
+<p>CAS虽然很高效的解决了原子操作问题，但是CAS仍然存在三大问题。</p>
+<p><strong>循环时间长开销很大。</strong><br><strong>只能保证一个共享变量的原子操作。</strong><br><strong>ABA问题。</strong></p>
+<p><strong>如果CAS失败，会一直进行尝试</strong>。如果CAS长时间一直不成功，可能会给CPU带来很大的开销。</p>
+<p>当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候就可以用锁来保证原子性。</p>
+<p>如果值曾经被改成了B，后来又被改回为A，那CAS操作就会误认为它从来没有被改变过。这个漏洞称为CAS操作的“ABA”问题。</p>
+<p>Java并发包为了解决这个问题，提供了一个<strong>带有标记的原子引用类“AtomicStampedReference”，</strong>它可以通过<strong>控制变量值的版本</strong>来保证CAS的正确性。因此，在使用CAS前要考虑清楚“ABA”问题是否会影响程序并发的正确性，如果需要解决ABA问题，改用传统的互斥同步可能会比原子类更高效。</p>
+<h3 id="AQS-抽象队列同步器"><a href="#AQS-抽象队列同步器" class="headerlink" title="AQS-抽象队列同步器"></a>AQS-抽象队列同步器</h3><p><img src="https://i.loli.net/2021/08/03/ovkD8F5rExbgpBq.png" alt="image-20210803192200462"></p>
+<p><strong>AQS 核心思想是，</strong>如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设置为锁定状态。<strong>如果被请求的共享资源被占用</strong>，那么就需要一套线程阻塞等待以及被唤醒时锁分配的机制，这个机制 AQS 是用 <strong>CLH 队列锁</strong>实现的，即将暂时获取不到锁的线程加入到队列中。</p>
+<p>CLH(Craig,Landin,and Hagersten)队列是一个<strong>虚拟的双向队列</strong>（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将<strong>每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点</strong>（Node）来实现锁的分配。</p>
+<p><img src="https://i.loli.net/2021/08/05/FMUxJCKm7Gkn8Hv.png" alt="image-20210805140155989"></p>
+<p>AQS 使用一个 int 成员变量来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。</p>
+<h4 id="节点状态"><a href="#节点状态" class="headerlink" title="节点状态"></a>节点状态</h4><p>nt waitStatus：</p>
+<p>1、<strong>CANCELLED</strong>，值为1 。场景：当该线程<strong>等待超时或者被中断，需要从同步队列中取消等待</strong>，则该线程被置1，即被取消（这里该线程在取消之前是等待状态）。节点进入了取消状态则不再变化；</p>
+<p>2、<strong>SIGNAL</strong>，值为-1。场景：<strong>后继的节点处于等待状态</strong>，当前节点的线程如果释放了同步状态或者被取消（当前节点状态置为-1），将会通知后继节点，使后继节点的线程得以运行；</p>
+<p>3、<strong>CONDITION</strong>，值为-2。场景：<strong>节点处于等待队列中，节点线程等待在Condition上，</strong>当其他线程对Condition调用了signal()方法后，该节点从等待队列中转移到同步队列中，加入到对同步状态的获取中；</p>
+<p>4、<strong>PROPAGATE</strong>，值为-3。场景：表示<strong>下一次的共享状态会被无条件的传播下去</strong>；</p>
+<p>5、<strong>INITIAL</strong>，值为0，初始状态。</p>
+<h4 id="AQS-对资源的共享方式"><a href="#AQS-对资源的共享方式" class="headerlink" title="AQS 对资源的共享方式"></a>AQS 对资源的共享方式</h4><p><strong>AQS 定义两种资源共享方式</strong></p>
+<h5 id="Exclusive（独占）"><a href="#Exclusive（独占）" class="headerlink" title="Exclusive（独占）"></a>Exclusive（独占）</h5><p><strong>只有一个线程能执行</strong>，如 ReentrantLock。又可分为公平锁和非公平锁，ReentrantLock 同时支持两种锁，下面以 ReentrantLock 对这两种锁的定义做介绍：</p>
+<p>公平锁 ：<strong>按照线程在队列中的排队顺序，先到者先拿到锁</strong><br>非公平锁 ：当线程要获取锁时，先通过<strong>两次 CAS 操作去抢锁</strong>，如果没抢到，当前线程再加入到队列中等待唤醒。</p>
+<p>ReentrantLock 默认采用<strong>非公平锁</strong>，<strong>因为考虑获得更好的性能</strong>，通过 boolean 来决定是否用公平锁（传入 true 用公平锁）。</p>
+<p>非公平锁在<strong>调用 lock</strong> 后，首先就会调用 CAS 进行一次抢锁，如果这个时候恰巧锁没有被占用，那么直接就获取到锁返回了。<br>非公平锁<strong>在 CAS 失败后</strong>，和公平锁一样都会进入到 <strong>tryAcquire 方法</strong>，在 tryAcquire 方法中，如果发现锁这个时候被释放了（state == 0），<strong>非公平锁会直接 CAS 抢锁</strong>，<strong>但是公平锁会判断等待队列是否有线程处于等待状态，如果有则不去抢锁，乖乖排到后面。</strong></p>
+<p>公平锁和非公平锁就这两点区别，<strong>如果这两次 CAS 都不成功，那么后面非公平锁和公平锁是一样的，都要进入到阻塞队列等待唤醒。</strong></p>
+<p>相对来说，<strong>非公平锁会有更好的性能，因为它的吞吐量比较大</strong>。当然，非公平锁让获取锁的时间变得更加不确定，可能会导致在阻塞队列中的线程长期处于饥饿状态。</p>
+<h5 id="Share（共享）"><a href="#Share（共享）" class="headerlink" title="Share（共享）"></a>Share（共享）</h5><p>多个线程可同时执行，如Semaphore、CountDownLatCh、 CyclicBarrier、ReadWriteLock 。</p>
+<p>ReentrantReadWriteLock 可以看成是组合式，因为 ReentrantReadWriteLock 也就是读写锁允许多个线程同时对某一资源进行读。</p>
+<p>不同的<strong>自定义同步器</strong>争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队/唤醒出队等），AQS 已经在上层已经帮我们实现好了。</p>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><p>Java实现锁有两种语法<strong>，一种是synchronized语句，另外一种是reentrantlock关键字</strong>。</p>
+<h4 id="公平锁-非公平锁"><a href="#公平锁-非公平锁" class="headerlink" title="公平锁/非公平锁"></a>公平锁/非公平锁</h4><p>公平锁指<strong>多个线程按照申请锁的顺序获得锁。</strong></p>
+<p>非公平锁指多个线程获得锁的顺序不按照申请顺序。</p>
+<p>Java reentranthlock通过构造函数来指定锁是公平还是非公平，默认是非公平锁，对于synchronized而言，也是一种非公平锁。</p>
+<p><strong>非公平锁优点在于吞吐量比公平锁大。</strong></p>
+<h4 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h4><p>可重入锁又叫递归锁，是指同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。</p>
+<p>Synchronized也是一个可重入锁。</p>
+<p>可重入锁的优点是可以一定程度避免死锁。</p>
+<h4 id="独享锁-共享锁"><a href="#独享锁-共享锁" class="headerlink" title="独享锁/共享锁"></a>独享锁/共享锁</h4><p>独享锁是指该锁一次只能被一个线程所持有，共享锁可以被多个线程所持有。</p>
+<p>Java reentrantlock是一个独享锁，但是对于lock的另一个实现readwritelock，其读锁是一个共享锁，写锁是一个独享锁。</p>
+<p>对于synchronized是一个独享锁。</p>
+<h4 id="互斥锁-读写锁"><a href="#互斥锁-读写锁" class="headerlink" title="互斥锁/读写锁"></a>互斥锁/读写锁</h4><p>互斥锁在Java中具体实现就是reentrantlock。</p>
+<p>读写锁在Java中的具体实现就是readwritelock。</p>
+<h4 id="乐观锁-悲观锁"><a href="#乐观锁-悲观锁" class="headerlink" title="乐观锁/悲观锁"></a>乐观锁/悲观锁</h4><p>乐观锁和悲观锁不是指具体的锁类型，而是对于看待并发编程中加锁问题的角度。</p>
+<p>悲观锁认为，对于一个数据的并发操作，一定会改变数据，即使实际上数据没被改变，但是也悲观的认为被改变的可能性比较大，一定要加锁，不加锁早晚要出问题。</p>
+<p>乐观锁认为，对于一个数据的并发操作，是不会改变数据的，不加锁也不会出问题。</p>
+<p>乐观锁指java中的无所编程，适合读操作非常多的场景。</p>
+<p>悲观锁就是指java中，适合并发下写非常多的场景。</p>
+<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p>在java中，自旋锁是指尝试获取锁的线程不会立即阻塞，<strong>而是采用循环的方式去尝试获取锁</strong>，当循环条件被其他线程改变时，才能进入临界区。这样的好处是减少线程上下文切换的消耗，<strong>缺点是会消耗CPU。</strong></p>
+<p>由于自旋锁只是将当前线程不停地执行循环体，不进行线程状态的改变，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，占用CPU时间。<strong>如果线程竞争不激烈，并且保持锁的时间段。适合使用自旋锁。</strong></p>
+<h4 id="偏向锁-轻量级锁-重量级锁"><a href="#偏向锁-轻量级锁-重量级锁" class="headerlink" title="偏向锁/轻量级锁/重量级锁"></a>偏向锁/轻量级锁/重量级锁</h4><p>这三种锁，就是指锁的状态，针对synchronized。</p>
+<p>偏向锁是<strong>指一段代码一直被一个线程所访问</strong>，那么理论上，这个线程会自动获取这个锁，并一直拥有这个锁，这样就降低了获取锁的代价。</p>
+<p>轻量级锁是指当偏向锁的状态下，<strong>被另一个线程访问</strong>，偏向锁就会升级为<strong>轻量级锁</strong>，其他线程会通过自旋形式尝试获取锁，不会阻塞，提高效率。</p>
+<p>重量级锁是指在轻量级锁的状态下，<strong>另一个线程虽然自旋</strong>，但不会一直持续下去，当自旋一定次数的时候还没有获取到锁的话，<strong>就会进入阻塞</strong>，该锁就会膨胀为重量级锁，重量级锁会让其他申请的线程陷入阻塞，降低性能。</p>
 ]]></content>
       <categories>
-        <category>leetcode</category>
+        <category>Java并发</category>
       </categories>
       <tags>
-        <tag>basic</tag>
+        <tag>关键字</tag>
       </tags>
   </entry>
   <entry>
@@ -311,71 +376,6 @@
       </categories>
       <tags>
         <tag>并发容器</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java并发-常见关键字</title>
-    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/</url>
-    <content><![CDATA[<h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p>见《线程安全的机制》</p>
-<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。</p>
-<p>CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。</p>
-<p>CAS虽然很高效的解决了原子操作问题，但是CAS仍然存在三大问题。</p>
-<p><strong>循环时间长开销很大。</strong><br><strong>只能保证一个共享变量的原子操作。</strong><br><strong>ABA问题。</strong></p>
-<p><strong>如果CAS失败，会一直进行尝试</strong>。如果CAS长时间一直不成功，可能会给CPU带来很大的开销。</p>
-<p>当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候就可以用锁来保证原子性。</p>
-<p>如果值曾经被改成了B，后来又被改回为A，那CAS操作就会误认为它从来没有被改变过。这个漏洞称为CAS操作的“ABA”问题。</p>
-<p>Java并发包为了解决这个问题，提供了一个<strong>带有标记的原子引用类“AtomicStampedReference”，</strong>它可以通过<strong>控制变量值的版本</strong>来保证CAS的正确性。因此，在使用CAS前要考虑清楚“ABA”问题是否会影响程序并发的正确性，如果需要解决ABA问题，改用传统的互斥同步可能会比原子类更高效。</p>
-<h3 id="AQS-抽象队列同步器"><a href="#AQS-抽象队列同步器" class="headerlink" title="AQS-抽象队列同步器"></a>AQS-抽象队列同步器</h3><p><img src="https://i.loli.net/2021/08/03/ovkD8F5rExbgpBq.png" alt="image-20210803192200462"></p>
-<p><strong>AQS 核心思想是，</strong>如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设置为锁定状态。<strong>如果被请求的共享资源被占用</strong>，那么就需要一套线程阻塞等待以及被唤醒时锁分配的机制，这个机制 AQS 是用 <strong>CLH 队列锁</strong>实现的，即将暂时获取不到锁的线程加入到队列中。</p>
-<p>CLH(Craig,Landin,and Hagersten)队列是一个<strong>虚拟的双向队列</strong>（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将<strong>每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点</strong>（Node）来实现锁的分配。</p>
-<p><img src="https://i.loli.net/2021/08/05/FMUxJCKm7Gkn8Hv.png" alt="image-20210805140155989"></p>
-<p>AQS 使用一个 int 成员变量来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。</p>
-<h4 id="节点状态"><a href="#节点状态" class="headerlink" title="节点状态"></a>节点状态</h4><p>nt waitStatus：</p>
-<p>1、<strong>CANCELLED</strong>，值为1 。场景：当该线程<strong>等待超时或者被中断，需要从同步队列中取消等待</strong>，则该线程被置1，即被取消（这里该线程在取消之前是等待状态）。节点进入了取消状态则不再变化；</p>
-<p>2、<strong>SIGNAL</strong>，值为-1。场景：<strong>后继的节点处于等待状态</strong>，当前节点的线程如果释放了同步状态或者被取消（当前节点状态置为-1），将会通知后继节点，使后继节点的线程得以运行；</p>
-<p>3、<strong>CONDITION</strong>，值为-2。场景：<strong>节点处于等待队列中，节点线程等待在Condition上，</strong>当其他线程对Condition调用了signal()方法后，该节点从等待队列中转移到同步队列中，加入到对同步状态的获取中；</p>
-<p>4、<strong>PROPAGATE</strong>，值为-3。场景：表示<strong>下一次的共享状态会被无条件的传播下去</strong>；</p>
-<p>5、<strong>INITIAL</strong>，值为0，初始状态。</p>
-<h4 id="AQS-对资源的共享方式"><a href="#AQS-对资源的共享方式" class="headerlink" title="AQS 对资源的共享方式"></a>AQS 对资源的共享方式</h4><p><strong>AQS 定义两种资源共享方式</strong></p>
-<h5 id="Exclusive（独占）"><a href="#Exclusive（独占）" class="headerlink" title="Exclusive（独占）"></a>Exclusive（独占）</h5><p><strong>只有一个线程能执行</strong>，如 ReentrantLock。又可分为公平锁和非公平锁，ReentrantLock 同时支持两种锁，下面以 ReentrantLock 对这两种锁的定义做介绍：</p>
-<p>公平锁 ：<strong>按照线程在队列中的排队顺序，先到者先拿到锁</strong><br>非公平锁 ：当线程要获取锁时，先通过<strong>两次 CAS 操作去抢锁</strong>，如果没抢到，当前线程再加入到队列中等待唤醒。</p>
-<p>ReentrantLock 默认采用<strong>非公平锁</strong>，<strong>因为考虑获得更好的性能</strong>，通过 boolean 来决定是否用公平锁（传入 true 用公平锁）。</p>
-<p>非公平锁在<strong>调用 lock</strong> 后，首先就会调用 CAS 进行一次抢锁，如果这个时候恰巧锁没有被占用，那么直接就获取到锁返回了。<br>非公平锁<strong>在 CAS 失败后</strong>，和公平锁一样都会进入到 <strong>tryAcquire 方法</strong>，在 tryAcquire 方法中，如果发现锁这个时候被释放了（state == 0），<strong>非公平锁会直接 CAS 抢锁</strong>，<strong>但是公平锁会判断等待队列是否有线程处于等待状态，如果有则不去抢锁，乖乖排到后面。</strong></p>
-<p>公平锁和非公平锁就这两点区别，<strong>如果这两次 CAS 都不成功，那么后面非公平锁和公平锁是一样的，都要进入到阻塞队列等待唤醒。</strong></p>
-<p>相对来说，<strong>非公平锁会有更好的性能，因为它的吞吐量比较大</strong>。当然，非公平锁让获取锁的时间变得更加不确定，可能会导致在阻塞队列中的线程长期处于饥饿状态。</p>
-<h5 id="Share（共享）"><a href="#Share（共享）" class="headerlink" title="Share（共享）"></a>Share（共享）</h5><p>多个线程可同时执行，如Semaphore、CountDownLatCh、 CyclicBarrier、ReadWriteLock 。</p>
-<p>ReentrantReadWriteLock 可以看成是组合式，因为 ReentrantReadWriteLock 也就是读写锁允许多个线程同时对某一资源进行读。</p>
-<p>不同的<strong>自定义同步器</strong>争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队/唤醒出队等），AQS 已经在上层已经帮我们实现好了。</p>
-<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><p>Java实现锁有两种语法<strong>，一种是synchronized语句，另外一种是reentrantlock关键字</strong>。</p>
-<h4 id="公平锁-非公平锁"><a href="#公平锁-非公平锁" class="headerlink" title="公平锁/非公平锁"></a>公平锁/非公平锁</h4><p>公平锁指<strong>多个线程按照申请锁的顺序获得锁。</strong></p>
-<p>非公平锁指多个线程获得锁的顺序不按照申请顺序。</p>
-<p>Java reentranthlock通过构造函数来指定锁是公平还是非公平，默认是非公平锁，对于synchronized而言，也是一种非公平锁。</p>
-<p><strong>非公平锁优点在于吞吐量比公平锁大。</strong></p>
-<h4 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h4><p>可重入锁又叫递归锁，是指同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。</p>
-<p>Synchronized也是一个可重入锁。</p>
-<p>可重入锁的优点是可以一定程度避免死锁。</p>
-<h4 id="独享锁-共享锁"><a href="#独享锁-共享锁" class="headerlink" title="独享锁/共享锁"></a>独享锁/共享锁</h4><p>独享锁是指该锁一次只能被一个线程所持有，共享锁可以被多个线程所持有。</p>
-<p>Java reentrantlock是一个独享锁，但是对于lock的另一个实现readwritelock，其读锁是一个共享锁，写锁是一个独享锁。</p>
-<p>对于synchronized是一个独享锁。</p>
-<h4 id="互斥锁-读写锁"><a href="#互斥锁-读写锁" class="headerlink" title="互斥锁/读写锁"></a>互斥锁/读写锁</h4><p>互斥锁在Java中具体实现就是reentrantlock。</p>
-<p>读写锁在Java中的具体实现就是readwritelock。</p>
-<h4 id="乐观锁-悲观锁"><a href="#乐观锁-悲观锁" class="headerlink" title="乐观锁/悲观锁"></a>乐观锁/悲观锁</h4><p>乐观锁和悲观锁不是指具体的锁类型，而是对于看待并发编程中加锁问题的角度。</p>
-<p>悲观锁认为，对于一个数据的并发操作，一定会改变数据，即使实际上数据没被改变，但是也悲观的认为被改变的可能性比较大，一定要加锁，不加锁早晚要出问题。</p>
-<p>乐观锁认为，对于一个数据的并发操作，是不会改变数据的，不加锁也不会出问题。</p>
-<p>乐观锁指java中的无所编程，适合读操作非常多的场景。</p>
-<p>悲观锁就是指java中，适合并发下写非常多的场景。</p>
-<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p>在java中，自旋锁是指尝试获取锁的线程不会立即阻塞，<strong>而是采用循环的方式去尝试获取锁</strong>，当循环条件被其他线程改变时，才能进入临界区。这样的好处是减少线程上下文切换的消耗，<strong>缺点是会消耗CPU。</strong></p>
-<p>由于自旋锁只是将当前线程不停地执行循环体，不进行线程状态的改变，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，占用CPU时间。<strong>如果线程竞争不激烈，并且保持锁的时间段。适合使用自旋锁。</strong></p>
-<h4 id="偏向锁-轻量级锁-重量级锁"><a href="#偏向锁-轻量级锁-重量级锁" class="headerlink" title="偏向锁/轻量级锁/重量级锁"></a>偏向锁/轻量级锁/重量级锁</h4><p>这三种锁，就是指锁的状态，针对synchronized。</p>
-<p>偏向锁是<strong>指一段代码一直被一个线程所访问</strong>，那么理论上，这个线程会自动获取这个锁，并一直拥有这个锁，这样就降低了获取锁的代价。</p>
-<p>轻量级锁是指当偏向锁的状态下，<strong>被另一个线程访问</strong>，偏向锁就会升级为<strong>轻量级锁</strong>，其他线程会通过自旋形式尝试获取锁，不会阻塞，提高效率。</p>
-<p>重量级锁是指在轻量级锁的状态下，<strong>另一个线程虽然自旋</strong>，但不会一直持续下去，当自旋一定次数的时候还没有获取到锁的话，<strong>就会进入阻塞</strong>，该锁就会膨胀为重量级锁，重量级锁会让其他申请的线程陷入阻塞，降低性能。</p>
-]]></content>
-      <categories>
-        <category>Java并发</category>
-      </categories>
-      <tags>
-        <tag>关键字</tag>
       </tags>
   </entry>
   <entry>
@@ -938,6 +938,13 @@
     <title>Mysql-索引</title>
     <url>/2021/07/30/Mysql-%E7%B4%A2%E5%BC%95/</url>
     <content><![CDATA[<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:<strong>B+树和 Hash</strong>。<br>Hash 索引不支持顺序和范围查询。</p>
+<h3 id="主键索引vs唯一索引"><a href="#主键索引vs唯一索引" class="headerlink" title="主键索引vs唯一索引"></a>主键索引vs唯一索引</h3><p>主键是一种约束，唯一索引是一种索引，两者在本质上是不同的。</p>
+<p>主键创建后一定包含一个唯一性索引，唯一性索引并不一定就是主键。</p>
+<p>唯一性索引列允许空值，而主键列不允许为空值。</p>
+<p>主键列在创建时，已经默认为空值 + 唯一索引了。</p>
+<p>主键可以被其他表引用为外键，而唯一索引不能。</p>
+<p>一个表最多只能创建一个主键，但可以创建多个唯一索引。</p>
+<p>主键更适合那些不容易更改的唯一标识，如自动递增列、身份证号等。</p>
 <h2 id="B-树-amp-B-树两者有何异同呢？"><a href="#B-树-amp-B-树两者有何异同呢？" class="headerlink" title="B 树&amp; B+树两者有何异同呢？"></a>B 树&amp; B+树两者有何异同呢？</h2><p>B 树的所有节点<strong>既存放键(key) 也存放 数据(data)<strong>，而 B+树</strong>只有叶子节点存放 key 和 data</strong>，其他内节点只存放 key。</p>
 <p>B 树的叶子节点都是独立的;</p>
 <p>B+树的<strong>叶子节点有一条引用链指向与它相邻的叶子节点</strong>。</p>
@@ -1257,6 +1264,31 @@
       </tags>
   </entry>
   <entry>
+    <title>Netty-零拷贝</title>
+    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
+    <content><![CDATA[<p>零拷⻉技术是指计算机执⾏操作时，CPU 不需要先将数 据从某处内存复制到另⼀个特定区域。这种技术通常⽤于通过⽹络传输⽂件时节省CPU周期和内存带宽。 </p>
+<p>在 OS 层⾯上的 Zero-copy 通常指避免在用户态和内核态之间来回 拷⻉数据。</p>
+<p>⽽在 Netty 层⾯ ，零拷⻉主要体现在对于数据操作的优化。 </p>
+<ol>
+<li> 使⽤ Netty 提供的 CompositeByteBuf 类, 可以将多个 ByteBuf 合并为⼀个逻辑上的 ByteBuf , 避免了各个 ByteBuf 之间的拷⻉。 </li>
+<li> ByteBuf ⽀持 slice 操作, 因此可以将 ByteBuf 分解为多个共享同⼀个存储区域的 ByteBuf , 避免了内存的拷⻉。 </li>
+<li>通过 FileRegion 包装的 FileChannel.tranferTo 实现⽂件传输（底层是sendfile方法）, 可以直接将⽂件缓冲区的数据发送到⽬标 Channel , 避免了传统通过循环 write ⽅式导致的内存拷⻉问题 。</li>
+<li>duplicate。逻辑上的复制。</li>
+</ol>
+<h3 id="slice（si-lai-si）"><a href="#slice（si-lai-si）" class="headerlink" title="slice（si lai si）"></a>slice（si lai si）</h3><p>对原始 ByteBuf 进行切片成多个 ByteBuf，切片后的 ByteBuf 并没有发生内存复制，还是使用原始 ByteBuf 的内存，切片后的 ByteBuf 维护独立的 read，write 指针</p>
+<p><img src="https://i.loli.net/2021/08/04/XkAyOUa6xiMPqV8.png" alt="image-20210804201821413"></p>
+<h3 id="duplicate"><a href="#duplicate" class="headerlink" title="duplicate"></a>duplicate</h3><p>就好比截取了原始 ByteBuf 所有内容，并且没有 max capacity 的限制，也是与原始 ByteBuf 使用同一块底层内存，只是读写指针是独立的。</p>
+<p><img src="https://i.loli.net/2021/08/04/2sbl13NIuMo5jwZ.png" alt="image-20210804201834603"></p>
+<h3 id="CompositeByteBuf（composite）"><a href="#CompositeByteBuf（composite）" class="headerlink" title="CompositeByteBuf（composite）"></a>CompositeByteBuf（composite）</h3><p>可以将多个 ByteBuf 合并为一个逻辑上的 ByteBuf，避免拷贝。</p>
+]]></content>
+      <categories>
+        <category>Netty</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Netty-长连接，心跳机制</title>
     <url>/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/</url>
     <content><![CDATA[<h3 id="tcp粘包？netty解决办法？"><a href="#tcp粘包？netty解决办法？" class="headerlink" title="tcp粘包？netty解决办法？"></a>tcp粘包？netty解决办法？</h3><ul>
@@ -1295,31 +1327,6 @@
       </categories>
       <tags>
         <tag>机制</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Netty-零拷贝</title>
-    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
-    <content><![CDATA[<p>零拷⻉技术是指计算机执⾏操作时，CPU 不需要先将数 据从某处内存复制到另⼀个特定区域。这种技术通常⽤于通过⽹络传输⽂件时节省CPU周期和内存带宽。 </p>
-<p>在 OS 层⾯上的 Zero-copy 通常指避免在用户态和内核态之间来回 拷⻉数据。</p>
-<p>⽽在 Netty 层⾯ ，零拷⻉主要体现在对于数据操作的优化。 </p>
-<ol>
-<li> 使⽤ Netty 提供的 CompositeByteBuf 类, 可以将多个 ByteBuf 合并为⼀个逻辑上的 ByteBuf , 避免了各个 ByteBuf 之间的拷⻉。 </li>
-<li> ByteBuf ⽀持 slice 操作, 因此可以将 ByteBuf 分解为多个共享同⼀个存储区域的 ByteBuf , 避免了内存的拷⻉。 </li>
-<li>通过 FileRegion 包装的 FileChannel.tranferTo 实现⽂件传输（底层是sendfile方法）, 可以直接将⽂件缓冲区的数据发送到⽬标 Channel , 避免了传统通过循环 write ⽅式导致的内存拷⻉问题 。</li>
-<li>duplicate。逻辑上的复制。</li>
-</ol>
-<h3 id="slice（si-lai-si）"><a href="#slice（si-lai-si）" class="headerlink" title="slice（si lai si）"></a>slice（si lai si）</h3><p>对原始 ByteBuf 进行切片成多个 ByteBuf，切片后的 ByteBuf 并没有发生内存复制，还是使用原始 ByteBuf 的内存，切片后的 ByteBuf 维护独立的 read，write 指针</p>
-<p><img src="https://i.loli.net/2021/08/04/XkAyOUa6xiMPqV8.png" alt="image-20210804201821413"></p>
-<h3 id="duplicate"><a href="#duplicate" class="headerlink" title="duplicate"></a>duplicate</h3><p>就好比截取了原始 ByteBuf 所有内容，并且没有 max capacity 的限制，也是与原始 ByteBuf 使用同一块底层内存，只是读写指针是独立的。</p>
-<p><img src="https://i.loli.net/2021/08/04/2sbl13NIuMo5jwZ.png" alt="image-20210804201834603"></p>
-<h3 id="CompositeByteBuf（composite）"><a href="#CompositeByteBuf（composite）" class="headerlink" title="CompositeByteBuf（composite）"></a>CompositeByteBuf（composite）</h3><p>可以将多个 ByteBuf 合并为一个逻辑上的 ByteBuf，避免拷贝。</p>
-]]></content>
-      <categories>
-        <category>Netty</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
       </tags>
   </entry>
   <entry>
@@ -1448,6 +1455,44 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis-缓存一致性</title>
+    <url>/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/</url>
+    <content><![CDATA[<h2 id="如何保证数据库和缓存的数据一致性"><a href="#如何保证数据库和缓存的数据一致性" class="headerlink" title="如何保证数据库和缓存的数据一致性"></a>如何保证数据库和缓存的数据一致性</h2><p>一般来说，如果允许缓存可以稍微的跟数据库偶尔有不一致的情况，也就是说如果你的系统不是严格要求 “缓存+数据库” 必须保持一致性的话，最好不要做这个方案，即：<strong>读请求和写请求串行化，串到一个内存队列里去</strong>。</p>
+<p><strong>串行化</strong>可以保证<strong>一定不会出现不一致的情况</strong>，但是它也会导致系统的吞吐量大幅度降低，用比正常情况下多几倍的机器去支撑线上的一个请求。</p>
+<h2 id="Cache-Aside-Pattern旁路缓存模式"><a href="#Cache-Aside-Pattern旁路缓存模式" class="headerlink" title="Cache Aside Pattern旁路缓存模式"></a><strong>Cache Aside Pattern旁路缓存模式</strong></h2><p>最经典的缓存+数据库读写的模式，就是 <strong>Cache Aside Pattern。</strong></p>
+<blockquote>
+<p><strong>读的时候，先读缓存</strong>，缓存没有的话，就读数据库，然后取出数据后放入缓存，同时返回响应。<br><strong>更新的时候，先更新数据库，成功后，然后再删除缓存。</strong></p>
+<p>如果 cache 服务当前不可用导致缓存删除失败的话，我们就隔一段时间进行重试，重试次数可以自己定。如果多次重试还是失败的话，我们可以把当前更新失败的 key 存入队列中，等缓存服务可用之后，再将缓存中对应的 key 删除即可。</p>
+</blockquote>
+<h3 id="在写数据的过程中，可以先删除-cache-，后更新-DB-？"><a href="#在写数据的过程中，可以先删除-cache-，后更新-DB-？" class="headerlink" title="在写数据的过程中，可以先删除 cache ，后更新 DB ？"></a>在写数据的过程中，可以先删除 cache ，后更新 DB ？</h3><p>请求1先把cache中的A数据删除 -&gt; 请求2从DB中读取数据-&gt;请求1再把DB中的A数据更新。</p>
+<h3 id="在写数据的过程中，先更新DB，后删除cache就没有问题了？"><a href="#在写数据的过程中，先更新DB，后删除cache就没有问题了？" class="headerlink" title="在写数据的过程中，先更新DB，后删除cache就没有问题了？"></a>在写数据的过程中，先更新DB，后删除cache就没有问题了？</h3><p>理论上来说还是可能会出现数据不一致性的问题，不过概率非常小，因为<strong>缓存的写入速度是比数据库的写入速度快很多</strong></p>
+<p>比如请求1先读数据 A，请求2随后写数据A，并且数据A不在缓存中的话也有可能产生数据不一致性的问题。这个过程可以简单描述为：</p>
+<p>请求1从DB读数据A-&gt;请求2写更新数据 A 到数据库并把删除cache中的A数据-&gt;请求1将数据A写入cache。</p>
+<h3 id="为什么是删除缓存，而不是更新缓存？"><a href="#为什么是删除缓存，而不是更新缓存？" class="headerlink" title="为什么是删除缓存，而不是更新缓存？"></a>为什么是删除缓存，而不是更新缓存？</h3><p>原因很简单，很多时候，在复杂点的缓存场景，缓存不单单是数据库中直接取出来的值。</p>
+<p>比如可能更新了某个表的一个字段，然后其对应的缓存，是需要查询另外两个表的数据并进行运算，才能计算出缓存最新的值的。</p>
+<p>另外<strong>更新缓存的代价有时候是很高的</strong>。是不是说，每次修改数据库的时候，都一定要将其对应的缓存更新一份？也许有的场景是这样，但是对于比较复杂的缓存数据计算的场景，就不是这样了。<strong>如果你频繁修改一个缓存涉及的多个表，缓存也频繁更新。</strong>但是问题在于，这个缓存到底会不会被频繁访问到？</p>
+<p>举个栗子，一个缓存涉及的表的字段，在 1 分钟内就修改了 20 次，或者是 100 次，那么缓存更新 20 次、100 次；<strong>但是这个缓存在 1 分钟内只被读取了 1 次</strong>，有大量的冷数据。实际上，<strong>如果你只是删除缓存的话</strong>，那么在 1 分钟内，这个缓存不过就重新计算一次而已，<strong>开销大幅度降低</strong>。用到缓存才去算缓存。</p>
+<p><strong>其实删除缓存，而不是更新缓存</strong>，就是一个 <strong>lazy 计算</strong>的思想，不要每次都重新做复杂的计算，不管它会不会用到，而是让它到需要被使用的时候再重新计算。像 mybatis，hibernate，都有懒加载思想。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>一个是读操作，但是没有命中缓存，然后就到数据库中取数据，此时来了一个写操作，写完数据库后，让缓存失效，然后，之前的那个读操作再把老的数据放进去，所以，会造成脏数据。</p>
+<p>但实际上出现的概率可能非常低，因为这个条件需要发生在读缓存时缓存失效，而且并发着有一个写操作。而实际上数据库的<strong>写操作会比读操作慢得多，而且还要锁表</strong>，而读操作必需在写操作前进入数据库操作，而又要晚于写操作更新缓存，所有的这些条件都具备的概率基本并不大。</p>
+<p>所以，要么通过2PC或是Paxos协议保证一致性，要么就是拼命的降低并发时脏数据的概率，而Facebook使用了这个降低概率的玩法，因为2PC太慢，而Paxos太复杂。当然，<strong>最好还是为缓存设置上过期时间。</strong></p>
+<h2 id="Read-Write-Through-Pattern（读写穿透）"><a href="#Read-Write-Through-Pattern（读写穿透）" class="headerlink" title="Read/Write Through Pattern（读写穿透）"></a>Read/Write Through Pattern（读写穿透）</h2><p>Read/Write Through套路是把更新数据库（Repository）的操作由<strong>缓存自己代理</strong>，可以理解为，应用认为后端就是一个单一的存储，而存储自己维护自己的Cache。</p>
+<p><strong>Read Through</strong><br>Read Through 套路就是在<strong>查询操作中更新缓存</strong>，也就是说，当缓存失效的时候（过期或LRU换出），Cache Aside是由调用方负责把数据加载入缓存，而Read Through则用缓存服务自己来加载，从而对应用方是透明的。</p>
+<p><strong>Write Through</strong><br>Write Through 套路和Read Through相仿，不过是在更新数据时发生。<strong>当有数据更新的时候，如果没有命中缓存，直接更新数据库，然后返回</strong>。<strong>如果命中了缓存，则更新缓存，然后再由Cache自己更新数据库（这是一个同步操作）</strong></p>
+<p><img src="https://i.loli.net/2021/08/04/UgD7uS9WeIimzxR.png" alt="image-20210804192802967"></p>
+<h2 id="Write-Behind-Caching-Pattern"><a href="#Write-Behind-Caching-Pattern" class="headerlink" title="Write Behind Caching Pattern"></a>Write Behind Caching Pattern</h2><p>Write Behind 又叫 Write Back。</p>
+<p>Write Back套路，<strong>在更新数据的时候，只更新缓存，不更新数据库，而我们的缓存会异步地批量更新数据库。</strong>这个设计的好处就是让数据的I/O操作飞快无比，因为异步，write backg还可以合并对同一个数据的多次操作，所以性能的提高是相当可观的。</p>
+<p>但是，其带来的问题是，<strong>数据不是强一致性的</strong>，而且可能会丢失。</p>
+<p>另外，Write Back实现逻辑比较复杂，因为他需要track有哪数据是被更新了的，需要刷到持久层上。操作系统的write back会在仅当这个cache需要失效的时候，才会被真正持久起来，比如，内存不够了，或是进程退出了等情况，这又叫lazy write。</p>
+]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>思想</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis-线程模型,事务</title>
     <url>/2021/07/30/Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/</url>
     <content><![CDATA[<h2 id="redis为什么快"><a href="#redis为什么快" class="headerlink" title="redis为什么快"></a>redis为什么快</h2><p><strong>1、基于内存的操作</strong><br><strong>2、使用了 I/O 多路复用模型，select、epoll 等，基于 reactor 模式开发了自己的网络事件处理器</strong><br><strong>3、单线程可以避免不必要的上下文切换和竞争条件，减少了这方面的性能消耗。</strong><br><strong>4、以上这三点是 redis 性能高的主要原因，其他的还有一些小优化，例如：对数据结构进行了优化，简单动态字符串、压缩列表等</strong></p>
@@ -1490,44 +1535,6 @@
       </categories>
       <tags>
         <tag>模型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis-缓存一致性</title>
-    <url>/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/</url>
-    <content><![CDATA[<h2 id="如何保证数据库和缓存的数据一致性"><a href="#如何保证数据库和缓存的数据一致性" class="headerlink" title="如何保证数据库和缓存的数据一致性"></a>如何保证数据库和缓存的数据一致性</h2><p>一般来说，如果允许缓存可以稍微的跟数据库偶尔有不一致的情况，也就是说如果你的系统不是严格要求 “缓存+数据库” 必须保持一致性的话，最好不要做这个方案，即：<strong>读请求和写请求串行化，串到一个内存队列里去</strong>。</p>
-<p><strong>串行化</strong>可以保证<strong>一定不会出现不一致的情况</strong>，但是它也会导致系统的吞吐量大幅度降低，用比正常情况下多几倍的机器去支撑线上的一个请求。</p>
-<h2 id="Cache-Aside-Pattern旁路缓存模式"><a href="#Cache-Aside-Pattern旁路缓存模式" class="headerlink" title="Cache Aside Pattern旁路缓存模式"></a><strong>Cache Aside Pattern旁路缓存模式</strong></h2><p>最经典的缓存+数据库读写的模式，就是 <strong>Cache Aside Pattern。</strong></p>
-<blockquote>
-<p><strong>读的时候，先读缓存</strong>，缓存没有的话，就读数据库，然后取出数据后放入缓存，同时返回响应。<br><strong>更新的时候，先更新数据库，成功后，然后再删除缓存。</strong></p>
-<p>如果 cache 服务当前不可用导致缓存删除失败的话，我们就隔一段时间进行重试，重试次数可以自己定。如果多次重试还是失败的话，我们可以把当前更新失败的 key 存入队列中，等缓存服务可用之后，再将缓存中对应的 key 删除即可。</p>
-</blockquote>
-<h3 id="在写数据的过程中，可以先删除-cache-，后更新-DB-？"><a href="#在写数据的过程中，可以先删除-cache-，后更新-DB-？" class="headerlink" title="在写数据的过程中，可以先删除 cache ，后更新 DB ？"></a>在写数据的过程中，可以先删除 cache ，后更新 DB ？</h3><p>请求1先把cache中的A数据删除 -&gt; 请求2从DB中读取数据-&gt;请求1再把DB中的A数据更新。</p>
-<h3 id="在写数据的过程中，先更新DB，后删除cache就没有问题了？"><a href="#在写数据的过程中，先更新DB，后删除cache就没有问题了？" class="headerlink" title="在写数据的过程中，先更新DB，后删除cache就没有问题了？"></a>在写数据的过程中，先更新DB，后删除cache就没有问题了？</h3><p>理论上来说还是可能会出现数据不一致性的问题，不过概率非常小，因为<strong>缓存的写入速度是比数据库的写入速度快很多</strong></p>
-<p>比如请求1先读数据 A，请求2随后写数据A，并且数据A不在缓存中的话也有可能产生数据不一致性的问题。这个过程可以简单描述为：</p>
-<p>请求1从DB读数据A-&gt;请求2写更新数据 A 到数据库并把删除cache中的A数据-&gt;请求1将数据A写入cache。</p>
-<h3 id="为什么是删除缓存，而不是更新缓存？"><a href="#为什么是删除缓存，而不是更新缓存？" class="headerlink" title="为什么是删除缓存，而不是更新缓存？"></a>为什么是删除缓存，而不是更新缓存？</h3><p>原因很简单，很多时候，在复杂点的缓存场景，缓存不单单是数据库中直接取出来的值。</p>
-<p>比如可能更新了某个表的一个字段，然后其对应的缓存，是需要查询另外两个表的数据并进行运算，才能计算出缓存最新的值的。</p>
-<p>另外<strong>更新缓存的代价有时候是很高的</strong>。是不是说，每次修改数据库的时候，都一定要将其对应的缓存更新一份？也许有的场景是这样，但是对于比较复杂的缓存数据计算的场景，就不是这样了。<strong>如果你频繁修改一个缓存涉及的多个表，缓存也频繁更新。</strong>但是问题在于，这个缓存到底会不会被频繁访问到？</p>
-<p>举个栗子，一个缓存涉及的表的字段，在 1 分钟内就修改了 20 次，或者是 100 次，那么缓存更新 20 次、100 次；<strong>但是这个缓存在 1 分钟内只被读取了 1 次</strong>，有大量的冷数据。实际上，<strong>如果你只是删除缓存的话</strong>，那么在 1 分钟内，这个缓存不过就重新计算一次而已，<strong>开销大幅度降低</strong>。用到缓存才去算缓存。</p>
-<p><strong>其实删除缓存，而不是更新缓存</strong>，就是一个 <strong>lazy 计算</strong>的思想，不要每次都重新做复杂的计算，不管它会不会用到，而是让它到需要被使用的时候再重新计算。像 mybatis，hibernate，都有懒加载思想。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>一个是读操作，但是没有命中缓存，然后就到数据库中取数据，此时来了一个写操作，写完数据库后，让缓存失效，然后，之前的那个读操作再把老的数据放进去，所以，会造成脏数据。</p>
-<p>但实际上出现的概率可能非常低，因为这个条件需要发生在读缓存时缓存失效，而且并发着有一个写操作。而实际上数据库的<strong>写操作会比读操作慢得多，而且还要锁表</strong>，而读操作必需在写操作前进入数据库操作，而又要晚于写操作更新缓存，所有的这些条件都具备的概率基本并不大。</p>
-<p>所以，要么通过2PC或是Paxos协议保证一致性，要么就是拼命的降低并发时脏数据的概率，而Facebook使用了这个降低概率的玩法，因为2PC太慢，而Paxos太复杂。当然，<strong>最好还是为缓存设置上过期时间。</strong></p>
-<h2 id="Read-Write-Through-Pattern（读写穿透）"><a href="#Read-Write-Through-Pattern（读写穿透）" class="headerlink" title="Read/Write Through Pattern（读写穿透）"></a>Read/Write Through Pattern（读写穿透）</h2><p>Read/Write Through套路是把更新数据库（Repository）的操作由<strong>缓存自己代理</strong>，可以理解为，应用认为后端就是一个单一的存储，而存储自己维护自己的Cache。</p>
-<p><strong>Read Through</strong><br>Read Through 套路就是在<strong>查询操作中更新缓存</strong>，也就是说，当缓存失效的时候（过期或LRU换出），Cache Aside是由调用方负责把数据加载入缓存，而Read Through则用缓存服务自己来加载，从而对应用方是透明的。</p>
-<p><strong>Write Through</strong><br>Write Through 套路和Read Through相仿，不过是在更新数据时发生。<strong>当有数据更新的时候，如果没有命中缓存，直接更新数据库，然后返回</strong>。<strong>如果命中了缓存，则更新缓存，然后再由Cache自己更新数据库（这是一个同步操作）</strong></p>
-<p><img src="https://i.loli.net/2021/08/04/UgD7uS9WeIimzxR.png" alt="image-20210804192802967"></p>
-<h2 id="Write-Behind-Caching-Pattern"><a href="#Write-Behind-Caching-Pattern" class="headerlink" title="Write Behind Caching Pattern"></a>Write Behind Caching Pattern</h2><p>Write Behind 又叫 Write Back。</p>
-<p>Write Back套路，<strong>在更新数据的时候，只更新缓存，不更新数据库，而我们的缓存会异步地批量更新数据库。</strong>这个设计的好处就是让数据的I/O操作飞快无比，因为异步，write backg还可以合并对同一个数据的多次操作，所以性能的提高是相当可观的。</p>
-<p>但是，其带来的问题是，<strong>数据不是强一致性的</strong>，而且可能会丢失。</p>
-<p>另外，Write Back实现逻辑比较复杂，因为他需要track有哪数据是被更新了的，需要刷到持久层上。操作系统的write back会在仅当这个cache需要失效的时候，才会被真正持久起来，比如，内存不够了，或是进程退出了等情况，这又叫lazy write。</p>
-]]></content>
-      <categories>
-        <category>Redis</category>
-      </categories>
-      <tags>
-        <tag>思想</tag>
       </tags>
   </entry>
   <entry>
@@ -1632,55 +1639,39 @@
   <entry>
     <title>a-Linux常用命令</title>
     <url>/2021/08/05/a-Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<h3 id="1-查看CPU（top）"><a href="#1-查看CPU（top）" class="headerlink" title="1. 查看CPU（top）"></a><strong>1. 查看CPU（top）</strong></h3><p>top + 1、vmstat</p>
-<p>top -c  =》查看最高CPU占用率的进程</p>
-<h3 id="2-kill、ps-ef"><a href="#2-kill、ps-ef" class="headerlink" title="2. kill、ps-ef"></a><strong>2. kill、ps-ef</strong></h3><p>kill其实就是给某个进程id发送了一个信号。默认发送的信号是SIGTERM，而kill -9 发送的信号是exit。exit信号不会被系统阻塞，因此能够顺利杀掉进程。</p>
-<p>ps-ef查看所有正在运行的进程</p>
-<h3 id="3-查看内存（free）"><a href="#3-查看内存（free）" class="headerlink" title="3. 查看内存（free）"></a><strong>3. 查看内存（free）</strong></h3><p>free</p>
-<h3 id="4-查看硬盘（df、du）"><a href="#4-查看硬盘（df、du）" class="headerlink" title="4. 查看硬盘（df、du）"></a><strong>4. 查看硬盘（df、du）</strong></h3><p>df，du</p>
-<h3 id="5-查看文件描述符（lsof）"><a href="#5-查看文件描述符（lsof）" class="headerlink" title="5. 查看文件描述符（lsof）"></a><strong>5. 查看文件描述符（lsof）</strong></h3><p>lsof–list open file</p>
-<h3 id="6-关机重启（shutdown、poweroff、reboot）"><a href="#6-关机重启（shutdown、poweroff、reboot）" class="headerlink" title="6. 关机重启（shutdown、poweroff、reboot）"></a><strong>6. 关机重启（shutdown、poweroff、reboot）</strong></h3><p>关机</p>
-<p>​    shutdown -h now        立刻关机</p>
-<p>​    shutdown -h 5        5分钟后关机</p>
-<p>​    poweroff            立刻关机</p>
-<p>重启</p>
-<p>​    shutdown -r now        立刻重启</p>
-<p>​    shutdown -r 5        5分钟后重启</p>
-<p>​    reboot                立刻重启</p>
-<h3 id="7-目录操作（cd、ls、mkdir、pwd）"><a href="#7-目录操作（cd、ls、mkdir、pwd）" class="headerlink" title="7. 目录操作（cd、ls、mkdir、pwd）"></a><strong>7. 目录操作（cd、ls、mkdir、pwd）</strong></h3><p>目录切换    cd</p>
-<p>目录查看    ls</p>
-<p>目录创建    mkdir</p>
-<p>目录路径    pwd</p>
-<h3 id="8-文件操作（增删改查touch、rm、vi、cat、less、more、tail、chmod）"><a href="#8-文件操作（增删改查touch、rm、vi、cat、less、more、tail、chmod）" class="headerlink" title="8. 文件操作（增删改查touch、rm、vi、cat、less、more、tail、chmod）"></a><strong>8. 文件操作（增删改查touch、rm、vi、cat、less、more、tail、chmod）</strong></h3><p>文件新建    touch</p>
-<p>文件删除    rm</p>
-<p>文件修改    vi或vim</p>
-<p>文件查看    cat(最后一屏幕)、more(百分比显示，只能从前往后)、less(翻页查看，可往前往后，不用完全加载)、tail(指定行数查看)</p>
-<p>权限修改     chmod</p>
-<h3 id="9-压缩解压缩（tar-c-x-vzf）"><a href="#9-压缩解压缩（tar-c-x-vzf）" class="headerlink" title="9. 压缩解压缩（tar -c(x)vzf）"></a><strong>9. 压缩解压缩（tar -c(x)vzf）</strong></h3><p>命令：tar -zcvf 打包压缩后的文件名 要打包的文件其中：z：调用gzip压缩命令进行压缩 c：打包文件 v：显示运行过程 f：指定文件名</p>
-<p>命令：tar [-zxvf] 压缩文件   其中：x：代表解压示例：将/usr/tmp 下的ab.tar解压到当前目录下</p>
-<h3 id="10-查找-grep、find、whereis、which"><a href="#10-查找-grep、find、whereis、which" class="headerlink" title="10. 查找(grep、find、whereis、which)"></a><strong>10. 查找(grep、find、whereis、which)</strong></h3><p>grep</p>
-<p>ps -ef | grep sshd  查找指定ssh服务进程 </p>
-<p>ps -ef | grep sshd | grep -v grep 查找指定服务进程，排除gerp身  </p>
-<p>ps -ef | grep sshd -c 查找指定进程个数              </p>
-<p>find</p>
-<p>find . -name “*.log” -ls  在当前目录查找以.log结尾的文件，并显示详细信息。 </p>
-<p>find /root/ -perm 600   查找/root/目录下权限为600的文件  </p>
-<p>find . -type f -name “*.log”  查找当目录，以.log结尾的普通文件  </p>
-<p>find . -type d | sort   查找当前所有目录并排序  </p>
-<p>find . -size +100M  查找当前目录大于100M的文件         </p>
-<p>​     </p>
-<p>whereis：定位可执行文件、源代码文件、帮助文件在文件系统中的位置。这些文件的属性应属于原始代码，二进制文件，或是帮助文件。</p>
-<p>whereis ls    将和ls文件相关的文件都查找出来       </p>
-<p>​       </p>
-<p>which：在PATH变量指定的路径中，搜索某个系统命令的位置，并且返回第一个搜索结果。</p>
-<p>which pwd  查找pwd命令所在路径  </p>
-<p>which java  查找path中java的路径              </p>
-<p><strong>11. 网络（ifconfig、ping、netstat-an、service network start、chkconfig）</strong></p>
-<p>ifconfig查看网卡的信息</p>
-<p>ping查看与某台机器的连接情况</p>
-<p>netstat查看当前的系统端口：netstat -an | grep 8080</p>
-<p>service network start：重启网络</p>
-<p>chkconfig iptables off：关闭防火墙</p>
+    <content><![CDATA[<h3 id="目录切换命令"><a href="#目录切换命令" class="headerlink" title="目录切换命令"></a>目录切换命令</h3><p>cd usr： 切换到该目录下 usr 目录<br>cd ..（或cd../）： 切换到上一层目录<br>cd /： 切换到系统根目录<br>cd ~： 切换到用户主目录<br>cd -： 切换到上一个操作所在目录</p>
+<h3 id="目录的操作命令-增删改查"><a href="#目录的操作命令-增删改查" class="headerlink" title="目录的操作命令(增删改查)"></a>目录的操作命令(增删改查)</h3><p><strong>mkdir 目录名称： 增加目录。</strong><br>ls/ll（ll 是 ls -l 的别名，ll 命令可以看到该目录下的所有目录和文件的详细信息）：查看目录信息。<br>find 目录 参数： 寻找目录（查）。示例：① 列出当前目录及子目录下所有文件和文件夹: find .；② 在/home目录下查找以.txt 结尾的文件名:find /home -name “<em>.txt” ,忽略大小写: find /home -iname “</em>.txt” ；③ 当前目录及子目录下查找所有以.txt 和.pdf 结尾的文件:find . ( -name “<em>.txt” -o -name “</em>.pdf” )或find . -name “<em>.txt” -o -name “</em>.pdf”。<br>mv 目录名称 新目录名称： 修改目录的名称（改）。注意：mv 的语法不仅可以对目录进行重命名而且也可以对各种文件，压缩包等进行 重命名的操作。mv 命令用来对文件或目录重新命名，或者将文件从一个目录移到另一个目录中。后面会介绍到 mv 命令的另一个用法。<br>mv 目录名称 目录的新位置： 移动目录的位置—剪切（改）。注意：mv 语法不仅可以对目录进行剪切操作，对文件和压缩包等都可执行剪切操作。另外 mv 与 cp 的结果不同，mv 好像文件“搬家”，文件个数并未增加。而 cp 对文件进行复制，文件个数增加了。<br>cp -r 目录名称 目录拷贝的目标位置： 拷贝目录（改），-r 代表递归拷贝 。注意：cp 命令不仅可以拷贝目录还可以拷贝文件，压缩包等，拷贝文件和压缩包时不 用写-r 递归。<br>rm [-rf] 目录 : 删除目录（删）。注意：rm 不仅可以删除目录，也可以删除其他文件或压缩包，为了增强大家的记忆， 无论删除任何目录或文件，都直接使用rm -rf 目录/文件/压缩包。</p>
+<h3 id="文件的操作命令-增删改查"><a href="#文件的操作命令-增删改查" class="headerlink" title="文件的操作命令(增删改查)"></a>文件的操作命令(增删改查)</h3><p><strong>touch 文件名称: 文件的创建（增）</strong>。</p>
+<p><strong>cat/more/less/tail 文件名称 ：文件的查看（查）</strong> 。命令 tail -f 文件 可以对某个文件进行动态监控，例如 tomcat 的日志文件， 会随着程序的运行，日志会变化，可以使用 tail -f catalina-2016-11-11.log 监控 文 件的变化 。</p>
+<p><strong>vim 文件</strong>： 修改文件的内容（改）。vim 编辑器是 Linux 中的强大组件，是 vi 编辑器的加强版，vim 编辑器的命令和快捷方式有很多，但此处不一一阐述，大家也无需研究的很透彻，使用 vim 编辑修改文件的方式基本会使用就可以了。在实际开发中，使用 vim 编辑器主要作用就是修改配置文件，</p>
+<p>下面是一般步骤： vim 文件——&gt;进入文件—–&gt;命令模式——&gt;<strong>按i进入编辑模式</strong>—–&gt;编辑文件 ——-&gt;<strong>按Esc进入底行模式</strong>—–&gt;输入：wq/q! （输入 wq 代表写入内容并退出，即保存；输入 q!代表强制退出不保存）。</p>
+<p><strong>rm -rf 文件： 删除文件（删）。</strong></p>
+<h3 id="压缩文件的操作命令"><a href="#压缩文件的操作命令" class="headerlink" title="压缩文件的操作命令"></a>压缩文件的操作命令</h3><p>1）打包并压缩文件：</p>
+<p>Linux 中的打包文件一般是以.tar 结尾的，压缩的命令一般是以.gz 结尾的。而一般情况下打包和压缩是一起进行的，打包并压缩后的文件的后缀名一般.tar.gz。 命令：tar -zcvf 打包压缩后的文件名 要打包压缩的文件 ，其中：</p>
+<p>z：调用 gzip 压缩命令进行压缩<br>c：打包文件<br>v：显示运行过程<br>f：指定文件名<br>比如：假如 test 目录下有三个文件分别是：aaa.txt bbb.txt ccc.txt，如果我们要打包 test 目录并指定压缩后的压缩包名称为 test.tar.gz 可以使用命令：tar -zcvf test.tar.gz aaa.txt bbb.txt ccc.txt 或 tar -zcvf test.tar.gz /test/</p>
+<p>2）解压压缩包：</p>
+<p>命令：`tar [-xvf] 压缩文件``</p>
+<p>其中：x：代表解压</p>
+<p>示例：</p>
+<p>将 /test 下的 test.tar.gz 解压到当前目录下可以使用命令：tar -xvf test.tar.gz<br>将 /test 下的 test.tar.gz 解压到根目录/usr 下:tar -xvf test.tar.gz -C /usr（- C 代表指定解压的位置）</p>
+<h3 id="Linux-用户管理"><a href="#Linux-用户管理" class="headerlink" title="Linux 用户管理"></a>Linux 用户管理</h3><p>Linux 系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。</p>
+<p>用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护。</p>
+<p>Linux 用户管理相关命令:</p>
+<p>useradd 选项 用户名:添加用户账号<br>userdel 选项 用户名:删除用户帐号<br>usermod 选项 用户名:修改帐号<br>passwd 用户名:更改或创建用户的密码<br>passwd -S 用户名 :显示用户账号密码信息<br>passwd -d 用户名: 清除用户密码<br>useradd 命令用于 Linux 中创建的新的系统用户。useradd可用来建立用户帐号。帐号建好之后，再用passwd设定帐号的密码．而可用userdel删除帐号。使用useradd指令所建立的帐号，实际上是保存在 /etc/passwd文本文件中。</p>
+<p>passwd命令用于设置用户的认证信息，包括用户密码、密码过期时间等。系统管理者则能用它管理系统用户的密码。只有管理者可以指定用户名称，一般用户只能变更自己的密码。</p>
+<h3 id="Linux-系统用户组的管理"><a href="#Linux-系统用户组的管理" class="headerlink" title="Linux 系统用户组的管理"></a>Linux 系统用户组的管理</h3><p>每个用户都有一个用户组，系统可以对一个用户组中的所有用户进行集中管理。不同 Linux 系统对用户组的规定有所不同，如 Linux 下的用户属于与它同名的用户组，这个用户组在创建用户时同时创建。</p>
+<p>用户组的管理涉及用户组的添加、删除和修改。组的增加、删除和修改实际上就是对/etc/group文件的更新。</p>
+<p>Linux 系统用户组的管理相关命令:</p>
+<p>groupadd 选项 用户组 :增加一个新的用户组<br>groupdel 用户组:要删除一个已有的用户组<br>groupmod 选项 用户组 : 修改用户组的属性</p>
+<h3 id="其他常用命令"><a href="#其他常用命令" class="headerlink" title="其他常用命令"></a>其他常用命令</h3><p><strong>pwd</strong>： 显示当前所在位置</p>
+<p>sudo + 其他命令 ：以系统管理者的身份执行指令，也就是说，经由 sudo 所执行的指令就好像是 root 亲自执行。</p>
+<p><strong>grep</strong> 要搜索的字符串 要搜索的文件 –color： 搜索命令，–color 代表高亮显示</p>
+<p><strong>ps -ef/ps -aux</strong>： 这两个命令都是查看当前系统正在运行进程，两者的区别是展示格式不同。如果想要查看特定的进程可以使用这样的格式：<strong>ps aux|grep redis</strong> （查看包括 redis 字符串的进程），也可使用 pgrep redis -a。注意：如果直接用 ps（（Process Status））命令，会显示所有进程的状态，通常结合 grep 命令查看某进程的状态。</p>
+<p><strong>kill -9 进程的pid</strong>： 杀死进程（-9 表示强制终止。）先用 ps 查找进程，然后用 kill 杀掉</p>
+<p>网络通信命令：<br>查看当前系统的网卡信息：ifconfig<br>查看与某台机器的连接情况：ping<br>查看当前系统的端口使用：netstat -an</p>
+<p>net-tools 和 iproute2 ： net-tools起源于 BSD 的 TCP/IP 工具箱，后来成为老版本 LinuxLinux 中配置网络功能的工具。但自 2001 年起，Linux 社区已经对其停止维护。同时，一些 Linux 发行版比如 Arch Linux 和 CentOS/RHEL 7 则已经完全抛弃了 net-tools，只支持iproute2。linux ip 命令类似于 ifconfig，但功能更强大，旨在替代它。更多详情请阅读如何在 Linux 中使用 IP 命令和示例</p>
+<p>shutdown： shutdown -h now： 指定现在立即关机；shutdown +5 “System will shutdown after 5 minutes”：指定 5 分钟后关机，同时送出警告信息给登入用户。</p>
+<p>reboot： reboot： 重开机。reboot -w： 做个重开机的模拟（只有纪录并不会真的重开机）。</p>
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -1721,7 +1712,30 @@
 <p>只有private构造方法，确保外部无法实例化；</p>
 <p>通过private static变量持有唯一实例，<strong>保证全局唯一性；</strong></p>
 <p>通过public static方法返回此唯一实例，<strong>使外部调用方能获取到实例。</strong></p>
-<h4 id="双重检查单例模式"><a href="#双重检查单例模式" class="headerlink" title="双重检查单例模式"></a>双重检查单例模式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line">    private volatile static Singleton uniqueInstance;</span><br><span class="line">    private Singleton()&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    public static Singleton getUniqueInstance()&#123;</span><br><span class="line">        if (uniqueInstance==null)&#123;</span><br><span class="line">            synchronized (Singleton.class)&#123;</span><br><span class="line">                if (uniqueInstance==null)&#123;</span><br><span class="line">                    uniqueInstance=new Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="懒汉式，线程不安全"><a href="#懒汉式，线程不安全" class="headerlink" title="懒汉式，线程不安全"></a>懒汉式，线程不安全</h4><p>是否 Lazy 初始化：是</p>
+<p>是否多线程安全：否</p>
+<p>这种写法起到了Lazy Loading的效果，但是只能在单线程下使用。</p>
+<p>如果在多线程下，一个线程进入了if (singleton == null)判断语句块，还未来得及往下执行，另一个线程也通过了这个判断语句，这时便会产生多个实例。所以在多线程环境下不可使用这种方式。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Singleton &#123;  </span><br><span class="line">    private static Singleton instance;  </span><br><span class="line">    private Singleton ()&#123;&#125;  </span><br><span class="line"></span><br><span class="line">	public static Singleton getInstance() &#123;  </span><br><span class="line">	if (instance == null) &#123;  </span><br><span class="line">    instance = new Singleton();  </span><br><span class="line">	&#125;  </span><br><span class="line">	return instance;  </span><br><span class="line">	&#125;  </span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="懒汉式，线程安全"><a href="#懒汉式，线程安全" class="headerlink" title="懒汉式，线程安全"></a>懒汉式，线程安全</h4><p>是否 Lazy 初始化：是</p>
+<p>是否多线程安全：是</p>
+<p>描述：这种方式具备很好的 lazy loading，能够在多线程中很好的工作，但是，效率很低，99% 情况下不需要同步。<br>优点：<strong>第一次调用才初始化，避免内存浪费。</strong><br>缺点：<strong>必须加锁 synchronized 才能保证单例，但加锁会影响效率</strong>。<br>getInstance() 的性能对应用程序不是很关键（该方法使用不太频繁）。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Singleton &#123;  </span><br><span class="line">    private static Singleton instance;  </span><br><span class="line">    private Singleton ()&#123;&#125;  </span><br><span class="line">    public static synchronized Singleton getInstance() &#123;  </span><br><span class="line">    if (instance == null) &#123;  </span><br><span class="line">        instance = new Singleton();  </span><br><span class="line">    &#125;  </span><br><span class="line">    return instance;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h4><p>是否 Lazy 初始化：否</p>
+<p>是否多线程安全：是</p>
+<p>优点：这种写法比较简单，<strong>就是在类装载的时候就完成实例化</strong>。避免了线程同步问题。</p>
+<p>缺点：在类装载的时候就完成实例化，<strong>没有达到Lazy Loading的效果</strong>。<strong>如果从始至终从未使用过这个实例，则会造成内存的浪费。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Singleton &#123;  </span><br><span class="line">    private static Singleton instance = new Singleton();  </span><br><span class="line">    private Singleton ()&#123;&#125;  </span><br><span class="line">    public static Singleton getInstance() &#123;  </span><br><span class="line">    return instance;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="双检锁-双重校验锁（DCL，即-double-checked-locking）"><a href="#双检锁-双重校验锁（DCL，即-double-checked-locking）" class="headerlink" title="双检锁/双重校验锁（DCL，即 double-checked locking）"></a>双检锁/双重校验锁（DCL，即 double-checked locking）</h4><p><strong>是否 Lazy 初始化：</strong>是</p>
+<p><strong>是否多线程安全：</strong>是</p>
+<p><strong>描述：</strong>我们进行了两次if (singleton == null)检查，这样就可以保证线程安全了。这样，实例化代码只用执行一次，后面再次访问时，判断if (singleton == null)，直接return实例化对象。</p>
+<p>优点：线程安全；延迟加载；效率较高。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line">    private volatile static Singleton uniqueInstance;</span><br><span class="line">    private Singleton()&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    public static Singleton getUniqueInstance()&#123;</span><br><span class="line">        if (uniqueInstance==null)&#123;</span><br><span class="line">            synchronized (Singleton.class)&#123;</span><br><span class="line">                if (uniqueInstance==null)&#123;</span><br><span class="line">                    uniqueInstance=new Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>volatile修饰uniqueinstance的必要性：</p>
 <p>uniqueinstance=new singleton()；实际上分为3步。</p>
@@ -1735,6 +1749,18 @@
 <li>代码读取到instance不为null时，instance引用的对象可能还没有完成初始化。</li>
 <li><strong>防止指令重排。</strong></li>
 </ul>
+<h4 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line"></span><br><span class="line">private Singleton() &#123;&#125;</span><br><span class="line"></span><br><span class="line">private static class SingletonInstance &#123;</span><br><span class="line">    private static final Singleton INSTANCE = new Singleton();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static Singleton getInstance() &#123;</span><br><span class="line">    return SingletonInstance.INSTANCE;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了<strong>类装载的机制</strong>来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式<strong>在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</strong></p>
+<p>复制代码<br>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了类装载的机制来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</p>
+<p><strong>类的静态属性只会在第一次加载类的时候初始化，所以在这里，JVM帮助我们保证了线程的安全性</strong>，在类进行初始化时，别的线程是无法进入的。</p>
+<p>优点：避免了线程不安全，延迟加载，效率高。</p>
+<h4 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public enum Singleton &#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">    public void whateverMethod() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>借助JDK1.5中添加的枚举来实现单例模式。不仅能避免多线程同步问题，而且还能防止反序列化重新创建新的对象。可能是因为枚举在JDK1.5中才添加，所以在实际项目开发中，很少见人这么写过。</p>
+<p>优点<br>系统内存中该类只存在一个对象，节省了系统资源，对于一些需要频繁创建销毁的对象，使用单例模式可以提高系统性能。</p>
+<p>缺点<br>当想实例化一个单例类的时候，必须要记住使用相应的获取对象的方法，而不是使用new，可能会给其他开发人员造成困扰，特别是看不到源码的时候。</p>
+<p>适用场合<br>需要频繁的进行创建和销毁的对象；<br>创建对象时耗时过多或耗费资源过多，但又经常用到的对象；<br>工具类对象；<br>频繁访问数据库或文件的对象。</p>
 <h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p>工厂方法是指定义<strong>工厂接口和产品接口</strong>，但如何创建实际工厂和实际产品被推迟到子类实现，从而使调用方只和抽象工厂与抽象产品打交道。</p>
 <p>实际更常用的是更简单的<strong>静态工厂方法</strong>，它允许工厂内部对创建产品进行优化。</p>
 <p>调用方尽量持有接口或抽象类，避免持有具体类型的子类，以便工厂方法能随时切换不同的子类返回，却不影响调用方代码。</p>
@@ -2357,27 +2383,14 @@
 <p>对称加密（只有一个密钥，速度快）（通信过程中）+非对称加密（两个密钥）（通信建立前）</p>
 <p>摘要算法实现完整性：每份数据都生成独一无二的指纹。</p>
 <p>服务器公钥放到数字证书中</p>
-<p><img src="image-20210731111936519.png"></p>
-<h2 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h2><h3 id="http-1-1"><a href="#http-1-1" class="headerlink" title="http 1.1"></a>http 1.1</h3><p><strong>长连接</strong></p>
-<p>管道传输</p>
-<p>不能压缩首部，只能压缩body。</p>
-<p>首部冗长。</p>
-<p>队头阻塞。（服务器按照请求顺序响应）</p>
-<p>无请求优先级控制。</p>
-<p>请求只能从客户端开始。</p>
-<h3 id="http-2"><a href="#http-2" class="headerlink" title="http 2"></a>http 2</h3><p>基于https-安全</p>
-<p>头部压缩：HPACK算法：双方维护一个头部信息表，发送索引。</p>
-<p>二进制格式而不是文本。头信息帧，数据帧。</p>
-<p>在二进制分帧层上，HTTP 2.0 会将所有传输的信息分割为更小的消息和帧,并对它们采用二进制格式的编码 ，其中HTTP1.x的首部信息会被封装到Headers帧，而我们的request body则封装到Data帧里面。</p>
-<p>然后，HTTP 2.0 通信都在一个连接上完成，这个连接可以承载任意数量的双向数据流。相应地，每个数据流以消息的形式发送，而消息由一或多个帧组成，这些帧可以乱序发送，然后再根据每个帧首部的流标识符重新组装。</p>
-<p>数据流，可指定优先级。</p>
-<p>多路复用：一个连接中可以并发多个请求，不用按照顺序一一回应==解决了队头阻塞，降低延迟。</p>
-<p>服务器推送。</p>
-<p>复用一个TCP连接，下层的TCP不知道有几个http请求，发生丢包，就会触发重传机制。所有的http请求都必</p>
-<p>须等待这个包的重传（阻塞）。</p>
-<h3 id="http-3"><a href="#http-3" class="headerlink" title="http 3"></a>http 3</h3><p>TCP===UDP</p>
-<p>基于UDP的QUIC协议，可以实现类似的可靠传输。</p>
-<p><img src="image-20210731112531267.png"></p>
+<p><img src="https://i.loli.net/2021/08/08/YsWAFXOp5Mbx1vy.png" alt="image-20210808135009407"></p>
+<h2 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h2><h3 id="什么是HTTP-2-0"><a href="#什么是HTTP-2-0" class="headerlink" title="什么是HTTP 2.0"></a>什么是HTTP 2.0</h3><p>HTTP/2（超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP/2是HTTP协议自1999年HTTP 1.1发布后的首个更新，主要基于SPDY协议（是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。</p>
+<h3 id="与HTTP-1-1相比，主要区别包括"><a href="#与HTTP-1-1相比，主要区别包括" class="headerlink" title="与HTTP 1.1相比，主要区别包括"></a>与HTTP 1.1相比，主要区别包括</h3><p>HTTP/2<strong>采用二进制格式而非文本格式</strong><br>HTTP/2是<strong>完全多路复用的</strong>，而非有序并阻塞的——只需一个连接即可实现并行<br>使用<strong>报头压缩</strong>，HTTP/2降低了开销<br>HTTP/2让服务器可以将响应主动“推送”到客户端缓存中</p>
+<h3 id="HTTP-2为什么是二进制？"><a href="#HTTP-2为什么是二进制？" class="headerlink" title="HTTP/2为什么是二进制？"></a>HTTP/2为什么是二进制？</h3><p>比起像HTTP/1.x这样的文本协议，二进制协议解析起来更高效、“线上”更紧凑，更重要的是错误更少。</p>
+<h3 id="为什么-HTTP-2-需要多路传输"><a href="#为什么-HTTP-2-需要多路传输" class="headerlink" title="为什么 HTTP/2 需要多路传输?"></a>为什么 HTTP/2 需要多路传输?</h3><p>HTTP/1.x 有个问题叫<strong>线端阻塞</strong>(head-of-line blocking), 它是指一个连接(connection)一次只提交一个请求的效率比较高, 多了就会变慢。 HTTP/1.1 试过用流水线(pipelining)来解决这个问题, 但是效果并不理想(数据量较大或者速度较慢的响应, 会阻碍排在他后面的请求). 此外, 由于网络媒介(intermediary )和服务器不能很好的支持流水线, 导致部署起来困难重重。</p>
+<p>而多路传输(Multiplexing)能很好的解决这些问题, 因为它能同时处理多个消息的请求和响应; 甚至可以在传输过程中将一个消息跟另外一个掺杂在一起。所以客户端只需要一个连接就能加载一个页面。</p>
+<h3 id="消息头为什么需要压缩"><a href="#消息头为什么需要压缩" class="headerlink" title="消息头为什么需要压缩?"></a>消息头为什么需要压缩?</h3><p>假定一个页面有80个资源需要加载（这个数量对于今天的Web而言还是挺保守的）, 而每一次请求都有1400字节的消息头（着同样也并不少见，因为Cookie和引用等东西的存在）, 至少要7到8个来回去“在线”获得这些消息头。这还不包括响应时间——那只是从客户端那里获取到它们所花的时间而已。这全都由于TCP的慢启动机制，它会基于对已知有多少个包，来确定还要来回去获取哪些包 – 这很明显的限制了最初的几个来回可以发送的数据包的数量。相比之下，即使是头部轻微的压缩也可以是让那些请求只需一个来回就能搞定——有时候甚至一个包就可以了。这种开销是可以被节省下来的，特别是当你考虑移动客户端应用的时候，即使是良好条件下，一般也会看到几百毫秒的来回延迟。</p>
+<h3 id="服务器推送的好处是什么？"><a href="#服务器推送的好处是什么？" class="headerlink" title="服务器推送的好处是什么？"></a>服务器推送的好处是什么？</h3><p>当浏览器请求一个网页时，服务器将会发回HTML，在服务器开始发送JavaScript、图片和CSS前，服务器需要等待浏览器解析HTML和发送所有内嵌资源的请求。<strong>服务器推送服务通过“推送”那些它认为客户端将会需要的内容到客户端的缓存中，以此来避免往返的延迟。</strong></p>
 ]]></content>
       <categories>
         <category>计算机网络</category>
@@ -2578,7 +2591,8 @@
   <entry>
     <title>Java基础-常见问题</title>
     <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h3 id="Java数据类型"><a href="#Java数据类型" class="headerlink" title="Java数据类型"></a>Java数据类型</h3><p>Java 中有 8 种基本数据类型，分别为：</p>
+    <content><![CDATA[<h3 id="Obiect类有哪些方法"><a href="#Obiect类有哪些方法" class="headerlink" title="Obiect类有哪些方法"></a>Obiect类有哪些方法</h3><p>1、 getClass()：获取类的class对象。<br>2、 hashCode:获取对象的hashCode值<br>3、 equals():比较对象是否相等，比较的是值和地址，子类可重写以自定义。<br>4、 clone()：克隆方法。<br>5、 toString():如果没有重写，应用对象将打印的是地址值。<br>6、 notify():随机选择一个在该对象上调用wait方法的线程，解除其阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>7、 notifyall():解除所有那些在该对象上调用wait方法的线程的阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>8、 wait():导致线程进入等待状态，直到它被其他线程通过notify()或者notifyAll唤醒。该方法只能在同步方法中调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>9、 finalize()：对象回收时调用</p>
+<h3 id="Java数据类型"><a href="#Java数据类型" class="headerlink" title="Java数据类型"></a>Java数据类型</h3><p>Java 中有 8 种基本数据类型，分别为：</p>
 <p>6 种数字类型 ：byte-1、short-2、int-4、long-8、float-4、double-8<br>1 种字符类型：char-2<br>1 种布尔型：boolean-1位</p>
 <p>这八种基本类型都有对应的包装类分别为：Byte、Short、Integer、Long、Float、Double、Character、Boolean 。</p>
 <p>包装类型不赋值就是 Null ，而基本类型有默认值且不是 Null。</p>
@@ -3274,6 +3288,21 @@
 <p>为什么要 RPC  ？因为，两个不同的服务器上的服务提供的方法不在一个内存空间，所以，<strong>需要通过网络编程才能传递方法调用所需要的参数</strong>。并且，<strong>方法调用的结果也需要通过网络编程来接收</strong>。但是，如果我们自己手动网络编程来实现这个调用过程的话工作量是非常大的，因为，我们需要考虑底层传输方式（TCP还是UDP）、序列化方式等等方面。</p>
 <p>RPC 能帮助我们做什么呢？ 简单来说，通过 RPC 可以帮助我们调用远程计算机上某个服务的方法，这个过程就像调用本地方法一样简单。</p>
 <p>RPC 的出现就是为了让你<strong>调用远程方法像调用本地方法一样简单。</strong></p>
+<h3 id="RPC-VS-HTTP"><a href="#RPC-VS-HTTP" class="headerlink" title="RPC VS HTTP"></a>RPC VS HTTP</h3><p>无论是微服务还是分布式服务（都是SOA，都是面向服务编程），都面临着服务间的远程调用。那么服务间的远程调用方式有哪些呢？</p>
+<p>常见的远程调用方式有以下几种：</p>
+<p><strong>RPC</strong>：Remote Produce Call远程过程调用。<strong>自定义数据格式，基于原生TCP通信，速度快，效率高</strong>。早期的webservice，现在热门的dubbo，都是RPC的典型</p>
+<p><strong>Http</strong>：http其实是一种网络传输协议，基于TCP，<strong>规定了数据传输的格式。现在客户端浏览器与服务端通信基本都是采用Http协议。也可以用来进行远程服务调用。缺点是消息封装臃肿。</strong></p>
+<p>现在热门的Rest风格，就可以通过http协议来实现。</p>
+<p>相同点：*<em>底层通讯都是基于网络编程</em>***，都可以实现远程调用，都可以实现服务调用服务。</p>
+<p>不同点：<br>当使用RPC框架实现服务间调用的时候，要求服务提供方和服务消费方 都必须使用统一的RPC框架，跨操作系统在同一编程语言内使用<br><strong>优势：调用快、处理快</strong></p>
+<p>http：<br><strong>当使用http进行服务间调用的时候，无需关注服务提供方使用的编程语言，也无需关注服务消费方使用的编程语言，服务提供方只需要提供restful风格的接口，服务消费方，按照restful的原则，请求服务，即可跨系统跨编程语言的远程调用框架</strong></p>
+<p><strong>优势：通用性强</strong></p>
+<h4 id="restful"><a href="#restful" class="headerlink" title="restful"></a>restful</h4><p>在 REST 样式的 Web 服务中，<strong>每个资源都有一个地址</strong>。资源本身都是方法调用的目标，方法列表对所有资源都是一样的。这些方法都是标准方法，包括 HTTP GET、POST、PUT、DELETE，还可能包括 HEAD 和 OPTIONS。</p>
+<p>在 RPC 样式的架构中，<strong>关注点在于方法</strong>，而在 REST 样式的架构中，关注点在于资源 —— 将使用标准方法检索并操作信息片段（使用表示的形式）。资源表示形式在表示形式中使用超链接互联。</p>
+<p>RESTful架构是对MVC架构改进后所形成的一种架构，<strong>通过使用事先定义好的接口与不同的服务联系起来</strong>。在RESTful架构中，<strong>浏览器使用POST，DELETE，PUT和GET四种请求方式分别对指定的URL资源进行增删改查操作</strong>。因此，<strong>RESTful是通过URI实现对资源的管理及访问，具有扩展性强、结构清晰的特点。</strong></p>
+<p>RESTful架构将服务器分成前端服务器和后端服务器两部分，前端服务器为用户提供无模型的视图；后端服务器为前端服务器提供接口。浏览器向前端服务器请求视图，通过视图中包含的AJAX函数发起接口请求获取模型。<br>项目开发引入RESTful架构，利于团队并行开发。在RESTful架构中，将多数HTTP请求转移到前端服务器上，降低服务器的负荷，使视图获取后端模型失败也能呈现。但RESTful架构却不适用于所有的项目，当项目比较小时无需使用RESTful架构，项目变得更加复杂。</p>
+<p>（1）每一个URI代表一种资源；<br>（2）客户端和服务器之间，传递这种资源的某种表现层；<br>（3）客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。</p>
+<p><img src="https://i.loli.net/2021/08/08/rG74PqAnCzLyYQ6.png" alt="image-20210808143751929"></p>
 <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p><img src="https://i.loli.net/2021/08/06/KWeIP5wtzvQ8SVU.png" alt="image-20210806114259901"></p>
 <p>client 调用远程方法-&gt; request序列化 -&gt; 协议编码 -&gt; 网络传输-&gt; 服务端 -&gt; 反序列化request -&gt; 调用本地方法得到response -&gt; 序列化 -&gt;编码-&gt;…..</p>
 <h3 id="常见的RPC框架"><a href="#常见的RPC框架" class="headerlink" title="常见的RPC框架"></a>常见的RPC框架</h3><h4 id="Dubbo"><a href="#Dubbo" class="headerlink" title="Dubbo"></a>Dubbo</h4><p>是一款高性能、轻量级的开源 Java RPC 框架，它提供了三大核心能力：</p>

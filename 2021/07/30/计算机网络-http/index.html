@@ -28,10 +28,9 @@
 <meta property="og:description" content="概念HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。 是什么报文   方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与get类似，不返回内容主体。 URI 协议版本    可选的首部字段     内容实体        协议版本 状态码 状态码原因短语    可选的响应首部字段     主体">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/06/PvL5K2BYp18URHu.png">
-<meta property="og:image" content="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/image-20210731111936519.png">
-<meta property="og:image" content="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/image-20210731112531267.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/08/YsWAFXOp5Mbx1vy.png">
 <meta property="article:published_time" content="2021-07-30T07:04:12.000Z">
-<meta property="article:modified_time" content="2021-08-06T02:43:10.673Z">
+<meta property="article:modified_time" content="2021-08-08T05:52:27.766Z">
 <meta property="article:author" content="Xieyi">
 <meta property="article:tag" content="协议">
 <meta name="twitter:card" content="summary">
@@ -196,7 +195,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-06 10:43:10" itemprop="dateModified" datetime="2021-08-06T10:43:10+08:00">2021-08-06</time>
+                <time title="修改时间：2021-08-08 13:52:27" itemprop="dateModified" datetime="2021-08-08T13:52:27+08:00">2021-08-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -332,27 +331,14 @@
 <p>对称加密（只有一个密钥，速度快）（通信过程中）+非对称加密（两个密钥）（通信建立前）</p>
 <p>摘要算法实现完整性：每份数据都生成独一无二的指纹。</p>
 <p>服务器公钥放到数字证书中</p>
-<p><img src="image-20210731111936519.png"></p>
-<h2 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h2><h3 id="http-1-1"><a href="#http-1-1" class="headerlink" title="http 1.1"></a>http 1.1</h3><p><strong>长连接</strong></p>
-<p>管道传输</p>
-<p>不能压缩首部，只能压缩body。</p>
-<p>首部冗长。</p>
-<p>队头阻塞。（服务器按照请求顺序响应）</p>
-<p>无请求优先级控制。</p>
-<p>请求只能从客户端开始。</p>
-<h3 id="http-2"><a href="#http-2" class="headerlink" title="http 2"></a>http 2</h3><p>基于https-安全</p>
-<p>头部压缩：HPACK算法：双方维护一个头部信息表，发送索引。</p>
-<p>二进制格式而不是文本。头信息帧，数据帧。</p>
-<p>在二进制分帧层上，HTTP 2.0 会将所有传输的信息分割为更小的消息和帧,并对它们采用二进制格式的编码 ，其中HTTP1.x的首部信息会被封装到Headers帧，而我们的request body则封装到Data帧里面。</p>
-<p>然后，HTTP 2.0 通信都在一个连接上完成，这个连接可以承载任意数量的双向数据流。相应地，每个数据流以消息的形式发送，而消息由一或多个帧组成，这些帧可以乱序发送，然后再根据每个帧首部的流标识符重新组装。</p>
-<p>数据流，可指定优先级。</p>
-<p>多路复用：一个连接中可以并发多个请求，不用按照顺序一一回应==解决了队头阻塞，降低延迟。</p>
-<p>服务器推送。</p>
-<p>复用一个TCP连接，下层的TCP不知道有几个http请求，发生丢包，就会触发重传机制。所有的http请求都必</p>
-<p>须等待这个包的重传（阻塞）。</p>
-<h3 id="http-3"><a href="#http-3" class="headerlink" title="http 3"></a>http 3</h3><p>TCP===UDP</p>
-<p>基于UDP的QUIC协议，可以实现类似的可靠传输。</p>
-<p><img src="image-20210731112531267.png"></p>
+<p><img src="https://i.loli.net/2021/08/08/YsWAFXOp5Mbx1vy.png" alt="image-20210808135009407"></p>
+<h2 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h2><h3 id="什么是HTTP-2-0"><a href="#什么是HTTP-2-0" class="headerlink" title="什么是HTTP 2.0"></a>什么是HTTP 2.0</h3><p>HTTP/2（超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP/2是HTTP协议自1999年HTTP 1.1发布后的首个更新，主要基于SPDY协议（是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。</p>
+<h3 id="与HTTP-1-1相比，主要区别包括"><a href="#与HTTP-1-1相比，主要区别包括" class="headerlink" title="与HTTP 1.1相比，主要区别包括"></a>与HTTP 1.1相比，主要区别包括</h3><p>HTTP/2<strong>采用二进制格式而非文本格式</strong><br>HTTP/2是<strong>完全多路复用的</strong>，而非有序并阻塞的——只需一个连接即可实现并行<br>使用<strong>报头压缩</strong>，HTTP/2降低了开销<br>HTTP/2让服务器可以将响应主动“推送”到客户端缓存中</p>
+<h3 id="HTTP-2为什么是二进制？"><a href="#HTTP-2为什么是二进制？" class="headerlink" title="HTTP/2为什么是二进制？"></a>HTTP/2为什么是二进制？</h3><p>比起像HTTP/1.x这样的文本协议，二进制协议解析起来更高效、“线上”更紧凑，更重要的是错误更少。</p>
+<h3 id="为什么-HTTP-2-需要多路传输"><a href="#为什么-HTTP-2-需要多路传输" class="headerlink" title="为什么 HTTP/2 需要多路传输?"></a>为什么 HTTP/2 需要多路传输?</h3><p>HTTP/1.x 有个问题叫<strong>线端阻塞</strong>(head-of-line blocking), 它是指一个连接(connection)一次只提交一个请求的效率比较高, 多了就会变慢。 HTTP/1.1 试过用流水线(pipelining)来解决这个问题, 但是效果并不理想(数据量较大或者速度较慢的响应, 会阻碍排在他后面的请求). 此外, 由于网络媒介(intermediary )和服务器不能很好的支持流水线, 导致部署起来困难重重。</p>
+<p>而多路传输(Multiplexing)能很好的解决这些问题, 因为它能同时处理多个消息的请求和响应; 甚至可以在传输过程中将一个消息跟另外一个掺杂在一起。所以客户端只需要一个连接就能加载一个页面。</p>
+<h3 id="消息头为什么需要压缩"><a href="#消息头为什么需要压缩" class="headerlink" title="消息头为什么需要压缩?"></a>消息头为什么需要压缩?</h3><p>假定一个页面有80个资源需要加载（这个数量对于今天的Web而言还是挺保守的）, 而每一次请求都有1400字节的消息头（着同样也并不少见，因为Cookie和引用等东西的存在）, 至少要7到8个来回去“在线”获得这些消息头。这还不包括响应时间——那只是从客户端那里获取到它们所花的时间而已。这全都由于TCP的慢启动机制，它会基于对已知有多少个包，来确定还要来回去获取哪些包 – 这很明显的限制了最初的几个来回可以发送的数据包的数量。相比之下，即使是头部轻微的压缩也可以是让那些请求只需一个来回就能搞定——有时候甚至一个包就可以了。这种开销是可以被节省下来的，特别是当你考虑移动客户端应用的时候，即使是良好条件下，一般也会看到几百毫秒的来回延迟。</p>
+<h3 id="服务器推送的好处是什么？"><a href="#服务器推送的好处是什么？" class="headerlink" title="服务器推送的好处是什么？"></a>服务器推送的好处是什么？</h3><p>当浏览器请求一个网页时，服务器将会发回HTML，在服务器开始发送JavaScript、图片和CSS前，服务器需要等待浏览器解析HTML和发送所有内嵌资源的请求。<strong>服务器推送服务通过“推送”那些它认为客户端将会需要的内容到客户端的缓存中，以此来避免往返的延迟。</strong></p>
 
     </div>
 
@@ -436,7 +422,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%A5%E6%96%87"><span class="nav-number">2.1.</span> <span class="nav-text">报文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">状态码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E6%AE%B5"><span class="nav-number">2.3.</span> <span class="nav-text">字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#get-post"><span class="nav-number">2.4.</span> <span class="nav-text">get post</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">2.4.1.</span> <span class="nav-text">区别？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%B9%82%E7%AD%89%EF%BC%9F"><span class="nav-number">2.4.2.</span> <span class="nav-text">安全幂等？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-%E6%98%AF%E4%B8%8D%E4%BF%9D%E5%AD%98%E7%8A%B6%E6%80%81%E7%9A%84%E5%8D%8F%E8%AE%AE-%E5%A6%82%E4%BD%95%E4%BF%9D%E5%AD%98%E7%94%A8%E6%88%B7%E7%8A%B6%E6%80%81"><span class="nav-number">2.5.</span> <span class="nav-text">HTTP 是不保存状态的协议,如何保存用户状态?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie-%E7%9A%84%E4%BD%9C%E7%94%A8%E6%98%AF%E4%BB%80%E4%B9%88-%E5%92%8C-Session-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">2.6.</span> <span class="nav-text">Cookie 的作用是什么?和 Session 有什么区别？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#https"><span class="nav-number">3.</span> <span class="nav-text">https</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E4%BA%86%E5%95%A5%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">解决了啥？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">如何解决不安全的问题？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#http%E6%BC%94%E5%8F%98"><span class="nav-number">4.</span> <span class="nav-text">http演变</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#http-1-1"><span class="nav-number">4.1.</span> <span class="nav-text">http 1.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http-2"><span class="nav-number">4.2.</span> <span class="nav-text">http 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http-3"><span class="nav-number">4.3.</span> <span class="nav-text">http 3</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%A5%E6%96%87"><span class="nav-number">2.1.</span> <span class="nav-text">报文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">状态码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E6%AE%B5"><span class="nav-number">2.3.</span> <span class="nav-text">字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#get-post"><span class="nav-number">2.4.</span> <span class="nav-text">get post</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">2.4.1.</span> <span class="nav-text">区别？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%B9%82%E7%AD%89%EF%BC%9F"><span class="nav-number">2.4.2.</span> <span class="nav-text">安全幂等？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-%E6%98%AF%E4%B8%8D%E4%BF%9D%E5%AD%98%E7%8A%B6%E6%80%81%E7%9A%84%E5%8D%8F%E8%AE%AE-%E5%A6%82%E4%BD%95%E4%BF%9D%E5%AD%98%E7%94%A8%E6%88%B7%E7%8A%B6%E6%80%81"><span class="nav-number">2.5.</span> <span class="nav-text">HTTP 是不保存状态的协议,如何保存用户状态?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie-%E7%9A%84%E4%BD%9C%E7%94%A8%E6%98%AF%E4%BB%80%E4%B9%88-%E5%92%8C-Session-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">2.6.</span> <span class="nav-text">Cookie 的作用是什么?和 Session 有什么区别？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#https"><span class="nav-number">3.</span> <span class="nav-text">https</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E4%BA%86%E5%95%A5%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">解决了啥？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">如何解决不安全的问题？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#http%E6%BC%94%E5%8F%98"><span class="nav-number">4.</span> <span class="nav-text">http演变</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFHTTP-2-0"><span class="nav-number">4.1.</span> <span class="nav-text">什么是HTTP 2.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8EHTTP-1-1%E7%9B%B8%E6%AF%94%EF%BC%8C%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB%E5%8C%85%E6%8B%AC"><span class="nav-number">4.2.</span> <span class="nav-text">与HTTP 1.1相比，主要区别包括</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-2%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%8C%E8%BF%9B%E5%88%B6%EF%BC%9F"><span class="nav-number">4.3.</span> <span class="nav-text">HTTP&#x2F;2为什么是二进制？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-HTTP-2-%E9%9C%80%E8%A6%81%E5%A4%9A%E8%B7%AF%E4%BC%A0%E8%BE%93"><span class="nav-number">4.4.</span> <span class="nav-text">为什么 HTTP&#x2F;2 需要多路传输?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%A4%B4%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8E%8B%E7%BC%A9"><span class="nav-number">4.5.</span> <span class="nav-text">消息头为什么需要压缩?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A8%E9%80%81%E7%9A%84%E5%A5%BD%E5%A4%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">4.6.</span> <span class="nav-text">服务器推送的好处是什么？</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

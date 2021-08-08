@@ -179,10 +179,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-08-06 11:03:03 / 修改时间：20:53:09" itemprop="dateCreated datePublished" datetime="2021-08-06T11:03:03+08:00">2021-08-06</time>
+              <time title="创建时间：2021-08-06 11:03:03" itemprop="dateCreated datePublished" datetime="2021-08-06T11:03:03+08:00">2021-08-06</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-08 14:38:05" itemprop="dateModified" datetime="2021-08-08T14:38:05+08:00">2021-08-08</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -208,6 +214,21 @@
 <p>为什么要 RPC  ？因为，两个不同的服务器上的服务提供的方法不在一个内存空间，所以，<strong>需要通过网络编程才能传递方法调用所需要的参数</strong>。并且，<strong>方法调用的结果也需要通过网络编程来接收</strong>。但是，如果我们自己手动网络编程来实现这个调用过程的话工作量是非常大的，因为，我们需要考虑底层传输方式（TCP还是UDP）、序列化方式等等方面。</p>
 <p>RPC 能帮助我们做什么呢？ 简单来说，通过 RPC 可以帮助我们调用远程计算机上某个服务的方法，这个过程就像调用本地方法一样简单。</p>
 <p>RPC 的出现就是为了让你<strong>调用远程方法像调用本地方法一样简单。</strong></p>
+<h3 id="RPC-VS-HTTP"><a href="#RPC-VS-HTTP" class="headerlink" title="RPC VS HTTP"></a>RPC VS HTTP</h3><p>无论是微服务还是分布式服务（都是SOA，都是面向服务编程），都面临着服务间的远程调用。那么服务间的远程调用方式有哪些呢？</p>
+<p>常见的远程调用方式有以下几种：</p>
+<p><strong>RPC</strong>：Remote Produce Call远程过程调用。<strong>自定义数据格式，基于原生TCP通信，速度快，效率高</strong>。早期的webservice，现在热门的dubbo，都是RPC的典型</p>
+<p><strong>Http</strong>：http其实是一种网络传输协议，基于TCP，<strong>规定了数据传输的格式。现在客户端浏览器与服务端通信基本都是采用Http协议。也可以用来进行远程服务调用。缺点是消息封装臃肿。</strong></p>
+<p>现在热门的Rest风格，就可以通过http协议来实现。</p>
+<p>相同点：*<em>底层通讯都是基于网络编程</em>***，都可以实现远程调用，都可以实现服务调用服务。</p>
+<p>不同点：<br>当使用RPC框架实现服务间调用的时候，要求服务提供方和服务消费方 都必须使用统一的RPC框架，跨操作系统在同一编程语言内使用<br><strong>优势：调用快、处理快</strong></p>
+<p>http：<br><strong>当使用http进行服务间调用的时候，无需关注服务提供方使用的编程语言，也无需关注服务消费方使用的编程语言，服务提供方只需要提供restful风格的接口，服务消费方，按照restful的原则，请求服务，即可跨系统跨编程语言的远程调用框架</strong></p>
+<p><strong>优势：通用性强</strong></p>
+<h4 id="restful"><a href="#restful" class="headerlink" title="restful"></a>restful</h4><p>在 REST 样式的 Web 服务中，<strong>每个资源都有一个地址</strong>。资源本身都是方法调用的目标，方法列表对所有资源都是一样的。这些方法都是标准方法，包括 HTTP GET、POST、PUT、DELETE，还可能包括 HEAD 和 OPTIONS。</p>
+<p>在 RPC 样式的架构中，<strong>关注点在于方法</strong>，而在 REST 样式的架构中，关注点在于资源 —— 将使用标准方法检索并操作信息片段（使用表示的形式）。资源表示形式在表示形式中使用超链接互联。</p>
+<p>RESTful架构是对MVC架构改进后所形成的一种架构，<strong>通过使用事先定义好的接口与不同的服务联系起来</strong>。在RESTful架构中，<strong>浏览器使用POST，DELETE，PUT和GET四种请求方式分别对指定的URL资源进行增删改查操作</strong>。因此，<strong>RESTful是通过URI实现对资源的管理及访问，具有扩展性强、结构清晰的特点。</strong></p>
+<p>RESTful架构将服务器分成前端服务器和后端服务器两部分，前端服务器为用户提供无模型的视图；后端服务器为前端服务器提供接口。浏览器向前端服务器请求视图，通过视图中包含的AJAX函数发起接口请求获取模型。<br>项目开发引入RESTful架构，利于团队并行开发。在RESTful架构中，将多数HTTP请求转移到前端服务器上，降低服务器的负荷，使视图获取后端模型失败也能呈现。但RESTful架构却不适用于所有的项目，当项目比较小时无需使用RESTful架构，项目变得更加复杂。</p>
+<p>（1）每一个URI代表一种资源；<br>（2）客户端和服务器之间，传递这种资源的某种表现层；<br>（3）客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。</p>
+<p><img src="https://i.loli.net/2021/08/08/rG74PqAnCzLyYQ6.png" alt="image-20210808143751929"></p>
 <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p><img src="https://i.loli.net/2021/08/06/KWeIP5wtzvQ8SVU.png" alt="image-20210806114259901"></p>
 <p>client 调用远程方法-&gt; request序列化 -&gt; 协议编码 -&gt; 网络传输-&gt; 服务端 -&gt; 反序列化request -&gt; 调用本地方法得到response -&gt; 序列化 -&gt;编码-&gt;…..</p>
 <h3 id="常见的RPC框架"><a href="#常见的RPC框架" class="headerlink" title="常见的RPC框架"></a>常见的RPC框架</h3><h4 id="Dubbo"><a href="#Dubbo" class="headerlink" title="Dubbo"></a>Dubbo</h4><p>是一款高性能、轻量级的开源 Java RPC 框架，它提供了三大核心能力：</p>
@@ -514,7 +535,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-06 10:48:50" itemprop="dateModified" datetime="2021-08-06T10:48:50+08:00">2021-08-06</time>
+                <time title="修改时间：2021-08-08 14:04:50" itemprop="dateModified" datetime="2021-08-08T14:04:50+08:00">2021-08-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -537,55 +558,39 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="1-查看CPU（top）"><a href="#1-查看CPU（top）" class="headerlink" title="1. 查看CPU（top）"></a><strong>1. 查看CPU（top）</strong></h3><p>top + 1、vmstat</p>
-<p>top -c  =》查看最高CPU占用率的进程</p>
-<h3 id="2-kill、ps-ef"><a href="#2-kill、ps-ef" class="headerlink" title="2. kill、ps-ef"></a><strong>2. kill、ps-ef</strong></h3><p>kill其实就是给某个进程id发送了一个信号。默认发送的信号是SIGTERM，而kill -9 发送的信号是exit。exit信号不会被系统阻塞，因此能够顺利杀掉进程。</p>
-<p>ps-ef查看所有正在运行的进程</p>
-<h3 id="3-查看内存（free）"><a href="#3-查看内存（free）" class="headerlink" title="3. 查看内存（free）"></a><strong>3. 查看内存（free）</strong></h3><p>free</p>
-<h3 id="4-查看硬盘（df、du）"><a href="#4-查看硬盘（df、du）" class="headerlink" title="4. 查看硬盘（df、du）"></a><strong>4. 查看硬盘（df、du）</strong></h3><p>df，du</p>
-<h3 id="5-查看文件描述符（lsof）"><a href="#5-查看文件描述符（lsof）" class="headerlink" title="5. 查看文件描述符（lsof）"></a><strong>5. 查看文件描述符（lsof）</strong></h3><p>lsof–list open file</p>
-<h3 id="6-关机重启（shutdown、poweroff、reboot）"><a href="#6-关机重启（shutdown、poweroff、reboot）" class="headerlink" title="6. 关机重启（shutdown、poweroff、reboot）"></a><strong>6. 关机重启（shutdown、poweroff、reboot）</strong></h3><p>关机</p>
-<p>​    shutdown -h now        立刻关机</p>
-<p>​    shutdown -h 5        5分钟后关机</p>
-<p>​    poweroff            立刻关机</p>
-<p>重启</p>
-<p>​    shutdown -r now        立刻重启</p>
-<p>​    shutdown -r 5        5分钟后重启</p>
-<p>​    reboot                立刻重启</p>
-<h3 id="7-目录操作（cd、ls、mkdir、pwd）"><a href="#7-目录操作（cd、ls、mkdir、pwd）" class="headerlink" title="7. 目录操作（cd、ls、mkdir、pwd）"></a><strong>7. 目录操作（cd、ls、mkdir、pwd）</strong></h3><p>目录切换    cd</p>
-<p>目录查看    ls</p>
-<p>目录创建    mkdir</p>
-<p>目录路径    pwd</p>
-<h3 id="8-文件操作（增删改查touch、rm、vi、cat、less、more、tail、chmod）"><a href="#8-文件操作（增删改查touch、rm、vi、cat、less、more、tail、chmod）" class="headerlink" title="8. 文件操作（增删改查touch、rm、vi、cat、less、more、tail、chmod）"></a><strong>8. 文件操作（增删改查touch、rm、vi、cat、less、more、tail、chmod）</strong></h3><p>文件新建    touch</p>
-<p>文件删除    rm</p>
-<p>文件修改    vi或vim</p>
-<p>文件查看    cat(最后一屏幕)、more(百分比显示，只能从前往后)、less(翻页查看，可往前往后，不用完全加载)、tail(指定行数查看)</p>
-<p>权限修改     chmod</p>
-<h3 id="9-压缩解压缩（tar-c-x-vzf）"><a href="#9-压缩解压缩（tar-c-x-vzf）" class="headerlink" title="9. 压缩解压缩（tar -c(x)vzf）"></a><strong>9. 压缩解压缩（tar -c(x)vzf）</strong></h3><p>命令：tar -zcvf 打包压缩后的文件名 要打包的文件其中：z：调用gzip压缩命令进行压缩 c：打包文件 v：显示运行过程 f：指定文件名</p>
-<p>命令：tar [-zxvf] 压缩文件   其中：x：代表解压示例：将/usr/tmp 下的ab.tar解压到当前目录下</p>
-<h3 id="10-查找-grep、find、whereis、which"><a href="#10-查找-grep、find、whereis、which" class="headerlink" title="10. 查找(grep、find、whereis、which)"></a><strong>10. 查找(grep、find、whereis、which)</strong></h3><p>grep</p>
-<p>ps -ef | grep sshd  查找指定ssh服务进程 </p>
-<p>ps -ef | grep sshd | grep -v grep 查找指定服务进程，排除gerp身  </p>
-<p>ps -ef | grep sshd -c 查找指定进程个数              </p>
-<p>find</p>
-<p>find . -name “*.log” -ls  在当前目录查找以.log结尾的文件，并显示详细信息。 </p>
-<p>find /root/ -perm 600   查找/root/目录下权限为600的文件  </p>
-<p>find . -type f -name “*.log”  查找当目录，以.log结尾的普通文件  </p>
-<p>find . -type d | sort   查找当前所有目录并排序  </p>
-<p>find . -size +100M  查找当前目录大于100M的文件         </p>
-<p>​     </p>
-<p>whereis：定位可执行文件、源代码文件、帮助文件在文件系统中的位置。这些文件的属性应属于原始代码，二进制文件，或是帮助文件。</p>
-<p>whereis ls    将和ls文件相关的文件都查找出来       </p>
-<p>​       </p>
-<p>which：在PATH变量指定的路径中，搜索某个系统命令的位置，并且返回第一个搜索结果。</p>
-<p>which pwd  查找pwd命令所在路径  </p>
-<p>which java  查找path中java的路径              </p>
-<p><strong>11. 网络（ifconfig、ping、netstat-an、service network start、chkconfig）</strong></p>
-<p>ifconfig查看网卡的信息</p>
-<p>ping查看与某台机器的连接情况</p>
-<p>netstat查看当前的系统端口：netstat -an | grep 8080</p>
-<p>service network start：重启网络</p>
-<p>chkconfig iptables off：关闭防火墙</p>
+          <h3 id="目录切换命令"><a href="#目录切换命令" class="headerlink" title="目录切换命令"></a>目录切换命令</h3><p>cd usr： 切换到该目录下 usr 目录<br>cd ..（或cd../）： 切换到上一层目录<br>cd /： 切换到系统根目录<br>cd ~： 切换到用户主目录<br>cd -： 切换到上一个操作所在目录</p>
+<h3 id="目录的操作命令-增删改查"><a href="#目录的操作命令-增删改查" class="headerlink" title="目录的操作命令(增删改查)"></a>目录的操作命令(增删改查)</h3><p><strong>mkdir 目录名称： 增加目录。</strong><br>ls/ll（ll 是 ls -l 的别名，ll 命令可以看到该目录下的所有目录和文件的详细信息）：查看目录信息。<br>find 目录 参数： 寻找目录（查）。示例：① 列出当前目录及子目录下所有文件和文件夹: find .；② 在/home目录下查找以.txt 结尾的文件名:find /home -name “<em>.txt” ,忽略大小写: find /home -iname “</em>.txt” ；③ 当前目录及子目录下查找所有以.txt 和.pdf 结尾的文件:find . ( -name “<em>.txt” -o -name “</em>.pdf” )或find . -name “<em>.txt” -o -name “</em>.pdf”。<br>mv 目录名称 新目录名称： 修改目录的名称（改）。注意：mv 的语法不仅可以对目录进行重命名而且也可以对各种文件，压缩包等进行 重命名的操作。mv 命令用来对文件或目录重新命名，或者将文件从一个目录移到另一个目录中。后面会介绍到 mv 命令的另一个用法。<br>mv 目录名称 目录的新位置： 移动目录的位置—剪切（改）。注意：mv 语法不仅可以对目录进行剪切操作，对文件和压缩包等都可执行剪切操作。另外 mv 与 cp 的结果不同，mv 好像文件“搬家”，文件个数并未增加。而 cp 对文件进行复制，文件个数增加了。<br>cp -r 目录名称 目录拷贝的目标位置： 拷贝目录（改），-r 代表递归拷贝 。注意：cp 命令不仅可以拷贝目录还可以拷贝文件，压缩包等，拷贝文件和压缩包时不 用写-r 递归。<br>rm [-rf] 目录 : 删除目录（删）。注意：rm 不仅可以删除目录，也可以删除其他文件或压缩包，为了增强大家的记忆， 无论删除任何目录或文件，都直接使用rm -rf 目录/文件/压缩包。</p>
+<h3 id="文件的操作命令-增删改查"><a href="#文件的操作命令-增删改查" class="headerlink" title="文件的操作命令(增删改查)"></a>文件的操作命令(增删改查)</h3><p><strong>touch 文件名称: 文件的创建（增）</strong>。</p>
+<p><strong>cat/more/less/tail 文件名称 ：文件的查看（查）</strong> 。命令 tail -f 文件 可以对某个文件进行动态监控，例如 tomcat 的日志文件， 会随着程序的运行，日志会变化，可以使用 tail -f catalina-2016-11-11.log 监控 文 件的变化 。</p>
+<p><strong>vim 文件</strong>： 修改文件的内容（改）。vim 编辑器是 Linux 中的强大组件，是 vi 编辑器的加强版，vim 编辑器的命令和快捷方式有很多，但此处不一一阐述，大家也无需研究的很透彻，使用 vim 编辑修改文件的方式基本会使用就可以了。在实际开发中，使用 vim 编辑器主要作用就是修改配置文件，</p>
+<p>下面是一般步骤： vim 文件——&gt;进入文件—–&gt;命令模式——&gt;<strong>按i进入编辑模式</strong>—–&gt;编辑文件 ——-&gt;<strong>按Esc进入底行模式</strong>—–&gt;输入：wq/q! （输入 wq 代表写入内容并退出，即保存；输入 q!代表强制退出不保存）。</p>
+<p><strong>rm -rf 文件： 删除文件（删）。</strong></p>
+<h3 id="压缩文件的操作命令"><a href="#压缩文件的操作命令" class="headerlink" title="压缩文件的操作命令"></a>压缩文件的操作命令</h3><p>1）打包并压缩文件：</p>
+<p>Linux 中的打包文件一般是以.tar 结尾的，压缩的命令一般是以.gz 结尾的。而一般情况下打包和压缩是一起进行的，打包并压缩后的文件的后缀名一般.tar.gz。 命令：tar -zcvf 打包压缩后的文件名 要打包压缩的文件 ，其中：</p>
+<p>z：调用 gzip 压缩命令进行压缩<br>c：打包文件<br>v：显示运行过程<br>f：指定文件名<br>比如：假如 test 目录下有三个文件分别是：aaa.txt bbb.txt ccc.txt，如果我们要打包 test 目录并指定压缩后的压缩包名称为 test.tar.gz 可以使用命令：tar -zcvf test.tar.gz aaa.txt bbb.txt ccc.txt 或 tar -zcvf test.tar.gz /test/</p>
+<p>2）解压压缩包：</p>
+<p>命令：`tar [-xvf] 压缩文件``</p>
+<p>其中：x：代表解压</p>
+<p>示例：</p>
+<p>将 /test 下的 test.tar.gz 解压到当前目录下可以使用命令：tar -xvf test.tar.gz<br>将 /test 下的 test.tar.gz 解压到根目录/usr 下:tar -xvf test.tar.gz -C /usr（- C 代表指定解压的位置）</p>
+<h3 id="Linux-用户管理"><a href="#Linux-用户管理" class="headerlink" title="Linux 用户管理"></a>Linux 用户管理</h3><p>Linux 系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。</p>
+<p>用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护。</p>
+<p>Linux 用户管理相关命令:</p>
+<p>useradd 选项 用户名:添加用户账号<br>userdel 选项 用户名:删除用户帐号<br>usermod 选项 用户名:修改帐号<br>passwd 用户名:更改或创建用户的密码<br>passwd -S 用户名 :显示用户账号密码信息<br>passwd -d 用户名: 清除用户密码<br>useradd 命令用于 Linux 中创建的新的系统用户。useradd可用来建立用户帐号。帐号建好之后，再用passwd设定帐号的密码．而可用userdel删除帐号。使用useradd指令所建立的帐号，实际上是保存在 /etc/passwd文本文件中。</p>
+<p>passwd命令用于设置用户的认证信息，包括用户密码、密码过期时间等。系统管理者则能用它管理系统用户的密码。只有管理者可以指定用户名称，一般用户只能变更自己的密码。</p>
+<h3 id="Linux-系统用户组的管理"><a href="#Linux-系统用户组的管理" class="headerlink" title="Linux 系统用户组的管理"></a>Linux 系统用户组的管理</h3><p>每个用户都有一个用户组，系统可以对一个用户组中的所有用户进行集中管理。不同 Linux 系统对用户组的规定有所不同，如 Linux 下的用户属于与它同名的用户组，这个用户组在创建用户时同时创建。</p>
+<p>用户组的管理涉及用户组的添加、删除和修改。组的增加、删除和修改实际上就是对/etc/group文件的更新。</p>
+<p>Linux 系统用户组的管理相关命令:</p>
+<p>groupadd 选项 用户组 :增加一个新的用户组<br>groupdel 用户组:要删除一个已有的用户组<br>groupmod 选项 用户组 : 修改用户组的属性</p>
+<h3 id="其他常用命令"><a href="#其他常用命令" class="headerlink" title="其他常用命令"></a>其他常用命令</h3><p><strong>pwd</strong>： 显示当前所在位置</p>
+<p>sudo + 其他命令 ：以系统管理者的身份执行指令，也就是说，经由 sudo 所执行的指令就好像是 root 亲自执行。</p>
+<p><strong>grep</strong> 要搜索的字符串 要搜索的文件 –color： 搜索命令，–color 代表高亮显示</p>
+<p><strong>ps -ef/ps -aux</strong>： 这两个命令都是查看当前系统正在运行进程，两者的区别是展示格式不同。如果想要查看特定的进程可以使用这样的格式：<strong>ps aux|grep redis</strong> （查看包括 redis 字符串的进程），也可使用 pgrep redis -a。注意：如果直接用 ps（（Process Status））命令，会显示所有进程的状态，通常结合 grep 命令查看某进程的状态。</p>
+<p><strong>kill -9 进程的pid</strong>： 杀死进程（-9 表示强制终止。）先用 ps 查找进程，然后用 kill 杀掉</p>
+<p>网络通信命令：<br>查看当前系统的网卡信息：ifconfig<br>查看与某台机器的连接情况：ping<br>查看当前系统的端口使用：netstat -an</p>
+<p>net-tools 和 iproute2 ： net-tools起源于 BSD 的 TCP/IP 工具箱，后来成为老版本 LinuxLinux 中配置网络功能的工具。但自 2001 年起，Linux 社区已经对其停止维护。同时，一些 Linux 发行版比如 Arch Linux 和 CentOS/RHEL 7 则已经完全抛弃了 net-tools，只支持iproute2。linux ip 命令类似于 ifconfig，但功能更强大，旨在替代它。更多详情请阅读如何在 Linux 中使用 IP 命令和示例</p>
+<p>shutdown： shutdown -h now： 指定现在立即关机；shutdown +5 “System will shutdown after 5 minutes”：指定 5 分钟后关机，同时送出警告信息给登入用户。</p>
+<p>reboot： reboot： 重开机。reboot -w： 做个重开机的模拟（只有纪录并不会真的重开机）。</p>
 
       
     </div>
@@ -628,10 +633,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-08-05 14:50:04 / 修改时间：18:49:37" itemprop="dateCreated datePublished" datetime="2021-08-05T14:50:04+08:00">2021-08-05</time>
+              <time title="创建时间：2021-08-05 14:50:04" itemprop="dateCreated datePublished" datetime="2021-08-05T14:50:04+08:00">2021-08-05</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-08 13:45:17" itemprop="dateModified" datetime="2021-08-08T13:45:17+08:00">2021-08-08</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -682,7 +693,30 @@
 <p>只有private构造方法，确保外部无法实例化；</p>
 <p>通过private static变量持有唯一实例，<strong>保证全局唯一性；</strong></p>
 <p>通过public static方法返回此唯一实例，<strong>使外部调用方能获取到实例。</strong></p>
-<h4 id="双重检查单例模式"><a href="#双重检查单例模式" class="headerlink" title="双重检查单例模式"></a>双重检查单例模式</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line">    private volatile static Singleton uniqueInstance;</span><br><span class="line">    private Singleton()&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    public static Singleton getUniqueInstance()&#123;</span><br><span class="line">        if (uniqueInstance==null)&#123;</span><br><span class="line">            synchronized (Singleton.class)&#123;</span><br><span class="line">                if (uniqueInstance==null)&#123;</span><br><span class="line">                    uniqueInstance=new Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="懒汉式，线程不安全"><a href="#懒汉式，线程不安全" class="headerlink" title="懒汉式，线程不安全"></a>懒汉式，线程不安全</h4><p>是否 Lazy 初始化：是</p>
+<p>是否多线程安全：否</p>
+<p>这种写法起到了Lazy Loading的效果，但是只能在单线程下使用。</p>
+<p>如果在多线程下，一个线程进入了if (singleton == null)判断语句块，还未来得及往下执行，另一个线程也通过了这个判断语句，这时便会产生多个实例。所以在多线程环境下不可使用这种方式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;  </span><br><span class="line">    private static Singleton instance;  </span><br><span class="line">    private Singleton ()&#123;&#125;  </span><br><span class="line"></span><br><span class="line">	public static Singleton getInstance() &#123;  </span><br><span class="line">	if (instance == null) &#123;  </span><br><span class="line">    instance = new Singleton();  </span><br><span class="line">	&#125;  </span><br><span class="line">	return instance;  </span><br><span class="line">	&#125;  </span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="懒汉式，线程安全"><a href="#懒汉式，线程安全" class="headerlink" title="懒汉式，线程安全"></a>懒汉式，线程安全</h4><p>是否 Lazy 初始化：是</p>
+<p>是否多线程安全：是</p>
+<p>描述：这种方式具备很好的 lazy loading，能够在多线程中很好的工作，但是，效率很低，99% 情况下不需要同步。<br>优点：<strong>第一次调用才初始化，避免内存浪费。</strong><br>缺点：<strong>必须加锁 synchronized 才能保证单例，但加锁会影响效率</strong>。<br>getInstance() 的性能对应用程序不是很关键（该方法使用不太频繁）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;  </span><br><span class="line">    private static Singleton instance;  </span><br><span class="line">    private Singleton ()&#123;&#125;  </span><br><span class="line">    public static synchronized Singleton getInstance() &#123;  </span><br><span class="line">    if (instance == null) &#123;  </span><br><span class="line">        instance = new Singleton();  </span><br><span class="line">    &#125;  </span><br><span class="line">    return instance;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h4><p>是否 Lazy 初始化：否</p>
+<p>是否多线程安全：是</p>
+<p>优点：这种写法比较简单，<strong>就是在类装载的时候就完成实例化</strong>。避免了线程同步问题。</p>
+<p>缺点：在类装载的时候就完成实例化，<strong>没有达到Lazy Loading的效果</strong>。<strong>如果从始至终从未使用过这个实例，则会造成内存的浪费。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;  </span><br><span class="line">    private static Singleton instance = new Singleton();  </span><br><span class="line">    private Singleton ()&#123;&#125;  </span><br><span class="line">    public static Singleton getInstance() &#123;  </span><br><span class="line">    return instance;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="双检锁-双重校验锁（DCL，即-double-checked-locking）"><a href="#双检锁-双重校验锁（DCL，即-double-checked-locking）" class="headerlink" title="双检锁/双重校验锁（DCL，即 double-checked locking）"></a>双检锁/双重校验锁（DCL，即 double-checked locking）</h4><p><strong>是否 Lazy 初始化：</strong>是</p>
+<p><strong>是否多线程安全：</strong>是</p>
+<p><strong>描述：</strong>我们进行了两次if (singleton == null)检查，这样就可以保证线程安全了。这样，实例化代码只用执行一次，后面再次访问时，判断if (singleton == null)，直接return实例化对象。</p>
+<p>优点：线程安全；延迟加载；效率较高。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line">    private volatile static Singleton uniqueInstance;</span><br><span class="line">    private Singleton()&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    public static Singleton getUniqueInstance()&#123;</span><br><span class="line">        if (uniqueInstance==null)&#123;</span><br><span class="line">            synchronized (Singleton.class)&#123;</span><br><span class="line">                if (uniqueInstance==null)&#123;</span><br><span class="line">                    uniqueInstance=new Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return uniqueInstance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>volatile修饰uniqueinstance的必要性：</p>
 <p>uniqueinstance=new singleton()；实际上分为3步。</p>
@@ -696,6 +730,18 @@
 <li>代码读取到instance不为null时，instance引用的对象可能还没有完成初始化。</li>
 <li><strong>防止指令重排。</strong></li>
 </ul>
+<h4 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line"></span><br><span class="line">private Singleton() &#123;&#125;</span><br><span class="line"></span><br><span class="line">private static class SingletonInstance &#123;</span><br><span class="line">    private static final Singleton INSTANCE = new Singleton();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static Singleton getInstance() &#123;</span><br><span class="line">    return SingletonInstance.INSTANCE;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了<strong>类装载的机制</strong>来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式<strong>在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</strong></p>
+<p>复制代码<br>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了类装载的机制来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</p>
+<p><strong>类的静态属性只会在第一次加载类的时候初始化，所以在这里，JVM帮助我们保证了线程的安全性</strong>，在类进行初始化时，别的线程是无法进入的。</p>
+<p>优点：避免了线程不安全，延迟加载，效率高。</p>
+<h4 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public enum Singleton &#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">    public void whateverMethod() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>借助JDK1.5中添加的枚举来实现单例模式。不仅能避免多线程同步问题，而且还能防止反序列化重新创建新的对象。可能是因为枚举在JDK1.5中才添加，所以在实际项目开发中，很少见人这么写过。</p>
+<p>优点<br>系统内存中该类只存在一个对象，节省了系统资源，对于一些需要频繁创建销毁的对象，使用单例模式可以提高系统性能。</p>
+<p>缺点<br>当想实例化一个单例类的时候，必须要记住使用相应的获取对象的方法，而不是使用new，可能会给其他开发人员造成困扰，特别是看不到源码的时候。</p>
+<p>适用场合<br>需要频繁的进行创建和销毁的对象；<br>创建对象时耗时过多或耗费资源过多，但又经常用到的对象；<br>工具类对象；<br>频繁访问数据库或文件的对象。</p>
 <h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p>工厂方法是指定义<strong>工厂接口和产品接口</strong>，但如何创建实际工厂和实际产品被推迟到子类实现，从而使调用方只和抽象工厂与抽象产品打交道。</p>
 <p>实际更常用的是更简单的<strong>静态工厂方法</strong>，它允许工厂内部对创建产品进行优化。</p>
 <p>调用方尽量持有接口或抽象类，避免持有具体类型的子类，以便工厂方法能随时切换不同的子类返回，却不影响调用方代码。</p>
