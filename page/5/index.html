@@ -156,144 +156,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">操作系统-内存管理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-30 15:05:30" itemprop="dateCreated datePublished" datetime="2021-07-30T15:05:30+08:00">2021-07-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-06 10:29:40" itemprop="dateModified" datetime="2021-08-06T10:29:40+08:00">2021-08-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="分段管理"><a href="#分段管理" class="headerlink" title="分段管理"></a>分段管理</h3><p><img src="https://i.loli.net/2021/08/06/gY7BE1UoqzbDnLO.png" alt="image-20210801212559233"></p>
-<p><img src="https://i.loli.net/2021/08/06/EevMmVO14PZa8gF.png" alt="image-20210801214351270"></p>
-<p>进程的地址空间：按照程序自身的<strong>逻辑关系划分</strong>（代码段，数据段….）为若干个段，每个段都有一个段名（在低级语言中，程序员使用段名来编程），每段从0开始编址。<br>内存分配规则：以段为单位进行分配，每个段在内存中占据连续空间，但各段之间可以不相邻。</p>
-<p>由于是按逻辑功能模块划分，用户编程更方便，程序可读性更高。</p>
-<p><strong>逻辑地址</strong>：段号：段内地址</p>
-<p><strong>段表</strong>：段号=段基地址=段长。<br>缺点：</p>
-<ul>
-<li><strong>内存碎片。</strong></li>
-<li><strong>内存交换效率低。</strong></li>
-</ul>
-<h3 id="分页管理"><a href="#分页管理" class="headerlink" title="分页管理"></a>分页管理</h3><h4 id="分页式："><a href="#分页式：" class="headerlink" title="分页式："></a>分页式：</h4><ul>
-<li><p><strong>固定分区会产生碎片</strong>。把内存划分为很多块，作为进程内存分配的最小单位。</p>
-</li>
-<li><p>页面大小要权衡，应该是2的幂次。太大会产生页内碎片，太小，页表会占用大量内存，降低换入换出效率。<br><strong>分页管理的地址结构：页号：页内偏移量</strong></p>
-<p>为32位，<strong>0-11为页内偏移，12-31为页号。</strong></p>
-<p>每页大小2^12=<strong>4kb。</strong></p>
-</li>
-<li><p>为了方便每个进程<strong>在内存中找到每个页面对应的物理块</strong>，会为每个进程创建一张<strong>页表</strong>（存储在内存中===访问一次数据需要<strong>访问两次内存</strong>）。<br>页表由<strong>页表项</strong>组成<strong>第一部分是，页号，第二部分是物理块号。</strong></p>
-</li>
-</ul>
-<p><img src="https://i.loli.net/2021/08/06/CjPalYZUGqMAsEn.png" alt="image-20210801213808642"></p>
-<h4 id="分页管理问题："><a href="#分页管理问题：" class="headerlink" title="分页管理问题："></a>分页管理问题：</h4><ul>
-<li>每次访问内存<strong>都需要进行地址的转换</strong>。速度受限制。</li>
-<li><strong>页表不能太大</strong>，否则内存利用率会降低。</li>
-</ul>
-<h4 id="改进："><a href="#改进：" class="headerlink" title="改进："></a>改进：</h4><ul>
-<li><p>具有并行查找能力的高速缓冲存储器==<strong>快表（联想存储器TLB）</strong>–把最常访问的⼏个⻚表项存储到访问速度更快的硬件。</p>
-</li>
-<li><p>这时先查快表，没有再查慢表。（局部性原理）</p>
-</li>
-</ul>
-<h4 id="多级页表："><a href="#多级页表：" class="headerlink" title="多级页表："></a>多级页表：</h4><ul>
-<li><p>虚拟内存地址空间4Gb，页表大小是4kb，需要100万个页，假设每个页表项大小为4b。那么需要4Mb来存储页表。</p>
-</li>
-<li><p>每个进程都有自己的页表，假设有200个进程，就需要800Mb来存储页表，很大了。</p>
-</li>
-<li><p>建立上一级页表存储页表间的映射关系。</p>
-</li>
-<li><p><strong>顶级页表一般只有一个页面。</strong></p>
-</li>
-</ul>
-<p>建立多级页表：建立索引，不用去存储无用页表项，也不用去盲目的查找页表项。</p>
-<p><img src="https://i.loli.net/2021/08/06/ZQH2XSo81gRuCa7.png" alt="image-20210801213945467"></p>
-<h3 id="段页式管理"><a href="#段页式管理" class="headerlink" title="段页式管理"></a>段页式管理</h3><ul>
-<li>分段<strong>利于反应程序的逻辑结构以及段的共享</strong>。</li>
-<li>先将程序划分为<strong>多个有逻辑意义的段</strong>，接着再把<strong>每个段划分为多个⻚</strong>，也就是对分段划分出来的连续空间，再划分固定⼤⼩的⻚；</li>
-<li>地址结构就由<strong>段号、段内⻚号和⻚内位移</strong>三部分组成。</li>
-<li>⽤于段⻚式地址变换的数据结构是每⼀个程序⼀张段表，每个段⼜建⽴⼀张⻚表，段表中的地址是⻚表的起始地址，⽽⻚表中的地址则为某⻚的物理⻚号。</li>
-</ul>
-<p><img src="https://i.loli.net/2021/08/06/knoWqyRxGDMKC1P.png" alt="image-20210801214844351"></p>
-<ul>
-<li>第⼀次访问段表，得到<strong>⻚表起始地址；</strong></li>
-<li>第⼆次访问⻚表，得到<strong>物理⻚号；</strong></li>
-<li>第三次将物理⻚号与⻚内位移组合，得到物理地址。</li>
-</ul>
-<h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><p>基于局部性原理：程序装入时，先装入一部分，其他的驻留在外存，当访问的信息不在内存时，再换入。<br>这好像给用户提供了一个比实际内存大的内存空间。</p>
-<p><strong>使用外存的空间来扩展内存的空间。</strong><br><strong>实现：</strong><br>    分页<br>    分段<br>    段页式<br>需要：<br>    内外存<br>    页表机制<br>    中断机构（缺页中断）<br>    地址变换（先检索快表）</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>为了在多进程环境下，使得<strong>进程之间的内存地址不受影响</strong>，相互隔离，于是操作系统就为每个进程独⽴分<br>配⼀套<strong>虚拟地址空间</strong>，每个程序只关⼼⾃⼰的虚拟地址就可以，实际上⼤家的虚拟地址都是⼀样的，但分<br>布到物理地址内存是不⼀样的。作为程序，也不⽤关⼼物理地址的事情。</p>
-<p>每个进程都有⾃⼰的虚拟空间，⽽物理内存只有⼀个，所以当启⽤了⼤量的进程，物理内存必然会很紧<br>张，于是操作系统会通过<strong>内存交换</strong>技术，把不常使⽤的内存暂时存放到硬盘（换出），在需要的时候再装<br>载回物理内存（换⼊）。</p>
-<p>那既然有了虚拟地址空间，那必然要把<strong>虚拟地址「映射」到物理地址</strong>，这个事情通常由操作系统来维护。<br>那么对于虚拟地址与物理地址的映射关系，可以有<strong>分段和分⻚</strong>的⽅式，同时两者结合都是可以的。</p>
-<p>内存分段是根据<strong>程序的逻辑⻆度</strong>，分成了<strong>栈段、堆段、数据段、代码段</strong>等，这样可以分离出不同属性的<br>段，同时是⼀块连续的空间。但是每个段的⼤⼩都不是统⼀的，这就会导致<strong>内存碎⽚和内存交换效率低</strong>的<br>问题。</p>
-<p>于是，就出现了内存分⻚，把虚拟空间和物理空间分成⼤⼩固定的⻚，如在 Linux 系统中，每⼀⻚的⼤⼩<br>为 <strong>4KB</strong> 。由于分了⻚后，就不会产⽣细⼩的内存碎⽚。同时在内存交换的时候，写⼊硬盘也就⼀个⻚或<br>⼏个⻚，这就⼤⼤提⾼了内存交换的效率。</p>
-<p>再来，为了解决简单分⻚产⽣的<strong>⻚表过⼤的问题</strong>，就有了<strong>多级⻚表</strong>，它解决了空间上的问题，但这就会导<br>致 CPU 在寻址的过程中，需要有很多层表参与，加⼤了时间上的开销。于是根据程序的局部性原理，在<br>CPU 芯⽚中加⼊了 <strong>TLB，负责缓存最近常被访问的⻚表项，⼤⼤提⾼了地址的转换速度。</strong></p>
-<p><strong>Linux 系统主要采⽤了分⻚管理</strong>，但是由于 Intel 处理器的发展史，Linux 系统⽆法避免分段管理。于是<br>Linux 就把<strong>所有段的基地址设为 0</strong> ，也就意味着所有程序的地址空间都是线性地址空间（虚拟地址），相<br>当于屏蔽了 CPU 逻辑地址的概念，所以段只被⽤于访问控制和内存保护。</p>
-<p>另外，Linxu 系统中虚拟空间分布可分为<strong>⽤户态和内核态</strong>两部分，其中⽤户态的分布：<strong>代码段、全局变量、</strong><br><strong>BSS、函数栈、堆内存、映射区</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1557,6 +1419,412 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/06/RPC-%E6%A6%82%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/06/RPC-%E6%A6%82%E8%BF%B0/" class="post-title-link" itemprop="url">RPC-概述</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-06 11:03:03" itemprop="dateCreated datePublished" datetime="2021-07-06T11:03:03+08:00">2021-07-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-11 14:45:19" itemprop="dateModified" datetime="2021-08-11T14:45:19+08:00">2021-08-11</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="什么是RPC"><a href="#什么是RPC" class="headerlink" title="什么是RPC"></a>什么是RPC</h3><p>RPC（Remote Procedure Call）即<strong>远程过程调用</strong>。</p>
+<p>为什么要 RPC  ？因为，两个不同的服务器上的服务提供的方法不在一个内存空间，所以，<strong>需要通过网络编程才能传递方法调用所需要的参数</strong>。并且，<strong>方法调用的结果也需要通过网络编程来接收</strong>。但是，如果我们自己手动网络编程来实现这个调用过程的话工作量是非常大的，因为，我们需要考虑底层传输方式（TCP还是UDP）、序列化方式等等方面。</p>
+<p>RPC 能帮助我们做什么呢？ 简单来说，通过 RPC 可以帮助我们调用远程计算机上某个服务的方法，这个过程就像调用本地方法一样简单。</p>
+<p>RPC 的出现就是为了让你<strong>调用远程方法像调用本地方法一样简单。</strong></p>
+<h3 id="RPC-VS-HTTP"><a href="#RPC-VS-HTTP" class="headerlink" title="RPC VS HTTP"></a>RPC VS HTTP</h3><p>无论是微服务还是分布式服务（都是SOA，都是面向服务编程），都面临着服务间的远程调用。那么服务间的远程调用方式有哪些呢？</p>
+<p>常见的远程调用方式有以下几种：</p>
+<p><strong>RPC</strong>：Remote Produce Call远程过程调用。<strong>自定义数据格式，基于原生TCP通信，速度快，效率高</strong>。早期的webservice，现在热门的dubbo，都是RPC的典型</p>
+<p><strong>Http</strong>：http其实是一种网络传输协议，基于TCP，<strong>规定了数据传输的格式。现在客户端浏览器与服务端通信基本都是采用Http协议。也可以用来进行远程服务调用。缺点是消息封装臃肿。</strong></p>
+<p>现在热门的Rest风格，就可以通过http协议来实现。</p>
+<p>相同点：<strong>底层通讯都是基于网络编程</strong>，都可以实现远程调用，都可以实现服务调用服务。</p>
+<p>不同点：<br>当使用RPC框架实现服务间调用的时候，要求服务提供方和服务消费方 都必须使用统一的RPC框架，跨操作系统在同一编程语言内使用<br><strong>优势：调用快、处理快</strong></p>
+<p>http：<br><strong>当使用http进行服务间调用的时候，无需关注服务提供方使用的编程语言，也无需关注服务消费方使用的编程语言，服务提供方只需要提供restful风格的接口，服务消费方，按照restful的原则，请求服务，即可跨系统跨编程语言的远程调用框架</strong></p>
+<p><strong>优势：通用性强</strong></p>
+<h4 id="restful"><a href="#restful" class="headerlink" title="restful"></a>restful</h4><p>在 REST 样式的 Web 服务中，<strong>每个资源都有一个地址</strong>。资源本身都是方法调用的目标，方法列表对所有资源都是一样的。这些方法都是标准方法，包括 HTTP GET、POST、PUT、DELETE，还可能包括 HEAD 和 OPTIONS。</p>
+<p>在 RPC 样式的架构中，<strong>关注点在于方法</strong>，而在 REST 样式的架构中，关注点在于资源 —— 将使用标准方法检索并操作信息片段（使用表示的形式）。资源表示形式在表示形式中使用超链接互联。</p>
+<p>RESTful架构是对MVC架构改进后所形成的一种架构，<strong>通过使用事先定义好的接口与不同的服务联系起来</strong>。在RESTful架构中，<strong>浏览器使用POST，DELETE，PUT和GET四种请求方式分别对指定的URL资源进行增删改查操作</strong>。因此，<strong>RESTful是通过URI实现对资源的管理及访问，具有扩展性强、结构清晰的特点。</strong></p>
+<p>RESTful架构将服务器分成前端服务器和后端服务器两部分，前端服务器为用户提供无模型的视图；后端服务器为前端服务器提供接口。浏览器向前端服务器请求视图，通过视图中包含的AJAX函数发起接口请求获取模型。<br>项目开发引入RESTful架构，利于团队并行开发。在RESTful架构中，将多数HTTP请求转移到前端服务器上，降低服务器的负荷，使视图获取后端模型失败也能呈现。但RESTful架构却不适用于所有的项目，当项目比较小时无需使用RESTful架构，项目变得更加复杂。</p>
+<p>（1）每一个URI代表一种资源；<br>（2）客户端和服务器之间，传递这种资源的某种表现层；<br>（3）客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。</p>
+<p><img src="https://i.loli.net/2021/08/08/rG74PqAnCzLyYQ6.png" alt="image-20210808143751929"></p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p><img src="https://i.loli.net/2021/08/06/KWeIP5wtzvQ8SVU.png" alt="image-20210806114259901"></p>
+<p>client 调用远程方法-&gt; request序列化 -&gt; 协议编码 -&gt; 网络传输-&gt; 服务端 -&gt; 解码-&gt;反序列化request -&gt; 调用本地方法得到response -&gt; 序列化 -&gt;编码-&gt;…..</p>
+<h3 id="常见的RPC框架"><a href="#常见的RPC框架" class="headerlink" title="常见的RPC框架"></a>常见的RPC框架</h3><h4 id="Dubbo"><a href="#Dubbo" class="headerlink" title="Dubbo"></a>Dubbo</h4><p>是一款高性能、轻量级的开源 Java RPC 框架，它提供了三大核心能力：</p>
+<p>面向接口的远程方法调用<br>智能容错和负载均衡<br>服务自动注册和发现。</p>
+<p>简单来说 Dubbo 是一个分布式服务框架，致力于提供高性能和透明化的 RPC 远程服务调用方案，以及 SOA 服务治理方案。</p>
+<p>Dubbo 是由阿里开源，后来加入了 Apache 。正式由于 Dubbo 的出现，才使得越来越多的公司开始使用以及接受分布式架构。</p>
+<h4 id="Motan"><a href="#Motan" class="headerlink" title="Motan"></a>Motan</h4><p>motan 是2016 年新浪微博开源的一款 RPC 框架，据说在新浪微博正支撑着千亿次调用。</p>
+<p>很多人喜欢拿 motan 和 Dubbo 作比较，毕竟都是国内大公司开源的。笔者在查阅了很多资料，以及简单查看了其源码之后发现：motan 更像是一个精简版的 dubbo，可能是借鉴了 Dubbo 的思想，motan 的设计更加精简，功能更加纯粹。</p>
+<p>不过，我不推荐你在实际项目中使用 motan。如果你要是公司实际使用的话，还是推荐 Dubbo ，其社区活跃度以及生态都要好很多。</p>
+<h4 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h4><p>gRPC 是 Google 开源的一个高性能、通用的开源 RPC 框架。其由主要面向移动应用开发并基于 HTTP/2 协议标准而设计，基于 ProtoBuf 序列化协议开发，并且支持众多开发语言。</p>
+<p>通过 ProtoBuf 定义接口和数据类型还挺繁琐的，虽然 gRPC 确实很多亮点的地方，但是我还是选择 Dubbo。</p>
+<h4 id="Thrift"><a href="#Thrift" class="headerlink" title="Thrift"></a>Thrift</h4><p>Apache Thrift 是 Facebook 开源的跨语言的 RPC 通信框架，目前已经捐献给 Apache 基金会管理，由于其跨语言特性和出色的性能，在很多互联网公司得到应用，有能力的公司甚至会基于 thrift 研发一套分布式服务框架，增加诸如服务注册、服务发现等功能。</p>
+<p>Thrift支持多种不同的编程语言，包括C++、Java、Python、PHP、Ruby等（相比于 gRPC 支持的语言更多 ）。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><strong>gRPC 和 Thrift</strong> 虽然支持跨语言的 RPC 调用，但是因为它们只提供了最基本的 RPC 框架功能，缺乏一系列配套的服务化组件和服务治理功能的支撑。</p>
+<p>Dubbo 不论是从功能完善程度、生态系统还是社区活跃度来说都是最优秀的。最重要的是其在国内有很多成功的案例比如当当网、滴滴等等。下图展示了 Dubbo 的生态系统。</p>
+<p>但是，Dubbo 和 Motan 主要是给 Java 语言使用。虽然，Dubbo 和 Motan 目前也能兼容部分语言，但是不太推荐。如果需要跨语言调用的话，可以考虑一下 Thrift 和 gRPC。</p>
+<h3 id="自己实现RPC框架的思路"><a href="#自己实现RPC框架的思路" class="headerlink" title="自己实现RPC框架的思路"></a>自己实现RPC框架的思路</h3><p><img src="https://i.loli.net/2021/08/06/aG7gWErNb9iymIU.png" alt="image-20210806144123153"></p>
+<h4 id="注册中心"><a href="#注册中心" class="headerlink" title="注册中心"></a><strong>注册中心</strong></h4><h5 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public class ZkServiceDiscoveryImpl implements ServiceDiscovery &#123;</span><br><span class="line">    private final LoadBalance loadBalance;//负载均衡</span><br><span class="line"></span><br><span class="line">    public ZkServiceDiscoveryImpl() &#123;</span><br><span class="line">        this.loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(&quot;loadBalance&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public InetSocketAddress lookupService(RpcRequest rpcRequest) &#123;</span><br><span class="line">    	//服务名</span><br><span class="line">        String rpcServiceName = rpcRequest.getRpcServiceName();</span><br><span class="line">        CuratorFramework zkClient = CuratorUtils.getZkClient();</span><br><span class="line">        //找子节点</span><br><span class="line">        List&lt;String&gt; serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);</span><br><span class="line">        //找不到，就抛出not found</span><br><span class="line">        if (serviceUrlList == null || serviceUrlList.size() == 0) &#123;</span><br><span class="line">            throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);</span><br><span class="line">        &#125;</span><br><span class="line">        // load balancing</span><br><span class="line">        String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);</span><br><span class="line">        </span><br><span class="line">        String[] socketAddressArray = targetServiceUrl.split(&quot;:&quot;);</span><br><span class="line">        String host = socketAddressArray[0];</span><br><span class="line">        int port = Integer.parseInt(socketAddressArray[1]);</span><br><span class="line">        return new InetSocketAddress(host, port);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class ZkServiceRegistryImpl implements ServiceRegistry &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void registerService(String rpcServiceName, InetSocketAddress inetSocketAddress) &#123;</span><br><span class="line">        String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + &quot;/&quot; + rpcServiceName + inetSocketAddress.toString();</span><br><span class="line">        CuratorFramework zkClient = CuratorUtils.getZkClient();</span><br><span class="line">        //创建一个持久节点</span><br><span class="line">        CuratorUtils.createPersistentNode(zkClient, servicePath);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>推荐使用 Zookeeper 作为注册中心。当然了，你也可以使用 Nacos ，甚至是 Redis。</p>
+<p>ZooKeeper 为我们提供了高可用、高性能、稳定的分布式数据一致性解决方案，通常被用于实现诸如数据发布/订阅、负载均衡、命名服务、分布式协调/通知、集群管理、Master 选举、分布式锁和分布式队列等功能。并且<strong>，ZooKeeper 将数据保存在内存中，性能是非常棒的</strong>。 在“读”多于“写”的应用程序中尤其地高性能，因为“写”会导致所有的服务器间同步状态。（“读”多于“写”是协调服务的典型场景）。</p>
+<p>当然了，如果你想通过文件来存储服务地址的话也是没问题的，不过性能会比较差。</p>
+<p>注册中心负责<strong>服务地址的注册与查找，相当于目录服务</strong>。 <strong>服务端启动的时候将服务名称及其对应的地址(ip+port)注册到注册中心</strong>，服务消费端根据服务名称找到对应的服务地址。有了服务地址之后，服务消费端就可以通过网络请求服务端了。</p>
+<h5 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h5><p><strong>查看常用命令(help 命令)</strong></p>
+<p>通过 help 命令查看 ZooKeeper 常用命令</p>
+<p><strong>创建节点(create 命令)</strong></p>
+<p>通过 create 命令在根目录创建了 node1 节点，与它关联的字符串是”node1”</p>
+<p>create /node1 “node1”</p>
+<p><strong>更新节点数据内容(set 命令)</strong></p>
+<p> set /node1 “set node1”</p>
+<p><strong>获取节点的数据(get 命令)</strong></p>
+<p>get 命令可以获取指定节点的数据内容和节点的状态</p>
+<p><strong>查看某个目录下的子节点(ls 命令)</strong></p>
+<p>通过 ls 命令查看根目录下的节点</p>
+<p>ls /</p>
+<p>通过 ls 命令查看 node1 目录下的节点</p>
+<p>ls /node1</p>
+<p><strong>查看节点状态(stat 命令)</strong></p>
+<p>通过 stat 命令查看节点状态</p>
+<p>stat /node1<br>比如 cversion、aclVersion、numChildren 等等</p>
+<p><strong>查看节点信息和状态(ls2 命令)</strong></p>
+<p>ls2 命令更像是  ls 命令和 stat 命令的结合。 ls2 命令返回的信息包括 2 部分：</p>
+<p>子节点列表<br>当前节点的 stat 信息。</p>
+<p><strong>删除节点(delete 命令)</strong></p>
+<p>这个命令很简单，但是需要注意的一点是如果你要删除某一个节点，那么这个节点必须无子节点才行。</p>
+<h5 id="连接zookeeper"><a href="#连接zookeeper" class="headerlink" title="连接zookeeper"></a>连接zookeeper</h5><p>通过 CuratorFrameworkFactory 创建 CuratorFramework 对象，然后再调用  CuratorFramework 对象的 start() 方法即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CuratorFramework zkClient = CuratorFrameworkFactory.builder()</span><br><span class="line">    // the server to connect to (can be a server list)</span><br><span class="line">    .connectString(&quot;127.0.0.1:2181&quot;)</span><br><span class="line">    .retryPolicy(retryPolicy)</span><br><span class="line">    .build();</span><br><span class="line">zkClient.start();</span><br></pre></td></tr></table></figure>
+
+<p>baseSleepTimeMs：重试之间等待的初始时间<br>maxRetries ：最大重试次数<br>connectString ：要连接的服务器列表<br>retryPolicy ：重试策略</p>
+<h5 id="zookeeper常见概念"><a href="#zookeeper常见概念" class="headerlink" title="zookeeper常见概念"></a>zookeeper常见概念</h5><h6 id="ZooKeeper-典型应用场景"><a href="#ZooKeeper-典型应用场景" class="headerlink" title="ZooKeeper 典型应用场景"></a><strong>ZooKeeper 典型应用场景</strong></h6><p>分布式锁 ： 通过创建唯一节点获得分布式锁，当获得锁的一方执行完相关代码或者是挂掉之后就释放锁。<br>命名服务 ：可以通过 ZooKeeper 的顺序节点生成全局唯一 ID<br>数据发布/订阅 ：通过 Watcher 机制 可以很方便地实现数据发布/订阅。当你将数据发布到 ZooKeeper 被监听的节点上，其他机器可通过监听 ZooKeeper 上节点的变化来实现配置的动态更新。</p>
+<h6 id="Data-model（数据模型）"><a href="#Data-model（数据模型）" class="headerlink" title="Data model（数据模型）"></a>Data model（数据模型）</h6><p>ZooKeeper 数据模型采用层次化的多叉树形结构，每个节点上都可以存储数据，这些数据可以是数字、字符串或者是二级制序列。并且。每个节点还可以拥有 N 个子节点，最上层是根节点以“/”来代表。每个数据节点在 ZooKeeper 中被称为 znode，它是 ZooKeeper 中数据的最小单元。并且，每个 znode 都一个唯一的路径标识。</p>
+<p>ZooKeeper 主要是用来协调服务的，而不是用来存储业务数据的，所以不要放比较大的数据在 znode 上，ZooKeeper 给出的上限是每个结点的数据大小最大是 1M。</p>
+<p><img src="https://i.loli.net/2021/08/06/U4PZ357vfcK2QDT.png" alt="image-20210806184839468"></p>
+<h6 id="znode-4-种类型"><a href="#znode-4-种类型" class="headerlink" title="znode 4 种类型"></a>znode 4 种类型</h6><p><strong>持久（PERSISTENT）节点</strong> ：一旦创建就一直存在即使 ZooKeeper 集群宕机，直到将其删除。<br><strong>临时（EPHEMERAL）节点</strong> ：临时节点的生命周期是与 客户端会话（session） 绑定的，会话消失则节点消失 。并且，临时节点只能做叶子节点 ，不能创建子节点。<br><strong>持久顺序（PERSISTENT_SEQUENTIAL）节点</strong> ：除了具有持久（PERSISTENT）节点的特性之外， 子节点的名称还具有顺序性。比如 /node1/app0000000001 、/node1/app0000000002 。<br><strong>临时顺序（EPHEMERAL_SEQUENTIAL）节点</strong> ：除了具备临时（EPHEMERAL）节点的特性之外，子节点的名称还具有顺序性。</p>
+<p>每个 znode 由 2 部分组成:</p>
+<p>stat ：状态信息<br>data ： 节点存放的数据的具体内容</p>
+<p><img src="https://i.loli.net/2021/08/06/CAHXpy2Qitw8M1h.png" alt="image-20210806184946339"></p>
+<h6 id="ACL（权限控制）"><a href="#ACL（权限控制）" class="headerlink" title="ACL（权限控制）"></a>ACL（权限控制）</h6><p>ZooKeeper 采用 ACL（AccessControlLists）策略来进行权限控制，类似于 UNIX 文件系统的权限控制。</p>
+<p>对于 znode 操作的权限，ZooKeeper 提供了以下 5 种：</p>
+<p>CREATE : 能创建子节点<br>READ ：能获取节点数据和列出其子节点<br>WRITE : 能设置/更新节点数据<br>DELETE : 能删除子节点<br>ADMIN : 能设置节点 ACL 的权限</p>
+<h6 id="Watcher（事件监听器）"><a href="#Watcher（事件监听器）" class="headerlink" title="Watcher（事件监听器）"></a>Watcher（事件监听器）</h6><p>Watcher（事件监听器），是 ZooKeeper 中的一个很重要的特性。ZooKeeper 允许用户在<strong>指定节点上注册一些 Watcher</strong>，并且在一些特定事件触发的时候，ZooKeeper 服务端会将事件通知到感兴趣的客户端上去，该机制是 ZooKeeper 实现分布式协调服务的重要特性。</p>
+<p><img src="https://i.loli.net/2021/08/06/cYBTq4IkzRsagZF.png" alt="image-20210806185101550"></p>
+<h6 id="ZooKeeper-集群"><a href="#ZooKeeper-集群" class="headerlink" title="ZooKeeper 集群"></a>ZooKeeper 集群</h6><p>为了保证高可用，最好是以集群形态来部署 ZooKeeper，这样只要集群中大部分机器是可用的（能够容忍一定的机器故障），那么 ZooKeeper 本身仍然是可用的。通常 3 台服务器就可以构成一个 ZooKeeper 集群了。ZooKeeper 官方提供的架构图就是一个 ZooKeeper 集群整体对外提供服务。</p>
+<p>集群间通过 <strong>ZAB 协议（ZooKeeper Atomic Broadcast）</strong>来保持数据的一致性。</p>
+<p>ZooKeeper 中没有选择传统的 Master/Slave 概念，而是引入了 <strong>Leader、Follower 和 Observer</strong> 三种角色。</p>
+<p><img src="https://i.loli.net/2021/08/06/xSmqUpYf78lrvHk.png" alt="image-20210806185249694"></p>
+<p>ZooKeeper 集群中的所有机器通过一个 Leader 选举过程 来选定一台称为 “Leader” 的机器，Leader 既可以为客户端提供写服务又能提供读服务。除了 Leader 外，<strong>Follower 和 Observer 都只能提供读服务</strong>。Follower 和 Observer 唯一的区别在于 <strong>Observer 机器不参与 Leader 的选举过程</strong>，<strong>也不参与写操作的“过半写成功”策略，</strong>因此 <strong>Observer 机器可以在不影响写性能的情况下提升集群的读性能。</strong></p>
+<p>当 Leader 服务器出现网络中断、崩溃退出与重启等异常情况时，就会进入 Leader 选举过程，这个过程会选举产生新的 Leader 服务器。</p>
+<p><strong>Leader election（选举阶段）</strong>：节点在一开始都处于选举阶段，只要有一个节点得到超半数节点的票数，它就可以当选准 leader。<br><strong>Discovery（发现阶段）</strong> ：在这个阶段，followers 跟准 leader 进行通信，同步 followers 最近接收的事务提议。<br><strong>Synchronization（同步阶段）</strong> :同步阶段主要是利用 leader 前一阶段获得的最新提议历史，同步集群中所有的副本。同步完成之后 准 leader 才会成为真正的 leader。<br><strong>Broadcast（广播阶段）</strong> :到了这个阶段，ZooKeeper 集群才能正式对外提供事务服务，并且 leader 可以进行消息广播。同时如果有新的节点加入，还需要对新节点进行同步。</p>
+<h6 id="ZooKeeper-集群为啥最好奇数台？"><a href="#ZooKeeper-集群为啥最好奇数台？" class="headerlink" title="ZooKeeper 集群为啥最好奇数台？"></a>ZooKeeper 集群为啥最好奇数台？</h6><p>ZooKeeper 集群在宕掉几个 ZooKeeper 服务器之后，如果剩下的 ZooKeeper 服务器个数大于宕掉的个数的话整个 ZooKeeper 才依然可用。假如我们的集群中有 n 台 ZooKeeper 服务器，那么也就是剩下的服务数必须大于 n/2。先说一下结论，2n 和 2n-1 的容忍度是一样的，都是 n-1，大家可以先自己仔细想一想，这应该是一个很简单的数学问题了。</p>
+<p>比如假如我们有 3 台，那么最大允许宕掉 1 台 ZooKeeper 服务器，如果我们有 4 台的的时候也同样只允许宕掉 1 台。 假如我们有 5 台，那么最大允许宕掉 2 台 ZooKeeper 服务器，如果我们有 6 台的的时候也同样只允许宕掉 2 台。</p>
+<h6 id="何为集群脑裂？"><a href="#何为集群脑裂？" class="headerlink" title="何为集群脑裂？"></a>何为集群脑裂？</h6><p>对于一个集群，通常多台机器会部署在不同机房，来提高这个集群的可用性。保证可用性的同时，会发生一种机房间网络线路故障，导致机房间网络不通，而集群被割裂成几个小集群。这时候子集群各自选主导致“脑裂”的情况。</p>
+<p>举例说明：比如现在有一个由 6 台服务器所组成的一个集群，部署在了 2 个机房，每个机房 3 台。正常情况下只有 1 个 leader，但是当两个机房中间网络断开的时候，每个机房的 3 台服务器都会认为另一个机房的 3 台服务器下线，而选出自己的 leader 并对外提供服务。若没有过半机制，当网络恢复的时候会发现有 2 个 leader。仿佛是 1 个大脑（leader）分散成了 2 个大脑，这就发生了脑裂现象。脑裂期间 2 个大脑都可能对外提供了服务，这将会带来数据一致性等问题。</p>
+<h6 id="ZAB-协议介绍"><a href="#ZAB-协议介绍" class="headerlink" title="ZAB 协议介绍"></a>ZAB 协议介绍</h6><p>ZAB（<strong>ZooKeeper Atomic Broadcast 原子广播</strong>） 协议是为分布式协调服务 ZooKeeper 专门设计的一种<strong>支持崩溃恢复的原子广播协议</strong>。 在 ZooKeeper 中，主要依赖 <strong>ZAB 协议来实现分布式数据一致性</strong>，基于该协议，ZooKeeper 实现了一种主备模式的系统架构来保持集群中各个副本之间的数据一致性。</p>
+<p>ZAB 协议包括<strong>两种基本的模式</strong>，分别是</p>
+<p><strong>崩溃恢复 ：</strong>当整个服务框架在启动过程中，或是当 Leader 服务器出现网络中断、崩溃退出与重启等异常情况时，ZAB 协议就会进入恢复模式并选举产生新的 Leader 服务器。当选举产生了新的 Leader 服务器，同时集群中<strong>已经有过半的机器与该 Leader 服务器完成了状态同步之后，ZAB 协议就会退出恢复模式。</strong>其中，所谓的状态同步是指数据同步，用来保证集群中存在过半的机器能够和 Leader 服务器的数据状态保持一致。</p>
+<p><strong>消息广播 ：</strong>当集群中已经有过半的 Follower 服务器完成了和 Leader 服务器的状态同步，那么整个服务框架就可以进入<strong>消息广播模式</strong>了。 当一台同样遵守 ZAB 协议的服务器启动后加入到集群中时，如果此时集群中已经存在一个 Leader 服务器在负责进行消息广播，那么新加入的服务器就会自觉地进入数据恢复模式：找到 Leader 所在的服务器，并与其进行数据同步，然后一起参与到消息广播流程中去。</p>
+<h4 id="网络传输"><a href="#网络传输" class="headerlink" title="网络传输"></a>网络传输</h4><h5 id="网络传输实体类"><a href="#网络传输实体类" class="headerlink" title="网络传输实体类"></a>网络传输实体类</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class RpcRequest implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = 1905122041950251207L;//序列化版本控制</span><br><span class="line">    private String requestId;</span><br><span class="line">    private String interfaceName;</span><br><span class="line">    private String methodName;</span><br><span class="line">    private Object[] parameters;</span><br><span class="line">    private Class&lt;?&gt;[] paramTypes;</span><br><span class="line">    private String version;</span><br><span class="line">    private String group;//处理一个接口有多个实现类的情况</span><br><span class="line">    //服务名称：接口名加对应的实现方法。</span><br><span class="line">    public String getRpcServiceName() &#123;</span><br><span class="line">        return this.getInterfaceName() + this.getGroup() + this.getVersion();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class RpcResponse&lt;T&gt; implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = 715745410605631233L;</span><br><span class="line">    private String requestId;//唯一标识每一个请求</span><br><span class="line">    private Integer code;//返回数字</span><br><span class="line">    private String message;//返回的string</span><br><span class="line">    private T data;</span><br><span class="line"></span><br><span class="line">    public static &lt;T&gt; RpcResponse&lt;T&gt; success(T data, String requestId) &#123;</span><br><span class="line">        RpcResponse&lt;T&gt; response = new RpcResponse&lt;&gt;();</span><br><span class="line">        response.setCode(RpcResponseCodeEnum.SUCCESS.getCode());</span><br><span class="line">        response.setMessage(RpcResponseCodeEnum.SUCCESS.getMessage());</span><br><span class="line">        response.setRequestId(requestId);</span><br><span class="line">        if (null != data) &#123;</span><br><span class="line">            response.setData(data);</span><br><span class="line">        &#125;</span><br><span class="line">        return response;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static &lt;T&gt; RpcResponse&lt;T&gt; fail(RpcResponseCodeEnum rpcResponseCodeEnum) &#123;</span><br><span class="line">        RpcResponse&lt;T&gt; response = new RpcResponse&lt;&gt;();</span><br><span class="line">        response.setCode(rpcResponseCodeEnum.getCode());</span><br><span class="line">        response.setMessage(rpcResponseCodeEnum.getMessage());</span><br><span class="line">        return response;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="netty网络客户传输"><a href="#netty网络客户传输" class="headerlink" title="netty网络客户传输"></a>netty网络客户传输</h5><p><strong>NettyClient.java</strong></p>
+<p>doConnect() :用于连接服务端（目标方法所在的服务器）并返回对应的 Channel。当我们知道了服务端的地址之后，我们就可以通过 NettyClient 成功连接服务端了。（有了 Channel 之后就能发送数据到服务端了）</p>
+<p>sendRpcRequest() : 用于传输 rpc 请求(RpcRequest) 到服务端。</p>
+<p><strong>UnprocessedRequests.java</strong></p>
+<p>用于存放未被服务端处理的请求（建议限制 map 容器大小，避免未处理请求过多 OOM)。</p>
+<p><strong>NettyClientHandler</strong></p>
+<p>自定义客户端 ChannelHandler 用于处理服务器发送的数据。</p>
+<p>从代码中，可以看出当 rpc 请求被成功处理（客户端收到服务端的执行结果）之后，我们调用了 <strong>unprocessedRequests.complete(rpcResponse) 方法</strong>，这样的话，你只需要通过下面的方式就能成功接收到客户端返回的结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CompletableFuture&lt;RpcResponse&gt; completableFuture = (CompletableFuture&lt;RpcResponse&gt;) clientTransport.sendRpcRequest(rpcRequest);</span><br><span class="line">rpcResponse = completableFuture.get();</span><br></pre></td></tr></table></figure>
+
+<p><strong>ChannelProvider.java</strong></p>
+<p>用于存放 Channel（Channel用于在服务端和客户端之间传输数据）。</p>
+<p><strong>NettyRpcServer.java</strong></p>
+<p>Netty 服务端。并监听客户端的连接。</p>
+<p><strong>NettyServerHandler.java</strong></p>
+<p>自定义服务端 ChannelHandler 用于处理客户端发送的数据。</p>
+<p>当客端发的 rpc 请求(RpcRequest) 来了之后，服务端就会处理 rpc 请求(RpcRequest) ，处理完之后就把得到 rpc 相应(RpcResponse)传输给客户端。</p>
+<p>既然我们要调用远程的方法，就要发送网络请求来传递目标类和方法的信息以及方法的参数等数据到服务提供端。</p>
+<p>网络传输具体实现你可以使用 Socket （ Java 中最原始、最基础的网络通信方式。但是，Socket 是阻塞 IO、性能低并且功能单一）。</p>
+<p>你也可以使用同步非阻塞的 I/O 模型 NIO ，但是用它来进行网络编程真的太麻烦了。不过没关系，你可以使用基于 NIO 的网络编程框架 Netty ，它将是你最好的选择。</p>
+<p>Netty 是一个基于 NIO 的 client-server(客户端服务器)框架，使用它可以快速简单地开发网络应用程序。<br>它极大地简化并简化了 TCP 和 UDP 套接字服务器等网络编程,并且性能以及安全性等很多方面甚至都要更好。<br>支持多种协议如 FTP，SMTP，HTTP 以及各种二进制和基于文本的传统协议。</p>
+<h5 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h5><p><strong>服务器端：</strong></p>
+<p>创建 <strong>ServerSocket 对象</strong>并且绑定地址（ip）和端口号(port)：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server.bind(new InetSocketAddress(host, port))</span><br></pre></td></tr></table></figure>
+
+<p>通过 <strong>accept()方法监听</strong>客户端请求<br>连接建立后，通过输入流读取客户端发送的请求信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Message message = (Message) objectInputStream.readObject();</span><br></pre></td></tr></table></figure>
+
+<p>通过输出流向客户端发送响应信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objectOutputStream.writeObject(message);</span><br></pre></td></tr></table></figure>
+
+<p>关闭相关资源</p>
+<h6 id="管理多个客户端"><a href="#管理多个客户端" class="headerlink" title="管理多个客户端"></a>管理多个客户端</h6><p><img src="https://i.loli.net/2021/08/06/1bNwXIjGmecq7K9.png" alt="image-20210806153434387"></p>
+<p> 比较简单并且实际的改进方法就是使用<strong>线程池</strong>。线程池还可以让线程的创建和回收成本相对较低，并且我们可以指定线程池的可创建线程的最大数量，这样就不会导致线程创建过多，机器资源被不合理消耗。</p>
+<p><strong>客户端：</strong></p>
+<p>创建Socket 对象并且连接指定的服务器的地址（ip）和端口号(port)：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socket.connect(inetSocketAddress)</span><br></pre></td></tr></table></figure>
+
+<p>连接建立后，通过输出流向服务器端发送请求信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objectOutputStream.writeObject(message)</span><br></pre></td></tr></table></figure>
+
+<p>通过输入流获取服务器响应的信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return objectInputStream.readObject();</span><br></pre></td></tr></table></figure>
+
+<p>关闭相关资源</p>
+<h5 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h5><p>Netty 是一个基于 NIO 的 client-server(客户端服务器)框架，使用它可以快速简单地开发网络应用程序。</p>
+<p>它极大地简化并简化了 TCP 和 UDP 套接字服务器等网络编程,并且性能以及安全性等很多方面甚至都要更好。</p>
+<p>支持多种协议如 FTP，SMTP，HTTP 以及各种二进制和基于文本的传统协议。</p>
+<p>Netty 成功地找到了一种在不妥协可维护性和性能的情况下实现易于开发，性能，稳定性和灵活性的方法。</p>
+<p>这个应该是老铁们最关心的一个问题了，凭借自己的了解，简单说一下，理论上 NIO 可以做的事情 ，使用 Netty 都可以做并且更好。Netty 主要用来做网络通信 :</p>
+<h6 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h6><p>作为 RPC 框架的网络通信工具 </p>
+<p>实现一个自己的 HTTP 服务器 </p>
+<p>实现一个即时通讯系统</p>
+<p>消息推送系统<br>……</p>
+<p>Dubbo、RocketMQ、Elasticsearch、gRPC 等等都用到了 Netty。</p>
+<h6 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h6><p>客户端中主要有一个用于向服务端发送消息的 **sendMessage()**方法，通过这个方法你可以将消息也就是RpcRequest 对象发送到服务端，并且你可以同步获取到服务端返回的结果也就是RpcResponse 对象。 </p>
+<p><strong>sendMessage()方法分析：</strong></p>
+<p>首先初始化了一个 Bootstrap</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> @Override</span><br><span class="line">protected void initChannel(SocketChannel ch) &#123;</span><br><span class="line">/*</span><br><span class="line">自定义序列化编解码器</span><br><span class="line">*/</span><br><span class="line">// RpcResponse -&gt; ByteBuf</span><br><span class="line">ch.pipeline().addLast(new NettyKryoDecoder(kryoSerializer, RpcResponse.class));</span><br><span class="line">// ByteBuf -&gt; RpcRequest</span><br><span class="line">ch.pipeline().addLast(new NettyKryoEncoder(kryoSerializer, RpcRequest.class));</span><br><span class="line">ch.pipeline().addLast(new NettyClientHandler());</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过 Bootstrap 对象连接服务端</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ChannelFuture f = b.connect(host, port).sync();</span><br><span class="line">Channel futureChannel = f.channel();</span><br></pre></td></tr></table></figure>
+
+<p>通过 Channel 向服务端发送消息RpcRequest</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">futureChannel.writeAndFlush(rpcRequest)</span><br></pre></td></tr></table></figure>
+
+<p>发送成功后，阻塞等待 ，直到Channel关闭</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">futureChannel.closeFuture().sync();</span><br></pre></td></tr></table></figure>
+
+<p>拿到服务端返回的结果 RpcResponse</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">NettyClientHandler</span><br><span class="line"></span><br><span class="line">// 声明一个 AttributeKey 对象</span><br><span class="line">AttributeKey&lt;RpcResponse&gt; key = AttributeKey.valueOf(&quot;rpcResponse&quot;);</span><br><span class="line">// 将服务端的返回结果保存到 AttributeMap 上，AttributeMap 可以看作是一个Channel的共享数据源</span><br><span class="line">// AttributeMap的key是AttributeKey，value是Attribute</span><br><span class="line">ctx.channel().attr(key).set(rpcResponse);</span><br></pre></td></tr></table></figure>
+
+<p>（<strong>NettyClientHandler</strong>用于读取服务端发送过来的 RpcResponse 消息对象，并将 RpcResponse 消息对象保存到 AttributeMap 上。</p>
+<p>AttributeMap 可以看作是一个Channel的共享数据源。这样的话，我们就能通过 channel 和 key 将数据读取出来。</p>
+<p>AttributeMap ,AttributeMap 是一个接口，但是类似于 Map 数据结构 。</p>
+<p>Channel 实现了 <strong>AttributeMap 接口</strong>，这样也就表明它存在了AttributeMap 相关的属性。 <strong>每个 Channel上的AttributeMap属于共享数据</strong>。AttributeMap 的结构，和Map很像，我们可以把 key 看作是AttributeKey，value 看作是Attribute，我们可以根据 AttributeKey找到对应的Attribute。）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AttributeKey&lt;RpcResponse&gt; key = AttributeKey.valueOf(&quot;rpcResponse&quot;);</span><br><span class="line">return futureChannel.attr(key).get();</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">ServerBootstrap b = new ServerBootstrap();</span><br><span class="line">b.group(bossGroup, workerGroup)</span><br><span class="line">                    .channel(NioServerSocketChannel.class)</span><br><span class="line">                    // TCP默认开启了 Nagle 算法，该算法的作用是尽可能的发送大数据快，减少网络传输。TCP_NODELAY 参数的作用就是控制是否启用 Nagle 算法。</span><br><span class="line">                    .childOption(ChannelOption.TCP_NODELAY, true)</span><br><span class="line">                    // 是否开启 TCP 底层心跳机制</span><br><span class="line">                    .childOption(ChannelOption.SO_KEEPALIVE, true)</span><br><span class="line">                    //表示系统用于临时存放已完成三次握手的请求的队列的最大长度,如果连接建立频繁，服务器处理创建新连接较慢，可以适当调大这个参数</span><br><span class="line">                    .option(ChannelOption.SO_BACKLOG, 128)</span><br><span class="line">                    .handler(new LoggingHandler(LogLevel.INFO))</span><br><span class="line">                    .childHandler(new ChannelInitializer&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                        @Override</span><br><span class="line">                        protected void initChannel(SocketChannel ch) &#123;</span><br><span class="line">     ch.pipeline().addLast(new NettyKryoDecoder(kryoSerializer, RpcRequest.class));</span><br><span class="line">     ch.pipeline().addLast(new NettyKryoEncoder(kryoSerializer, RpcResponse.class));</span><br><span class="line">     ch.pipeline().addLast(new NettyServerHandler());</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line"></span><br><span class="line">            // 绑定端口，同步等待绑定成功</span><br><span class="line">            ChannelFuture f = b.bind(port).sync();</span><br><span class="line">            // 等待服务端监听端口关闭</span><br><span class="line">            f.channel().closeFuture().sync();</span><br></pre></td></tr></table></figure>
+
+<h6 id="编码器"><a href="#编码器" class="headerlink" title="编码器"></a>编码器</h6><p>NettyKryoEncoder 是我们自定义的编码器。它负责处理”出站”消息，将消息格式转换为字节数组然后写入到字节数据的容器 ByteBuf 对象中。</p>
+<p>4B  magic code（魔法数）  </p>
+<p>1B version（版本）   </p>
+<p>4B full length（消息长度）   </p>
+<p>1B messageType（消息类型）</p>
+<p>1B compress（压缩类型） </p>
+<p>1B codec（序列化类型）    </p>
+<p>4B  requestId（请求的Id）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"> @Override</span><br><span class="line">protected void encode(ChannelHandlerContext ctx, RpcMessage rpcMessage, ByteBuf out) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            out.writeBytes(RpcConstants.MAGIC_NUMBER);//魔数4</span><br><span class="line">            out.writeByte(RpcConstants.VERSION);//版本1</span><br><span class="line">            out.writerIndex(out.writerIndex() + 4);//跳过4字节，留着写长度</span><br><span class="line">            byte messageType = rpcMessage.getMessageType();</span><br><span class="line">            out.writeByte(messageType);//消息类型1</span><br><span class="line">            out.writeByte(rpcMessage.getCodec());//序列化类型1</span><br><span class="line">            out.writeByte(CompressTypeEnum.GZIP.getCode());//压缩类型1</span><br><span class="line">            out.writeInt(ATOMIC_INTEGER.getAndIncrement());//请求ID4</span><br><span class="line">            </span><br><span class="line">            byte[] bodyBytes = null;</span><br><span class="line">            int fullLength = RpcConstants.HEAD_LENGTH;//头部长度</span><br><span class="line">            </span><br><span class="line">            if (messageType != RpcConstants.HEARTBEAT_REQUEST_TYPE</span><br><span class="line">                    &amp;&amp; messageType != RpcConstants.HEARTBEAT_RESPONSE_TYPE) &#123;</span><br><span class="line">                // 序列化</span><br><span class="line">         String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());</span><br><span class="line">         Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class)</span><br><span class="line">                        .getExtension(codecName);</span><br><span class="line">          bodyBytes = serializer.serialize(rpcMessage.getData());//序列化</span><br><span class="line">                // 压缩</span><br><span class="line">        String compressName = CompressTypeEnum.getName(rpcMessage.getCompress());</span><br><span class="line">        Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)</span><br><span class="line">                        .getExtension(compressName);</span><br><span class="line">         bodyBytes = compress.compress(bodyBytes);//压缩后的长度</span><br><span class="line">          </span><br><span class="line">         fullLength += bodyBytes.length;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            if (bodyBytes != null) &#123;</span><br><span class="line">                out.writeBytes(bodyBytes);</span><br><span class="line">            &#125;</span><br><span class="line">            int writeIndex = out.writerIndex();</span><br><span class="line">            //跳过魔术加版本</span><br><span class="line">            out.writerIndex(writeIndex - fullLength + RpcConstants.MAGIC_NUMBER.length + 1);</span><br><span class="line">            //写全长</span><br><span class="line">            out.writeInt(fullLength);</span><br><span class="line">            out.writerIndex(writeIndex);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            log.error(&quot;Encode request error!&quot;, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h6 id="解码器"><a href="#解码器" class="headerlink" title="解码器"></a>解码器</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">private Object decodeFrame(ByteBuf in) &#123;</span><br><span class="line">        // 有序的bytebuf</span><br><span class="line">        checkMagicNumber(in);//魔术</span><br><span class="line">        checkVersion(in);//版本</span><br><span class="line">        int fullLength = in.readInt();</span><br><span class="line">        // 构建返回对象</span><br><span class="line">        byte messageType = in.readByte();</span><br><span class="line">        byte codecType = in.readByte();</span><br><span class="line">        byte compressType = in.readByte();</span><br><span class="line">        int requestId = in.readInt();</span><br><span class="line">        RpcMessage rpcMessage = RpcMessage.builder()</span><br><span class="line">                .codec(codecType)</span><br><span class="line">                .requestId(requestId)</span><br><span class="line">                .messageType(messageType).build();</span><br><span class="line">        //心跳请求？</span><br><span class="line">        if (messageType == RpcConstants.HEARTBEAT_REQUEST_TYPE) &#123;</span><br><span class="line">            rpcMessage.setData(RpcConstants.PING);</span><br><span class="line">            return rpcMessage;</span><br><span class="line">        &#125;</span><br><span class="line">        //心跳返回？</span><br><span class="line">        if (messageType == RpcConstants.HEARTBEAT_RESPONSE_TYPE) &#123;</span><br><span class="line">            rpcMessage.setData(RpcConstants.PONG);</span><br><span class="line">            return rpcMessage;</span><br><span class="line">        &#125;</span><br><span class="line">        //正文长度</span><br><span class="line">        int bodyLength = fullLength - RpcConstants.HEAD_LENGTH;</span><br><span class="line">        if (bodyLength &gt; 0) &#123;</span><br><span class="line">            byte[] bs = new byte[bodyLength];</span><br><span class="line">            in.readBytes(bs);</span><br><span class="line">            // 解压缩</span><br><span class="line">            String compressName = CompressTypeEnum.getName(compressType);</span><br><span class="line">            Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)</span><br><span class="line">                    .getExtension(compressName);</span><br><span class="line">            bs = compress.decompress(bs);</span><br><span class="line">            // 反序列化</span><br><span class="line">            String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());</span><br><span class="line">            Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class)</span><br><span class="line">                    .getExtension(codecName);</span><br><span class="line">            //rqcreauest？</span><br><span class="line">            if (messageType == RpcConstants.REQUEST_TYPE) &#123;</span><br><span class="line">                RpcRequest tmpValue = serializer.deserialize(bs, RpcRequest.class);</span><br><span class="line">                rpcMessage.setData(tmpValue);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                RpcResponse tmpValue = serializer.deserialize(bs, RpcResponse.class);</span><br><span class="line">                rpcMessage.setData(tmpValue);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return rpcMessage;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="序列化和反序列化"></a>序列化和反序列化</h4><p>要在网络传输数据就要涉及到序列化。为什么需要序列化和反序列化呢？ </p>
+<p>因为<strong>网络传输的数据必须是二进制</strong>的。因此，我们的 Java 对象没办法直接在网络中传输。为了能够让 Java 对象在网络中传输我们需要将其序列化为二进制的数据。我们最终需要的还是目标 Java 对象，因此我们还要将二进制的数据“解析”为目标 Java 对象，也就是对二进制数据再进行一次反序列化。</p>
+<p>另外，<strong>不仅网络传输的时候需要用到序列化和反序列化，将对象存储到文件、数据库等场景都需要用到序列化和反序列化。</strong></p>
+<p>JDK 自带的序列化，只需实现 java.io.Serializable接口即可，不过这种方式不推荐，因为不支持跨语言调用并且性能比较差。</p>
+<p>现在比较常用序列化的有 hessian、kyro、protostuff ….</p>
+<h5 id="属于哪一层？"><a href="#属于哪一层？" class="headerlink" title="属于哪一层？"></a>属于哪一层？</h5><p><img src="https://i.loli.net/2021/08/06/G4DzcJvQf2Z9mku.png" alt="image-20210806150427787"></p>
+<p>OSI七层协议模型中，<strong>表示层</strong>做的事情主要就是对应用层的用户数据进行处理转换为二进制流。反过来的话，就是将二进制流转换成应用层的用户数据。</p>
+<p>因为，OSI七层协议模型中的应用层、表示层和会话层对应的都是TCP/IP 四层模型中的应用层，所以序列化协议属于TCP/IP协议应用层的一部分。</p>
+<h5 id="常见序列化协议对比"><a href="#常见序列化协议对比" class="headerlink" title="常见序列化协议对比"></a>常见序列化协议对比</h5><p>JDK自带的序列化方式一般不会用 ，因为序列化效率低并且部分版本有安全漏洞。比较常用的序列化协议有 <strong>hessian、kyro、protostuff。</strong></p>
+<p>下面提到的都是基于二进制的序列化协议，像 <strong>JSON 和 XML</strong>这种属于文本类序列化方式。虽然 JSON 和 XML可读性比较好，但是性能较差。</p>
+<p><strong>JDK自带的序列化方式</strong></p>
+<p>JDK 自带的序列化，只需实现 <strong>java.io.Serializable</strong>接口即可。</p>
+<p>序列化号 serialVersionUID 属于<strong>版本控制</strong>的作用。序列化的时候serialVersionUID也会被写入二级制序列，当反序列化时会<strong>检查serialVersionUID是否和当前类的serialVersionUID一致</strong>。如果serialVersionUID不一致则会抛出 InvalidClassException 异常。强烈推荐每个序列化类都手动指定其 serialVersionUID，如果不手动指定，那么编译器会动态生成默认的序列化号。</p>
+<p><strong>kyro</strong></p>
+<p>Kryo是一个高性能的序列化/反序列化工具，由于其变长存储特性并使用了字节码生成机制，拥有较高的运行速度和较小的字节码体积。</p>
+<p>另外，Kryo 已经是一种非常成熟的序列化实现了，已经在Twitter、Groupon、Yahoo以及多个著名开源项目（如Hive、Storm）中广泛的使用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">public class KryoSerializer implements Serializer &#123;</span><br><span class="line">    //Lambda方式传入实现了 Supplier 函数接口的参数。</span><br><span class="line">    private final ThreadLocal&lt;Kryo&gt; kryoThreadLocal = ThreadLocal.withInitial(new Supplier&lt;Kryo&gt;() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public Kryo get() &#123;</span><br><span class="line">            //先注册</span><br><span class="line">            Kryo kryo = new Kryo();</span><br><span class="line">            kryo.register(RpcResponse.class);</span><br><span class="line">            kryo.register(RpcRequest.class);</span><br><span class="line">            return kryo;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public byte[] serialize(Object obj) &#123;</span><br><span class="line">        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();</span><br><span class="line">             Output output = new Output(byteArrayOutputStream)) &#123;</span><br><span class="line">            Kryo kryo = kryoThreadLocal.get();</span><br><span class="line">            // Object-&gt;byte:将对象序列化为byte数组</span><br><span class="line">            kryo.writeObject(output, obj);</span><br><span class="line">            kryoThreadLocal.remove();</span><br><span class="line">            return output.toBytes();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            throw new SerializeException(&quot;Serialization failed&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public &lt;T&gt; T deserialize(byte[] bytes, Class&lt;T&gt; clazz) &#123;</span><br><span class="line">        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);</span><br><span class="line">             Input input = new Input(byteArrayInputStream)) &#123;</span><br><span class="line">            Kryo kryo = kryoThreadLocal.get();</span><br><span class="line">            // byte-&gt;Object:从byte数组中反序列化出对对象</span><br><span class="line">            Object o = kryo.readObject(input, clazz);</span><br><span class="line">            kryoThreadLocal.remove();</span><br><span class="line">            return clazz.cast(o);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            throw new SerializeException(&quot;Deserialization failed&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>hession</strong></p>
+<p>hessian 是一个轻量级的,自定义描述的二进制RPC协议。hessian是一个比较老的序列化实现了，并且同样也是跨语言的。</p>
+<p><strong>Protobuf</strong></p>
+<p>Protobuf出自于Google，性能还比较优秀，也支持多种语言，同时还是跨平台的。就是在使用中过于繁琐，因为你需要自己定义 IDL 文件和生成对应的序列化代码。这样虽然不然灵活，但是，另一方面导致protobuf没有序列化漏洞的风险。</p>
+<h4 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h4><p>我们知道代理模式就是： 我们给某一个对象提供一个代理对象，并由代理对象来代替真实对象做一些事情。你可以把代理对象理解为一个幕后的工具人。 举个例子：我们真实对象调用方法的时候，我们可以通过代理对象去做一些事情比如安全校验、日志打印等等。但是，这个过程是完全对真实对象屏蔽的。</p>
+<p>RPC 的主要目的就是让我们调用远程方法像调用本地方法一样简单，我们不需要关心远程方法调用的细节比如网络传输。</p>
+<p>当你调用远程方法的时候，<strong>实际会通过代理对象来传输网络请求</strong>，不然的话，怎么可能直接就调用到远程方法。</p>
+<h5 id="JDK动态代理"><a href="#JDK动态代理" class="headerlink" title="JDK动态代理"></a>JDK动态代理</h5><p>在 Java 动态代理机制中 <strong>InvocationHandler 接口和 Proxy 类是核心。</strong></p>
+<p>Proxy 类中使用频率最高的方法是：newProxyInstance() ，这个方法主要用来生成一个代理对象。</p>
+<pre><code>public static Object newProxyInstance(ClassLoader loader,
+                                      Class&lt;?&gt;[] interfaces,
+                                      InvocationHandler h)
+</code></pre>
+<p>这个方法一共有 3 个参数：</p>
+<p>loader :类加载器，用于加载代理对象。<br>interfaces : 被代理类实现的一些接口；<br>h : 实现了 InvocationHandler 接口的对象；</p>
+<p>要实现动态代理的话，还必须需要实现InvocationHandler 来自定义处理逻辑。 当我们的动态代理对象调用一个方法时候，这个方法的调用就会被转发到实现InvocationHandler 接口类的 invoke 方法来调用。</p>
+<p>invoke() 方法有下面三个参数：</p>
+<p>proxy :动态生成的代理类<br>method : <strong>与代理类对象调用的方法相对应</strong><br>args : <strong>当前 method 方法的参数</strong></p>
+<p>也就是说：你通过Proxy 类的 newProxyInstance() 创建的代理对象在调用方法的时候，<strong>实际会调用到实现InvocationHandler 接口的类的 invoke()方法。 你可以在 invoke() 方法中自定义处理逻辑</strong>，比如在方法执行前后做什么事情。</p>
+<p><strong>步骤</strong>：</p>
+<p>定义一个接口及其实现类；<br>自定义 InvocationHandler 并重写invoke方法，在 invoke 方法中我们会调用原生方法（被代理类的方法）并自定义一些处理逻辑；<br>通过 Proxy.newProxyInstance(ClassLoader loader,Class&lt;?&gt;[] interfaces,InvocationHandler h) 方法创建代理对象；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public Object invoke(Object proxy, Method method, Object[] args) &#123;</span><br><span class="line">      //生成RPCrequest</span><br><span class="line">       RpcRequest rpcRequest = RpcRequest.builder().methodName(method.getName())</span><br><span class="line">               .parameters(args)</span><br><span class="line">               .interfaceName(method.getDeclaringClass().getName())</span><br><span class="line">               .paramTypes(method.getParameterTypes())</span><br><span class="line">               .requestId(UUID.randomUUID().toString())</span><br><span class="line">               .group(rpcServiceConfig.getGroup())</span><br><span class="line">               .version(rpcServiceConfig.getVersion())</span><br><span class="line">               .build();</span><br><span class="line">       RpcResponse&lt;Object&gt; rpcResponse = null;</span><br><span class="line">       </span><br><span class="line">       if (rpcRequestTransport instanceof NettyRpcClient) &#123;</span><br><span class="line">           CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt; completableFuture = (CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt;) </span><br><span class="line">           //发送rpcrequest</span><br><span class="line">           rpcRequestTransport.sendRpcRequest(rpcRequest);</span><br><span class="line">           rpcResponse = completableFuture.get();</span><br><span class="line">       &#125;</span><br><span class="line">       if (rpcRequestTransport instanceof SocketRpcClient) &#123;</span><br><span class="line">           rpcResponse = (RpcResponse&lt;Object&gt;) </span><br><span class="line">           rpcRequestTransport.sendRpcRequest(rpcRequest);</span><br><span class="line">       &#125;</span><br><span class="line">       this.check(rpcResponse, rpcRequest);</span><br><span class="line">       return rpcResponse.getData();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="CGLIB动态代理"><a href="#CGLIB动态代理" class="headerlink" title="CGLIB动态代理"></a>CGLIB动态代理</h5><p>JDK 动态代理有一个最致命的问题是其只能代理实现了接口的类。</p>
+<p>为了解决这个问题，我们可以用 CGLIB 动态代理机制来避免。</p>
+<p>CGLIB(Code Generation Library)是一个基于ASM的字节码生成库，它允许我们在运行时对字节码进行修改和动态生成。CGLIB 通过继承方式实现代理。很多知名的开源框架都使用到了CGLIB， 例如 Spring 中的 AOP 模块中：如果目标对象实现了接口，则默认采用 JDK 动态代理，否则采用 CGLIB 动态代理。</p>
+<p>在 CGLIB 动态代理机制中 MethodInterceptor 接口和 Enhancer 类是核心。</p>
+<p>你需要自定义 MethodInterceptor 并重写 intercept 方法，intercept 用于拦截增强被代理类的方法。</p>
+<p><strong>CGLIB 动态代理类使用步骤</strong></p>
+<p>定义一个类；<br>自定义 MethodInterceptor 并重写 intercept 方法，intercept 用于拦截增强被代理类的方法，和 JDK 动态代理中的 invoke 方法类似；<br>通过 Enhancer 类的 create()创建代理类；</p>
+<h5 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h5><p><strong>JDK 动态代理和 CGLIB 动态代理对比</strong></p>
+<p>JDK 动态代理只能<strong>只能代理实现了接口的类</strong>，而 CGLIB 可以代理未实现任何接口的类。 另外， CGLIB 动态代理是通过<strong>生成一个被代理类的子类</strong>来拦截被代理类的方法调用，因此不能代理声明为 final 类型的类和方法。<br>就二者的效率来说，大部分情况都是 JDK 动态代理更优秀，随着 JDK 版本的升级，这个优势更加明显。</p>
+<p><strong>静态代理和动态代理的对比</strong></p>
+<p>灵活性 ：动态代理更加灵活，不需要必须实现接口，可以直接代理实现类，并且可以不需要针对每个目标类都创建一个代理类。另外，<strong>静态代理中，接口一旦新增加方法，目标对象和代理对象都要进行修改</strong>。</p>
+<p>JVM 层面 ：静态代理在<strong>编译时</strong>就将接口、实现类、代理类这些都变成了一个个实际的 class 文件。而动态代理是在<strong>运行时动态生成类字节码</strong>，并加载到 JVM 中的。</p>
+<h5 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h5><p>RpcClientProxy.java</p>
+<p>当我们去调用一个远程的方法的时候，实际上是通过代理对象调用的。</p>
+<p>网络传输细节都被封装在了  <code>invoke()</code>  方法中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public Object invoke(Object proxy, Method method, Object[] args) &#123;</span><br><span class="line">      //构造rpcrequset</span><br><span class="line">       RpcRequest rpcRequest = RpcRequest.builder().methodName(method.getName())</span><br><span class="line">               .parameters(args)</span><br><span class="line">               .interfaceName(method.getDeclaringClass().getName())</span><br><span class="line">               .paramTypes(method.getParameterTypes())</span><br><span class="line">               .requestId(UUID.randomUUID().toString())</span><br><span class="line">               .group(rpcServiceProperties.getGroup())</span><br><span class="line">               .version(rpcServiceProperties.getVersion())</span><br><span class="line">               .build();</span><br><span class="line">       RpcResponse&lt;Object&gt; rpcResponse = null;</span><br><span class="line">       if (rpcRequestTransport instanceof NettyRpcClient) &#123;</span><br><span class="line">           CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt; completableFuture = (CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt;) rpcRequestTransport.sendRpcRequest(rpcRequest);</span><br><span class="line">           rpcResponse = completableFuture.get();</span><br><span class="line">       &#125;</span><br><span class="line">       if (rpcRequestTransport instanceof SocketRpcClient) &#123;</span><br><span class="line">           rpcResponse = (RpcResponse&lt;Object&gt;) rpcRequestTransport.sendRpcRequest(rpcRequest);</span><br><span class="line">       &#125;</span><br><span class="line">       this.check(rpcResponse, rpcRequest);</span><br><span class="line">       return rpcResponse.getData();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h4><p>系统中的某个服务的访问量特别大，我们将这个服务部署在了多台服务器上，当客户端发起请求的时候，多台服务器都可以处理这个请求。那么，如何正确选择处理该请求的服务器就很关键。假如，你就要一台服务器来处理该服务的请求，那该服务部署在多台服务器的意义就不复存在了。负载均衡就是为了避免单个服务器响应同一请求，容易造成服务器宕机、崩溃等问题。</p>
+<h5 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h5><p>我们定义了两个接口 ServiceDiscovery.java 和 ServiceRegistry.java，这两个接口分别定义了服务发现和服务注册行为。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class ZkServiceRegistryImpl implements ServiceRegistry &#123;</span><br><span class="line">@Override</span><br><span class="line">public void registerService(String rpcServiceName, InetSocketAddress inetSocketAddress) &#123;</span><br><span class="line"> String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + &quot;/&quot; + rpcServiceName + inetSocketAddress.toString();</span><br><span class="line">CuratorFramework zkClient = CuratorUtils.getZkClient();</span><br><span class="line">CuratorUtils.createPersistentNode(zkClient, servicePath);//创建一个用永久节点</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们的服务被注册进 zookeeper 的时候，我们将完整的服务名称 <strong>rpcServiceName</strong> （class name+group+version）作为根节点 ，子节点是对应的服务地址（ip+端口号）。</p>
+<p>class name : <strong>服务接口名</strong>也就是类名比如：github.javaguide.HelloService。<br>version :（服务版本）主要是为后续不兼容升级提供可能<br>group :主要用于处理一个接口有多个类实现的情况。</p>
+<p>一个根节点（rpcServiceName）<strong>可能会对应多个服务地址</strong>（相同服务被部署多份的情况）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class ZkServiceDiscoveryImpl implements ServiceDiscovery &#123;</span><br><span class="line">    private final LoadBalance loadBalance;</span><br><span class="line"></span><br><span class="line">public ZkServiceDiscoveryImpl() &#123;</span><br><span class="line">this.loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(&quot;loadBalance&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public InetSocketAddress lookupService(RpcRequest rpcRequest) &#123;</span><br><span class="line">        String rpcServiceName = rpcRequest.getRpcServiceName();</span><br><span class="line">        CuratorFramework zkClient = CuratorUtils.getZkClient();</span><br><span class="line">        List&lt;String&gt; serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);</span><br><span class="line">        if (serviceUrlList == null || serviceUrlList.size() == 0) &#123;</span><br><span class="line">            throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);</span><br><span class="line">        &#125;</span><br><span class="line">        // load balancing</span><br><span class="line">        String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);</span><br><span class="line">        </span><br><span class="line">        String[] socketAddressArray = targetServiceUrl.split(&quot;:&quot;);</span><br><span class="line">        String host = socketAddressArray[0];</span><br><span class="line">        int port = Integer.parseInt(socketAddressArray[1]);</span><br><span class="line">        return new InetSocketAddress(host, port);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="具体算法"><a href="#具体算法" class="headerlink" title="具体算法"></a>具体算法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface LoadBalance &#123;</span><br><span class="line">    String selectServiceAddress(List&lt;String&gt; serviceAddresses, RpcRequest rpcRequest);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="随机"><a href="#随机" class="headerlink" title="随机"></a>随机</h5><h5 id="轮询"><a href="#轮询" class="headerlink" title="轮询"></a>轮询</h5><h5 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h5><h4 id="版本一"><a href="#版本一" class="headerlink" title="版本一"></a>版本一</h4><p>考虑最简单的RPC功能。<br>客户端调用服务端方法，服务端返回。</p>
+<p>1，有一个User对象，是客户端与服务端都已知的<br>2，定义客户端需要调用，服务端需要提供的服务接口UserService<br>3，服务端需要实现UserService接口的功能UserServiceImpl<br>4，客户端建立Socket连接，传输Id给服务端，得到返回的User对象<br>5，服务端以BIO的方式监听Socket，如有数据，调用对应服务的实现类执行任务，将结果返回给客户端</p>
+<p>问题<br>只能调用服务端唯一的方法<br>返回值也只只支持一种</p>
+<h4 id="版本2"><a href="#版本2" class="headerlink" title="版本2"></a>版本2</h4><p>定义了一个通用的Request的对象（消息格式）<br>（在上个版本中，Request仅仅只发送了一个id参数过去，这显然是不合理的，<br>因为服务端不会只有一个服务一个方法，因此只传递参数不会知道调用那个方法。<br>因此一个RPC请求中，client发送应该是需要调用的Service接口名，方法名，参数，参数类型<br>这样服务端就能根据这些信息根据反射调用相应的方法。<br>还是使用java自带的序列化方式。）</p>
+<p> 定义了一个通用的Response的对象（消息格式）</p>
+<p>（上个版本中response传输的是User对象，显然在一个应用中我们不可能只传输一种类型的数据<br>由此我们将传输对象抽象成为Object<br>。Rpc需要经过网络传输，有可能失败，引入状态码和状态信息表示服务调用成功还是失败）</p>
+<p>通过jdk 动态代理封装传输细节， 每一次代理对象调用方法，会经过invoke方法增强（反射获取request对象，socket发送至客户端，得到返回的rpcresponce）</p>
+<p>客户端反射得到结果<br> // 读取客户端传过来的request<br> RPCRequest request = (RPCRequest) ois.readObject();<br>// 反射调用对应方法<br>Method method = userService.getClass().getMethod(request.getMethodName(), request.getParamsTypes());<br> Object invoke = method.invoke(userService, request.getParams());<br>// 封装，写入response对象<br> oos.writeObject(RPCResponse.success(invoke));<br>问题<br>服务端直接绑定的是UserService服务，如果还有其它服务接口暴露呢（多个服务的注册）<br>服务端以BIO的方式性能太低<br>解决<br>用一个Map来保存，&lt;interfaceName, xxxServiceImpl&gt;<br>此时来了一个request，就能从map中取出对应的服务<br>Object service = map.get(request.getInterfaceName())<br>服务端用线程池<br> threadPool = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),<br>                1000, 60, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(100));</p>
+<h4 id="版本3"><a href="#版本3" class="headerlink" title="版本3"></a>版本3</h4><p>netty改善<br>客户端<br>//超时设定：5秒没连接就断开<br> .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)<br> .handler(new ChannelInitializer<SocketChannel>() {<br>     @Override<br>     protected void initChannel(SocketChannel ch) {<br>         ChannelPipeline p = ch.pipeline();<br>         //5秒没有数据发送，就发送心跳包。<br>         p.addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));<br>         p.addLast(new RpcMessageEncoder());//编码<br>         p.addLast(new RpcMessageDecoder());//解码<br>         p.addLast(new NettyRpcClientHandler());<br>     }<br> });<br>4B  magic code（魔法数）   1B version（版本）   4B full length（消息长度）    1B messageType（消息类型-request，reaponse，心跳）<br>1B compress（压缩类型） 1B codec（序列化类型）    4B  requestId（请求的Id） </p>
+<p>服务端<br>// TCP默认开启了 Nagle 算法，该算法的作用是尽可能的发送大数据快，减少网络传输。TCP_NODELAY 参数的作用就是控制是否启用 Nagle 算法。<br>.childOption(ChannelOption.TCP_NODELAY, true)<br>// 是否开启 TCP 底层心跳机制<br>.childOption(ChannelOption.SO_KEEPALIVE, true)<br>//表示系统用于临时存放已完成三次握手的请求的队列的最大长度,如果连接建立频繁，服务器处理创建新连接较慢，可以适当调大这个参数<br>.option(ChannelOption.SO_BACKLOG, 128)<br>.handler(new LoggingHandler(LogLevel.INFO))<br>// 当客户端第一次进行请求的时候才会进行初始化<br>.childHandler(new ChannelInitializer<SocketChannel>() {<br>    @Override<br>    protected void initChannel(SocketChannel ch) {<br>        // 30 秒之内没有收到客户端请求的话就关闭连接<br>        ChannelPipeline p = ch.pipeline();<br>        p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));<br>        p.addLast(new RpcMessageEncoder());<br>        p.addLast(new RpcMessageDecoder());<br>        p.addLast(serviceHandlerGroup, new NettyRpcServerHandler());</p>
+<p>问题：服务端与客户端通信的host与port预先就必须知道的，每一个客户端都必须知道对应服务的ip与端口号， 并且如果服务挂了或者换地址了，就很麻烦。扩展性也不强。</p>
+<h4 id="版本4"><a href="#版本4" class="headerlink" title="版本4"></a>版本4</h4><p>zookeeper注册中心<br>public void registerService(String rpcServiceName, InetSocketAddress inetSocketAddress) {<br>    String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + “/“ + rpcServiceName + inetSocketAddress.toString();<br>    CuratorFramework zkClient = CuratorUtils.getZkClient();<br>    CuratorUtils.createPersistentNode(zkClient, servicePath);<br>}</p>
+<p>public InetSocketAddress lookupService(RpcRequest rpcRequest) {<br>    String rpcServiceName = rpcRequest.getRpcServiceName();<br>    CuratorFramework zkClient = CuratorUtils.getZkClient();<br>    List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);<br>    if (serviceUrlList == null || serviceUrlList.size() == 0) {<br>        throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);<br>    }<br>    // load balancing<br>    String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);</p>
+<pre><code>String[] socketAddressArray = targetServiceUrl.split(&quot;:&quot;);
+String host = socketAddressArray[0];
+int port = Integer.parseInt(socketAddressArray[1]);
+return new InetSocketAddress(host, port);
+</code></pre>
+<p>}<br>简单的负载均衡<br>随机<br>轮询<br>一致性哈希</p>
+<p>容错</p>
+<p>在 RPC 中可选的网络传输方式有多种，可以选择 TCP 协议、UDP 协议、HTTP 协议。</p>
+<p>基于 TCP 协议的 RPC 调用</p>
+<p>由服务的调用方与服务的提供方建立 Socket 连接，并由服务的调用方通过 Socket 将需要调用的接口名称、方法名称和参数序列化后传递给服务的提供方，服务的提供方反序列化后再利用反射调用相关的方法。</p>
+<p>将结果返回给服务的调用方，整个基于 TCP 协议的 RPC 调用大致如此。</p>
+<p>但是在实例应用中则会进行一系列的封装，如 RMI 便是在 TCP 协议上传递可序列化的 Java 对象。</p>
+<p>基于 HTTP 协议的 RPC 调用</p>
+<p>该方法更像是访问网页一样，只是它的返回结果更加单一简单。</p>
+<p>其大致流程为：由服务的调用者向服务的提供者发送请求，这种请求的方式可能是 GET、POST、PUT、DELETE 等中的一种，服务的提供者可能会根据不同的请求方式做出不同的处理，或者某个方法只允许某种请求方式。</p>
+<p>而调用的具体方法则是根据 URL 进行方法调用，而方法所需要的参数可能是对服务调用方传输过去的 XML 数据或者 JSON 数据解析后的结果，返回 JOSN 或者 XML 的数据结果。</p>
+<p>由于目前有很多开源的 Web 服务器，如 Tomcat，所以其实现起来更加容易，就像做 Web 项目一样。</p>
+<p>两种方式对比</p>
+<p>基于 TCP 的协议实现的 RPC 调用，由于 TCP 协议处于协议栈的下层，能够更加灵活地对协议字段进行定制，减少网络开销，提高性能，实现更大的吞吐量和并发数。</p>
+<p>但是需要更多关注底层复杂的细节，实现的代价更高。同时对不同平台，如安卓，iOS 等，需要重新开发出不同的工具包来进行请求发送和相应解析，工作量大，难以快速响应和满足用户需求。</p>
+<p>基于 HTTP 协议实现的 RPC 则可以使用 JSON 和 XML 格式的请求或响应数据。</p>
+<p>而 JSON 和 XML 作为通用的格式标准(使用 HTTP 协议也需要序列化和反序列化，不过这不是该协议下关心的内容，成熟的 Web 程序已经做好了序列化内容)，开源的解析工具已经相当成熟，在其上进行二次开发会非常便捷和简单。</p>
+<p>但是由于 HTTP 协议是上层协议，发送包含同等内容的信息，使用 HTTP 协议传输所占用的字节数会比使用 TCP 协议传输所占用的字节数更高。</p>
+<p>因此在同等网络下，通过 HTTP 协议传输相同内容，效率会比基于 TCP 协议的数据效率要低，信息传输所占用的时间也会更长，当然压缩数据，能够缩小这一差距。</p>
+<p>简单对比 RPC 和 Restful API</p>
+<p>RESTful API 架构</p>
+<p>REST 的几个特点为：资源、统一接口、URI 和无状态。</p>
+<p>①资源</p>
+<p>所谓”资源”，就是网络上的一个实体，或者说是网络上的一个具体信息。它可以是一段文本、一张图片、一首歌曲、一种服务，就是一个具体的实在。</p>
+<p>②统一接口</p>
+<p>RESTful 架构风格规定，数据的元操作，即 CRUD(Create，Read，Update 和 Delete，即数据的增删查改)操作，分别对应于 HTTP 方法：GET 用来获取资源，POST 用来新建资源(也可以用于更新资源)，PUT 用来更新资源，DELETE 用来删除资源，这样就统一了数据操作的接口，仅通过 HTTP 方法，就可以完成对数据的所有增删查改工作。</p>
+<p>③URL</p>
+<p>可以用一个 URI(统一资源定位符)指向资源，即每个 URI 都对应一个特定的资源。</p>
+<p>要获取这个资源，访问它的 URI 就可以，因此 URI 就成了每一个资源的地址或识别符。</p>
+<p>④无状态</p>
+<p>所谓无状态的，即所有的资源，都可以通过 URI 定位，而且这个定位与其他资源无关，也不会因为其他资源的变化而改变。有状态和无状态的区别，举个简单的例子说明一下。</p>
+<p>如查询员工的工资，如果查询工资是需要登录系统，进入查询工资的页面，执行相关操作后，获取工资的多少，则这种情况是有状态的。</p>
+<p>因为查询工资的每一步操作都依赖于前一步操作，只要前置操作不成功，后续操作就无法执行。</p>
+<p>如果输入一个 URI 即可得到指定员工的工资，则这种情况是无状态的，因为获取工资不依赖于其他资源或状态。</p>
+<p>且这种情况下，员工工资是一个资源，由一个 URI 与之对应，可以通过 HTTP 中的 GET 方法得到资源，这是典型的 RESTful 风格。</p>
+<p>RPC 和 Restful API 对比</p>
+<p>面对对象不同：</p>
+<p>RPC 更侧重于动作。<br>REST 的主体是资源。<br>RESTful 是面向资源的设计架构，但在系统中有很多对象不能抽象成资源，比如登录，修改密码等而 RPC 可以通过动作去操作资源。所以在操作的全面性上 RPC 大于 RESTful。</p>
+<p>传输效率：</p>
+<p>RPC 效率更高。RPC，使用自定义的 TCP 协议，可以让请求报文体积更小，或者使用 HTTP2 协议，也可以很好的减少报文的体积，提高传输效率。</p>
+<p>复杂度：</p>
+<p>RPC 实现复杂，流程繁琐。<br>REST 调用及测试都很方便。<br>RPC 实现需要实现编码，序列化，网络传输等。而 RESTful 不要关注这些，RESTful 实现更简单。</p>
+<p>灵活性：</p>
+<p>HTTP 相对更规范，更标准，更通用，无论哪种语言都支持 HTTP 协议。<br>RPC 可以实现跨语言调用，但整体灵活性不如 RESTful。</p>
+<p>总结</p>
+<p>RPC 主要用于公司内部的服务调用，性能消耗低，传输效率高，实现复杂。</p>
+<p>HTTP 主要用于对外的异构环境，浏览器接口调用，App 接口调用，第三方接口调用等。</p>
+<p>RPC 使用场景(大型的网站，内部子系统较多、接口非常多的情况下适合使用 RPC)：</p>
+<p>长链接。不必每次通信都要像 HTTP 一样去 3 次握手，减少了网络开销。<br>注册发布机制。RPC 框架一般都有注册中心，有丰富的监控管理;发布、下线接口、动态扩展等，对调用方来说是无感知、统一化的操作。<br>安全性，没有暴露资源操作。<br>微服务支持。就是最近流行的服务化架构、服务化治理，RPC 框架是一个强力的支撑。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -1635,7 +1903,7 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">

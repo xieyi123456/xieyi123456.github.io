@@ -1630,7 +1630,26 @@
   <entry>
     <title>Spring-常见概念</title>
     <url>/2021/07/30/Spring-%E5%B8%B8%E8%A7%81%E6%A6%82%E5%BF%B5/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h3 id="什么是-Spring-框架"><a href="#什么是-Spring-框架" class="headerlink" title="什么是 Spring 框架?"></a>什么是 Spring 框架?</h3><p>Spring 是一款开源的轻量级 Java 开发框架，旨在提高开发人员的开发效率以及系统的可维护性。</p>
+<p>我们一般说 Spring 框架指的都是 Spring Framework，它是很多模块的集合，使用这些模块可以很方便地协助我们进行开发。</p>
+<p>比如说 Spring 自带 **IoC（Inverse of Control:控制反转） 和 AOP(Aspect-Oriented Programming:面向切面编程)**、可以很方便地对数据库进行访问、可以很方便地集成第三方组件（电子邮件，任务，调度，缓存等等）、对单元测试支持比较好、支持 RESTful Java 应用程序的开发。</p>
+<h3 id="列举一些重要的-Spring-模块？"><a href="#列举一些重要的-Spring-模块？" class="headerlink" title="列举一些重要的 Spring 模块？"></a>列举一些重要的 Spring 模块？</h3><p>Spring Core</p>
+<p>核心模块， Spring 其他所有的功能基本都需要依赖于该类库，主要提供 <strong>IoC 依赖注入</strong>功能的支持。</p>
+<p>Spring Aspects</p>
+<p>该模块为与 AspectJ 的集成提供支持。</p>
+<p>Spring AOP</p>
+<p>提供了<strong>面向切面的编程</strong>实现。</p>
+<p>Spring Data Access/Integration ：</p>
+<p>Spring Data Access/Integration 由 5 个模块组成：</p>
+<p>spring-jdbc : 提供了对数据库访问的抽象 JDBC。不同的数据库都有自己独立的 API 用于操作数据库，而 Java 程序只需要和 JDBC API 交互，这样就屏蔽了数据库的影响。<br>spring-tx : 提供对事务的支持。<br>spring-orm : 提供对 Hibernate 等 ORM 框架的支持。<br>spring-oxm ： 提供对 Castor 等 OXM 框架的支持。<br>spring-jms : Java 消息服务。<br>Spring Web</p>
+<p><strong>Spring Web 由 4 个模块组成：</strong></p>
+<p>spring-web ：对 Web 功能的实现提供一些最基础的支持。<br>spring-webmvc ： 提供对 Spring MVC 的实现。<br>spring-websocket ： 提供了对 WebSocket 的支持，WebSocket 可以让客户端和服务端进行双向通信。<br>spring-webflux ：提供对 WebFlux 的支持。WebFlux 是 Spring Framework 5.0 中引入的新的响应式框架。与 Spring MVC 不同，它不需要 Servlet API，是完全异步.<br>Spring Test</p>
+<p><strong>Spring 团队提倡测试驱动开发（TDD）</strong>。有了控制反转 (IoC)的帮助，单元测试和集成测试变得更简单。</p>
+<p>Spring 的测试模块对 JUnit（单元测试框架）、TestNG（类似 JUnit）、Mockito（主要用来 Mock 对象）、PowerMock（解决 Mockito 的问题比如无法模拟 final, static， private 方法）等等常用的测试框架支持的都比较好。</p>
+<h3 id="Spring-IOC-amp-AOP"><a href="#Spring-IOC-amp-AOP" class="headerlink" title="Spring IOC &amp; AOP"></a>Spring IOC &amp; AOP</h3><p>IoC（Inverse of Control:控制反转） 是一种设计思想，而不是一个具体的技术实现。IoC 的思想就是将<strong>原本在程序中手动创建对象的控制权，交由 Spring 框架来管理</strong>。</p>
+<p>为什么叫控制反转？</p>
+<p>控制 ：指的是<strong>对象创建（实例化、管理）的权力</strong><br>反转 ：控制权交给外部环境（Spring 框架、IoC 容器）</p>
+]]></content>
       <categories>
         <category>Spring</category>
       </categories>
@@ -3293,7 +3312,7 @@
   </entry>
   <entry>
     <title>RPC-概述</title>
-    <url>/2021/08/06/RPC-%E6%A6%82%E8%BF%B0/</url>
+    <url>/2021/07/06/RPC-%E6%A6%82%E8%BF%B0/</url>
     <content><![CDATA[<h3 id="什么是RPC"><a href="#什么是RPC" class="headerlink" title="什么是RPC"></a>什么是RPC</h3><p>RPC（Remote Procedure Call）即<strong>远程过程调用</strong>。</p>
 <p>为什么要 RPC  ？因为，两个不同的服务器上的服务提供的方法不在一个内存空间，所以，<strong>需要通过网络编程才能传递方法调用所需要的参数</strong>。并且，<strong>方法调用的结果也需要通过网络编程来接收</strong>。但是，如果我们自己手动网络编程来实现这个调用过程的话工作量是非常大的，因为，我们需要考虑底层传输方式（TCP还是UDP）、序列化方式等等方面。</p>
 <p>RPC 能帮助我们做什么呢？ 简单来说，通过 RPC 可以帮助我们调用远程计算机上某个服务的方法，这个过程就像调用本地方法一样简单。</p>
@@ -3314,7 +3333,7 @@
 <p>（1）每一个URI代表一种资源；<br>（2）客户端和服务器之间，传递这种资源的某种表现层；<br>（3）客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。</p>
 <p><img src="https://i.loli.net/2021/08/08/rG74PqAnCzLyYQ6.png" alt="image-20210808143751929"></p>
 <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p><img src="https://i.loli.net/2021/08/06/KWeIP5wtzvQ8SVU.png" alt="image-20210806114259901"></p>
-<p>client 调用远程方法-&gt; request序列化 -&gt; 协议编码 -&gt; 网络传输-&gt; 服务端 -&gt; 反序列化request -&gt; 调用本地方法得到response -&gt; 序列化 -&gt;编码-&gt;…..</p>
+<p>client 调用远程方法-&gt; request序列化 -&gt; 协议编码 -&gt; 网络传输-&gt; 服务端 -&gt; 解码-&gt;反序列化request -&gt; 调用本地方法得到response -&gt; 序列化 -&gt;编码-&gt;…..</p>
 <h3 id="常见的RPC框架"><a href="#常见的RPC框架" class="headerlink" title="常见的RPC框架"></a>常见的RPC框架</h3><h4 id="Dubbo"><a href="#Dubbo" class="headerlink" title="Dubbo"></a>Dubbo</h4><p>是一款高性能、轻量级的开源 Java RPC 框架，它提供了三大核心能力：</p>
 <p>面向接口的远程方法调用<br>智能容错和负载均衡<br>服务自动注册和发现。</p>
 <p>简单来说 Dubbo 是一个分布式服务框架，致力于提供高性能和透明化的 RPC 远程服务调用方案，以及 SOA 服务治理方案。</p>
@@ -3637,11 +3656,5 @@ return new InetSocketAddress(host, port);
 <p>RPC 使用场景(大型的网站，内部子系统较多、接口非常多的情况下适合使用 RPC)：</p>
 <p>长链接。不必每次通信都要像 HTTP 一样去 3 次握手，减少了网络开销。<br>注册发布机制。RPC 框架一般都有注册中心，有丰富的监控管理;发布、下线接口、动态扩展等，对调用方来说是无感知、统一化的操作。<br>安全性，没有暴露资源操作。<br>微服务支持。就是最近流行的服务化架构、服务化治理，RPC 框架是一个强力的支撑。</p>
 ]]></content>
-      <categories>
-        <category>RPC</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
   </entry>
 </search>
