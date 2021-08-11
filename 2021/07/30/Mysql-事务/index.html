@@ -28,7 +28,7 @@
 <meta property="og:description" content="事务特性 原子性： 事务是最小的执行单位，不允许分割。事务的原子性确保动作要么全部完成，要么完全不起作用；  一致性： 执行事务前后，数据保持一致，例如转账业务中，无论事务是否成功，转账者和收款人的总额应该是不变的；  隔离性： 并发访问数据库时，一个用户的事务不被其他事务所干扰，各并发事务之间数据库是独立的；  持久性： 一个事务被提交之后。它对数据库中数据的改变是持久的，即使数据库发生故障也不">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-07-30T07:11:16.000Z">
-<meta property="article:modified_time" content="2021-08-04T06:20:51.594Z">
+<meta property="article:modified_time" content="2021-08-11T05:57:44.127Z">
 <meta property="article:author" content="Xieyi">
 <meta property="article:tag" content="事务">
 <meta name="twitter:card" content="summary">
@@ -192,7 +192,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-04 14:20:51" itemprop="dateModified" datetime="2021-08-04T14:20:51+08:00">2021-08-04</time>
+                <time title="修改时间：2021-08-11 13:57:44" itemprop="dateModified" datetime="2021-08-11T13:57:44+08:00">2021-08-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -269,7 +269,7 @@
 <p><strong>RC和RR隔离级别下MVCC的差异</strong></p>
 <p>在事务隔离级别 RC 和 RR （InnoDB存储引擎的默认事务隔离级别）下， InnoDB 存储引擎使用 MVCC（非锁定一致性读），但它们<strong>生成 Read View 的时机却不同</strong></p>
 <p>在 RC 隔离级别下的 <strong>每次select 查询前</strong>都生成一个Read View (m_ids列表)<br>在 RR 隔离级别下<strong>只在事务开始后 第一次select 数据前生成一个Read View（m_ids列表）</strong></p>
-<h4 id="MVCC-Next-key-Lock防止幻读"><a href="#MVCC-Next-key-Lock防止幻读" class="headerlink" title="MVCC+Next-key-Lock防止幻读"></a>MVCC+Next-key-Lock防止幻读</h4><p>InnoDB存储引擎在 RR 级别下通过 MVCC和 Next-key Lock 来解决幻读问题：</p>
+<h4 id="！！！！MVCC-Next-key-Lock防止幻读"><a href="#！！！！MVCC-Next-key-Lock防止幻读" class="headerlink" title="！！！！MVCC+Next-key-Lock防止幻读"></a>！！！！MVCC+Next-key-Lock防止幻读</h4><p>InnoDB存储引擎在 RR 级别下通过 MVCC和 Next-key Lock 来解决幻读问题：</p>
 <p>执行普通 select，此时会以 MVCC <strong>快照读</strong>的方式读取数据</p>
 <p>在<strong>快照读</strong>的情况下，RR 隔离级别只会在事务开启后的第一次查询生成 Read View ，<strong>并使用到事务提交</strong>。所以在生成 Read View 之后其它事务所做的更新、插入记录版本对当前事务并不可见，实现了可重复读和防止快照读下的 “幻读”。</p>
 <p>执行select…for update/lock in share mode、insert、update、delete等当前读。</p>
@@ -362,7 +362,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%89%B9%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">事务特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">隔离级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVCC"><span class="nav-number">3.</span> <span class="nav-text">MVCC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MVCC-%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%BE%9D%E8%B5%96%E4%BA%8E%EF%BC%9A%E9%9A%90%E8%97%8F%E5%AD%97%E6%AE%B5%E3%80%81Read-View%E3%80%81undo-log%E3%80%82"><span class="nav-number">3.1.</span> <span class="nav-text">MVCC 的实现依赖于：隐藏字段、Read View、undo log。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%90%E8%97%8F%E5%AD%97%E6%AE%B5"><span class="nav-number">3.1.1.</span> <span class="nav-text">隐藏字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReadView"><span class="nav-number">3.1.2.</span> <span class="nav-text">ReadView</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undo-log"><span class="nav-number">3.1.3.</span> <span class="nav-text">undo-log</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MVCC-Next-key-Lock%E9%98%B2%E6%AD%A2%E5%B9%BB%E8%AF%BB"><span class="nav-number">3.1.4.</span> <span class="nav-text">MVCC+Next-key-Lock防止幻读</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB-%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%9A%84%E9%94%81%E7%9A%84%E7%AE%97%E6%B3%95%E6%9C%89%E4%B8%89%E7%A7%8D%EF%BC%9A"><span class="nav-number">3.1.5.</span> <span class="nav-text">InnoDB 存储引擎的锁的算法有三种：</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%89%B9%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">事务特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">隔离级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVCC"><span class="nav-number">3.</span> <span class="nav-text">MVCC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MVCC-%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%BE%9D%E8%B5%96%E4%BA%8E%EF%BC%9A%E9%9A%90%E8%97%8F%E5%AD%97%E6%AE%B5%E3%80%81Read-View%E3%80%81undo-log%E3%80%82"><span class="nav-number">3.1.</span> <span class="nav-text">MVCC 的实现依赖于：隐藏字段、Read View、undo log。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%90%E8%97%8F%E5%AD%97%E6%AE%B5"><span class="nav-number">3.1.1.</span> <span class="nav-text">隐藏字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReadView"><span class="nav-number">3.1.2.</span> <span class="nav-text">ReadView</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undo-log"><span class="nav-number">3.1.3.</span> <span class="nav-text">undo-log</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%81MVCC-Next-key-Lock%E9%98%B2%E6%AD%A2%E5%B9%BB%E8%AF%BB"><span class="nav-number">3.1.4.</span> <span class="nav-text">！！！！MVCC+Next-key-Lock防止幻读</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InnoDB-%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%9A%84%E9%94%81%E7%9A%84%E7%AE%97%E6%B3%95%E6%9C%89%E4%B8%89%E7%A7%8D%EF%BC%9A"><span class="nav-number">3.1.5.</span> <span class="nav-text">InnoDB 存储引擎的锁的算法有三种：</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -378,7 +378,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

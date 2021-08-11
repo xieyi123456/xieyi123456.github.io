@@ -156,6 +156,80 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/" class="post-title-link" itemprop="url">笔试总结1</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-07-31 21:28:34 / 修改时间：21:59:58" itemprop="dateCreated datePublished" datetime="2021-07-31T21:28:34+08:00">2021-07-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AC%94%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">笔试</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="有序数组，交换两数，找出这两个数的下标"><a href="#有序数组，交换两数，找出这两个数的下标" class="headerlink" title="有序数组，交换两数，找出这两个数的下标"></a>有序数组，交换两数，找出这两个数的下标</h3><h4 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h4><p>用两个标志位去找乱序的那两个数字。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public static int[] change(int[] nums) &#123;</span><br><span class="line">        int first = -1;</span><br><span class="line">        int second = -1;</span><br><span class="line">        int[] res = new int[2];</span><br><span class="line">        for (int i = 1; i &lt; nums.length; i++) &#123;</span><br><span class="line">            if (first == -1 &amp;&amp; nums[i - 1] &gt; nums[i]) first = i - 1;</span><br><span class="line">            if (first != -1 &amp;&amp; nums[i - 1] &gt; nums[i]) second = i;</span><br><span class="line">        &#125;</span><br><span class="line">        res[0] = first + 1;</span><br><span class="line">        res[1] = second + 1;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="括号的个数"><a href="#括号的个数" class="headerlink" title="括号的个数"></a>括号的个数</h3><p>【】【】【【】3】2</p>
+<p>表示1+1+2（3）=8个括号</p>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getBox</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">       Stack&lt;Integer&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">       <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">           <span class="keyword">if</span> (s.charAt(i) == <span class="string">&#x27;[&#x27;</span>) &#123;</span><br><span class="line">               stack.push(<span class="number">1</span>);<span class="comment">//保底一个</span></span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s.charAt(i) == <span class="string">&#x27;]&#x27;</span>) &#123;</span><br><span class="line">               <span class="keyword">int</span> temp = stack.pop();</span><br><span class="line">               <span class="keyword">if</span> (i + <span class="number">1</span> &lt; s.length() &amp;&amp; s.charAt(i + <span class="number">1</span>) &lt;= <span class="string">&#x27;9&#x27;</span> &amp;&amp; s.charAt(i + <span class="number">1</span>) &gt; <span class="string">&#x27;0&#x27;</span>) &#123;<span class="comment">//后面为数字，要结算</span></span><br><span class="line">                   temp *= (s.charAt(i + <span class="number">1</span>) - <span class="string">&#x27;0&#x27;</span>);</span><br><span class="line">                   i++;<span class="comment">//结算完跳过这个数字</span></span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">if</span> (stack.isEmpty()) &#123;<span class="comment">//空的，表示一个分段算完了</span></span><br><span class="line">                   res += temp;</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   <span class="keyword">int</span> top = stack.pop() + temp;</span><br><span class="line">                   stack.push(top);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> res;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Spring-%E5%B8%B8%E8%A7%81%E6%A6%82%E5%BF%B5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -187,7 +261,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-06 11:00:18" itemprop="dateModified" datetime="2021-08-06T11:00:18+08:00">2021-08-06</time>
+                <time title="修改时间：2021-08-11 14:31:12" itemprop="dateModified" datetime="2021-08-11T14:31:12+08:00">2021-08-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -210,10 +284,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>依赖注入</p>
-<p>AOP</p>
-<p>循环依赖</p>
-
+          
       
     </div>
 
@@ -1050,7 +1121,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-05 21:23:49" itemprop="dateModified" datetime="2021-08-05T21:23:49+08:00">2021-08-05</time>
+                <time title="修改时间：2021-08-11 14:29:31" itemprop="dateModified" datetime="2021-08-11T14:29:31+08:00">2021-08-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1074,6 +1145,8 @@
 
       
           <h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><p>主从复制，是指将一台Redis服务器的数据，复制到其他的Redis服务器。前者称为主节点(master)，后者称为从节点(slave)；数据的复制是单向的，只能由主节点到从节点。</p>
+<p>slaveof命令</p>
+<p>部分复制：偏移量，积压缓冲区，服务器运行id</p>
 <h3 id="主从复制的作用"><a href="#主从复制的作用" class="headerlink" title="主从复制的作用"></a>主从复制的作用</h3><ul>
 <li>数据冗余：主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。</li>
 <li>故障恢复：当主节点出现问题时，可以由从节点提供服务，实现快速的故障恢复；实际上是一种服务的冗余。</li>
@@ -1112,139 +1185,6 @@
 <p>Redis 使用了 <strong>ASK 错误</strong>来保证在线扩容的安全性。</p>
 <p>在槽的迁移过程中若有客户端访问，依旧先访问源节点，源节点会先在自己的数据库里面査找指定的键，如果找到的话，就直接执行客户端发送的命令。</p>
 <p>如果没找到，说明该键可能已经被迁移到目标节点了，源节点将向客户端返回一个 ASK 错误，该错误会指引客户端转向正在导入槽的目标节点，并再次发送之前想要执行的命令，从而获取到结果。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/" class="post-title-link" itemprop="url">Redis-持久化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-30 15:12:32" itemprop="dateCreated datePublished" datetime="2021-07-30T15:12:32+08:00">2021-07-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-04 16:11:02" itemprop="dateModified" datetime="2021-08-04T16:11:02+08:00">2021-08-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Redis 的持久化机制有：<strong>RDB、AOF、混合持久化（RDB+AOF，Redis 4.0 引入）。</strong></p>
-<h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><p>类似于快照。在某个时间点，<strong>将 Redis 在内存中的数据库状态（数据库的键值对等信息）保存到磁盘里面</strong>。<br>RDB 持久化功能生成的 RDB 文件是<strong>经过压缩的二进制文件。</strong></p>
-<p>命令：有两个 Redis 命令可以用于生成 RDB 文件<strong>，一个是 SAVE，另一个是 BGSAVE</strong>。<br>开启：使用 save point 配置，满足 save point 条件后会触发 BGSAVE <strong>来存储一次快照</strong>。</p>
-<p>save point 格式：save <seconds> <changes>，含义是 Redis 如果<strong>在 seconds 秒内数据发生了 changes 次改变，就保存快照文件。</strong></p>
-<p>SAVE：生成 RDB 快照文件，<strong>但是会阻塞主进程</strong>，服务器将无法处理客户端发来的命令请求，所以通常不会直接使用该命令。</p>
-<p>BGSAVE：<strong>fork 子进程来生成 RDB 快照文件，阻塞只会发生在 fork 子进程的时候</strong>，之后主进程可以正常处理请求。</p>
-<p>fork：在 Linux 系统中，调用 fork() 时，会创建出一个新进程，称为子进程，子进程会拷贝父进程的 page table。如果进程占用的内存越大，进程的 page table 也会越大，那么 fork 也会占用更多的时间。如果 Redis 占用的内存很大，那么在 fork 子进程时，则会出现明显的停顿。</p>
-<h4 id="RDB-的优点"><a href="#RDB-的优点" class="headerlink" title="RDB 的优点"></a>RDB 的优点</h4><p>RDB 文件是是经过压缩的二进制文件，<strong>占用空间很小</strong>，它保存了 Redis 某个时间点的数据集，很适合用于做备<br>份。</p>
-<p>RDB 非常适用于灾难恢复（disaster recovery）：它只有一个文件，并且内容都非常紧凑，可以（在加密后）将它传送到别的数据中心。</p>
-<p>RDB 可以最大化 redis 的性能。父进程在保存 RDB 文件时唯一要做的就是 fork 出一个子进程，然后这个子进<br>程就会处理接下来的所有保存工作，父进程无须执行任何磁盘 I/O 操作。</p>
-<p>RDB 在<strong>恢复大数据集时的速度比 AOF 的恢复速度要快</strong>。</p>
-<h4 id="RDB-的缺点"><a href="#RDB-的缺点" class="headerlink" title="RDB 的缺点"></a>RDB 的缺点</h4><p>RDB 在服务器故障时<strong>容易造成数据的丢失</strong>。RDB 允许我们通过修改 save point 配置来控制持久化的频率。但是，因为 RDB 文件需要保存整个数据集的状态， 所以它是一个比较重的操作，如果频率太频繁，可能会对 Redis 性能产生影响。</p>
-<p>RDB 保存时使用 fork 子进程进行数据的持久化，如果数据比较大的话，<strong>fork 可能会非常耗时</strong>，造成 Redis 停<br>止处理服务 N 毫秒。如果数据集很大且 CPU 比较繁忙的时候，停止服务的时间甚至会到一秒。</p>
-<p>Linux fork 子进程采用的是 <strong>copy-on-write</strong> 的方式。在 Redis 执行 RDB 持久化期间，如果 client 写入数据很频繁，那么将增加 Redis 占用的内存，最坏情况下，内存的占用将达到原先的 2 倍。刚 fork 时，主进程和子进程共享内存，<strong>但是随着主进程需要处理写操作，主进程需要将修改的页面拷贝一份出来，然后进行修改</strong>。极端情况下，如果所有的页面都被修改，则此时的内存占用是原先的 2 倍。</p>
-<h3 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h3><p>保存 Redis 服务器所执行的所有写操作命令来记录数据库状态，并在服务器启动时，通过重新执行这些命令<br>来还原数据集。<br>开启：AOF 持久化默认是关闭的，可以通过配置：<strong>appendonly yes</strong> 开启。<br>关闭：使用配置 appendonly no 可以关闭 AOF 持久化。</p>
-<p>AOF 持久化功能的实现可以分为三个步骤：<strong>命令追加、文件写入、文件同步</strong>。</p>
-<p>命令追加：当 AOF 持久化功能打开时，服务器在执行完一个写命令之后，会将被执行的写命令追加到服务器状态的 <strong>aof 缓冲区（aof_buf）</strong>的末尾。<br>文件写入与文件同步：可能有人不明白为什么将 aof_buf 的内容写到磁盘上需要两步操作，这边简单解释一下。</p>
-<p>Linux 操作系统中为了提升性能，使用了<strong>页缓存（page cache）</strong>。当我们将 aof_buf 的内容写到磁盘上时，此时数据并没有真正的落盘，而是在 page cache 中，为了将 page cache 中的数据真正落盘，需要执行 fsync / fdatasync 命令来强制刷盘。这边的文件同步做的就是刷盘操作，或者叫文件刷盘可能更容易理解一些。</p>
-<p>appendfsync 参数值，来决定<strong>是否将 aof_buf 缓冲区的内容写入和保存到 AOF 文件</strong>。</p>
-<h4 id="appendfsync-参数有三个选项："><a href="#appendfsync-参数有三个选项：" class="headerlink" title="appendfsync 参数有三个选项："></a><strong>appendfsync 参数有三个选项：</strong></h4><p>always：<strong>每处理一个命令</strong>都将 aof_buf 缓冲区中的所有内容写入并同步到 AOF 文件，即每个命令都刷盘。</p>
-<p>everysec：将 aof_buf 缓冲区中的所有内容写入到 AOF 文件，如果上次同步 AOF 文件的时间距离现在超<br>过一秒钟， 那么再次对 AOF 文件进行同步， 并且这个同步操作是异步的，由一个后台线程专门负责执行，<br>即<strong>每秒刷盘 1 次。</strong></p>
-<p>no：将 aof_buf 缓冲区中的所有内容写入到 AOF 文件， 但并不对 AOF 文件进行同步， 何时同步由操作<br>系统来决定。即不执行刷盘，<strong>让操作系统自己执行刷盘。</strong></p>
-<h4 id="AOF-的优点"><a href="#AOF-的优点" class="headerlink" title="AOF 的优点"></a>AOF 的优点</h4><ol>
-<li><strong>AOF 比 RDB 可靠。</strong>你可以设置不同的 fsync 策略：no、everysec 和 always。默认是 everysec，在这种配置下，redis 仍然可以保持良好的性能，并且就算发生故障停机，也最多只会丢失一秒钟的数据。</li>
-<li><strong>AOF 文件是一个纯追加的日志文件</strong>。即使日志因为某些原因而包含了未写入完整的命令（比如写入时磁盘<br>已满，写入中途停机等等）， 我们也可以使用 redis-check-aof 工具也可以轻易地修复这种问题。</li>
-<li><strong>当 AOF 文件太大时，Redis 会自动在后台进行重写</strong>：重写后的新 AOF 文件包含了恢复当前数据集所需的最<br>小命令集合。整个重写是绝对安全，因为重写是在一个新的文件上进行，同时 Redis 会继续往旧的文件追<br>加数据。当新文件重写完毕，Redis 会把新旧文件进行切换，然后开始把数据写到新文件上。</li>
-<li>AOF 文件<strong>有序地保存了对数据库执行的所有写入操作以 Redis 协议的格式保存</strong>， 因此 AOF 文件的<strong>内容非</strong><br> <strong>常容易被人读懂</strong>， 对文件进行分析（parse）也很轻松。如果你不小心执行了 FLUSHALL 命令把所有数据刷<br> 掉了，但只要 AOF 文件没有被重写，那么只要停止服务器， 移除 AOF 文件末尾的 FLUSHALL 命令， 并<br> 重启 Redis ， 就可以将数据集恢复到 FLUSHALL 执行之前的状态。</li>
-</ol>
-<h4 id="AOF-的缺点"><a href="#AOF-的缺点" class="headerlink" title="AOF 的缺点"></a>AOF 的缺点</h4><p>对于相同的数据集，<strong>AOF 文件的大小一般会比 RDB 文件大。</strong></p>
-<p>根据所使用的 fsync 策略，<strong>AOF 的速度可能会比 RDB 慢</strong>。通常 fsync 设置为每秒一次就能获得比较高的<br>性能，而关闭 fsync 可以让 AOF 的速度和 RDB 一样快。</p>
-<h3 id="混合持久化"><a href="#混合持久化" class="headerlink" title="混合持久化"></a>混合持久化</h3><p>混合持久化并不是一种全新的持久化方式，而是对已有方式的优化。混合持久化<strong>只发生于 AOF 重写</strong>过程。<br>使用了混合持久化，<strong>重写后的新 AOF 文件前半段是 RDB 格式的全量数据，后半段是 AOF 格式的增量数据</strong>。</p>
-<p>开启：混合持久化的配置参数为 <strong>aof-use-rdb-preamble</strong>，配置为 yes 时开启混合持久化，在 redis 4 刚引入时，默认是关闭混合持久化的，但是在 redis 5 中默认已经打开了。</p>
-<p>关闭：使用 aof-use-rdb-preamble no 配置即可关闭混合持久化。</p>
-<p>混合持久化本质是<strong>通过 AOF 后台重写（bgrewriteaof 命令）完成的，不同的是当开启混合持久化时，fork 出的子进程先将当前全量数据以 RDB 方式写入新的 AOF 文件，然后再将 AOF 重写缓冲区的增量命令以 AOF 方式写入到文件</strong>，写入完成后通知主进程将新的含有 RDB 格式和 AOF 格式的 AOF 文件替换旧的的 AOF 文件。</p>
-<p>优点：结合 RDB 和 AOF 的优点, <strong>更快的重写和恢复。</strong><br>缺点：AOF 文件里面的 RDB 部分不再是 AOF 格式，可读性差。</p>
-<h4 id="为什么需要-AOF-重写"><a href="#为什么需要-AOF-重写" class="headerlink" title="为什么需要 AOF 重写"></a>为什么需要 AOF 重写</h4><p>AOF 持久化是通过保存<strong>被执行的写命令</strong>来记录数据库状态的，随着写入命令的不断增加，AOF 文件中的内容会越来越多，<strong>文件的体积也会越来越大。</strong></p>
-<p>举个例子， 如果你对一个计数器调用了 100 次 INCR ， 那么仅仅是为了保存这个计数器的当前值， AOF 文件就需要使用 100 条记录。<br>然而在实际上， 只使用一条 SET 命令已经足以保存计数器的当前值了， 其余 99 条记录实际上都是多余的。<br>为了处理这种情况， Redis 引入了 AOF 重写：可以在不打断服务端处理请求的情况下， 对 AOF 文件进行重建<br>（rebuild）。</p>
-<h4 id="介绍下-AOF-重写的过程、AOF-后台重写存在的问题、如何解决-AOF-后台重写存在的数据不一致问题"><a href="#介绍下-AOF-重写的过程、AOF-后台重写存在的问题、如何解决-AOF-后台重写存在的数据不一致问题" class="headerlink" title="介绍下 AOF 重写的过程、AOF 后台重写存在的问题、如何解决 AOF 后台重写存在的数据不一致问题"></a>介绍下 AOF 重写的过程、AOF 后台重写存在的问题、如何解决 AOF 后台重写存在的数据不一致问题</h4><p>Redis 生成新的 AOF 文件来代替旧 AOF 文件，这个新的 AOF 文件<strong>包含重建当前数据集所需的最少命令。</strong></p>
-<p>具体过程是<strong>遍历所有数据库的所有键，从数据库读取键现在的值，然后用一条命令去记录键值对，代替之前记录这个键值对的多条命令。</strong></p>
-<p>命令：有两个 Redis 命令可以用于触发 AOF 重写，一个是 <strong>BGREWRITEAOF</strong> 、另一个是 <strong>REWRITEAOF</strong> 命令；<br>开启：AOF 重写由两个参数共同控制，auto-aof-rewrite-percentage 和 auto-aof-rewrite-min-size，同时满足这两个条件，则触发 AOF 后台重写 BGREWRITEAOF。</p>
-<ol>
-<li><p>// 当前 AOF 文件比上次重写后的 AOF 文件大小的增长比例超过 100</p>
-<p>auto-aof-rewrite-percentage 100</p>
-</li>
-<li><p>// 当前 AOF 文件的文件大小大于 64MB</p>
-<p>auto-aof-rewrite-min-size 64mb</p>
-</li>
-</ol>
-<p>BGREWRITEAOF：fork 子进程来进行 AOF 重写，阻塞只会发生在 fork 子进程的时候，之后主进程可以正常处理请求。<br><strong>REWRITEAOF 和 BGREWRITEAOF 的关系与 SAVE 和 BGSAVE 的关系类似。</strong></p>
-<h4 id="AOF-后台重写存在的问题"><a href="#AOF-后台重写存在的问题" class="headerlink" title="AOF 后台重写存在的问题"></a>AOF 后台重写存在的问题</h4><p>AOF 后台重写使用子进程进行从写，解决了主进程阻塞的问题，但是仍然存在另一个问题：</p>
-<p>子进程在进行 AOF 重写期间，服务器主进程还需要继续处理命令请求，<strong>新的命令可能会对现有的数据库状态进行修改，从而使得当前的数据库状态和重写后的 AOF 文件保存的数据库状态不一致。</strong></p>
-<h4 id="如何解决-AOF-后台重写存在的数据不一致问题"><a href="#如何解决-AOF-后台重写存在的数据不一致问题" class="headerlink" title="如何解决 AOF 后台重写存在的数据不一致问题"></a>如何解决 AOF 后台重写存在的数据不一致问题</h4><p>为了解决上述问题，Redis 引入了 <strong>AOF 重写缓冲区</strong>（aof_rewrite_buf_blocks），这个缓冲区在服务器创建子进程之后开始使用，当 Redis 服务器执行完一个写命令之后，它会同时将这个写命令追加到 AOF 缓冲区和 AOF 重写缓冲区。</p>
-<p> 1、现有 AOF 文件的处理工作会如常进行。这样即使在重写的中途发生停机，现有的 AOF 文件也还是安全的。<br> 2、从创建子进程开始，也就是 AOF 重写开始，服务器执行的所有写命令会被记录到 AOF 重写缓冲区里面。</p>
-<p> 这样，<strong>当子进程完成 AOF 重写工作后，父进程会在 serverCron 中检测到子进程已经重写结束</strong>，则会执行以下工作：<br> 1、将 AOF 重写缓冲区中的所有内容写入到新 AOF 文件中，这时新 AOF 文件所保存的数据库状态将和服务器当前的数据库状态一致。<br> 2、对新的 AOF 文件进行改名，原子的覆盖现有的 AOF 文件，完成新旧两个 AOF 文件的替换。</p>
-<h4 id="RDB、AOF、混合持久，用哪一个？"><a href="#RDB、AOF、混合持久，用哪一个？" class="headerlink" title="RDB、AOF、混合持久，用哪一个？"></a>RDB、AOF、混合持久，用哪一个？</h4><p>如果想尽量保证数据安全性， 你应该同时使用 RDB 和 AOF 持久化功能，同时可以开启混合持久化。</p>
-<p>如果你非常关心你的数据， 但仍然可以承受数分钟以内的数据丢失， 那么你可以只使用 RDB 持久化。</p>
-<p>如果你的数据是可以丢失的，则可以关闭持久化功能，在这种情况下，Redis 的性能是最高的。</p>
-<p>使用 Redis 通常都是为了提升性能，而如果为了不丢失数据而将 appendfsync 设置为 always 级别时，对 Redis 的性能影响是很大的，在这种不能接受数据丢失的场景，其实可以考虑直接选择 MySQL 。</p>
-<h4 id="同时开启-RDB-和-AOF，服务重启时如何加载"><a href="#同时开启-RDB-和-AOF，服务重启时如何加载" class="headerlink" title="同时开启 RDB 和 AOF，服务重启时如何加载"></a>同时开启 RDB 和 AOF，服务重启时如何加载</h4><p>简单来说，如果同时启用了 AOF 和 RDB，Redis 重新启动时，<strong>会使用 AOF 文件来重建数据集</strong>，因为通常来说， AOF的数据会更完整。</p>
-<p>而在引入了混合持久化之后，使用 AOF 重建数据集时，会通过文件开头是否为“REDIS”来判断是否为混合持久化。</p>
 
       
     </div>
@@ -1331,7 +1271,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

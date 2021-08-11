@@ -156,6 +156,67 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/09/%E4%B8%8B%E5%88%92%E7%BA%BF%E8%BD%AC%E9%A9%BC%E5%B3%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/09/%E4%B8%8B%E5%88%92%E7%BA%BF%E8%BD%AC%E9%A9%BC%E5%B3%B0/" class="post-title-link" itemprop="url">下划线转驼峰</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-09 13:21:33 / 修改时间：13:23:29" itemprop="dateCreated datePublished" datetime="2021-08-09T13:21:33+08:00">2021-08-09</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>举例：Hello_woRLD==helloWorld</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public static String camelName(String name) &#123;</span><br><span class="line">       StringBuilder result = new StringBuilder();</span><br><span class="line">       if (name == null || name.isEmpty()) &#123;</span><br><span class="line">           return &quot;&quot;;</span><br><span class="line">       &#125; else if (!name.contains(&quot;_&quot;)) &#123;</span><br><span class="line">           // 不含下划线，仅将首字母小写</span><br><span class="line">           return name.substring(0, 1).toLowerCase() + name.substring(1);</span><br><span class="line">       &#125;</span><br><span class="line">       // 用下划线将原始字符串分割</span><br><span class="line">       String camels[] = name.split(&quot;_&quot;);</span><br><span class="line">       for (String camel : camels) &#123;</span><br><span class="line">           // 跳过原始字符串中开头、结尾的下换线或双重下划线</span><br><span class="line">           if (camel.isEmpty()) &#123;</span><br><span class="line">               continue;</span><br><span class="line">           &#125;</span><br><span class="line">           // 处理真正的驼峰片段</span><br><span class="line">           if (result.length() == 0) &#123;</span><br><span class="line">               // 第一个驼峰片段，全部字母都小写</span><br><span class="line">               result.append(camel.toLowerCase());</span><br><span class="line">           &#125; else &#123;</span><br><span class="line">               // 其他的驼峰片段，首字母大写</span><br><span class="line">               result.append(camel.substring(0, 1).toUpperCase());</span><br><span class="line">               result.append(camel.substring(1).toLowerCase());</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       return result.toString();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/06/RPC-%E6%A6%82%E8%BF%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -187,7 +248,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-08 14:38:05" itemprop="dateModified" datetime="2021-08-08T14:38:05+08:00">2021-08-08</time>
+                <time title="修改时间：2021-08-11 14:32:30" itemprop="dateModified" datetime="2021-08-11T14:32:30+08:00">2021-08-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -219,7 +280,7 @@
 <p><strong>RPC</strong>：Remote Produce Call远程过程调用。<strong>自定义数据格式，基于原生TCP通信，速度快，效率高</strong>。早期的webservice，现在热门的dubbo，都是RPC的典型</p>
 <p><strong>Http</strong>：http其实是一种网络传输协议，基于TCP，<strong>规定了数据传输的格式。现在客户端浏览器与服务端通信基本都是采用Http协议。也可以用来进行远程服务调用。缺点是消息封装臃肿。</strong></p>
 <p>现在热门的Rest风格，就可以通过http协议来实现。</p>
-<p>相同点：*<em>底层通讯都是基于网络编程</em>***，都可以实现远程调用，都可以实现服务调用服务。</p>
+<p>相同点：<strong>底层通讯都是基于网络编程</strong>，都可以实现远程调用，都可以实现服务调用服务。</p>
 <p>不同点：<br>当使用RPC框架实现服务间调用的时候，要求服务提供方和服务消费方 都必须使用统一的RPC框架，跨操作系统在同一编程语言内使用<br><strong>优势：调用快、处理快</strong></p>
 <p>http：<br><strong>当使用http进行服务间调用的时候，无需关注服务提供方使用的编程语言，也无需关注服务消费方使用的编程语言，服务提供方只需要提供restful风格的接口，服务消费方，按照restful的原则，请求服务，即可跨系统跨编程语言的远程调用框架</strong></p>
 <p><strong>优势：通用性强</strong></p>
@@ -485,7 +546,74 @@
 
 
 
-<h5 id="随机"><a href="#随机" class="headerlink" title="随机"></a>随机</h5><h5 id="轮询"><a href="#轮询" class="headerlink" title="轮询"></a>轮询</h5><h5 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h5>
+<h5 id="随机"><a href="#随机" class="headerlink" title="随机"></a>随机</h5><h5 id="轮询"><a href="#轮询" class="headerlink" title="轮询"></a>轮询</h5><h5 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h5><h4 id="版本一"><a href="#版本一" class="headerlink" title="版本一"></a>版本一</h4><p>考虑最简单的RPC功能。<br>客户端调用服务端方法，服务端返回。</p>
+<p>1，有一个User对象，是客户端与服务端都已知的<br>2，定义客户端需要调用，服务端需要提供的服务接口UserService<br>3，服务端需要实现UserService接口的功能UserServiceImpl<br>4，客户端建立Socket连接，传输Id给服务端，得到返回的User对象<br>5，服务端以BIO的方式监听Socket，如有数据，调用对应服务的实现类执行任务，将结果返回给客户端</p>
+<p>问题<br>只能调用服务端唯一的方法<br>返回值也只只支持一种</p>
+<h4 id="版本2"><a href="#版本2" class="headerlink" title="版本2"></a>版本2</h4><p>定义了一个通用的Request的对象（消息格式）<br>（在上个版本中，Request仅仅只发送了一个id参数过去，这显然是不合理的，<br>因为服务端不会只有一个服务一个方法，因此只传递参数不会知道调用那个方法。<br>因此一个RPC请求中，client发送应该是需要调用的Service接口名，方法名，参数，参数类型<br>这样服务端就能根据这些信息根据反射调用相应的方法。<br>还是使用java自带的序列化方式。）</p>
+<p> 定义了一个通用的Response的对象（消息格式）</p>
+<p>（上个版本中response传输的是User对象，显然在一个应用中我们不可能只传输一种类型的数据<br>由此我们将传输对象抽象成为Object<br>。Rpc需要经过网络传输，有可能失败，引入状态码和状态信息表示服务调用成功还是失败）</p>
+<p>通过jdk 动态代理封装传输细节， 每一次代理对象调用方法，会经过invoke方法增强（反射获取request对象，socket发送至客户端，得到返回的rpcresponce）</p>
+<p>客户端反射得到结果<br> // 读取客户端传过来的request<br> RPCRequest request = (RPCRequest) ois.readObject();<br>// 反射调用对应方法<br>Method method = userService.getClass().getMethod(request.getMethodName(), request.getParamsTypes());<br> Object invoke = method.invoke(userService, request.getParams());<br>// 封装，写入response对象<br> oos.writeObject(RPCResponse.success(invoke));<br>问题<br>服务端直接绑定的是UserService服务，如果还有其它服务接口暴露呢（多个服务的注册）<br>服务端以BIO的方式性能太低<br>解决<br>用一个Map来保存，&lt;interfaceName, xxxServiceImpl&gt;<br>此时来了一个request，就能从map中取出对应的服务<br>Object service = map.get(request.getInterfaceName())<br>服务端用线程池<br> threadPool = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),<br>                1000, 60, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(100));</p>
+<h4 id="版本3"><a href="#版本3" class="headerlink" title="版本3"></a>版本3</h4><p>netty改善<br>客户端<br>//超时设定：5秒没连接就断开<br> .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)<br> .handler(new ChannelInitializer<SocketChannel>() {<br>     @Override<br>     protected void initChannel(SocketChannel ch) {<br>         ChannelPipeline p = ch.pipeline();<br>         //5秒没有数据发送，就发送心跳包。<br>         p.addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));<br>         p.addLast(new RpcMessageEncoder());//编码<br>         p.addLast(new RpcMessageDecoder());//解码<br>         p.addLast(new NettyRpcClientHandler());<br>     }<br> });<br>4B  magic code（魔法数）   1B version（版本）   4B full length（消息长度）    1B messageType（消息类型-request，reaponse，心跳）<br>1B compress（压缩类型） 1B codec（序列化类型）    4B  requestId（请求的Id） </p>
+<p>服务端<br>// TCP默认开启了 Nagle 算法，该算法的作用是尽可能的发送大数据快，减少网络传输。TCP_NODELAY 参数的作用就是控制是否启用 Nagle 算法。<br>.childOption(ChannelOption.TCP_NODELAY, true)<br>// 是否开启 TCP 底层心跳机制<br>.childOption(ChannelOption.SO_KEEPALIVE, true)<br>//表示系统用于临时存放已完成三次握手的请求的队列的最大长度,如果连接建立频繁，服务器处理创建新连接较慢，可以适当调大这个参数<br>.option(ChannelOption.SO_BACKLOG, 128)<br>.handler(new LoggingHandler(LogLevel.INFO))<br>// 当客户端第一次进行请求的时候才会进行初始化<br>.childHandler(new ChannelInitializer<SocketChannel>() {<br>    @Override<br>    protected void initChannel(SocketChannel ch) {<br>        // 30 秒之内没有收到客户端请求的话就关闭连接<br>        ChannelPipeline p = ch.pipeline();<br>        p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));<br>        p.addLast(new RpcMessageEncoder());<br>        p.addLast(new RpcMessageDecoder());<br>        p.addLast(serviceHandlerGroup, new NettyRpcServerHandler());</p>
+<p>问题：服务端与客户端通信的host与port预先就必须知道的，每一个客户端都必须知道对应服务的ip与端口号， 并且如果服务挂了或者换地址了，就很麻烦。扩展性也不强。</p>
+<h4 id="版本4"><a href="#版本4" class="headerlink" title="版本4"></a>版本4</h4><p>zookeeper注册中心<br>public void registerService(String rpcServiceName, InetSocketAddress inetSocketAddress) {<br>    String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + “/“ + rpcServiceName + inetSocketAddress.toString();<br>    CuratorFramework zkClient = CuratorUtils.getZkClient();<br>    CuratorUtils.createPersistentNode(zkClient, servicePath);<br>}</p>
+<p>public InetSocketAddress lookupService(RpcRequest rpcRequest) {<br>    String rpcServiceName = rpcRequest.getRpcServiceName();<br>    CuratorFramework zkClient = CuratorUtils.getZkClient();<br>    List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);<br>    if (serviceUrlList == null || serviceUrlList.size() == 0) {<br>        throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);<br>    }<br>    // load balancing<br>    String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);</p>
+<pre><code>String[] socketAddressArray = targetServiceUrl.split(&quot;:&quot;);
+String host = socketAddressArray[0];
+int port = Integer.parseInt(socketAddressArray[1]);
+return new InetSocketAddress(host, port);
+</code></pre>
+<p>}<br>简单的负载均衡<br>随机<br>轮询<br>一致性哈希</p>
+<p>容错</p>
+<p>在 RPC 中可选的网络传输方式有多种，可以选择 TCP 协议、UDP 协议、HTTP 协议。</p>
+<p>基于 TCP 协议的 RPC 调用</p>
+<p>由服务的调用方与服务的提供方建立 Socket 连接，并由服务的调用方通过 Socket 将需要调用的接口名称、方法名称和参数序列化后传递给服务的提供方，服务的提供方反序列化后再利用反射调用相关的方法。</p>
+<p>将结果返回给服务的调用方，整个基于 TCP 协议的 RPC 调用大致如此。</p>
+<p>但是在实例应用中则会进行一系列的封装，如 RMI 便是在 TCP 协议上传递可序列化的 Java 对象。</p>
+<p>基于 HTTP 协议的 RPC 调用</p>
+<p>该方法更像是访问网页一样，只是它的返回结果更加单一简单。</p>
+<p>其大致流程为：由服务的调用者向服务的提供者发送请求，这种请求的方式可能是 GET、POST、PUT、DELETE 等中的一种，服务的提供者可能会根据不同的请求方式做出不同的处理，或者某个方法只允许某种请求方式。</p>
+<p>而调用的具体方法则是根据 URL 进行方法调用，而方法所需要的参数可能是对服务调用方传输过去的 XML 数据或者 JSON 数据解析后的结果，返回 JOSN 或者 XML 的数据结果。</p>
+<p>由于目前有很多开源的 Web 服务器，如 Tomcat，所以其实现起来更加容易，就像做 Web 项目一样。</p>
+<p>两种方式对比</p>
+<p>基于 TCP 的协议实现的 RPC 调用，由于 TCP 协议处于协议栈的下层，能够更加灵活地对协议字段进行定制，减少网络开销，提高性能，实现更大的吞吐量和并发数。</p>
+<p>但是需要更多关注底层复杂的细节，实现的代价更高。同时对不同平台，如安卓，iOS 等，需要重新开发出不同的工具包来进行请求发送和相应解析，工作量大，难以快速响应和满足用户需求。</p>
+<p>基于 HTTP 协议实现的 RPC 则可以使用 JSON 和 XML 格式的请求或响应数据。</p>
+<p>而 JSON 和 XML 作为通用的格式标准(使用 HTTP 协议也需要序列化和反序列化，不过这不是该协议下关心的内容，成熟的 Web 程序已经做好了序列化内容)，开源的解析工具已经相当成熟，在其上进行二次开发会非常便捷和简单。</p>
+<p>但是由于 HTTP 协议是上层协议，发送包含同等内容的信息，使用 HTTP 协议传输所占用的字节数会比使用 TCP 协议传输所占用的字节数更高。</p>
+<p>因此在同等网络下，通过 HTTP 协议传输相同内容，效率会比基于 TCP 协议的数据效率要低，信息传输所占用的时间也会更长，当然压缩数据，能够缩小这一差距。</p>
+<p>简单对比 RPC 和 Restful API</p>
+<p>RESTful API 架构</p>
+<p>REST 的几个特点为：资源、统一接口、URI 和无状态。</p>
+<p>①资源</p>
+<p>所谓”资源”，就是网络上的一个实体，或者说是网络上的一个具体信息。它可以是一段文本、一张图片、一首歌曲、一种服务，就是一个具体的实在。</p>
+<p>②统一接口</p>
+<p>RESTful 架构风格规定，数据的元操作，即 CRUD(Create，Read，Update 和 Delete，即数据的增删查改)操作，分别对应于 HTTP 方法：GET 用来获取资源，POST 用来新建资源(也可以用于更新资源)，PUT 用来更新资源，DELETE 用来删除资源，这样就统一了数据操作的接口，仅通过 HTTP 方法，就可以完成对数据的所有增删查改工作。</p>
+<p>③URL</p>
+<p>可以用一个 URI(统一资源定位符)指向资源，即每个 URI 都对应一个特定的资源。</p>
+<p>要获取这个资源，访问它的 URI 就可以，因此 URI 就成了每一个资源的地址或识别符。</p>
+<p>④无状态</p>
+<p>所谓无状态的，即所有的资源，都可以通过 URI 定位，而且这个定位与其他资源无关，也不会因为其他资源的变化而改变。有状态和无状态的区别，举个简单的例子说明一下。</p>
+<p>如查询员工的工资，如果查询工资是需要登录系统，进入查询工资的页面，执行相关操作后，获取工资的多少，则这种情况是有状态的。</p>
+<p>因为查询工资的每一步操作都依赖于前一步操作，只要前置操作不成功，后续操作就无法执行。</p>
+<p>如果输入一个 URI 即可得到指定员工的工资，则这种情况是无状态的，因为获取工资不依赖于其他资源或状态。</p>
+<p>且这种情况下，员工工资是一个资源，由一个 URI 与之对应，可以通过 HTTP 中的 GET 方法得到资源，这是典型的 RESTful 风格。</p>
+<p>RPC 和 Restful API 对比</p>
+<p>面对对象不同：</p>
+<p>RPC 更侧重于动作。<br>REST 的主体是资源。<br>RESTful 是面向资源的设计架构，但在系统中有很多对象不能抽象成资源，比如登录，修改密码等而 RPC 可以通过动作去操作资源。所以在操作的全面性上 RPC 大于 RESTful。</p>
+<p>传输效率：</p>
+<p>RPC 效率更高。RPC，使用自定义的 TCP 协议，可以让请求报文体积更小，或者使用 HTTP2 协议，也可以很好的减少报文的体积，提高传输效率。</p>
+<p>复杂度：</p>
+<p>RPC 实现复杂，流程繁琐。<br>REST 调用及测试都很方便。<br>RPC 实现需要实现编码，序列化，网络传输等。而 RESTful 不要关注这些，RESTful 实现更简单。</p>
+<p>灵活性：</p>
+<p>HTTP 相对更规范，更标准，更通用，无论哪种语言都支持 HTTP 协议。<br>RPC 可以实现跨语言调用，但整体灵活性不如 RESTful。</p>
+<p>总结</p>
+<p>RPC 主要用于公司内部的服务调用，性能消耗低，传输效率高，实现复杂。</p>
+<p>HTTP 主要用于对外的异构环境，浏览器接口调用，App 接口调用，第三方接口调用等。</p>
+<p>RPC 使用场景(大型的网站，内部子系统较多、接口非常多的情况下适合使用 RPC)：</p>
+<p>长链接。不必每次通信都要像 HTTP 一样去 3 次握手，减少了网络开销。<br>注册发布机制。RPC 框架一般都有注册中心，有丰富的监控管理;发布、下线接口、动态扩展等，对调用方来说是无感知、统一化的操作。<br>安全性，没有暴露资源操作。<br>微服务支持。就是最近流行的服务化架构、服务化治理，RPC 框架是一个强力的支撑。</p>
+
       
     </div>
 
@@ -1448,80 +1576,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/" class="post-title-link" itemprop="url">笔试总结1</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-07-31 21:28:34 / 修改时间：21:59:58" itemprop="dateCreated datePublished" datetime="2021-07-31T21:28:34+08:00">2021-07-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AC%94%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">笔试</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="有序数组，交换两数，找出这两个数的下标"><a href="#有序数组，交换两数，找出这两个数的下标" class="headerlink" title="有序数组，交换两数，找出这两个数的下标"></a>有序数组，交换两数，找出这两个数的下标</h3><h4 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h4><p>用两个标志位去找乱序的那两个数字。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public static int[] change(int[] nums) &#123;</span><br><span class="line">        int first = -1;</span><br><span class="line">        int second = -1;</span><br><span class="line">        int[] res = new int[2];</span><br><span class="line">        for (int i = 1; i &lt; nums.length; i++) &#123;</span><br><span class="line">            if (first == -1 &amp;&amp; nums[i - 1] &gt; nums[i]) first = i - 1;</span><br><span class="line">            if (first != -1 &amp;&amp; nums[i - 1] &gt; nums[i]) second = i;</span><br><span class="line">        &#125;</span><br><span class="line">        res[0] = first + 1;</span><br><span class="line">        res[1] = second + 1;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="括号的个数"><a href="#括号的个数" class="headerlink" title="括号的个数"></a>括号的个数</h3><p>【】【】【【】3】2</p>
-<p>表示1+1+2（3）=8个括号</p>
-<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getBox</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">       Stack&lt;Integer&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">       <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">           <span class="keyword">if</span> (s.charAt(i) == <span class="string">&#x27;[&#x27;</span>) &#123;</span><br><span class="line">               stack.push(<span class="number">1</span>);<span class="comment">//保底一个</span></span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s.charAt(i) == <span class="string">&#x27;]&#x27;</span>) &#123;</span><br><span class="line">               <span class="keyword">int</span> temp = stack.pop();</span><br><span class="line">               <span class="keyword">if</span> (i + <span class="number">1</span> &lt; s.length() &amp;&amp; s.charAt(i + <span class="number">1</span>) &lt;= <span class="string">&#x27;9&#x27;</span> &amp;&amp; s.charAt(i + <span class="number">1</span>) &gt; <span class="string">&#x27;0&#x27;</span>) &#123;<span class="comment">//后面为数字，要结算</span></span><br><span class="line">                   temp *= (s.charAt(i + <span class="number">1</span>) - <span class="string">&#x27;0&#x27;</span>);</span><br><span class="line">                   i++;<span class="comment">//结算完跳过这个数字</span></span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">if</span> (stack.isEmpty()) &#123;<span class="comment">//空的，表示一个分段算完了</span></span><br><span class="line">                   res += temp;</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   <span class="keyword">int</span> top = stack.pop() + temp;</span><br><span class="line">                   stack.push(top);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> res;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1593,7 +1647,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
