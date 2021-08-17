@@ -993,7 +993,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-08 14:06:40" itemprop="dateModified" datetime="2021-08-08T14:06:40+08:00">2021-08-08</time>
+                <time title="修改时间：2021-08-16 13:33:07" itemprop="dateModified" datetime="2021-08-16T13:33:07+08:00">2021-08-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1016,7 +1016,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="Obiect类有哪些方法"><a href="#Obiect类有哪些方法" class="headerlink" title="Obiect类有哪些方法"></a>Obiect类有哪些方法</h3><p>1、 getClass()：获取类的class对象。<br>2、 hashCode:获取对象的hashCode值<br>3、 equals():比较对象是否相等，比较的是值和地址，子类可重写以自定义。<br>4、 clone()：克隆方法。<br>5、 toString():如果没有重写，应用对象将打印的是地址值。<br>6、 notify():随机选择一个在该对象上调用wait方法的线程，解除其阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>7、 notifyall():解除所有那些在该对象上调用wait方法的线程的阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>8、 wait():导致线程进入等待状态，直到它被其他线程通过notify()或者notifyAll唤醒。该方法只能在同步方法中调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>9、 finalize()：对象回收时调用</p>
+          <h3 id="Java对象判空？"><a href="#Java对象判空？" class="headerlink" title="Java对象判空？"></a>Java对象判空？</h3><p>null：一个对象如果有可能是null的话，首先要做的就是判断是否为null：object == null，否则就有可能会出现空指针异常，这个通常是我们在进行数据库的查询操作时，查询结果首先用object != null，进行非空判断，然后再进行其他的业务逻辑，这样可以避免出现空指针异常。</p>
+<p>isempty：此方法可以使用于字符串，数组，集合都可以用。</p>
+<pre><code>public boolean isEmpty() &#123;
+    return value.length == 0;
+&#125;
+</code></pre>
+<p>这里是一个对象的长度，使用这个方法，首先要排除对象不为null，否则当对象为null时，调用isEmpty方法就会报空指针了。</p>
+<p>要想返回true，也就是一个对象的长度为0，也就是说首先这个对象肯定不为null了，内容为空时，才能返回true。</p>
+<p>当创建一个新的对象时，栈里面有一个对象，堆里面有一个对象，栈里的对象指向堆里面的对象。对象包含引用对象和实际对象，也就是栈和值的关系，比如String a = new String();，这句代码就在堆内存中产生了一个String对象””，和栈内存中一个引用对象a，也就是a指向了一个为空的字符串。当没有再次给引用对象a进行赋值时，操作a也即是操作这个空字符串。</p>
+<h3 id="后端和前端交互接口"><a href="#后端和前端交互接口" class="headerlink" title="后端和前端交互接口"></a>后端和前端交互接口</h3><h3 id="Obiect类有哪些方法"><a href="#Obiect类有哪些方法" class="headerlink" title="Obiect类有哪些方法"></a>Obiect类有哪些方法</h3><p>1、 getClass()：获取类的class对象。<br>2、 hashCode:获取对象的hashCode值<br>3、 equals():比较对象是否相等，比较的是值和地址，子类可重写以自定义。<br>4、 clone()：克隆方法。<br>5、 toString():如果没有重写，应用对象将打印的是地址值。<br>6、 notify():随机选择一个在该对象上调用wait方法的线程，解除其阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>7、 notifyall():解除所有那些在该对象上调用wait方法的线程的阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>8、 wait():导致线程进入等待状态，直到它被其他线程通过notify()或者notifyAll唤醒。该方法只能在同步方法中调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>9、 finalize()：对象回收时调用</p>
 <h3 id="Java数据类型"><a href="#Java数据类型" class="headerlink" title="Java数据类型"></a>Java数据类型</h3><p>Java 中有 8 种基本数据类型，分别为：</p>
 <p>6 种数字类型 ：byte-1、short-2、int-4、long-8、float-4、double-8<br>1 种字符类型：char-2<br>1 种布尔型：boolean-1位</p>
 <p>这八种基本类型都有对应的包装类分别为：Byte、Short、Integer、Long、Float、Double、Character、Boolean 。</p>
@@ -1454,7 +1463,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-11 14:45:19" itemprop="dateModified" datetime="2021-08-11T14:45:19+08:00">2021-08-11</time>
+                <time title="修改时间：2021-08-11 14:55:42" itemprop="dateModified" datetime="2021-08-11T14:55:42+08:00">2021-08-11</time>
               </span>
 
           
