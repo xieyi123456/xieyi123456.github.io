@@ -861,7 +861,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-04 13:52:42" itemprop="dateModified" datetime="2021-08-04T13:52:42+08:00">2021-08-04</time>
+                <time title="修改时间：2021-08-23 23:59:16" itemprop="dateModified" datetime="2021-08-23T23:59:16+08:00">2021-08-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -884,7 +884,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="sql语法举例"><a href="#sql语法举例" class="headerlink" title="sql语法举例"></a>sql语法举例</h2><h3 id="顺序"><a href="#顺序" class="headerlink" title="顺序"></a>顺序</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Select </span><br><span class="line">From</span><br><span class="line">Join on</span><br><span class="line">Where</span><br><span class="line">Group by</span><br><span class="line">Having</span><br><span class="line">Order by</span><br><span class="line">Limit</span><br></pre></td></tr></table></figure>
+          <h2 id="sql语法举例"><a href="#sql语法举例" class="headerlink" title="sql语法举例"></a>sql语法举例</h2><p>有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。</p>
+<p>SELECT NAME,SUM(score) FROM chengji</p>
+<p>GROUP BY NAME</p>
+<p>ORDER BY SUM(score) DESC;</p>
+<h3 id="顺序"><a href="#顺序" class="headerlink" title="顺序"></a>顺序</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Select </span><br><span class="line">From</span><br><span class="line">Join on</span><br><span class="line">Where</span><br><span class="line">Group by</span><br><span class="line">Having</span><br><span class="line">Order by</span><br><span class="line">Limit</span><br></pre></td></tr></table></figure>
 
 
 
@@ -1551,7 +1555,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">48</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

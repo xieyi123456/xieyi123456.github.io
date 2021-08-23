@@ -1,34 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>ACM模式输入输出</title>
-    <url>/2021/07/29/ACM%E6%A8%A1%E5%BC%8F%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/</url>
-    <content><![CDATA[<h4 id="Scanner"><a href="#Scanner" class="headerlink" title="Scanner"></a>Scanner</h4><h5 id="next-与-nextLine-区别"><a href="#next-与-nextLine-区别" class="headerlink" title="next() 与 nextLine() 区别"></a><strong>next() 与 nextLine() 区别</strong></h5><h5 id="next"><a href="#next" class="headerlink" title="next():"></a>next():</h5><p>1、一定要读取到有效字符后才可以结束输入。<br>2、对输入有效字符之前遇到的空白，next() 方法会自动将其去掉。<br>3、只有输入有效字符后才将其后面<strong>输入的空白作为分隔符或者结束符</strong>。<br>next() 不能得到带有空格的字符串。</p>
-<p><strong>nextLine()：</strong></p>
-<p>1、<strong>以Enter为结束符</strong>,也就是说 nextLine()方法返回的是<strong>输入回车之前的所有字符</strong>。<br>2、<strong>可以获得空白。</strong></p>
-<p>如果要<strong>输入 int 或 float 类型的数据</strong>，在 Scanner 类中也有支持，但是在输入之前最好先使用 hasNextXxx() 方法进行验证，再使用 nextXxx() 来读取。</p>
-<h5 id="小小例子："><a href="#小小例子：" class="headerlink" title="小小例子："></a>小小例子：</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">while</span> (sc.hasNextInt()) &#123;</span><br><span class="line">            <span class="keyword">int</span> a = sc.nextInt();</span><br><span class="line">            <span class="keyword">int</span> b = sc.nextInt();</span><br><span class="line">            System.out.println(a + b);</span><br><span class="line">        &#125;</span><br><span class="line">        sc.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">2</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span></span><br><span class="line"><span class="number">2</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">5</span>    </span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">while</span> (sc.hasNext()) &#123;</span><br><span class="line">            String[] abc = sc.nextLine().split(<span class="string">&quot; &quot;</span>);</span><br><span class="line">            <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; abc.length; i++) &#123;</span><br><span class="line">                res += Integer.parseInt(abc[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(res);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> </span><br><span class="line"><span class="number">1</span> <span class="number">3</span> <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="number">6</span></span><br><span class="line"><span class="number">8</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="小小实战"><a href="#小小实战" class="headerlink" title="小小实战"></a>小小实战</h5><p><strong>牛顿迭代法求立方根</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">double</span> num = sc.nextFloat();</span><br><span class="line">        sc.close();</span><br><span class="line">        System.out.println(solve(num));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">solve</span><span class="params">(<span class="keyword">double</span> num)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">double</span> x=<span class="number">1.0</span>;</span><br><span class="line">        <span class="keyword">while</span> (Math.abs(num-x*x*x)&gt;<span class="number">1e-9</span>)&#123;</span><br><span class="line">            x=x+(num-x*x*x)/(<span class="number">3</span>*x*x);</span><br><span class="line">        &#125;</span><br><span class="line">        String res = String.format(<span class="string">&quot;%.1f&quot;</span>, x);</span><br><span class="line">        <span class="keyword">return</span> Double.parseDouble(res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>拓展</strong>：<strong>同样思路可以求平方根</strong></p>
-<p>另：<strong>二分法求平方根</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">squrt</span><span class="params">(<span class="keyword">double</span> num)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">double</span> l = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">double</span> r = num;</span><br><span class="line">       <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">           <span class="keyword">double</span> mid = l + (r - l) / <span class="number">2</span>;</span><br><span class="line">           <span class="keyword">if</span> (Math.abs(mid * mid - num) &lt; <span class="number">1e-9</span>) &#123;</span><br><span class="line">               <span class="keyword">return</span> mid;</span><br><span class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mid * mid &lt; num) &#123;</span><br><span class="line">               l = mid;</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               r = mid;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="字符串有多少个回文子串"><a href="#字符串有多少个回文子串" class="headerlink" title="字符串有多少个回文子串"></a>字符串有多少个回文子串</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        String s = sc.next();</span><br><span class="line">        System.out.println(maxLength(s));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">maxLength</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span>[][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[s.length()][s.length()];</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = s.length() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &lt; s.length(); j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (j - i &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">                        res++;</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dp[i + <span class="number">1</span>][j - <span class="number">1</span>]) &#123;</span><br><span class="line">                        res++;</span><br><span class="line">                        dp[i][j] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>leetcode</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java基础-Java集合框架</title>
     <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<h2 id="集合框架"><a href="#集合框架" class="headerlink" title="集合框架"></a>集合框架</h2><p><img src="https://i.loli.net/2021/08/04/6xejDEtAQKSRpwv.png" alt="image-20210804212935827"></p>
@@ -333,59 +305,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java并发-并发容器</title>
-    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="同步容器"><a href="#同步容器" class="headerlink" title="同步容器"></a>同步容器</h2><h3 id="collections中有一些方法："><a href="#collections中有一些方法：" class="headerlink" title="collections中有一些方法："></a>collections中有一些方法：</h3><p>synchronizedlist：</p>
-<p>synchronizedmap：</p>
-<p>synchronizedcollection：</p>
-<p>在遍历时容器发生了结构性变化，会报错。</p>
-<h2 id="写时复制的的List和Set"><a href="#写时复制的的List和Set" class="headerlink" title="写时复制的的List和Set"></a>写时复制的的List和Set</h2><p>copyonwritearraylist</p>
-<p>copyonwritearrayset</p>
-<p>线程安全</p>
-<p>迭代器不支持修改</p>
-<p>每次修改时都会新建一个数组，复制进去。读都会访问原来的数组。</p>
-<p>基于reentrantlock实现</p>
-<p>不适合大数组</p>
-<p><strong>适合大部分访问都是读的情况</strong></p>
-<h2 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h2><p>jdk以前concurrenthashmap是分段的数组+链表实现。<br>实现线程安全的方式：</p>
-<p>1，在 JDK1.7 的时候， ConcurrentHashMap （分段锁）对整个桶数组进⾏了分割分段，每⼀把锁只锁容器其中⼀部分数据，<strong>多线程访问容器⾥不同数据段的数据，就不会存在锁竞争，提⾼并发访问率</strong>。<br>一个concurrenthashmap里面包含一个segment数组。一个segment包含一个hashentry数组。</p>
-<p>核心：</p>
-<p><strong>分段锁</strong></p>
-<p><strong>读不需要锁</strong></p>
-<p><img src="https://i.loli.net/2021/08/03/BJEfHT8bwkLeaMh.png" alt="image-20210803181948397"></p>
-<p> 2，JDK1.8 的时候已经摒弃了 Segment 的概念，⽽是直接⽤ <strong>Node 数组+链表/红⿊树</strong>的数据结构来实现，并发控制使⽤ synchronized 和 CAS 来操作。<br>synchronized只会锁定当前链表或者红黑树的首节点。效率大大提高。</p>
-<h3 id="迭代器弱一致性？"><a href="#迭代器弱一致性？" class="headerlink" title="迭代器弱一致性？"></a>迭代器弱一致性？</h3><p>遍历时，内部元素变化发生在已经遍历过的部分，不会体现出来。</p>
-<p><img src="https://i.loli.net/2021/08/03/zgxDwuEOSZrRkPV.png" alt="image-20210803182140097"></p>
-<p>3，hashtable是同一把锁，全表锁。</p>
-<h2 id="基于跳表的Map和Set"><a href="#基于跳表的Map和Set" class="headerlink" title="基于跳表的Map和Set"></a>基于跳表的Map和Set</h2><p>concurrentskiplistmap==treemap</p>
-<p>concurrentskiplistset==treeset</p>
-<p>跳表更加容易实现高效并发</p>
-<p>没有使用锁，所有的操作都可以并发</p>
-<p>他们的size（）方法复杂度为o（n），并且结果也不一定准确</p>
-<h3 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h3><p>基于链表+多层索引</p>
-<p>类似二分查找</p>
-<h2 id="并发队列"><a href="#并发队列" class="headerlink" title="并发队列"></a>并发队列</h2><p><strong>无锁非阻塞：不用锁，所有操作都可以立即执行，主要通过循环CAS实现并发安全。</strong></p>
-<p><strong>阻塞队列：使用锁和条件。很多操作都要获得锁或者满足条件再返回。不满足或者未获得锁就会阻塞。</strong></p>
-<p>都是弱一致性的。遍历时遍历过的内容改变了不会显示。</p>
-<h4 id="无锁非阻塞并发队列："><a href="#无锁非阻塞并发队列：" class="headerlink" title="无锁非阻塞并发队列："></a>无锁非阻塞并发队列：</h4><p>concurrentlinkedqueue</p>
-<p>cocurrentlinkeddeque</p>
-<p>基于链表，没有大小限制</p>
-<p>基于循环cas</p>
-<h4 id="普通阻塞队列："><a href="#普通阻塞队列：" class="headerlink" title="普通阻塞队列："></a>普通阻塞队列：</h4><p>都实现了接口blockingqueue，在入队出队时可能会等待。</p>
-<p><img src="https://i.loli.net/2021/08/03/T1prKxLjmhqob5s.png" alt="image-20210803184553784"></p>
-<p>arrayblockingqueue循环数组</p>
-<p>linkedblockingqueue单向链表</p>
-<p>都是使用显示锁reentrantlock和显示条件condition实现的</p>
-<h4 id="优先级阻塞队列："><a href="#优先级阻塞队列：" class="headerlink" title="优先级阻塞队列："></a>优先级阻塞队列：</h4><p>按照优先级出队。</p>
-<h4 id="延时阻塞队列："><a href="#延时阻塞队列：" class="headerlink" title="延时阻塞队列："></a>延时阻塞队列：</h4><h4 id="其他："><a href="#其他：" class="headerlink" title="其他："></a>其他：</h4>]]></content>
-      <categories>
-        <category>Java并发</category>
-      </categories>
-      <tags>
-        <tag>并发容器</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java并发-线程安全的机制</title>
     <url>/2021/08/03/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%9C%BA%E5%88%B6/</url>
     <content><![CDATA[<h2 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h2><p><strong>解决多个线程访问资源的同步性。可以保证被他修饰的方法或者代码块在任意时刻只有一个线程执行。</strong></p>
@@ -471,6 +390,59 @@
       </categories>
       <tags>
         <tag>机制</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java并发-并发容器</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="同步容器"><a href="#同步容器" class="headerlink" title="同步容器"></a>同步容器</h2><h3 id="collections中有一些方法："><a href="#collections中有一些方法：" class="headerlink" title="collections中有一些方法："></a>collections中有一些方法：</h3><p>synchronizedlist：</p>
+<p>synchronizedmap：</p>
+<p>synchronizedcollection：</p>
+<p>在遍历时容器发生了结构性变化，会报错。</p>
+<h2 id="写时复制的的List和Set"><a href="#写时复制的的List和Set" class="headerlink" title="写时复制的的List和Set"></a>写时复制的的List和Set</h2><p>copyonwritearraylist</p>
+<p>copyonwritearrayset</p>
+<p>线程安全</p>
+<p>迭代器不支持修改</p>
+<p>每次修改时都会新建一个数组，复制进去。读都会访问原来的数组。</p>
+<p>基于reentrantlock实现</p>
+<p>不适合大数组</p>
+<p><strong>适合大部分访问都是读的情况</strong></p>
+<h2 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h2><p>jdk以前concurrenthashmap是分段的数组+链表实现。<br>实现线程安全的方式：</p>
+<p>1，在 JDK1.7 的时候， ConcurrentHashMap （分段锁）对整个桶数组进⾏了分割分段，每⼀把锁只锁容器其中⼀部分数据，<strong>多线程访问容器⾥不同数据段的数据，就不会存在锁竞争，提⾼并发访问率</strong>。<br>一个concurrenthashmap里面包含一个segment数组。一个segment包含一个hashentry数组。</p>
+<p>核心：</p>
+<p><strong>分段锁</strong></p>
+<p><strong>读不需要锁</strong></p>
+<p><img src="https://i.loli.net/2021/08/03/BJEfHT8bwkLeaMh.png" alt="image-20210803181948397"></p>
+<p> 2，JDK1.8 的时候已经摒弃了 Segment 的概念，⽽是直接⽤ <strong>Node 数组+链表/红⿊树</strong>的数据结构来实现，并发控制使⽤ synchronized 和 CAS 来操作。<br>synchronized只会锁定当前链表或者红黑树的首节点。效率大大提高。</p>
+<h3 id="迭代器弱一致性？"><a href="#迭代器弱一致性？" class="headerlink" title="迭代器弱一致性？"></a>迭代器弱一致性？</h3><p>遍历时，内部元素变化发生在已经遍历过的部分，不会体现出来。</p>
+<p><img src="https://i.loli.net/2021/08/03/zgxDwuEOSZrRkPV.png" alt="image-20210803182140097"></p>
+<p>3，hashtable是同一把锁，全表锁。</p>
+<h2 id="基于跳表的Map和Set"><a href="#基于跳表的Map和Set" class="headerlink" title="基于跳表的Map和Set"></a>基于跳表的Map和Set</h2><p>concurrentskiplistmap==treemap</p>
+<p>concurrentskiplistset==treeset</p>
+<p>跳表更加容易实现高效并发</p>
+<p>没有使用锁，所有的操作都可以并发</p>
+<p>他们的size（）方法复杂度为o（n），并且结果也不一定准确</p>
+<h3 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h3><p>基于链表+多层索引</p>
+<p>类似二分查找</p>
+<h2 id="并发队列"><a href="#并发队列" class="headerlink" title="并发队列"></a>并发队列</h2><p><strong>无锁非阻塞：不用锁，所有操作都可以立即执行，主要通过循环CAS实现并发安全。</strong></p>
+<p><strong>阻塞队列：使用锁和条件。很多操作都要获得锁或者满足条件再返回。不满足或者未获得锁就会阻塞。</strong></p>
+<p>都是弱一致性的。遍历时遍历过的内容改变了不会显示。</p>
+<h4 id="无锁非阻塞并发队列："><a href="#无锁非阻塞并发队列：" class="headerlink" title="无锁非阻塞并发队列："></a>无锁非阻塞并发队列：</h4><p>concurrentlinkedqueue</p>
+<p>cocurrentlinkeddeque</p>
+<p>基于链表，没有大小限制</p>
+<p>基于循环cas</p>
+<h4 id="普通阻塞队列："><a href="#普通阻塞队列：" class="headerlink" title="普通阻塞队列："></a>普通阻塞队列：</h4><p>都实现了接口blockingqueue，在入队出队时可能会等待。</p>
+<p><img src="https://i.loli.net/2021/08/03/T1prKxLjmhqob5s.png" alt="image-20210803184553784"></p>
+<p>arrayblockingqueue循环数组</p>
+<p>linkedblockingqueue单向链表</p>
+<p>都是使用显示锁reentrantlock和显示条件condition实现的</p>
+<h4 id="优先级阻塞队列："><a href="#优先级阻塞队列：" class="headerlink" title="优先级阻塞队列："></a>优先级阻塞队列：</h4><p>按照优先级出队。</p>
+<h4 id="延时阻塞队列："><a href="#延时阻塞队列：" class="headerlink" title="延时阻塞队列："></a>延时阻塞队列：</h4><h4 id="其他："><a href="#其他：" class="headerlink" title="其他："></a>其他：</h4>]]></content>
+      <categories>
+        <category>Java并发</category>
+      </categories>
+      <tags>
+        <tag>并发容器</tag>
       </tags>
   </entry>
   <entry>
@@ -734,7 +706,11 @@
   <entry>
     <title>Mysql-sql常见语法与优化</title>
     <url>/2021/07/30/Mysql-sql%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95%E4%B8%8E%E4%BC%98%E5%8C%96/</url>
-    <content><![CDATA[<h2 id="sql语法举例"><a href="#sql语法举例" class="headerlink" title="sql语法举例"></a>sql语法举例</h2><h3 id="顺序"><a href="#顺序" class="headerlink" title="顺序"></a>顺序</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Select </span><br><span class="line">From</span><br><span class="line">Join on</span><br><span class="line">Where</span><br><span class="line">Group by</span><br><span class="line">Having</span><br><span class="line">Order by</span><br><span class="line">Limit</span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<h2 id="sql语法举例"><a href="#sql语法举例" class="headerlink" title="sql语法举例"></a>sql语法举例</h2><p>有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。</p>
+<p>SELECT NAME,SUM(score) FROM chengji</p>
+<p>GROUP BY NAME</p>
+<p>ORDER BY SUM(score) DESC;</p>
+<h3 id="顺序"><a href="#顺序" class="headerlink" title="顺序"></a>顺序</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Select </span><br><span class="line">From</span><br><span class="line">Join on</span><br><span class="line">Where</span><br><span class="line">Group by</span><br><span class="line">Having</span><br><span class="line">Order by</span><br><span class="line">Limit</span><br></pre></td></tr></table></figure>
 
 
 
@@ -1203,6 +1179,31 @@
       </tags>
   </entry>
   <entry>
+    <title>Netty-零拷贝</title>
+    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
+    <content><![CDATA[<p>零拷⻉技术是指计算机执⾏操作时，CPU 不需要先将数 据从某处内存复制到另⼀个特定区域。这种技术通常⽤于通过⽹络传输⽂件时节省CPU周期和内存带宽。 </p>
+<p>在 OS 层⾯上的 Zero-copy 通常指避免在用户态和内核态之间来回 拷⻉数据。</p>
+<p>⽽在 Netty 层⾯ ，零拷⻉主要体现在对于数据操作的优化。 </p>
+<ol>
+<li> 使⽤ Netty 提供的 CompositeByteBuf 类, 可以将多个 ByteBuf 合并为⼀个逻辑上的 ByteBuf , 避免了各个 ByteBuf 之间的拷⻉。 </li>
+<li> ByteBuf ⽀持 slice 操作, 因此可以将 ByteBuf 分解为多个共享同⼀个存储区域的 ByteBuf , 避免了内存的拷⻉。 </li>
+<li>通过 FileRegion 包装的 FileChannel.tranferTo 实现⽂件传输（底层是sendfile方法）, 可以直接将⽂件缓冲区的数据发送到⽬标 Channel , 避免了传统通过循环 write ⽅式导致的内存拷⻉问题 。</li>
+<li>duplicate。逻辑上的复制。</li>
+</ol>
+<h3 id="slice（si-lai-si）"><a href="#slice（si-lai-si）" class="headerlink" title="slice（si lai si）"></a>slice（si lai si）</h3><p>对原始 ByteBuf 进行切片成多个 ByteBuf，切片后的 ByteBuf 并没有发生内存复制，还是使用原始 ByteBuf 的内存，切片后的 ByteBuf 维护独立的 read，write 指针</p>
+<p><img src="https://i.loli.net/2021/08/04/XkAyOUa6xiMPqV8.png" alt="image-20210804201821413"></p>
+<h3 id="duplicate"><a href="#duplicate" class="headerlink" title="duplicate"></a>duplicate</h3><p>就好比截取了原始 ByteBuf 所有内容，并且没有 max capacity 的限制，也是与原始 ByteBuf 使用同一块底层内存，只是读写指针是独立的。</p>
+<p><img src="https://i.loli.net/2021/08/04/2sbl13NIuMo5jwZ.png" alt="image-20210804201834603"></p>
+<h3 id="CompositeByteBuf（composite）"><a href="#CompositeByteBuf（composite）" class="headerlink" title="CompositeByteBuf（composite）"></a>CompositeByteBuf（composite）</h3><p>可以将多个 ByteBuf 合并为一个逻辑上的 ByteBuf，避免拷贝。</p>
+]]></content>
+      <categories>
+        <category>Netty</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Netty-长连接，心跳机制</title>
     <url>/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/</url>
     <content><![CDATA[<h3 id="tcp粘包？netty解决办法？"><a href="#tcp粘包？netty解决办法？" class="headerlink" title="tcp粘包？netty解决办法？"></a>tcp粘包？netty解决办法？</h3><ul>
@@ -1241,31 +1242,6 @@
       </categories>
       <tags>
         <tag>机制</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Netty-零拷贝</title>
-    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
-    <content><![CDATA[<p>零拷⻉技术是指计算机执⾏操作时，CPU 不需要先将数 据从某处内存复制到另⼀个特定区域。这种技术通常⽤于通过⽹络传输⽂件时节省CPU周期和内存带宽。 </p>
-<p>在 OS 层⾯上的 Zero-copy 通常指避免在用户态和内核态之间来回 拷⻉数据。</p>
-<p>⽽在 Netty 层⾯ ，零拷⻉主要体现在对于数据操作的优化。 </p>
-<ol>
-<li> 使⽤ Netty 提供的 CompositeByteBuf 类, 可以将多个 ByteBuf 合并为⼀个逻辑上的 ByteBuf , 避免了各个 ByteBuf 之间的拷⻉。 </li>
-<li> ByteBuf ⽀持 slice 操作, 因此可以将 ByteBuf 分解为多个共享同⼀个存储区域的 ByteBuf , 避免了内存的拷⻉。 </li>
-<li>通过 FileRegion 包装的 FileChannel.tranferTo 实现⽂件传输（底层是sendfile方法）, 可以直接将⽂件缓冲区的数据发送到⽬标 Channel , 避免了传统通过循环 write ⽅式导致的内存拷⻉问题 。</li>
-<li>duplicate。逻辑上的复制。</li>
-</ol>
-<h3 id="slice（si-lai-si）"><a href="#slice（si-lai-si）" class="headerlink" title="slice（si lai si）"></a>slice（si lai si）</h3><p>对原始 ByteBuf 进行切片成多个 ByteBuf，切片后的 ByteBuf 并没有发生内存复制，还是使用原始 ByteBuf 的内存，切片后的 ByteBuf 维护独立的 read，write 指针</p>
-<p><img src="https://i.loli.net/2021/08/04/XkAyOUa6xiMPqV8.png" alt="image-20210804201821413"></p>
-<h3 id="duplicate"><a href="#duplicate" class="headerlink" title="duplicate"></a>duplicate</h3><p>就好比截取了原始 ByteBuf 所有内容，并且没有 max capacity 的限制，也是与原始 ByteBuf 使用同一块底层内存，只是读写指针是独立的。</p>
-<p><img src="https://i.loli.net/2021/08/04/2sbl13NIuMo5jwZ.png" alt="image-20210804201834603"></p>
-<h3 id="CompositeByteBuf（composite）"><a href="#CompositeByteBuf（composite）" class="headerlink" title="CompositeByteBuf（composite）"></a>CompositeByteBuf（composite）</h3><p>可以将多个 ByteBuf 合并为一个逻辑上的 ByteBuf，避免拷贝。</p>
-]]></content>
-      <categories>
-        <category>Netty</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
       </tags>
   </entry>
   <entry>
@@ -1337,60 +1313,6 @@
       </categories>
       <tags>
         <tag>持久化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis-数据类型</title>
-    <url>/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
-    <content><![CDATA[<p><strong>redis总是键值对存储。</strong></p>
-<p><strong>key总是string。</strong></p>
-<p><strong>value有五种类型。</strong></p>
-<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>string 数据结构是简单的 <strong>key-value</strong> 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 <strong>简单动态字符串（simple dynamic string，SDS）</strong>。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据<strong>还可以保存二进制数据</strong>，并且**获取字符串长度复杂度为 O(1)**（C 字符串为O(N)）,除此之外，Redis 的 SDS API 是安全的，不会造成缓冲区溢出。</p>
-<p><img src="https://i.loli.net/2021/08/04/zkHrifPgLS46UeR.png" alt="image-20210804150655994"></p>
-<p>常用命令： <strong>set,get,strlen,exists,decr,incr,setex</strong> 等等。</p>
-<p>应用场景： <strong>一般常用在需要计数的场景，比如用户的访问次数、热点文章的点赞转发数量等等。</strong></p>
-<p>127.0.0.1:6379&gt; set key value #设置 key-value 类型的值<br>127.0.0.1:6379&gt; get key # 根据 key 获得对应的 value<br>127.0.0.1:6379&gt; exists key  # 判断某个 key 是否存在<br>127.0.0.1:6379&gt; strlen key # 返回 key 所储存的字符串值的长度。<br>127.0.0.1:6379&gt; del key # 删除某个 key 对应的值<br>127.0.0.1:6379&gt; get key</p>
-<p>批量设置 :<br>127.0.0.1:6379&gt; mset key1 value1 key2 value2 # 批量设置 key-value 类型的值<br>127.0.0.1:6379&gt; mget key1 key2 # 批量获取多个 key 对应的 value</p>
-<p>计数器（字符串的内容为整数的时候可以使用）：<br>127.0.0.1:6379&gt; set number 1<br>127.0.0.1:6379&gt; incr number # 将 key 中储存的数字值增一<br>127.0.0.1:6379&gt; get number<br>127.0.0.1:6379&gt; decr number # 将 key 中储存的数字值减一<br>127.0.0.1:6379&gt; get number</p>
-<p>过期（默认为永不过期）：<br>127.0.0.1:6379&gt; <strong>expire</strong> key  60 # 数据在 60s 后过期<br>127.0.0.1:6379&gt; setex key 60 value # 数据在 60s 后过期 (setex:[set] + [ex]pire)<br>127.0.0.1:6379&gt; ttl key # 查看数据还有多久过期</p>
-<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p>list 即是 <strong>链表</strong>。链表是一种非常常见的数据结构，特点是易于数据元素的插入和删除并且可以灵活调整链表长度，但是链表的随机访问困难。Redis 的 list 的实现为一个 <strong>双向链表</strong>，即可以支持反向查找和遍历，更方便操作，不过带来了部分额外的内存开销。</p>
-<p>常用命令**: rpush,lpop,lpush,rpop,lrange,llen** 等。</p>
-<p>应用场景: <strong>发布与订阅或者说消息队列、慢查询。</strong></p>
-<p>通过 rpush/lpop 实现队列：<br>127.0.0.1:6379&gt; rpush myList value1 # 向 list 的头部（右边）添加元素<br>127.0.0.1:6379&gt; rpush myList value2 value3 # 向list的头部（最右边）添加多个元素<br>127.0.0.1:6379&gt; lpop myList # 将 list的尾部(最左边)元素取出<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的list列表， 0 为 start,1为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1表示倒数第一</p>
-<p>通过 rpush/rpop 实现栈：<br>127.0.0.1:6379&gt; rpush myList2 value1 value2 value3<br>127.0.0.1:6379&gt; rpop myList2 # 将 list的头部(最右边)元素取出</p>
-<p>通过 lrange 查看对应下标范围的列表元素：<br>127.0.0.1:6379&gt; rpush myList value1 value2 value3<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的list列表， 0 为 start,1为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1表示倒数第一<br>通过 lrange 命令，你可以基于 list 实现分页查询，性能非常高！</p>
-<p>通过 llen 查看链表长度：<br>127.0.0.1:6379&gt; llen myList</p>
-<h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p>hash 类似于 JDK1.8 前的 HashMap，**内部实现也差不多(数组 + 链表)**。不过，Redis 的 hash 做了更多优化。另外，hash 是一个 string 类型的 field 和 value 的映射表，特别适合用于存储对象，后续操作的时候，你可以直接仅仅修改这个对象中的某个字段的值。</p>
-<h4 id="渐进式rehash（）；"><a href="#渐进式rehash（）；" class="headerlink" title="渐进式rehash（）；"></a><strong>渐进式rehash（）；</strong></h4><p>hash 对象在扩容时使用了一种叫“<strong>渐进式 rehash</strong>”的方式，步骤如下：</p>
-<p>1）计算新表 size（*2且为2的幂次）、掩码，为新表 ht[1] 分配空间，让字典同时持有 ht[0] 和 ht[1] 两个哈希表。<br>2）将 rehash <strong>索引计数器变量 rehashidx</strong> 的值设置为 0，表示 rehash 正式开始。<br>3）在 rehash 进行期间，每次对字典执行添加、删除、査找、更新操作时，程序除了执行指定的操作以外，还会触发额外的 rehash 操作，在源码中的 _dictRehashStep 方法。</p>
-<p>_dictRehashStep：从名字也可以看出来，大意是 rehash 一步，也就是 rehash 一个索引位置。</p>
-<p>该方法会从 <strong>ht[0] 表的 rehashidx 索引位置上开始向后查找，找到第一个不为空的索引位置，将该索引位置的所有节点 rehash 到 ht[1]，当本次 rehash 工作完成之后，将 ht[0] 索引位置为 rehashidx 的节点清空，同时将 rehashidx属性的值加一。</strong></p>
-<p>4）将 rehash 分摊到每个操作上确实是非常妙的方式，但是万一此时服务器比较空闲，一直没有什么操作，难道 redis要一直持有两个哈希表吗？<br>答案当然不是的。我们知道，redis 除了文件事件外，还有时间事件，<strong>redis 会定期触发时间事件，这些时间事件用于执行一些后台操作，其中就包含 rehash 操作</strong>：当 redis 发现有字典正在进行 rehash 操作时，会花费 1 毫秒的时间，一起帮忙进行 rehash。</p>
-<p>5）随着操作的不断执行，最终在某个时间点上，<strong>ht[0] 的所有键值对都会被 rehash 至 ht[1]<strong>，此时 rehash 流程完成，会执行最后的清理工作：</strong>释放 ht[0] 的空间、将 ht[0] 指向 ht[1]、重置 ht[1]、重置 rehashidx</strong></p>
-<h4 id="渐进式-rehash-的优点"><a href="#渐进式-rehash-的优点" class="headerlink" title="渐进式 rehash 的优点"></a>渐进式 rehash 的优点</h4><p>渐进式 rehash 的好处在于它采取<strong>分而治之</strong>的方式，将 rehash 键值对所需的计算工作<strong>均摊到对字典的每个添加、删除、查找和更新操作上</strong>，从而避免了<strong>集中式 rehash 而带来的庞大计算量</strong>。</p>
-<p>在进行渐进式 rehash 的过程中，字典会同时使用 ht[0] 和 ht[1] 两个哈希表， 所以在渐进式 rehash 进行期间，字典的删除、査找、更新等操作会在两个哈希表上进行。例如，要在字典里面査找一个键的话，程序会先在 ht[0] 里面进行査找，如果没找到的话，就会继续到 ht[1] 里面进行査找，诸如此类。</p>
-<p>另外，在渐进式 rehash 执行期间，<strong>新增的键值对会被直接保存到 ht[1], ht[0] 不再进行任何添加操作，这样就保证了 ht[0] 包含的键值对数量会只减不增，并随着 rehash 操作的执行而最终变成空表。</strong></p>
-<p>常用命令： <strong>hset,hmset,hexists,hget,hgetall,hkeys,hvals 等</strong>。</p>
-<p>应用场景: 系统中对象数据的存储。 hash 数据结构来存储用户信息，商品信息等等。</p>
-<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p>set 类似于 Java 中的 HashSet 。Redis 中的 set 类型是一种<strong>无序集合</strong>，集合中的元素没有先后顺序。<strong>当你需要存储一个列表数据，又不希望出现重复数据时，set 是一个很好的选择</strong>，并且 set 提供了判断某个成员是否在一个 set 集合内的重要接口，这个也是 list 所不能提供的。</p>
-<p><strong>可以基于 set 轻易实现交集、并集、差集的操作。</strong></p>
-<p>常用命令： <strong>sadd,spop,smembers,sismember,scard,sinterstore,sunion</strong> 等。</p>
-<p>应用场景: 需要存放的数据不能重复以及需要获取多个数据源交集和并集等场景。比如：你可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。Redis 可以非常方便的实现如<strong>共同关注、共同粉丝、共同喜好等功能。</strong><br>127.0.0.1:6379&gt; smembers mySet # 查看 set 中所有的元素<br>127.0.0.1:6379&gt; scard mySet # 查看 set 的长度<br>127.0.0.1:6379&gt; sismember mySet value1 # 检查某个元素是否存在set 中，只能接收单个元素<br>127.0.0.1:6379&gt; sadd mySet2 value2 value3<br>127.0.0.1:6379&gt; sinterstore mySet3 mySet mySet2 # 获取 mySet 和 mySet2 的交集并存放在 mySet3 中</p>
-<h3 id="sorted-set"><a href="#sorted-set" class="headerlink" title="sorted set"></a>sorted set</h3><p>和 set 相比，sorted set 增加了一个<strong>权重参数 score</strong>，使得集合中的元素能够按 score 进行有序排列，还可以通过 score 的范围来获取元素的列表。有点像是 Java 中 HashMap 和 TreeSet 的结合体。</p>
-<p>常用命令： zadd,zcard,zscore,zrange,zrevrange,zrem 等。</p>
-<p>应用场景： 需要对数据根据某个权重进行排序的场景。比如在直播系统中，实时排行信息包含直播间在线用户列表，各种<strong>礼物排行榜，弹幕消息（可以理解为按消息维度的消息排行榜）等信息</strong>。</p>
-<h4 id="Sorted-Set-为什么同时使用字典和跳跃表？"><a href="#Sorted-Set-为什么同时使用字典和跳跃表？" class="headerlink" title="Sorted Set 为什么同时使用字典和跳跃表？"></a>Sorted Set 为什么同时使用字典和跳跃表？</h4><p>主要是为了提升性能。</p>
-<p>单独使用字典：在执行范围型操作，比如 zrank、zrange，字典需要进行排序，至少需要 O(NlogN) 的时间复杂度及额外 O(N) 的内存空间。<br>单独使用跳跃表：根据成员查找分值操作的复杂度从 O(1) 上升为 O(logN）</p>
-<h4 id="Sorted-Set-为什么使用跳跃表，而不是红黑树？"><a href="#Sorted-Set-为什么使用跳跃表，而不是红黑树？" class="headerlink" title="Sorted Set 为什么使用跳跃表，而不是红黑树？"></a>Sorted Set 为什么使用跳跃表，而不是红黑树？</h4><p>主要有以下几个原因：<br>1）跳表的性能和红黑树差不多。<br>2）<strong>跳表更容易实现和调试</strong>。</p>
-<h3 id="bitmap"><a href="#bitmap" class="headerlink" title="bitmap"></a>bitmap</h3><p>bitmap 存储的是连续的二进制数字（0 和 1），通过 bitmap, 只需要一个 bit 位来表示某个元素对应的值或者状态，key 就是对应元素本身 。我们知道 8 个 bit 可以组成一个 byte，所以 bitmap 本身会极大的节省储存空间。</p>
-<p>常用命令： setbit 、getbit 、bitcount、bitop</p>
-<p>应用场景： 适合需要保存状态信息（比如是否签到、是否登录…）并需要进一步对这些信息进行分析的场景。比如<strong>用户签到情况、活跃用户情况、用户行为统计（比如是否点赞过某个视频）</strong>。</p>
-]]></content>
-      <categories>
-        <category>Redis</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
       </tags>
   </entry>
   <entry>
@@ -1474,6 +1396,60 @@
       </categories>
       <tags>
         <tag>思想</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis-数据类型</title>
+    <url>/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[<p><strong>redis总是键值对存储。</strong></p>
+<p><strong>key总是string。</strong></p>
+<p><strong>value有五种类型。</strong></p>
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>string 数据结构是简单的 <strong>key-value</strong> 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 <strong>简单动态字符串（simple dynamic string，SDS）</strong>。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据<strong>还可以保存二进制数据</strong>，并且**获取字符串长度复杂度为 O(1)**（C 字符串为O(N)）,除此之外，Redis 的 SDS API 是安全的，不会造成缓冲区溢出。</p>
+<p><img src="https://i.loli.net/2021/08/04/zkHrifPgLS46UeR.png" alt="image-20210804150655994"></p>
+<p>常用命令： <strong>set,get,strlen,exists,decr,incr,setex</strong> 等等。</p>
+<p>应用场景： <strong>一般常用在需要计数的场景，比如用户的访问次数、热点文章的点赞转发数量等等。</strong></p>
+<p>127.0.0.1:6379&gt; set key value #设置 key-value 类型的值<br>127.0.0.1:6379&gt; get key # 根据 key 获得对应的 value<br>127.0.0.1:6379&gt; exists key  # 判断某个 key 是否存在<br>127.0.0.1:6379&gt; strlen key # 返回 key 所储存的字符串值的长度。<br>127.0.0.1:6379&gt; del key # 删除某个 key 对应的值<br>127.0.0.1:6379&gt; get key</p>
+<p>批量设置 :<br>127.0.0.1:6379&gt; mset key1 value1 key2 value2 # 批量设置 key-value 类型的值<br>127.0.0.1:6379&gt; mget key1 key2 # 批量获取多个 key 对应的 value</p>
+<p>计数器（字符串的内容为整数的时候可以使用）：<br>127.0.0.1:6379&gt; set number 1<br>127.0.0.1:6379&gt; incr number # 将 key 中储存的数字值增一<br>127.0.0.1:6379&gt; get number<br>127.0.0.1:6379&gt; decr number # 将 key 中储存的数字值减一<br>127.0.0.1:6379&gt; get number</p>
+<p>过期（默认为永不过期）：<br>127.0.0.1:6379&gt; <strong>expire</strong> key  60 # 数据在 60s 后过期<br>127.0.0.1:6379&gt; setex key 60 value # 数据在 60s 后过期 (setex:[set] + [ex]pire)<br>127.0.0.1:6379&gt; ttl key # 查看数据还有多久过期</p>
+<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p>list 即是 <strong>链表</strong>。链表是一种非常常见的数据结构，特点是易于数据元素的插入和删除并且可以灵活调整链表长度，但是链表的随机访问困难。Redis 的 list 的实现为一个 <strong>双向链表</strong>，即可以支持反向查找和遍历，更方便操作，不过带来了部分额外的内存开销。</p>
+<p>常用命令**: rpush,lpop,lpush,rpop,lrange,llen** 等。</p>
+<p>应用场景: <strong>发布与订阅或者说消息队列、慢查询。</strong></p>
+<p>通过 rpush/lpop 实现队列：<br>127.0.0.1:6379&gt; rpush myList value1 # 向 list 的头部（右边）添加元素<br>127.0.0.1:6379&gt; rpush myList value2 value3 # 向list的头部（最右边）添加多个元素<br>127.0.0.1:6379&gt; lpop myList # 将 list的尾部(最左边)元素取出<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的list列表， 0 为 start,1为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1表示倒数第一</p>
+<p>通过 rpush/rpop 实现栈：<br>127.0.0.1:6379&gt; rpush myList2 value1 value2 value3<br>127.0.0.1:6379&gt; rpop myList2 # 将 list的头部(最右边)元素取出</p>
+<p>通过 lrange 查看对应下标范围的列表元素：<br>127.0.0.1:6379&gt; rpush myList value1 value2 value3<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的list列表， 0 为 start,1为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1表示倒数第一<br>通过 lrange 命令，你可以基于 list 实现分页查询，性能非常高！</p>
+<p>通过 llen 查看链表长度：<br>127.0.0.1:6379&gt; llen myList</p>
+<h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p>hash 类似于 JDK1.8 前的 HashMap，**内部实现也差不多(数组 + 链表)**。不过，Redis 的 hash 做了更多优化。另外，hash 是一个 string 类型的 field 和 value 的映射表，特别适合用于存储对象，后续操作的时候，你可以直接仅仅修改这个对象中的某个字段的值。</p>
+<h4 id="渐进式rehash（）；"><a href="#渐进式rehash（）；" class="headerlink" title="渐进式rehash（）；"></a><strong>渐进式rehash（）；</strong></h4><p>hash 对象在扩容时使用了一种叫“<strong>渐进式 rehash</strong>”的方式，步骤如下：</p>
+<p>1）计算新表 size（*2且为2的幂次）、掩码，为新表 ht[1] 分配空间，让字典同时持有 ht[0] 和 ht[1] 两个哈希表。<br>2）将 rehash <strong>索引计数器变量 rehashidx</strong> 的值设置为 0，表示 rehash 正式开始。<br>3）在 rehash 进行期间，每次对字典执行添加、删除、査找、更新操作时，程序除了执行指定的操作以外，还会触发额外的 rehash 操作，在源码中的 _dictRehashStep 方法。</p>
+<p>_dictRehashStep：从名字也可以看出来，大意是 rehash 一步，也就是 rehash 一个索引位置。</p>
+<p>该方法会从 <strong>ht[0] 表的 rehashidx 索引位置上开始向后查找，找到第一个不为空的索引位置，将该索引位置的所有节点 rehash 到 ht[1]，当本次 rehash 工作完成之后，将 ht[0] 索引位置为 rehashidx 的节点清空，同时将 rehashidx属性的值加一。</strong></p>
+<p>4）将 rehash 分摊到每个操作上确实是非常妙的方式，但是万一此时服务器比较空闲，一直没有什么操作，难道 redis要一直持有两个哈希表吗？<br>答案当然不是的。我们知道，redis 除了文件事件外，还有时间事件，<strong>redis 会定期触发时间事件，这些时间事件用于执行一些后台操作，其中就包含 rehash 操作</strong>：当 redis 发现有字典正在进行 rehash 操作时，会花费 1 毫秒的时间，一起帮忙进行 rehash。</p>
+<p>5）随着操作的不断执行，最终在某个时间点上，<strong>ht[0] 的所有键值对都会被 rehash 至 ht[1]<strong>，此时 rehash 流程完成，会执行最后的清理工作：</strong>释放 ht[0] 的空间、将 ht[0] 指向 ht[1]、重置 ht[1]、重置 rehashidx</strong></p>
+<h4 id="渐进式-rehash-的优点"><a href="#渐进式-rehash-的优点" class="headerlink" title="渐进式 rehash 的优点"></a>渐进式 rehash 的优点</h4><p>渐进式 rehash 的好处在于它采取<strong>分而治之</strong>的方式，将 rehash 键值对所需的计算工作<strong>均摊到对字典的每个添加、删除、查找和更新操作上</strong>，从而避免了<strong>集中式 rehash 而带来的庞大计算量</strong>。</p>
+<p>在进行渐进式 rehash 的过程中，字典会同时使用 ht[0] 和 ht[1] 两个哈希表， 所以在渐进式 rehash 进行期间，字典的删除、査找、更新等操作会在两个哈希表上进行。例如，要在字典里面査找一个键的话，程序会先在 ht[0] 里面进行査找，如果没找到的话，就会继续到 ht[1] 里面进行査找，诸如此类。</p>
+<p>另外，在渐进式 rehash 执行期间，<strong>新增的键值对会被直接保存到 ht[1], ht[0] 不再进行任何添加操作，这样就保证了 ht[0] 包含的键值对数量会只减不增，并随着 rehash 操作的执行而最终变成空表。</strong></p>
+<p>常用命令： <strong>hset,hmset,hexists,hget,hgetall,hkeys,hvals 等</strong>。</p>
+<p>应用场景: 系统中对象数据的存储。 hash 数据结构来存储用户信息，商品信息等等。</p>
+<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p>set 类似于 Java 中的 HashSet 。Redis 中的 set 类型是一种<strong>无序集合</strong>，集合中的元素没有先后顺序。<strong>当你需要存储一个列表数据，又不希望出现重复数据时，set 是一个很好的选择</strong>，并且 set 提供了判断某个成员是否在一个 set 集合内的重要接口，这个也是 list 所不能提供的。</p>
+<p><strong>可以基于 set 轻易实现交集、并集、差集的操作。</strong></p>
+<p>常用命令： <strong>sadd,spop,smembers,sismember,scard,sinterstore,sunion</strong> 等。</p>
+<p>应用场景: 需要存放的数据不能重复以及需要获取多个数据源交集和并集等场景。比如：你可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。Redis 可以非常方便的实现如<strong>共同关注、共同粉丝、共同喜好等功能。</strong><br>127.0.0.1:6379&gt; smembers mySet # 查看 set 中所有的元素<br>127.0.0.1:6379&gt; scard mySet # 查看 set 的长度<br>127.0.0.1:6379&gt; sismember mySet value1 # 检查某个元素是否存在set 中，只能接收单个元素<br>127.0.0.1:6379&gt; sadd mySet2 value2 value3<br>127.0.0.1:6379&gt; sinterstore mySet3 mySet mySet2 # 获取 mySet 和 mySet2 的交集并存放在 mySet3 中</p>
+<h3 id="sorted-set"><a href="#sorted-set" class="headerlink" title="sorted set"></a>sorted set</h3><p>和 set 相比，sorted set 增加了一个<strong>权重参数 score</strong>，使得集合中的元素能够按 score 进行有序排列，还可以通过 score 的范围来获取元素的列表。有点像是 Java 中 HashMap 和 TreeSet 的结合体。</p>
+<p>常用命令： zadd,zcard,zscore,zrange,zrevrange,zrem 等。</p>
+<p>应用场景： 需要对数据根据某个权重进行排序的场景。比如在直播系统中，实时排行信息包含直播间在线用户列表，各种<strong>礼物排行榜，弹幕消息（可以理解为按消息维度的消息排行榜）等信息</strong>。</p>
+<h4 id="Sorted-Set-为什么同时使用字典和跳跃表？"><a href="#Sorted-Set-为什么同时使用字典和跳跃表？" class="headerlink" title="Sorted Set 为什么同时使用字典和跳跃表？"></a>Sorted Set 为什么同时使用字典和跳跃表？</h4><p>主要是为了提升性能。</p>
+<p>单独使用字典：在执行范围型操作，比如 zrank、zrange，字典需要进行排序，至少需要 O(NlogN) 的时间复杂度及额外 O(N) 的内存空间。<br>单独使用跳跃表：根据成员查找分值操作的复杂度从 O(1) 上升为 O(logN）</p>
+<h4 id="Sorted-Set-为什么使用跳跃表，而不是红黑树？"><a href="#Sorted-Set-为什么使用跳跃表，而不是红黑树？" class="headerlink" title="Sorted Set 为什么使用跳跃表，而不是红黑树？"></a>Sorted Set 为什么使用跳跃表，而不是红黑树？</h4><p>主要有以下几个原因：<br>1）跳表的性能和红黑树差不多。<br>2）<strong>跳表更容易实现和调试</strong>。</p>
+<h3 id="bitmap"><a href="#bitmap" class="headerlink" title="bitmap"></a>bitmap</h3><p>bitmap 存储的是连续的二进制数字（0 和 1），通过 bitmap, 只需要一个 bit 位来表示某个元素对应的值或者状态，key 就是对应元素本身 。我们知道 8 个 bit 可以组成一个 byte，所以 bitmap 本身会极大的节省储存空间。</p>
+<p>常用命令： setbit 、getbit 、bitcount、bitop</p>
+<p>应用场景： 适合需要保存状态信息（比如是否签到、是否登录…）并需要进一步对这些信息进行分析的场景。比如<strong>用户签到情况、活跃用户情况、用户行为统计（比如是否点赞过某个视频）</strong>。</p>
+]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
       </tags>
   </entry>
   <entry>
@@ -2751,7 +2727,7 @@
 <p>尽管CMS收集器采用的是并发回收（非独占式），<strong>但是在其初始化标记和再次标记这两个阶段中仍然需要执行“Stop-the-World”机制暂停程序中的工作线程，不过暂停时间并不会太长</strong>，因此可以说明目前所有的垃圾收集器都做不到完全不需要“Stop-the-World”，只是尽可能地缩短暂停时间。</p>
 <p>由于<strong>最耗费时间的并发标记与并发清除阶段</strong>都不需要暂停工作，所以整体的回收是低停顿的。</p>
 <p>CMS收集器的垃圾收集算法采用的是<strong>标记清除算法</strong>，这意味着每次执行完内存回收后，由于被执行内存回收的无用对象所占用的内存空间极有可能是不连续的一些内存块，不可避免地将会产生一些内存碎片。那么CMS在为新对象分配内存空间时，将无法使用指针碰撞（Bump the Pointer）技术，而只能够选择<strong>空闲列表（Free List）执行内存分配。</strong></p>
-<p>为什么 CMS 不采用标记-压缩算法呢？</p>
+<p><strong>为什么 CMS 不采用标记-压缩算法呢？</strong></p>
 <p>答案其实很简答，因为当并发清除的时候，用Compact整理内存的话，原来的用户线程使用的内存还怎么用呢？要保证用户线程能继续执行，前提的它运行的资源不受影响。Mark Compact更适合“stop the world”这种场景下使用。</p>
 <h4 id="CMS-的优点与弊端"><a href="#CMS-的优点与弊端" class="headerlink" title="CMS 的优点与弊端"></a>CMS 的优点与弊端</h4><p>优点</p>
 <p><strong>并发收集</strong><br><strong>低延迟</strong></p>
@@ -3915,6 +3891,57 @@
 <p>RESTful架构将服务器分成前端服务器和后端服务器两部分，前端服务器为用户提供无模型的视图；后端服务器为前端服务器提供接口。浏览器向前端服务器请求视图，通过视图中包含的AJAX函数发起接口请求获取模型。<br>项目开发引入RESTful架构，利于团队并行开发。在RESTful架构中，将多数HTTP请求转移到前端服务器上，降低服务器的负荷，使视图获取后端模型失败也能呈现。但RESTful架构却不适用于所有的项目，当项目比较小时无需使用RESTful架构，项目变得更加复杂。</p>
 <p>（1）每一个URI代表一种资源；<br>（2）客户端和服务器之间，传递这种资源的某种表现层；<br>（3）客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。</p>
 <p><img src="https://i.loli.net/2021/08/08/rG74PqAnCzLyYQ6.png" alt="image-20210808143751929"></p>
+<h4 id="RPC-中网络传输协议"><a href="#RPC-中网络传输协议" class="headerlink" title="RPC 中网络传输协议"></a>RPC 中网络传输协议</h4><p>基于 TCP 协议的 RPC 调用</p>
+<p>由服务的调用方与服务的提供方建立 Socket 连接，并由服务的调用方通过 Socket 将需要调用的接口名称、方法名称和参数序列化后传递给服务的提供方，服务的提供方反序列化后再利用反射调用相关的方法。</p>
+<p>将结果返回给服务的调用方，整个基于 TCP 协议的 RPC 调用大致如此。</p>
+<p>但是在实例应用中则会进行一系列的封装，如 RMI 便是在 TCP 协议上传递可序列化的 Java 对象。</p>
+<p>基于 HTTP 协议的 RPC 调用</p>
+<p>该方法更像是访问网页一样，只是它的返回结果更加单一简单。</p>
+<p>其大致流程为：由服务的调用者向服务的提供者发送请求，这种请求的方式可能是 GET、POST、PUT、DELETE 等中的一种，服务的提供者可能会根据不同的请求方式做出不同的处理，或者某个方法只允许某种请求方式。</p>
+<p>而调用的具体方法则是根据 URL 进行方法调用，而方法所需要的参数可能是对服务调用方传输过去的 XML 数据或者 JSON 数据解析后的结果，返回 JOSN 或者 XML 的数据结果。</p>
+<p>由于前有很多开源的 Web 服务器，如 Tomcat，所以其实现起来更加容易，就像做 Web 项目一样。</p>
+<p>两种方式对比</p>
+<p>基于 TCP 的协议实现的 RPC 调用，由于 TCP 协议处于协议栈的下层，<strong>能够更加灵活地对协议字段进行定制，</strong>减少网络开销，提高性能，实现更大的吞吐量和并发数。</p>
+<p>但是需要更多关注底层复杂的细节，实现的代价更高。同时对不同平台，如安卓，iOS 等，需要重新开发出不同的工具包来进行请求发送和相应解析，工作量大，难以快速响应和满足用户需求。</p>
+<p>基于 HTTP 协议实现的 RPC 则可以使用 JSON 和 XML 格式的请求或响应数据。</p>
+<p>而 JSON 和 XML 作为通用的格式标准(使用 HTTP 协议也需要序列化和反序列化，不过这不是该协议下关心的内容，成熟的 Web 程序已经做好了序列化内容)，开源的解析工具已经相当成熟，在其上进行二次开发会非常便捷和简单。</p>
+<p>但是由于 HTTP 协议是上层协议，发送包含同等内容的信息，使用 HTTP 协议传输所占用的字节数会比使用 TCP 协议传输所占用的字节数更高。</p>
+<p>因此在同等网络下，通过 HTTP 协议传输相同内容，效率会比基于 TCP 协议的数据效率要低，信息传输所占用的时间也会更长，当然压缩数据，能够缩小这一差距。</p>
+<h5 id="简单对比-RPC-和-Restful-API"><a href="#简单对比-RPC-和-Restful-API" class="headerlink" title="简单对比 RPC 和 Restful API"></a><strong>简单对比 RPC 和 Restful API</strong></h5><p>RESTful API 架构</p>
+<p>REST 的几个特点为：资源、统一接口、URI 和无状态。</p>
+<p>①资源</p>
+<p>所谓”资源”，就是网络上的一个实体，或者说是网络上的一个具体信息。它可以是一段文本、一张图片、一首歌曲、一种服务，就是一个具体的实在。</p>
+<p>②统一接口</p>
+<p>RESTful 架构风格规定，数据的元操作，即 CRUD(Create，Read，Update 和 Delete，即数据的增删查改)操作，分别对应于 HTTP 方法：GET 用来获取资源，POST 用来新建资源(也可以用于更新资源)，PUT 用来更新资源，DELETE 用来删除资源，这样就统一了数据操作的接口，仅通过 HTTP 方法，就可以完成对数据的所有增删查改工作。</p>
+<p>③URL</p>
+<p>可以用一个 URI(统一资源定位符)指向资源，即每个 URI 都对应一个特定的资源。</p>
+<p>要获取这个资源，访问它的 URI 就可以，因此 URI 就成了每一个资源的地址或识别符。</p>
+<p>④无状态</p>
+<p>所谓无状态的，即所有的资源，都可以通过 URI 定位，而且这个定位与其他资源无关，也不会因为其他资源的变化而改变。有状态和无状态的区别，举个简单的例子说明一下。</p>
+<p>如查询员工的工资，如果查询工资是需要登录系统，进入查询工资的页面，执行相关操作后，获取工资的多少，则这种情况是有状态的。</p>
+<p>因为查询工资的每一步操作都依赖于前一步操作，只要前置操作不成功，后续操作就无法执行。</p>
+<p>如果输入一个 URI 即可得到指定员工的工资，则这种情况是无状态的，因为获取工资不依赖于其他资源或状态。</p>
+<p>且这种情况下，员工工资是一个资源，由一个 URI 与之对应，可以通过 HTTP 中的 GET 方法得到资源，这是典型的 RESTful 风格。</p>
+<h5 id="RPC-和-Restful-API-对比"><a href="#RPC-和-Restful-API-对比" class="headerlink" title="RPC 和 Restful API 对比"></a>RPC 和 Restful API 对比</h5><p>面对对象不同：</p>
+<p>RPC 更侧重于动作。</p>
+<p>REST 的主体是资源。</p>
+<p>RESTful 是<strong>面向资源</strong>的设计架构，但在系统中有很多对象不能抽象成资源，比如登录，修改密码等而 RPC 可以通过动作去操作资源。所以在操作的全面性上 RPC 大于 RESTful。</p>
+<p>传输效率：</p>
+<p>RPC 效率更高。RPC，使用自定义的 TCP 协议，可以让请求报文体积更小，或者使用 HTTP2 协议，也可以很好的减少报文的体积，提高传输效率。</p>
+<p>复杂度：</p>
+<p>RPC 实现复杂，流程繁琐。</p>
+<p>REST 调用及测试都很方便。</p>
+<p>RPC 实现需要实现编码，序列化，网络传输等。而 RESTful 不要关注这些，RESTful 实现更简单。</p>
+<p>灵活性：</p>
+<p>HTTP 相对更规范，更标准，更通用，无论哪种语言都支持 HTTP 协议。</p>
+<p>RPC 可以实现跨语言调用，但整体灵活性不如 RESTful。</p>
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>RPC 主要用于公司内部的服务调用，性能消耗低，传输效率高，实现复杂。</p>
+<p>HTTP 主要用于对外的异构环境，浏览器接口调用，App 接口调用，第三方接口调用等。</p>
+<p>RPC 使用场景(大型的网站，内部子系统较多、接口非常多的情况下适合使用 RPC)：</p>
+<p>长链接。不必每次通信都要像 HTTP 一样去 3 次握手，减少了网络开销。</p>
+<p>注册发布机制。RPC 框架一般都有注册中心，有丰富的监控管理;发布、下线接口、动态扩展等，对调用方来说是无感知、统一化的操作。</p>
+<p>安全性，没有暴露资源操作。</p>
+<p>微服务支持。就是最近流行的服务化架构、服务化治理，RPC 框架是一个强力的支撑。</p>
 <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p><img src="https://i.loli.net/2021/08/06/KWeIP5wtzvQ8SVU.png" alt="image-20210806114259901"></p>
 <p>client 调用远程方法-&gt; request序列化 -&gt; 协议编码 -&gt; 网络传输-&gt; 服务端 -&gt; 解码-&gt;反序列化request -&gt; 调用本地方法得到response -&gt; 序列化 -&gt;编码-&gt;…..</p>
 <h3 id="常见的RPC框架"><a href="#常见的RPC框架" class="headerlink" title="常见的RPC框架"></a>常见的RPC框架</h3><h4 id="Dubbo"><a href="#Dubbo" class="headerlink" title="Dubbo"></a>Dubbo</h4><p>是一款高性能、轻量级的开源 Java RPC 框架，它提供了三大核心能力：</p>
@@ -3928,11 +3955,42 @@
 <p>通过 ProtoBuf 定义接口和数据类型还挺繁琐的，虽然 gRPC 确实很多亮点的地方，但是我还是选择 Dubbo。</p>
 <h4 id="Thrift"><a href="#Thrift" class="headerlink" title="Thrift"></a>Thrift</h4><p>Apache Thrift 是 Facebook 开源的跨语言的 RPC 通信框架，目前已经捐献给 Apache 基金会管理，由于其跨语言特性和出色的性能，在很多互联网公司得到应用，有能力的公司甚至会基于 thrift 研发一套分布式服务框架，增加诸如服务注册、服务发现等功能。</p>
 <p>Thrift支持多种不同的编程语言，包括C++、Java、Python、PHP、Ruby等（相比于 gRPC 支持的语言更多 ）。</p>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><strong>gRPC 和 Thrift</strong> 虽然支持跨语言的 RPC 调用，但是因为它们只提供了最基本的 RPC 框架功能，缺乏一系列配套的服务化组件和服务治理功能的支撑。</p>
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p><strong>gRPC 和 Thrift</strong> 虽然支持跨语言的 RPC 调用，但是因为它们只提供了最基本的 RPC 框架功能，缺乏一系列配套的服务化组件和服务治理功能的支撑。</p>
 <p>Dubbo 不论是从功能完善程度、生态系统还是社区活跃度来说都是最优秀的。最重要的是其在国内有很多成功的案例比如当当网、滴滴等等。下图展示了 Dubbo 的生态系统。</p>
 <p>但是，Dubbo 和 Motan 主要是给 Java 语言使用。虽然，Dubbo 和 Motan 目前也能兼容部分语言，但是不太推荐。如果需要跨语言调用的话，可以考虑一下 Thrift 和 gRPC。</p>
 <h3 id="自己实现RPC框架的思路"><a href="#自己实现RPC框架的思路" class="headerlink" title="自己实现RPC框架的思路"></a>自己实现RPC框架的思路</h3><p><img src="https://i.loli.net/2021/08/06/aG7gWErNb9iymIU.png" alt="image-20210806144123153"></p>
-<h4 id="注册中心"><a href="#注册中心" class="headerlink" title="注册中心"></a><strong>注册中心</strong></h4><h5 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class ZkServiceDiscoveryImpl implements ServiceDiscovery &#123;</span><br><span class="line">    private final LoadBalance loadBalance;//负载均衡</span><br><span class="line"></span><br><span class="line">    public ZkServiceDiscoveryImpl() &#123;</span><br><span class="line">        this.loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(&quot;loadBalance&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public InetSocketAddress lookupService(RpcRequest rpcRequest) &#123;</span><br><span class="line">    	//服务名</span><br><span class="line">        String rpcServiceName = rpcRequest.getRpcServiceName();</span><br><span class="line">        CuratorFramework zkClient = CuratorUtils.getZkClient();</span><br><span class="line">        //找子节点</span><br><span class="line">        List&lt;String&gt; serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);</span><br><span class="line">        //找不到，就抛出not found</span><br><span class="line">        if (serviceUrlList == null || serviceUrlList.size() == 0) &#123;</span><br><span class="line">            throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);</span><br><span class="line">        &#125;</span><br><span class="line">        // load balancing</span><br><span class="line">        String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);</span><br><span class="line">        </span><br><span class="line">        String[] socketAddressArray = targetServiceUrl.split(&quot;:&quot;);</span><br><span class="line">        String host = socketAddressArray[0];</span><br><span class="line">        int port = Integer.parseInt(socketAddressArray[1]);</span><br><span class="line">        return new InetSocketAddress(host, port);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="注册中心"><a href="#注册中心" class="headerlink" title="注册中心"></a><strong>注册中心</strong></h4><h5 id="zookeeper作为注册中心的问题？"><a href="#zookeeper作为注册中心的问题？" class="headerlink" title="zookeeper作为注册中心的问题？"></a>zookeeper作为注册中心的问题？</h5><p>在实践中，注册中心不能因为自身的任何原因<strong>破坏服务之间本身的可连通性</strong><br>注册中心需要的是 AP，而 Zookeeper 是 CP</p>
+<p>CAP ：一致性、可用性、分区容忍性<br>一致性：是指在同一时刻，分布式系统中的所有数据备份为相同值<br>可用性：指集群中的某一个节点故障宕机后，集群还能响应客户端请求。<br>分区容忍性：当分布式系统中因为一些原因导致无法通信而分成多个分区，系统还能正常对外服务。</p>
+<p>在 CAP 模型中，<strong>zookeeper 是 CP，意味着面对网络分区时，为了保持一致性，他是不可用的。</strong></p>
+<p>因为 zookeeper 是一个<strong>分布式协调系统</strong>，如果使用最终一致性（AP）的话，将是一个糟糕的设计，他的核心算法是 <strong>ZAb，所有设计都是为了一致性。</strong></p>
+<p>对于协调系统，这是非常正确的，<strong>但是对于服务发现，可用性是第一位的，例如发生了短暂的网络分区时，即使拿到的信息是有瑕疵的、旧的，也好过完全不可用。</strong></p>
+<p>注册中心本质上的功能就是一个<strong>查询函数：</strong></p>
+<p>ServiceList = F(service-name)<br>以 service-name 为查询参数，得到对应的可用的服务端点列表 endpoints(ip:port)。</p>
+<p>1，我们假设<strong>不同的客户端得到的服务列表数据是不一致的，看看有什么后果。</strong></p>
+<p>现在有 2 个服务调用者 service1 和 service2，从注册中心获取 serviceB 的服务列表，但取得的数据不一致。</p>
+<p>s1 = { ip1,ip2 … ip9 }<br>s2 = { ip2,ip3 … ip10 }<br>这个不一致带来的影响是什么？</p>
+<p><strong>就是 serviceB 各个实例的流量不均衡。</strong></p>
+<p>这个不均衡有什么严重影响吗？并没有，完全可以接受，而且，又不会一直这样。</p>
+<p>所以，注册中心使用最终一致性模型（AP）完全可以的。</p>
+<p><strong>2，现在我们看一下 CP 带来的不可用的影响。</strong></p>
+<p>3个机房部署 5 个 ZK 节点。</p>
+<p>现在机房3出现网络分区了，形成了孤岛。</p>
+<p>发生网络分区时，各个区都会开始选举 leader，那么节点数少的那个分区将会停止运行，也就是 ZK5 不可用了。</p>
+<p>这时，serviceA 就访问不了机房1和机房2的 serviceB 了，而且连自己所在机房的 serviceB 也访问不了了。</p>
+<p>不能访问其他机房还可以理解，不能访问自己机房的服务就理解不了了，本机房内部的网络好好的，不能因为你注册中心有问题就不能访问了吧。</p>
+<p><strong>因为注册中心为了保障数据一致性而放弃了可用性，导致同机房服务之间无法调用，这个是接受不了的。</strong></p>
+<p><strong>所以，注册中心的可用性比数据强一致性更加重要，所以注册中心应该是偏向 AP，而不是 CP。</strong></p>
+<p><strong>zookeeper 的性能不适合注册中心</strong></p>
+<p>在大规模服务集群场景中，zookeeper 的性能也是瓶颈。</p>
+<p>zookeeper 所有的写操作都是 leader 处理的，在大规模服务注册写请求时，压力巨大，而且 leader 是单点，无法水平扩展。</p>
+<p>还有所有服务于 zookeeper 的长连接也是很重的负担。</p>
+<p>zookeeper 对每一个写请求，都会写一个事务日志，同时会定期将内存数据镜像dump到磁盘，保持数据一致性和持久性。这个动作会降低性能，而且对于注册中心来讲，是不需要的。</p>
+<p><strong>小结</strong></p>
+<p>从 CP 模型上来讲，zookeeper 并不适合注册中心高可用的需要。</p>
+<p>从性能上来讲，zookeeper 也无法满足注册中心大规模且频繁注册写的场景。</p>
+<p><strong>zookeeper 的特长是做分布式协调服务，</strong>例如 kafka、hbase、flink、hadoop 等大项目都在用 zookeeper。</p>
+<h5 id="redis注册中心"><a href="#redis注册中心" class="headerlink" title="redis注册中心"></a>redis注册中心</h5><p>redis 作为dubbo的注册中心，实现的功能跟 zk相同，但是内部的实现机制大相径庭，因为zk 有临时节点，服务端在zk 中创建临时节点会一直保持连接，如果服务器出现崩溃，自动断连，而redis 则要靠主服务器 进行定时轮询</p>
+<h5 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class ZkServiceDiscoveryImpl implements ServiceDiscovery &#123;</span><br><span class="line">    private final LoadBalance loadBalance;//负载均衡</span><br><span class="line"></span><br><span class="line">    public ZkServiceDiscoveryImpl() &#123;</span><br><span class="line">        this.loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(&quot;loadBalance&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public InetSocketAddress lookupService(RpcRequest rpcRequest) &#123;</span><br><span class="line">    	//服务名</span><br><span class="line">        String rpcServiceName = rpcRequest.getRpcServiceName();</span><br><span class="line">        CuratorFramework zkClient = CuratorUtils.getZkClient();</span><br><span class="line">        //找子节点</span><br><span class="line">        List&lt;String&gt; serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);</span><br><span class="line">        //找不到，就抛出not found</span><br><span class="line">        if (serviceUrlList == null || serviceUrlList.size() == 0) &#123;</span><br><span class="line">            throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);</span><br><span class="line">        &#125;</span><br><span class="line">        // load balancing</span><br><span class="line">        String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);</span><br><span class="line">        </span><br><span class="line">        String[] socketAddressArray = targetServiceUrl.split(&quot;:&quot;);</span><br><span class="line">        String host = socketAddressArray[0];</span><br><span class="line">        int port = Integer.parseInt(socketAddressArray[1]);</span><br><span class="line">        return new InetSocketAddress(host, port);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h5 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class ZkServiceRegistryImpl implements ServiceRegistry &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void registerService(String rpcServiceName, InetSocketAddress inetSocketAddress) &#123;</span><br><span class="line">        String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + &quot;/&quot; + rpcServiceName + inetSocketAddress.toString();</span><br><span class="line">        CuratorFramework zkClient = CuratorUtils.getZkClient();</span><br><span class="line">        //创建一个持久节点</span><br><span class="line">        CuratorUtils.createPersistentNode(zkClient, servicePath);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -4212,7 +4270,23 @@
 
 
 
-<h5 id="随机"><a href="#随机" class="headerlink" title="随机"></a>随机</h5><h5 id="轮询"><a href="#轮询" class="headerlink" title="轮询"></a>轮询</h5><h5 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h5><h4 id="版本一"><a href="#版本一" class="headerlink" title="版本一"></a>版本一</h4><p>考虑最简单的RPC功能。<br>客户端调用服务端方法，服务端返回。</p>
+<h5 id="随机"><a href="#随机" class="headerlink" title="随机"></a>随机</h5><h5 id="轮询"><a href="#轮询" class="headerlink" title="轮询"></a>轮询</h5><h5 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h5><p>简单的路由算法可以使用余数哈希算法：<code>HashCode = key % number of server</code>。由于HashCode具有随机性，因此使用余数哈希路由算法可保证缓存数据在整个Memcached服务器集群中比较均衡地分布。</p>
+<p>假设由于业务发展，网站需要将3台缓存服务器扩容至4台。更改服务器列表，仍旧使用余数Hash，很容易就可以计算出，3台服务器扩容至4台服务器，大约有75％（3/4）被缓存了的数据不能正确命中，随着服务器集群规模的增大，这个比例线性上升。当100台服务器的集群中加入一台新服务器，不能命中的概率是99％(N/(N＋1))。</p>
+<blockquote>
+<p>假设扩容前有N台服务器，扩容一台服务器<br>也就是说每(N+1)*N个数里面有N个key经过余数Hash映射后是一样的，所以命中率为1/(N+1)，所以未命中率为(N/(N＋1))</p>
+</blockquote>
+<p>当大部分被缓存了的数据因为服务器扩容而不能正确读取时，这些数据访问的压力就落到了数据库的身上，这将大大超过数据库的负载能力，严重的可能会导致数据库宕机。</p>
+<p>一致性Hash算法通过一个叫作一致性Hash环的数据结构实现key到缓存服务器的Hash映射。</p>
+<p>具体算法过程为：先构造一个长度为<code>0~2^32</code>的整数环（这个环被称作一致性Hash环），根据节点名称(通常是IP）的Hash值（其分布范围同样为<code>0~x^32</code>）将缓存服务器节点放置在这个Hash环上。然后根据需要缓存的数据的key值计算得到其Hash值（其分布范围也同样为<code>0~x^32</code>），然后在Hash环上顺时针查找距离这个key的Hash值最近的缓存服务器节点，完成key到服务器的Hash映射查找。</p>
+<p>当缓存服务器集群需要扩容的时候，只需要将新加入的节点名称<code>(NODE3)</code>的Hash值放入一致性Hash环中，由于key是顺时针查找距离其最近的节点，因此新加入的节点只影响整个环中的一小段。</p>
+<p>上图中，加入新节点<code>NODE3</code>后，原来的key大部分还能继续计算到原来的节点，只有<code>key3</code>、<code>key0</code>从原来的<code>NODE1</code>重新计算到<code>NODE3</code>。这样就能保证大部分被缓存的数据还可以继续命中。3台服务器扩容至4台服务器，可以继续命中原有缓存数据的概率是75％，远高于余数Hash的25％，而且随着集群规模越大，继续命中原有缓存数据的概率也逐渐增大，100台服务器扩容增加1台服务器，继续命中的概率是99％。虽然仍有小部分数据缓存在服务器中不能被读到，但是这个比例足够小，通过访问数据库获取也不会对数据库造成致命的负载压力。</p>
+<h6 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h6><p>新加入的节点<code>NODE3</code>只影响了原来的节点<code>NODE1</code>，也就是说一部分一部分原来需要访问<code>NODE1</code>的缓存数据现在需要访问<code>NODE3</code>。但是原来的节点<code>NODE0</code>和<code>NODE2</code>不受影响，这就意味着<code>NODE0</code>和<code>NODE2</code>缓存数据量和负载压力是<code>NODE1</code>与<code>NODE3</code>的两倍。如果4台机器的性能是一样的，那么这种结果显然不是我们需要的。</p>
+<p>怎么办？计算机领域有句话：计算机的任何问题都可以通过增加一个虚拟层来解决。计算机硬件、计算机网络、计算机软件都莫不如此。计算机网络的7层协议，每一层都可以看作是下一层的虚拟层；计算机操作系统可以看作是计算机硬件的虚拟层；Java虚拟机可以看作是操作系统的虚拟层；分层的计算机软件架构事实上也是利用虚拟层的概念。</p>
+<p>解决上述一致性Hash算法带来的负载不均衡问题，也可以通过使用虚拟层的手段：将每台物理缓存服务器虚拟为一组虚拟缓存服务器，将虚拟服务器的Hash值放置在Hash环上，key在环上先找到虚拟服务器节点，再得到物理服务器的信息。</p>
+<p>这样新加入物理服务器节点时，<strong>是将一组虚拟节点加入环中，如果虚拟节点的数目足够多，这组虚拟节点将会影响同样多数目的目的已经在环上存在的虚拟节点，</strong>这些已经存在的虚拟节点又对应不同的物理节点。</p>
+<p>最终的结果是：新加入一台缓存服务器，<strong>将会较为均匀地影响原来集群中已经存在的所有服务器，也就是说分摊原有缓存服务器集群中所有服务器的一小部分负载，其总的影响范围和上面讨论过的相同</strong>。</p>
+<p>新加入节点<code>NODE3</code>对应的一组虚拟节点为<code>V30</code>，<code>V31</code>，<code>V32</code>，加入到一致性Hash环上后，影响<code>V01</code>，<code>V12</code>，<code>V22</code>三个虚拟节点，而这三个虚拟节点分别对应<code>NODE0</code>，<code>NODE1</code>，<code>NODE2</code>三个物理节点。最终Memcached集群中加入一个节点，但是同时影响到集群中已存在的三个物理节点，在理想情况下，每个物理节点受影响的数据量（还在缓存中，但是不能被访问到数据）为其节点缓存数据量的1/4（X/（N＋X），N为原有物理节点数，X为新加入物理节点数），也就是集群中已经被缓存的数据有75％可以被继续命中，和未使用虚拟节点的一致性Hash算法结果相同。显然每个物理节点对应的虚拟节点越多，各个物理节点之间的负载越均衡，新加入物理服务器对原有的物理服务器的影响越保持一致（这就是一致性Hash这个名称的由来）。</p>
+<h4 id="版本一"><a href="#版本一" class="headerlink" title="版本一"></a>版本一</h4><p>考虑最简单的RPC功能。<br>客户端调用服务端方法，服务端返回。</p>
 <p>1，有一个User对象，是客户端与服务端都已知的<br>2，定义客户端需要调用，服务端需要提供的服务接口UserService<br>3，服务端需要实现UserService接口的功能UserServiceImpl<br>4，客户端建立Socket连接，传输Id给服务端，得到返回的User对象<br>5，服务端以BIO的方式监听Socket，如有数据，调用对应服务的实现类执行任务，将结果返回给客户端</p>
 <p>问题<br>只能调用服务端唯一的方法<br>返回值也只只支持一种</p>
 <h4 id="版本2"><a href="#版本2" class="headerlink" title="版本2"></a>版本2</h4><p>定义了一个通用的Request的对象（消息格式）<br>（在上个版本中，Request仅仅只发送了一个id参数过去，这显然是不合理的，<br>因为服务端不会只有一个服务一个方法，因此只传递参数不会知道调用那个方法。<br>因此一个RPC请求中，client发送应该是需要调用的Service接口名，方法名，参数，参数类型<br>这样服务端就能根据这些信息根据反射调用相应的方法。<br>还是使用java自带的序列化方式。）</p>
