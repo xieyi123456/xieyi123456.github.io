@@ -187,7 +187,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-11 13:32:54" itemprop="dateModified" datetime="2021-08-11T13:32:54+08:00">2021-08-11</time>
+                <time title="修改时间：2021-08-17 23:17:21" itemprop="dateModified" datetime="2021-08-17T23:17:21+08:00">2021-08-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -264,9 +264,9 @@
 <h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>第⼀点，epoll 在内核⾥使⽤<strong>红⿊树</strong>来跟踪进程所有待检测的⽂件描述字，把需要监控的 socket 通过epoll_ctl() 函数加⼊内核中的红⿊树⾥，红⿊树是个⾼效的数据结构，增删查⼀般时间复杂度是O(logn) ，通过对这棵⿊红树进⾏操作，这样就不需要像 select/poll 每次操作时都传⼊整个 socket 集合，只需要传⼊⼀个待检测的 socket，减少了内核和⽤户空间⼤量的数据拷⻉和内存分配。</p>
 <p>第⼆点， epoll 使⽤<strong>事件驱动的机制</strong>，内核⾥维护了⼀个链表来记录就绪事件，当某个 socket 有事件发⽣时，通过回调函数内核会将其加⼊到这个就绪事件列表中，<strong>当⽤户调⽤ epoll_wait() 函数时</strong>，只会返回有事件发⽣的⽂件描述符，不需要像 select/poll 那样轮询扫描整个 socket 集合，⼤⼤提⾼了检测的效率。</p>
 <p><img src="https://i.loli.net/2021/08/11/fHIJbCpiOan5ymZ.png" alt="image-20210811133207962"></p>
-<p>epoll对文件描述符的操作有两种模式：LT（level trigger）和ET（edge trigger）。LT模式是默认模式，LT模式与ET模式的区别如下：</p>
-<p>LT模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。<strong>下次调用epoll_wait时，会再次响应应用程序并通知此事件。</strong></p>
-<p>ET模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，<strong>下次调用epoll_wait时，不会再次响应应用程序并通知此事件。</strong></p>
+<p>epoll对文件描述符的操作有两种模式<strong>：LT（level trigger）和ET（edge trigger）</strong>。LT模式是默认模式，LT模式与ET模式的区别如下：</p>
+<p><strong>LT模式</strong>：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。<strong>下次调用epoll_wait时，会再次响应应用程序并通知此事件。</strong></p>
+<p><strong>ET模式</strong>：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，<strong>下次调用epoll_wait时，不会再次响应应用程序并通知此事件。</strong></p>
 <p>LT(level triggered)是缺省的工作方式，并且同时支持block和no-block socket.在这种做法中，内核告诉你一个文件描述符是否就绪了，然后你可以对这个就绪的fd进行IO操作。如果你不作任何操作，内核还是会继续通知你的。</p>
 <p>ET(edge-triggered)是<strong>高速工作方式，</strong>只支持<strong>no-block socket</strong>。在这种模式下，当描述符从未就绪变为就绪时，内核通过epoll告诉你。然后<strong>它会假设你知道文件描述符已经就绪，</strong>并且不会再为那个文件描述符发送更多的就绪通知，直到你做了某些操作导致那个文件描述符不再为就绪状态了。但是请注意，如果一直不对这个fd作IO操作(从而导致它再次变成未就绪)，<strong>内核不会发送更多的通知(only once)</strong></p>
 <p>ET模式在很大程度上<strong>减少了epoll事件被重复触发的次数</strong>，因此效率要比LT模式高。</p>
@@ -321,7 +321,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-05 16:06:24" itemprop="dateModified" datetime="2021-08-05T16:06:24+08:00">2021-08-05</time>
+                <time title="修改时间：2021-08-20 11:53:21" itemprop="dateModified" datetime="2021-08-20T11:53:21+08:00">2021-08-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -386,6 +386,8 @@
 <p>  由于 UDP ⾯向⽆连接，它可以随时发送数据，再加上UDP本身的处理既简单⼜⾼效，因此经常⽤于：<br>  包总数较少的通信，如 DNS 、 SNMP 等<br>  视频、⾳频等多媒体通信<br>  ⼴播通信</p>
 </li>
 </ol>
+<h4 id="UDP"><a href="#UDP" class="headerlink" title="UDP:"></a>UDP:</h4><p>UDP 是⼀个简单、不可靠的传输协议，⽽且是 UDP 包之间是⽆序的，也没有依赖关系。⽽且，UDP 是不需要连接的，也就不需要握⼿和挥⼿的过程，所以天然的就⽐ TCP 快。</p>
+<p>当然，HTTP/3 不仅仅只是简单将传输协议替换成了 UDP，还基于 UDP 协议在「应⽤层」实现了 QUIC 协议，它具有类似 TCP 的连接管理、拥塞窗⼝、流ᰁ控制的⽹络特性，相当于将不可靠传输的 UDP 协议变成“可靠”的了，所以不⽤担⼼数据包丢失的问题。</p>
 <h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><img src="https://i.loli.net/2021/08/05/tFSzZdBAvgEK27o.png" alt="image-20210731113603327"></p>
 <p>注意序列号和确认应答号的变化。<br>第三次握手可以携带数据。</p>
 <p>注意序列号和确认应答号的变化。</p>
@@ -436,6 +438,17 @@
 <p><strong>快速重传</strong><br>三次同样的ACK。</p>
 <p><strong>SACK</strong><br> SACK （ Selective Acknowledgment 选择性确认）。<br>这种⽅式需要在 <strong>TCP 头部「选项」字段⾥加⼀个 SACK</strong> 的东⻄，它可以将缓存的地图发送给发送⽅，这样<strong>发送⽅就可以知道哪些数据收到了，哪些数据没收到，</strong>知道了这些信息，就可以只重传丢失的数据。<br>D-SACK</p>
 <h4 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h4><p>窗⼝⼤⼩就是指⽆需等待确认应答，⽽可以继续发送数据的最⼤值。</p>
+<p>如果每次传输数据都只能发送一个MSS，就需要等待接收方的ACK，这显然会极大的影响传输的速率。在发送数据的时候，最好的方式是一下将所有的数据全部发送出去，然后一起确认。</p>
+<p>首先TCP在进行数据传输的时候都是<strong>先将数据放在数据缓冲区中的</strong>，TCP维护了两个缓冲区，<strong>发送方缓冲区和接收方缓冲区。</strong></p>
+<p>发送方缓冲区：发送方缓冲区用于存储<strong>已经准备就绪数据和发送了但是没有被确认的数据</strong>。<br>接收方缓冲区：接收方缓冲区用于存储<strong>已经被接收但是还没有被用户进程消费的数据。</strong></p>
+<p>滑动窗口机制是<strong>TCP的一种流量控制方法</strong>，该机制允许发送方在停止并等待确认前连续发送多个分组，而不必每发送一个分组就停下来等待确认，从而增加数据传输的速率<strong>提高应用的吞吐量。</strong></p>
+<p>TCP的包可以分为四种状态</p>
+<p>已发送并且已经确认的包。<br>已发送但是没有确认的包。<br>未发送但是可以发送的包。<br>不允许被发送的包。</p>
+<p>滑动窗口协议的基本工作流程就是由<strong>接收方通告窗口的大小</strong>，这个窗口称为提出窗口，也就是接收方窗口。接收方提出的窗口则是被接收缓冲区所影响的，如果数据没有被用户进程使用那么接收方通告的窗口就会相应得到减小，发送窗口取决于接收方窗口的大小。可用窗口的大小等于<strong>接收方窗口减去发送但是没有被确认的数据包大小。</strong></p>
+<p>最基本的传输可靠性来源于<strong>“确认重传”</strong>机制。</p>
+<p>TCP的滑动窗口的可靠性也是建立在“确认重传”基础上的。</p>
+<p><strong>发送窗口</strong>只有收到对端对于本段发送窗口内字节的ACK确认，才会<strong>移动发送窗口的左边界。</strong></p>
+<p><strong>接收窗口</strong>只有在<strong>前面所有的段都确认的情况下才会移动左边界。</strong>当在前面还有字节未接收但收到后面字节的情况下，窗口不会移动，并不对后续字节确认。以此确保对端会对这些数据重传。</p>
 <p><strong>累计确认：</strong></p>
 <p><img src="https://i.loli.net/2021/08/05/To93btGQDuPNFpl.png" alt="image-20210731150833402"></p>
 <h4 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h4><p>怎么让发送⽅<strong>避免发送⼩数据呢？</strong><br>发送⽅通常的策略:<br>使⽤ <strong>Nagle 算法</strong>，该算法的思路是延时处理，它满⾜以下两个条件中的⼀条才可以发送数据：<br>窗⼝⼤⼩ &gt;= MSS 或是 数据⼤⼩ &gt;= MSS<br>收到之前发送数据的 ack 回包<br>只要没满⾜上⾯条件中的⼀条，发送⽅⼀直在囤积数据，直到满⾜上⾯的发送条件。<br>另外，Nagle 算法默认是打开的，可以在 <strong>Socket 设置 TCP_NODELAY</strong> 选项来关闭这个算法。</p>
@@ -1463,7 +1476,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-11 14:55:42" itemprop="dateModified" datetime="2021-08-11T14:55:42+08:00">2021-08-11</time>
+                <time title="修改时间：2021-08-18 11:03:46" itemprop="dateModified" datetime="2021-08-18T11:03:46+08:00">2021-08-18</time>
               </span>
 
           
@@ -1575,6 +1588,47 @@
 <p>ZAB 协议包括<strong>两种基本的模式</strong>，分别是</p>
 <p><strong>崩溃恢复 ：</strong>当整个服务框架在启动过程中，或是当 Leader 服务器出现网络中断、崩溃退出与重启等异常情况时，ZAB 协议就会进入恢复模式并选举产生新的 Leader 服务器。当选举产生了新的 Leader 服务器，同时集群中<strong>已经有过半的机器与该 Leader 服务器完成了状态同步之后，ZAB 协议就会退出恢复模式。</strong>其中，所谓的状态同步是指数据同步，用来保证集群中存在过半的机器能够和 Leader 服务器的数据状态保持一致。</p>
 <p><strong>消息广播 ：</strong>当集群中已经有过半的 Follower 服务器完成了和 Leader 服务器的状态同步，那么整个服务框架就可以进入<strong>消息广播模式</strong>了。 当一台同样遵守 ZAB 协议的服务器启动后加入到集群中时，如果此时集群中已经存在一个 Leader 服务器在负责进行消息广播，那么新加入的服务器就会自觉地进入数据恢复模式：找到 Leader 所在的服务器，并与其进行数据同步，然后一起参与到消息广播流程中去。</p>
+<h5 id="CAP"><a href="#CAP" class="headerlink" title="CAP"></a>CAP</h5><p>分布式系统的最大难点，就是各个节点的状态如何保持一致。CAP理论是在设计分布式系统的过程中，处理数据一致性问题时必须考虑的理论。</p>
+<p>CAP即：</p>
+<p>Consistency（一致性）<br>Availability（可用性）<br>Partition tolerance（分区容忍性）</p>
+<p>①一致性：对于客户端的每次读操作，要么读到的是最新的数据，要么读取失败。换句话说，一致性是站在分布式系统的角度，对访问本系统的客户端的一种承诺：要么我给您返回一个错误，要么我给你返回绝对一致的最新数据，不难看出，其强调的是<strong>数据正确</strong>。</p>
+<p>②可用性：任何客户端的请求都<strong>能得到响应数据，不会出现响应错误</strong>。换句话说，可用性是站在分布式系统的角度，对访问本系统的客户的另一种承诺：我一定会给您返回数据，不会给你返回错误，但不保证数据最新，强调的是不出错。</p>
+<p>③分区容忍性：由于分布式系统通过网络进行通信，网络是不可靠的。当任意数量的消息丢失或延迟到达时，系统仍会继续提供服务，不会挂掉。换句话说，分区容忍性是站在分布式系统的角度，对访问本系统的客户端的再一种承诺：<strong>我会一直运行，不管我的内部出现何种数据同步问题，强调的是不挂掉。</strong></p>
+<p>假设N1和N2之间通信的时候网络突然出现故障，有用户向N1发送数据更新请求，那N1中的数据DB0将被更新为DB1，由于网络是断开的，N2中的数据库仍旧是DB0；</p>
+<p>如果这个时候，有用户向N2发送数据读取请求，由于数据还没有进行同步，应用程序没办法立即给用户返回最新的数据DB1，怎么办呢？有二种选择，第一，牺牲数据一致性，响应旧的数据DB0给用户；第二，牺牲可用性，阻塞等待，直到网络连接恢复，数据更新操作完成之后，再给用户响应最新的数据DB1。</p>
+<h5 id="raft协议"><a href="#raft协议" class="headerlink" title="raft协议"></a>raft协议</h5><p>有三个节点：a，b，c。客户端对这个由3个节点组成的数据库集群进行操作时的值一致性如何保证，就是分布式一致性问题。Raft就是一种实现了<strong>分布式一致性的协议</strong>（还有其他一些一致性算法，例如：ZAB、PAXOS等）</p>
+<h5 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h5><p>为了<strong>保证一个方法或属性在高并发情况下的同一时间只能被同一个线程执行</strong>，在传统单体应用单机部署的情况下，可以使用并发处理相关的功能进行互斥控制。但是，由于分布式系统多线程、多进程并且分布在不同机器上，这将使原单机部署情况下的并发控制锁策略失效，单纯的应用并不能提供分布式锁的能力。为了解决这个问题就需要一种跨机器的互斥机制来控制共享资源的访问。</p>
+<h6 id="基于数据库"><a href="#基于数据库" class="headerlink" title="基于数据库"></a>基于数据库</h6><p>基于数据库的实现方式的核心思想是：在数据库中创建一个表，表中包含方法名等字段，并在方法名字段上创建唯一索引，想要执行某个方法，就使用这个方法名向表中插入数据，成功插入则获取锁，执行完成后删除对应的行数据释放锁。</p>
+<p><strong>问题：</strong></p>
+<p>1、这把锁强<strong>依赖数据库的可用性</strong>，数据库是一个单点，一旦数据库挂掉，会导致业务系统不可用。</p>
+<p>2、这把<strong>锁没有失效时间，一旦解锁操作失败</strong>，就会导致锁记录一直在数据库中，其他线程无法再获得到锁。</p>
+<p>3、这把锁<strong>只能是非阻塞的</strong>，因为数据的insert操作，一旦插入失败就会直接报错。没有获得锁的线程并不会进入排队队列，要想再次获得锁就要再次触发获得锁操作。</p>
+<p>4、这把锁是<strong>非重入的</strong>，同一个线程在没有释放锁之前无法再次获得该锁。因为数据中数据已经存在了。</p>
+<p>解决：</p>
+<p>数据库是单点？搞两个数据库，数据之前双向同步。一旦挂掉快速切换到备库上。<br>没有失效时间？只要做一个定时任务，每隔一定时间把数据库中的超时数据清理一遍。<br>非阻塞的？搞一个while循环，直到insert成功再返回成功。<br>非重入的？在数据库表中加个字段，<strong>记录当前获得锁的机器的主机信息和线程信息</strong>，那么下次再获取锁的时候先查询数据库，如果当前机器的主机信息和线程信息在数据库可以查到的话，直接把锁分配给他就可以了。</p>
+<p><strong>基于数据库排它锁</strong></p>
+<p>在查询语句后面增加for update，数据库会在查询过程中给数据库表增加排他锁（这里再多提一句，InnoDB引擎在加锁的时候，<strong>只有通过索引进行检索的时候才会使用行级锁</strong>，否则会使用表级锁。这里我们希望使用行级锁，就要给<strong>method_name添加索引</strong>，值得注意的是，这个索引一定要创建成<strong>唯一索引</strong>，否则会出现多个重载方法之间无法同时被访问的问题。重载方法的话建议把参数类型也加上。）。</p>
+<p>当某条记录被加上排他锁之后，其他线程无法再在该行记录上增加排他锁。</p>
+<p>我们可以认为<strong>获得排它锁的线程即可获得分布式锁</strong>，当获取到锁之后，可以执行方法的业务逻辑，执行完方法之后，再通过**connection.commit()**操作来释放锁。</p>
+<p>这种方法可以有效的解决上面提到的<strong>无法释放锁和阻塞锁</strong>的问题。</p>
+<p>阻塞锁？ for update语句会在执行成功后立即返回，在执行失败时一直处于阻塞状态，直到成功。<br>锁定之后服务宕机，无法释放？使用这种方式，服务宕机之后数据库会自己把锁释放掉。</p>
+<p><strong>问题？</strong></p>
+<p>MySql会对查询进行优化，即便在条件中使用了索引字段，但是否使用索引来检索数据是由 MySQL 通过判断不同执行计划的代价来决定的，如果 MySQL 认为全表扫效率更高，比如对一些很小的表，它就不会使用索引，这种情况下 InnoDB 将使用表锁，而不是行锁。</p>
+<p>还有一个问题，就是我们要使用排他锁来进行分布式锁的lock，那么一个排他锁长时间不提交，就会占用数据库连接。一旦类似的连接变得多了，就可能把数据库连接池撑爆。</p>
+<h6 id="基于redis"><a href="#基于redis" class="headerlink" title="基于redis"></a>基于redis</h6><p>可以使用缓存来代替数据库来实现分布式锁，这个可以提供更好的性能，同时，很多缓存服务都是集群部署的，可以避免单点问题。并且很多缓存服务都提供了可以用来实现分布式锁的方法，redis的setnx方法等。并且，这些缓存服务也都提供了对数据的过期自动删除的支持，可以直接设置超时时间来控制锁的释放。</p>
+<p>（1）SETNX<br>SETNX key val：当且仅当key不存在时，set一个key为val的字符串，返回1；若key存在，则什么都不做，返回0。<br>（2）expire<br>expire key timeout：为key设置一个超时时间，单位为second，超过这个时间锁会自动释放，避免死锁。<br>（3）delete<br>delete key：删除key</p>
+<p>实现思想：<br>（1）获取锁的时候，使用setnx加锁，并使用expire命令为锁添加一个超时时间，超过该时间则自动释放锁，锁的<strong>value值为一个随机生成的UUID，通过此在释放锁的时候进行判断。</strong><br>（2）获取锁的时候还设置一个获取的超时时间，若超过这个时间则放弃获取锁。<br>（3）释放锁的时候，通过UUID判断是不是该锁，若是该锁，<strong>则执行delete进行锁释放。</strong></p>
+<p>设置的失效时间太短，方法没等执行完，锁就自动释放了，那么就会产生并发问题。如果设置的时间太长，其他获取锁的线程就可能要平白的多等一段时间。</p>
+<h6 id="基于zookeeper"><a href="#基于zookeeper" class="headerlink" title="基于zookeeper"></a>基于zookeeper</h6><p>基于zookeeper临时有序节点可以实现的分布式锁。</p>
+<p>大致思想即为：每个客户端对某个方法加锁时，在zookeeper上的与该方法对应的指定节点的目录下，生成一个唯一的瞬时有序节点。 判断是否获取锁的方式很简单，只需要判断有序节点中序号最小的一个。 当释放锁的时候，只需将这个瞬时节点删除即可。同时，其可以避免服务宕机导致的锁无法释放，而产生的死锁问题。</p>
+<p><strong>锁无法释放？</strong>使用Zookeeper可以有效的解决锁无法释放的问题，因为在创建锁的时候，客户端会在ZK中创建一个临时节点，<strong>一旦客户端获取到锁之后突然挂掉（Session连接断开）</strong>，<strong>那么这个临时节点就会自动删除掉。</strong>其他客户端就可以再次获得锁。</p>
+<p><strong>非阻塞锁？</strong>使用Zookeeper可以实现阻塞的锁，客户端可以通过在ZK中创建顺序节点，<strong>并且在节点上绑定监听器，一旦节点有变化</strong>，Zookeeper会通知客户端，客户端可以检查自己创建的节点是不是当前所有节点中序号最小的，如果是，那么自己就获取到锁，便可以执行业务逻辑了。</p>
+<p><strong>不可重入？</strong>使用Zookeeper也可以有效的解决不可重入的问题，客户端在创建节点的时候，把当前客户端的主机信息和线程信息直接写入到节点中，下次想要获取锁的时候和当前最小的节点中的数据比对一下就可以了。如果和自己的信息一样，那么自己直接获取到锁，如果不一样就再创建一个临时的顺序节点，参与排队。</p>
+<p><strong>单点问题？</strong>使用Zookeeper可以有效的解决单点问题，ZK是集群部署的，只要集群中有半数以上的机器存活，就可以对外提供服务。</p>
+<p>其实，使用Zookeeper也有可能带来并发问题，只是并不常见而已。考虑这样的情况，由于网络抖动，客户端和ZK集群的session连接断了，那么ZK以为客户端挂了，就会删除临时节点，这时候其他客户端就可以获取到分布式锁了。就可能产生并发问题。</p>
+<p>这个问题不常见是因为zk有重试机制，<strong>一旦zk集群检测不到客户端的心跳，就会重试</strong>，Curator客户端支持多种重试策略。多次重试之后还不行的话才会删除临时节点。</p>
+<p><strong>从性能角度（从高到低）</strong><br><strong>缓存 &gt; Zookeeper &gt;= 数据库</strong></p>
+<p><strong>从可靠性角度（从高到低）</strong><br><strong>Zookeeper &gt; 缓存 &gt; 数据库</strong></p>
 <h4 id="网络传输"><a href="#网络传输" class="headerlink" title="网络传输"></a>网络传输</h4><h5 id="网络传输实体类"><a href="#网络传输实体类" class="headerlink" title="网络传输实体类"></a>网络传输实体类</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class RpcRequest implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = 1905122041950251207L;//序列化版本控制</span><br><span class="line">    private String requestId;</span><br><span class="line">    private String interfaceName;</span><br><span class="line">    private String methodName;</span><br><span class="line">    private Object[] parameters;</span><br><span class="line">    private Class&lt;?&gt;[] paramTypes;</span><br><span class="line">    private String version;</span><br><span class="line">    private String group;//处理一个接口有多个实现类的情况</span><br><span class="line">    //服务名称：接口名加对应的实现方法。</span><br><span class="line">    public String getRpcServiceName() &#123;</span><br><span class="line">        return this.getInterfaceName() + this.getGroup() + this.getVersion();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class RpcResponse&lt;T&gt; implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = 715745410605631233L;</span><br><span class="line">    private String requestId;//唯一标识每一个请求</span><br><span class="line">    private Integer code;//返回数字</span><br><span class="line">    private String message;//返回的string</span><br><span class="line">    private T data;</span><br><span class="line"></span><br><span class="line">    public static &lt;T&gt; RpcResponse&lt;T&gt; success(T data, String requestId) &#123;</span><br><span class="line">        RpcResponse&lt;T&gt; response = new RpcResponse&lt;&gt;();</span><br><span class="line">        response.setCode(RpcResponseCodeEnum.SUCCESS.getCode());</span><br><span class="line">        response.setMessage(RpcResponseCodeEnum.SUCCESS.getMessage());</span><br><span class="line">        response.setRequestId(requestId);</span><br><span class="line">        if (null != data) &#123;</span><br><span class="line">            response.setData(data);</span><br><span class="line">        &#125;</span><br><span class="line">        return response;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static &lt;T&gt; RpcResponse&lt;T&gt; fail(RpcResponseCodeEnum rpcResponseCodeEnum) &#123;</span><br><span class="line">        RpcResponse&lt;T&gt; response = new RpcResponse&lt;&gt;();</span><br><span class="line">        response.setCode(rpcResponseCodeEnum.getCode());</span><br><span class="line">        response.setMessage(rpcResponseCodeEnum.getMessage());</span><br><span class="line">        return response;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>

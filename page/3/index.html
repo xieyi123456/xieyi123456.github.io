@@ -294,7 +294,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-04 15:22:27" itemprop="dateModified" datetime="2021-08-04T15:22:27+08:00">2021-08-04</time>
+                <time title="修改时间：2021-08-20 13:28:36" itemprop="dateModified" datetime="2021-08-20T13:28:36+08:00">2021-08-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -410,7 +410,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-11 14:03:21" itemprop="dateModified" datetime="2021-08-11T14:03:21+08:00">2021-08-11</time>
+                <time title="修改时间：2021-08-20 11:59:34" itemprop="dateModified" datetime="2021-08-20T11:59:34+08:00">2021-08-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -465,8 +465,8 @@
 <p>一张数据表有只能有一个主键，并且主键不能为 null，不能重复。</p>
 <p>在 MySQL 的 InnoDB 的表中，当没有显示的指定表的主键时，InnoDB 会自动先检查表中是否有<strong>唯一索引</strong>的字段，如果有，则选择该字段为默认的主键，否则 <strong>InnoDB 将会自动创建一个 6Byte 的自增主键。</strong></p>
 <h3 id="二级索引-辅助索引"><a href="#二级索引-辅助索引" class="headerlink" title="二级索引(辅助索引)"></a>二级索引(辅助索引)</h3><p>二级索引又称为辅助索引，是因为二级索引的叶子节点存储的数据是主键。也就是说，<strong>通过二级索引，可以定位主键的位置。</strong><br>唯一索引，普通索引，前缀索引等索引属于二级索引。</p>
-<h3 id="聚集索引"><a href="#聚集索引" class="headerlink" title="聚集索引"></a>聚集索引</h3><p>MyISAM: B+Tree叶节点的<strong>data域存放的是数据记录的地址</strong>。在索引检索的时候，⾸先按照B+Tree搜索算法搜索索引，如果指定的Key存在，则取出其 data 域的值，然后以 data 域的值为地址读取相应的数据记录。这被称为“⾮聚簇索引”。</p>
-<p>InnoDB: 其数据⽂件本身就是索引⽂件。相⽐MyISAM，索引⽂件和数据⽂件是分离的，其表数据⽂件本身就是按B+Tree组织的⼀个索引结构，<strong>树的叶节点data域保存了完整的数据记录</strong>。这个索引的key是数据表的主键，因此InnoDB表数据⽂件本身就是主索引。这被称为“聚簇索引（或聚集索引）”。</p>
+<h3 id="聚集索引"><a href="#聚集索引" class="headerlink" title="聚集索引"></a>聚集索引</h3><p>MyISAM: B+Tree叶节点的<strong>data域存放的是数据记录的地址</strong>。在索引检索的时候，⾸先按照B+Tree搜索算法搜索索引，如果指定的Key存在，则取出其 data 域的值，然后以 <strong>data 域的值为地址</strong>读取相应的数据记录。这被称为“⾮聚簇索引”。</p>
+<p>InnoDB: 其数据⽂件本身就是索引⽂件。相⽐MyISAM，<strong>索引⽂件和数据⽂件是分离的</strong>，其表数据⽂件本身就是按B+Tree组织的⼀个索引结构，<strong>树的叶节点data域保存了完整的数据记录</strong>。<strong>这个索引的key是数据表的主键</strong>，因此InnoDB表数据⽂件本身就是主索引。这被称为“聚簇索引（或聚集索引）”。</p>
 <p>⽽其余的索引都作为辅助索引，辅助索引的data域存储相应记录主键的值⽽不是地址，这也是和MyISAM不同的地⽅。在根据主索引搜索时，直接找到key所在的节点即可取出数据；再根据辅助索引查找时，则需要先取出主键的值，再⾛⼀遍主索引。因此，在设计表的时候，不建议使⽤过⻓的字段作为主键，也不建议使⽤⾮单调的字段作为主键，这样会造成主索引频繁分裂。 </p>
 <h3 id="聚集索引的缺点"><a href="#聚集索引的缺点" class="headerlink" title="聚集索引的缺点"></a>聚集索引的缺点</h3><p><strong>依赖于有序的数据</strong> ：因为 B+树是多路平衡树，如果索引的数据不是有序的，那么就需要在插入时排序，如果数据是整型还好，否则类似于字符串或 <strong>UUID</strong> 这种又长又难比较的数据，插入或查找的速度肯定比较慢。</p>
 <p><strong>更新代价大</strong> ： 如果对索引列的数据被修改时，那么对应的索引也将会被修改， 而且况聚集索引的叶子节点还存放着数据，修改代价肯定是较大的， 所以对于主键索引来说，主键一般都是不可被修改的。</p>
@@ -476,7 +476,8 @@
 <h3 id="覆盖索引。"><a href="#覆盖索引。" class="headerlink" title="覆盖索引。"></a>覆盖索引。</h3><p>当索引上<strong>包含了查询语句中的所有列</strong>时，我们无需进行回表查询就能拿到所有的请求数据，因此速度会很快。当 explain 的输出结果 Extra 字段为 <strong>Using index</strong> 时，则代表触发覆盖索引。</p>
 <h3 id="联合索引（复合索引）的底层实现？最佳左前缀原则？"><a href="#联合索引（复合索引）的底层实现？最佳左前缀原则？" class="headerlink" title="联合索引（复合索引）的底层实现？最佳左前缀原则？"></a>联合索引（复合索引）的底层实现？最佳左前缀原则？</h3><p>联合索引底层还是使用 B+树索引，并且还是只有<strong>一棵树</strong>，只是此时的排序会：首先按照第一个索引排序，在第一个索引相同的情况下，再按第二个索引排序，依次类推。</p>
 <p>这也是为什么有“最佳左前缀原则”的原因，<strong>因为右边（后面）的索引都是在左边（前面）的索引排序的基础上进行排序的，如果没有左边的索引，单独看右边的索引，其实是无序的</strong></p>
-<h3 id="B-树中一个节点到底多大合适？"><a href="#B-树中一个节点到底多大合适？" class="headerlink" title="B+树中一个节点到底多大合适？"></a>B+树中一个节点到底多大合适？</h3><p>1 页或页的倍数最为合适。因为如果一个节点的大小小于 1 页，那么读取这个节点的时候其实也会读出 1 页，造成资源的浪费。所以为了不造成浪费，所以最后把一个节点的大小控制在 1 页、2 页、3 页等倍数页大小最为合适。<br>这里说的“页”是 MySQL 自定义的单位（和操作系统类似），MySQL 的 Innodb 引擎中 <strong>1 页的默认大小是 16k。</strong></p>
+<h3 id="B-树中一个节点到底多大合适？"><a href="#B-树中一个节点到底多大合适？" class="headerlink" title="B+树中一个节点到底多大合适？"></a>B+树中一个节点到底多大合适？</h3><p>1 页或页的倍数最为合适。因为如果一个节点的大小小于 1 页，那么读取这个节点的时候其实也会读出 1 页，造成资源的浪费。所以为了不造成浪费，所以最后把一个节点的大小控制在 1 页、2 页、3 页等倍数页大小最为合适。</p>
+<p>这里说的“页”是 MySQL 自定义的单位（和操作系统类似），MySQL 的 Innodb 引擎中 <strong>1 页的默认大小是 16k。</strong></p>
 <h3 id="为什么一个节点为-1-页就够了？"><a href="#为什么一个节点为-1-页就够了？" class="headerlink" title="为什么一个节点为 1 页就够了？"></a>为什么一个节点为 1 页就够了？</h3><p>Innodb 中，B+树中的一个节点存储的内容是：</p>
 <ul>
 <li>非叶子节点：key + 指针</li>
@@ -552,7 +553,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-13 16:18:02" itemprop="dateModified" datetime="2021-08-13T16:18:02+08:00">2021-08-13</time>
+                <time title="修改时间：2021-08-20 13:55:37" itemprop="dateModified" datetime="2021-08-20T13:55:37+08:00">2021-08-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -600,7 +601,37 @@
 <li><strong>SERIALIZABLE(可串行化)：</strong> 最高的隔离级别，完全服从ACID的隔离级别。所有的事务依次逐个执行，这样事务之间就完全不可能产生干扰，也就是说，该级别可以防止脏读、不可重复读以及幻读。</li>
 </ul>
 <p>MySQL InnoDB 存储引擎的默认支持的隔离级别是 <strong>REPEATABLE-READ（可重读）</strong><br>与 SQL 标准不同的地方在于InnoDB 存储引擎在 REPEATABLE-READ（可重读） 事务隔离级别下，<strong>允许应用使用  MVCC和 Next-key Lock锁算法来避免幻读的产生。</strong></p>
-<h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><p>在 InnoDB 存储引擎中，多版本控制 (multi versioning) 就是对非锁定读的实现。如果<strong>读取的行正在执行 DELETE 或 UPDATE 操作</strong>，这时读取操作不会去等待行上锁的释放。相反地，InnoDB 存储引擎会去读取行的一个快照数据，<strong>对于这种读取历史数据的方式，我们叫它快照读 (snapshot read)</strong></p>
+<h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><h3 id="什么是MVCC"><a href="#什么是MVCC" class="headerlink" title="什么是MVCC?"></a><strong>什么是MVCC?</strong></h3><p>MVCC MVCC，全称Multi-Version Concurrency Control，即多版本并发控制。MVCC是一种并发控制的方法，一般在数据库管理系统中，实现对数据库的并发访问，在编程语言中实现事务内存。</p>
+<p>MVCC在MySQL InnoDB中的实现主要是为了提高数据库并发性能，用更好的方式去处理读-写冲突，做到即使有读写冲突时，也能做到不加锁，非阻塞并发读</p>
+<h3 id="什么是当前读和快照读？"><a href="#什么是当前读和快照读？" class="headerlink" title="什么是当前读和快照读？"></a><strong>什么是当前读和快照读？</strong></h3><ul>
+<li><p>当前读 像select lock in share mode(共享锁), select for update ; update, insert ,delete(排他锁)这些操作都是一种当前读，为什么叫当前读？就是它读取的是记录的最新版本，读取时还要保证其他并发事务不能修改当前记录，会对读取的记录进行加锁。</p>
+</li>
+<li><p>快照读 像不加锁的select操作就是快照读，即不加锁的非阻塞读；快照读的前提是隔离级别不是串行级别，串行级别下的快照读会退化成当前读；之所以出现快照读的情况，是基于提高并发性能的考虑，快照读的实现是基于多版本并发控制，即MVCC,可以认为MVCC是行锁的一个变种，但它在很多情况下，避免了加锁操作，降低了开销；既然是基于多版本，即快照读可能读到的并不一定是数据的最新版本，而有可能是之前的历史版本</p>
+</li>
+</ul>
+<p>MVCC就是为了<strong>实现读-写冲突不加锁，</strong>而这个读指的就是<strong>快照读</strong>, 而非当前读，当前读实际上是一种加锁的操作，是悲观锁的实现</p>
+<p><strong>当前读，快照读和MVCC的关系</strong></p>
+<ul>
+<li>准确的说，MVCC多版本并发控制指的是 “维持一个数据的多个版本，使得读写操作没有冲突” 这么一个概念。</li>
+<li>而在MySQL中，实现这么一个MVCC理想概念，我们就需要MySQL提供具体的功能去实现它，而快照读就是MySQL为我们实现MVCC理想模型的其中一个具体非阻塞读功能。而相对而言，当前读就是悲观锁的具体功能实现</li>
+</ul>
+<h3 id="MVCC能解决什么问题，好处是？"><a href="#MVCC能解决什么问题，好处是？" class="headerlink" title="MVCC能解决什么问题，好处是？"></a><strong>MVCC能解决什么问题，好处是？</strong></h3><p>数据库并发场景有三种，分别为：</p>
+<ul>
+<li>读-读：不存在任何问题，也不需要并发控制</li>
+<li>读-写：有线程安全问题，可能会造成事务隔离性问题，可能遇到脏读，幻读，不可重复读</li>
+<li>写-写：有线程安全问题，可能会存在更新丢失问题，比如第一类更新丢失，第二类更新丢失</li>
+</ul>
+<h3 id="MVCC带来的好处是？"><a href="#MVCC带来的好处是？" class="headerlink" title="MVCC带来的好处是？"></a><strong>MVCC带来的好处是？</strong></h3><p>多版本并发控制（MVCC）是一种用来解决读-写冲突的无锁并发控制，也就是为事务分配单向增长的时间戳，为每个修改保存一个版本，版本与事务时间戳关联，读操作只读该事务开始前的数据库的快照。 所以MVCC可以为数据库解决以下问题</p>
+<ul>
+<li>在并发读写数据库时，可以做到在读操作时不用阻塞写操作，写操作也不用阻塞读操作，提高了数据库并发读写的性能</li>
+<li>同时还可以解决脏读，幻读，不可重复读等事务隔离问题，但不能解决更新丢失问题</li>
+</ul>
+<p>总之，MVCC就是不满意只让数据库采用悲观锁这样性能不佳的形式去解决读-写冲突问题，而提出的解决方案，所以在数据库中，因为有了MVCC，所以我们可以形成两个组合：</p>
+<ul>
+<li>MVCC + 悲观锁 MVCC解决读写冲突，悲观锁解决写写冲突</li>
+<li>MVCC + 乐观锁 MVCC解决读写冲突，乐观锁解决写写冲突 这种组合的方式就可以最大程度的提高数据库并发性能，并解决读写冲突，和写写冲突导致的问题</li>
+</ul>
+<p>在 InnoDB 存储引擎中，多版本控制 (multi versioning) 就是对非锁定读的实现。如果<strong>读取的行正在执行 DELETE 或 UPDATE 操作</strong>，这时读取操作不会去等待行上锁的释放。相反地，InnoDB 存储引擎会去读取行的一个快照数据，<strong>对于这种读取历史数据的方式，我们叫它快照读 (snapshot read)</strong></p>
 <p>在 Repeatable Read 下 MVCC 实现了可重复读和防止部分幻读。</p>
 <p>如果执行的是下列语句，就是 <strong>锁定读（Locking Reads）</strong></p>
 <ul>
@@ -639,6 +670,48 @@
 <li>Gap lock：间隙锁，锁定一个范围，不包括记录本身</li>
 <li>Next-key lock：record+gap 临键锁，锁定一个范围，包含记录本身</li>
 </ul>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><h4 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h4><p>基于锁的属性分类：共享锁、排他锁。</p>
+<p>基于锁的粒度分类：表锁、行锁、（记录锁、间隙锁、临键锁）</p>
+<p>乐观锁，悲观锁</p>
+<p>死锁</p>
+<h5 id="记录锁（Record-Locks）"><a href="#记录锁（Record-Locks）" class="headerlink" title="记录锁（Record Locks）"></a>记录锁（Record Locks）</h5><p>记录锁就是为<strong>某行记录</strong>加锁，它封锁该行的索引记录：</p>
+<p>– id 列为主键列或唯一索引列<br>SELECT * FROM t_user WHERE id = 1 <strong>FOR UPDATE;</strong><br>id 为 1 的记录行会被锁住。</p>
+<p>需要注意的是：<strong>id 列必须为唯一索引列或主键列</strong>，<strong>否则上述语句加的锁就会变成临键锁。</strong></p>
+<p>同时查询语句必须为精准匹配（=），不能为 &gt;、&lt;、like等，否则也会退化成临键锁。</p>
+<p>我们也可以在通过 主键索引 与 唯一索引 对数据行进行 UPDATE 操作时，也会对该行数据加记录锁：</p>
+<p>– id 列为主键列或唯一索引列<br>UPDATE t_user SET age = 50 WHERE id = 1;</p>
+<h5 id="间隙锁（Gap-Locks）"><a href="#间隙锁（Gap-Locks）" class="headerlink" title="间隙锁（Gap Locks）"></a>间隙锁（Gap Locks）</h5><p>间隙锁基于<strong>非唯一索引</strong>，它锁定一段范围内的索引记录。间隙锁基于下面将会提到的Next-Key Locking 算法，请务必牢记：<strong>使用间隙锁锁住的是一个区间，而不仅仅是这个区间中的每一条数据。</strong></p>
+<p>SELECT * FROM t_user WHERE id BETWEN 1 AND 10 FOR UPDATE;<br>即所有在（1，10）区间内的记录行都会被锁住，所有id 为 2、3、4、5、6、7、8、9 的数据行的插入会被阻塞，但是 1 和 10 两条记录行并不会被锁住。</p>
+<p>除了手动加锁外，在执行完某些 SQL后，InnoDB也会自动加间隙锁。</p>
+<h5 id="临键锁（Next-Key-Locks）"><a href="#临键锁（Next-Key-Locks）" class="headerlink" title="临键锁（Next-Key Locks）"></a>临键锁（Next-Key Locks）</h5><p>临键锁是一种特殊的间隙锁，也可以理解为一种特殊的算法。<strong>通过临建锁可以解决幻读的问题。</strong>每个数据行上的<strong>非唯一索引列</strong>上都会存在一把临键锁，当某个事务持有该数据行的临键锁时，会锁住一段<strong>左开右闭</strong>区间的数据。需要强调的一点是，<strong>InnoDB 中行级锁是基于索引实现的，临键锁只与非唯一索引列有关，在唯一索引列（包括主键列）上不存在临键锁。</strong></p>
+<p>比如：表信息 t_user(id PK, age KEY, name)</p>
+<p><img src="https://i.loli.net/2021/08/18/PQEZqVyf8vijJlU.png" alt="image-20210818113227557"></p>
+<p>在事务 A 中执行如下命令：</p>
+<p>– 根据非唯一索引列 UPDATE 某条记录<br>UPDATE t_user SET name = Vladimir WHERE age = 24;<br>– 或根据非唯一索引列 锁住某条记录<br>SELECT * FROM t_user WHERE age = 24 FOR UPDATE;<br>不管执行了上述 SQL 中的哪一句，之后如果在事务 B 中执行以下命令，则该命令会被阻塞：</p>
+<p>INSERT INTO t_user VALUES(100, 26, ‘tian’);</p>
+<p>很明显，事务 A 在对 age 为 24 的列进行 UPDATE 操作的同时，也获取了 (24, 32] 这个区间内的临键锁。</p>
+<p>不仅如此，在执行以下 SQL 时，也会陷入阻塞等待：</p>
+<p>INSERT INTO table VALUES(100, 30, ‘zhang’);</p>
+<p>那最终我们就可以得知，在根据非唯一索引 对记录行进行 UPDATE \ FOR UPDATE \ LOCK IN SHARE MODE 操作时，<strong>InnoDB 会获取该记录行的 临键锁 ，并同时获取该记录行下一个区间的间隙锁。</strong></p>
+<p>即事务 A在执行了上述的 SQL 后，最终被锁住的记录区间为 (10, 32)。</p>
+<h4 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h4><p><img src="https://i.loli.net/2021/08/18/wcGgvB3aXy8nOA1.png" alt="image-20210818113411266"></p>
+<p>从死锁的定义来看，MySQL 出现死锁的几个要素为：</p>
+<p>两个或者两个以上事务<br>每个事务都已经持有锁并且申请新的锁<br>锁资源同时只能被同一个事务持有或者不兼容<br>事务之间因为持有锁和申请锁导致彼此循环等待</p>
+<p><strong>死锁分析思路</strong><br>大致分为两个步骤：</p>
+<p>查看<strong>死锁日志</strong>时，首先看一下<strong>发生死锁的事务等待获取锁的语句都是啥。</strong><br>找到发生死锁的事务中所有的语句之后，对照着事务获取到的锁和正在等待的锁的信息来分析死锁发生过程。</p>
+<p><strong>如何预防死锁?</strong></p>
+<p>innodb_lock_wait_timeout 等待锁超时回滚事务</p>
+<p>直观方法是在两个事务相互等待时，<strong>当一个等待时间超过设置的某一阀值时，对其中一个事务进行回滚，另一个事务就能继续执行。</strong></p>
+<p>wait-for graph算法来主动进行死锁检测</p>
+<p>每当加锁请求无法立即满足需要并进入等待时，wait-for graph算法都会被触发。</p>
+<p>wait-for graph要求数据库保存以下两种信息：</p>
+<p><strong>锁的信息链表</strong><br><strong>事务等待链表</strong></p>
+<p>那么如何解决死锁？</p>
+<p><strong>1.等待事务超时，主动回滚。</strong></p>
+<p><strong>2.进行死锁检查，主动回滚某条事务，让别的事务能继续走下去。</strong></p>
+<p>下面提供一种方法，解决死锁的状态:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM INFORMATION_SCHEMA.INNODB_TRX;--查看正在被锁的事务</span><br><span class="line"></span><br><span class="line">kill trx_mysql_thread_id；--（上图trx_mysql_thread_id列的值）</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
