@@ -156,139 +156,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Xieyi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/" class="post-title-link" itemprop="url">Redis-持久化</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-30 15:12:32" itemprop="dateCreated datePublished" datetime="2021-07-30T15:12:32+08:00">2021-07-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-04 16:11:02" itemprop="dateModified" datetime="2021-08-04T16:11:02+08:00">2021-08-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Redis 的持久化机制有：<strong>RDB、AOF、混合持久化（RDB+AOF，Redis 4.0 引入）。</strong></p>
-<h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><p>类似于快照。在某个时间点，<strong>将 Redis 在内存中的数据库状态（数据库的键值对等信息）保存到磁盘里面</strong>。<br>RDB 持久化功能生成的 RDB 文件是<strong>经过压缩的二进制文件。</strong></p>
-<p>命令：有两个 Redis 命令可以用于生成 RDB 文件<strong>，一个是 SAVE，另一个是 BGSAVE</strong>。<br>开启：使用 save point 配置，满足 save point 条件后会触发 BGSAVE <strong>来存储一次快照</strong>。</p>
-<p>save point 格式：save <seconds> <changes>，含义是 Redis 如果<strong>在 seconds 秒内数据发生了 changes 次改变，就保存快照文件。</strong></p>
-<p>SAVE：生成 RDB 快照文件，<strong>但是会阻塞主进程</strong>，服务器将无法处理客户端发来的命令请求，所以通常不会直接使用该命令。</p>
-<p>BGSAVE：<strong>fork 子进程来生成 RDB 快照文件，阻塞只会发生在 fork 子进程的时候</strong>，之后主进程可以正常处理请求。</p>
-<p>fork：在 Linux 系统中，调用 fork() 时，会创建出一个新进程，称为子进程，子进程会拷贝父进程的 page table。如果进程占用的内存越大，进程的 page table 也会越大，那么 fork 也会占用更多的时间。如果 Redis 占用的内存很大，那么在 fork 子进程时，则会出现明显的停顿。</p>
-<h4 id="RDB-的优点"><a href="#RDB-的优点" class="headerlink" title="RDB 的优点"></a>RDB 的优点</h4><p>RDB 文件是是经过压缩的二进制文件，<strong>占用空间很小</strong>，它保存了 Redis 某个时间点的数据集，很适合用于做备<br>份。</p>
-<p>RDB 非常适用于灾难恢复（disaster recovery）：它只有一个文件，并且内容都非常紧凑，可以（在加密后）将它传送到别的数据中心。</p>
-<p>RDB 可以最大化 redis 的性能。父进程在保存 RDB 文件时唯一要做的就是 fork 出一个子进程，然后这个子进<br>程就会处理接下来的所有保存工作，父进程无须执行任何磁盘 I/O 操作。</p>
-<p>RDB 在<strong>恢复大数据集时的速度比 AOF 的恢复速度要快</strong>。</p>
-<h4 id="RDB-的缺点"><a href="#RDB-的缺点" class="headerlink" title="RDB 的缺点"></a>RDB 的缺点</h4><p>RDB 在服务器故障时<strong>容易造成数据的丢失</strong>。RDB 允许我们通过修改 save point 配置来控制持久化的频率。但是，因为 RDB 文件需要保存整个数据集的状态， 所以它是一个比较重的操作，如果频率太频繁，可能会对 Redis 性能产生影响。</p>
-<p>RDB 保存时使用 fork 子进程进行数据的持久化，如果数据比较大的话，<strong>fork 可能会非常耗时</strong>，造成 Redis 停<br>止处理服务 N 毫秒。如果数据集很大且 CPU 比较繁忙的时候，停止服务的时间甚至会到一秒。</p>
-<p>Linux fork 子进程采用的是 <strong>copy-on-write</strong> 的方式。在 Redis 执行 RDB 持久化期间，如果 client 写入数据很频繁，那么将增加 Redis 占用的内存，最坏情况下，内存的占用将达到原先的 2 倍。刚 fork 时，主进程和子进程共享内存，<strong>但是随着主进程需要处理写操作，主进程需要将修改的页面拷贝一份出来，然后进行修改</strong>。极端情况下，如果所有的页面都被修改，则此时的内存占用是原先的 2 倍。</p>
-<h3 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h3><p>保存 Redis 服务器所执行的所有写操作命令来记录数据库状态，并在服务器启动时，通过重新执行这些命令<br>来还原数据集。<br>开启：AOF 持久化默认是关闭的，可以通过配置：<strong>appendonly yes</strong> 开启。<br>关闭：使用配置 appendonly no 可以关闭 AOF 持久化。</p>
-<p>AOF 持久化功能的实现可以分为三个步骤：<strong>命令追加、文件写入、文件同步</strong>。</p>
-<p>命令追加：当 AOF 持久化功能打开时，服务器在执行完一个写命令之后，会将被执行的写命令追加到服务器状态的 <strong>aof 缓冲区（aof_buf）</strong>的末尾。<br>文件写入与文件同步：可能有人不明白为什么将 aof_buf 的内容写到磁盘上需要两步操作，这边简单解释一下。</p>
-<p>Linux 操作系统中为了提升性能，使用了<strong>页缓存（page cache）</strong>。当我们将 aof_buf 的内容写到磁盘上时，此时数据并没有真正的落盘，而是在 page cache 中，为了将 page cache 中的数据真正落盘，需要执行 fsync / fdatasync 命令来强制刷盘。这边的文件同步做的就是刷盘操作，或者叫文件刷盘可能更容易理解一些。</p>
-<p>appendfsync 参数值，来决定<strong>是否将 aof_buf 缓冲区的内容写入和保存到 AOF 文件</strong>。</p>
-<h4 id="appendfsync-参数有三个选项："><a href="#appendfsync-参数有三个选项：" class="headerlink" title="appendfsync 参数有三个选项："></a><strong>appendfsync 参数有三个选项：</strong></h4><p>always：<strong>每处理一个命令</strong>都将 aof_buf 缓冲区中的所有内容写入并同步到 AOF 文件，即每个命令都刷盘。</p>
-<p>everysec：将 aof_buf 缓冲区中的所有内容写入到 AOF 文件，如果上次同步 AOF 文件的时间距离现在超<br>过一秒钟， 那么再次对 AOF 文件进行同步， 并且这个同步操作是异步的，由一个后台线程专门负责执行，<br>即<strong>每秒刷盘 1 次。</strong></p>
-<p>no：将 aof_buf 缓冲区中的所有内容写入到 AOF 文件， 但并不对 AOF 文件进行同步， 何时同步由操作<br>系统来决定。即不执行刷盘，<strong>让操作系统自己执行刷盘。</strong></p>
-<h4 id="AOF-的优点"><a href="#AOF-的优点" class="headerlink" title="AOF 的优点"></a>AOF 的优点</h4><ol>
-<li><strong>AOF 比 RDB 可靠。</strong>你可以设置不同的 fsync 策略：no、everysec 和 always。默认是 everysec，在这种配置下，redis 仍然可以保持良好的性能，并且就算发生故障停机，也最多只会丢失一秒钟的数据。</li>
-<li><strong>AOF 文件是一个纯追加的日志文件</strong>。即使日志因为某些原因而包含了未写入完整的命令（比如写入时磁盘<br>已满，写入中途停机等等）， 我们也可以使用 redis-check-aof 工具也可以轻易地修复这种问题。</li>
-<li><strong>当 AOF 文件太大时，Redis 会自动在后台进行重写</strong>：重写后的新 AOF 文件包含了恢复当前数据集所需的最<br>小命令集合。整个重写是绝对安全，因为重写是在一个新的文件上进行，同时 Redis 会继续往旧的文件追<br>加数据。当新文件重写完毕，Redis 会把新旧文件进行切换，然后开始把数据写到新文件上。</li>
-<li>AOF 文件<strong>有序地保存了对数据库执行的所有写入操作以 Redis 协议的格式保存</strong>， 因此 AOF 文件的<strong>内容非</strong><br> <strong>常容易被人读懂</strong>， 对文件进行分析（parse）也很轻松。如果你不小心执行了 FLUSHALL 命令把所有数据刷<br> 掉了，但只要 AOF 文件没有被重写，那么只要停止服务器， 移除 AOF 文件末尾的 FLUSHALL 命令， 并<br> 重启 Redis ， 就可以将数据集恢复到 FLUSHALL 执行之前的状态。</li>
-</ol>
-<h4 id="AOF-的缺点"><a href="#AOF-的缺点" class="headerlink" title="AOF 的缺点"></a>AOF 的缺点</h4><p>对于相同的数据集，<strong>AOF 文件的大小一般会比 RDB 文件大。</strong></p>
-<p>根据所使用的 fsync 策略，<strong>AOF 的速度可能会比 RDB 慢</strong>。通常 fsync 设置为每秒一次就能获得比较高的<br>性能，而关闭 fsync 可以让 AOF 的速度和 RDB 一样快。</p>
-<h3 id="混合持久化"><a href="#混合持久化" class="headerlink" title="混合持久化"></a>混合持久化</h3><p>混合持久化并不是一种全新的持久化方式，而是对已有方式的优化。混合持久化<strong>只发生于 AOF 重写</strong>过程。<br>使用了混合持久化，<strong>重写后的新 AOF 文件前半段是 RDB 格式的全量数据，后半段是 AOF 格式的增量数据</strong>。</p>
-<p>开启：混合持久化的配置参数为 <strong>aof-use-rdb-preamble</strong>，配置为 yes 时开启混合持久化，在 redis 4 刚引入时，默认是关闭混合持久化的，但是在 redis 5 中默认已经打开了。</p>
-<p>关闭：使用 aof-use-rdb-preamble no 配置即可关闭混合持久化。</p>
-<p>混合持久化本质是<strong>通过 AOF 后台重写（bgrewriteaof 命令）完成的，不同的是当开启混合持久化时，fork 出的子进程先将当前全量数据以 RDB 方式写入新的 AOF 文件，然后再将 AOF 重写缓冲区的增量命令以 AOF 方式写入到文件</strong>，写入完成后通知主进程将新的含有 RDB 格式和 AOF 格式的 AOF 文件替换旧的的 AOF 文件。</p>
-<p>优点：结合 RDB 和 AOF 的优点, <strong>更快的重写和恢复。</strong><br>缺点：AOF 文件里面的 RDB 部分不再是 AOF 格式，可读性差。</p>
-<h4 id="为什么需要-AOF-重写"><a href="#为什么需要-AOF-重写" class="headerlink" title="为什么需要 AOF 重写"></a>为什么需要 AOF 重写</h4><p>AOF 持久化是通过保存<strong>被执行的写命令</strong>来记录数据库状态的，随着写入命令的不断增加，AOF 文件中的内容会越来越多，<strong>文件的体积也会越来越大。</strong></p>
-<p>举个例子， 如果你对一个计数器调用了 100 次 INCR ， 那么仅仅是为了保存这个计数器的当前值， AOF 文件就需要使用 100 条记录。<br>然而在实际上， 只使用一条 SET 命令已经足以保存计数器的当前值了， 其余 99 条记录实际上都是多余的。<br>为了处理这种情况， Redis 引入了 AOF 重写：可以在不打断服务端处理请求的情况下， 对 AOF 文件进行重建<br>（rebuild）。</p>
-<h4 id="介绍下-AOF-重写的过程、AOF-后台重写存在的问题、如何解决-AOF-后台重写存在的数据不一致问题"><a href="#介绍下-AOF-重写的过程、AOF-后台重写存在的问题、如何解决-AOF-后台重写存在的数据不一致问题" class="headerlink" title="介绍下 AOF 重写的过程、AOF 后台重写存在的问题、如何解决 AOF 后台重写存在的数据不一致问题"></a>介绍下 AOF 重写的过程、AOF 后台重写存在的问题、如何解决 AOF 后台重写存在的数据不一致问题</h4><p>Redis 生成新的 AOF 文件来代替旧 AOF 文件，这个新的 AOF 文件<strong>包含重建当前数据集所需的最少命令。</strong></p>
-<p>具体过程是<strong>遍历所有数据库的所有键，从数据库读取键现在的值，然后用一条命令去记录键值对，代替之前记录这个键值对的多条命令。</strong></p>
-<p>命令：有两个 Redis 命令可以用于触发 AOF 重写，一个是 <strong>BGREWRITEAOF</strong> 、另一个是 <strong>REWRITEAOF</strong> 命令；<br>开启：AOF 重写由两个参数共同控制，auto-aof-rewrite-percentage 和 auto-aof-rewrite-min-size，同时满足这两个条件，则触发 AOF 后台重写 BGREWRITEAOF。</p>
-<ol>
-<li><p>// 当前 AOF 文件比上次重写后的 AOF 文件大小的增长比例超过 100</p>
-<p>auto-aof-rewrite-percentage 100</p>
-</li>
-<li><p>// 当前 AOF 文件的文件大小大于 64MB</p>
-<p>auto-aof-rewrite-min-size 64mb</p>
-</li>
-</ol>
-<p>BGREWRITEAOF：fork 子进程来进行 AOF 重写，阻塞只会发生在 fork 子进程的时候，之后主进程可以正常处理请求。<br><strong>REWRITEAOF 和 BGREWRITEAOF 的关系与 SAVE 和 BGSAVE 的关系类似。</strong></p>
-<h4 id="AOF-后台重写存在的问题"><a href="#AOF-后台重写存在的问题" class="headerlink" title="AOF 后台重写存在的问题"></a>AOF 后台重写存在的问题</h4><p>AOF 后台重写使用子进程进行从写，解决了主进程阻塞的问题，但是仍然存在另一个问题：</p>
-<p>子进程在进行 AOF 重写期间，服务器主进程还需要继续处理命令请求，<strong>新的命令可能会对现有的数据库状态进行修改，从而使得当前的数据库状态和重写后的 AOF 文件保存的数据库状态不一致。</strong></p>
-<h4 id="如何解决-AOF-后台重写存在的数据不一致问题"><a href="#如何解决-AOF-后台重写存在的数据不一致问题" class="headerlink" title="如何解决 AOF 后台重写存在的数据不一致问题"></a>如何解决 AOF 后台重写存在的数据不一致问题</h4><p>为了解决上述问题，Redis 引入了 <strong>AOF 重写缓冲区</strong>（aof_rewrite_buf_blocks），这个缓冲区在服务器创建子进程之后开始使用，当 Redis 服务器执行完一个写命令之后，它会同时将这个写命令追加到 AOF 缓冲区和 AOF 重写缓冲区。</p>
-<p> 1、现有 AOF 文件的处理工作会如常进行。这样即使在重写的中途发生停机，现有的 AOF 文件也还是安全的。<br> 2、从创建子进程开始，也就是 AOF 重写开始，服务器执行的所有写命令会被记录到 AOF 重写缓冲区里面。</p>
-<p> 这样，<strong>当子进程完成 AOF 重写工作后，父进程会在 serverCron 中检测到子进程已经重写结束</strong>，则会执行以下工作：<br> 1、将 AOF 重写缓冲区中的所有内容写入到新 AOF 文件中，这时新 AOF 文件所保存的数据库状态将和服务器当前的数据库状态一致。<br> 2、对新的 AOF 文件进行改名，原子的覆盖现有的 AOF 文件，完成新旧两个 AOF 文件的替换。</p>
-<h4 id="RDB、AOF、混合持久，用哪一个？"><a href="#RDB、AOF、混合持久，用哪一个？" class="headerlink" title="RDB、AOF、混合持久，用哪一个？"></a>RDB、AOF、混合持久，用哪一个？</h4><p>如果想尽量保证数据安全性， 你应该同时使用 RDB 和 AOF 持久化功能，同时可以开启混合持久化。</p>
-<p>如果你非常关心你的数据， 但仍然可以承受数分钟以内的数据丢失， 那么你可以只使用 RDB 持久化。</p>
-<p>如果你的数据是可以丢失的，则可以关闭持久化功能，在这种情况下，Redis 的性能是最高的。</p>
-<p>使用 Redis 通常都是为了提升性能，而如果为了不丢失数据而将 appendfsync 设置为 always 级别时，对 Redis 的性能影响是很大的，在这种不能接受数据丢失的场景，其实可以考虑直接选择 MySQL 。</p>
-<h4 id="同时开启-RDB-和-AOF，服务重启时如何加载"><a href="#同时开启-RDB-和-AOF，服务重启时如何加载" class="headerlink" title="同时开启 RDB 和 AOF，服务重启时如何加载"></a>同时开启 RDB 和 AOF，服务重启时如何加载</h4><p>简单来说，如果同时启用了 AOF 和 RDB，Redis 重新启动时，<strong>会使用 AOF 文件来重建数据集</strong>，因为通常来说， AOF的数据会更完整。</p>
-<p>而在引入了混合持久化之后，使用 AOF 重建数据集时，会通过文件开头是否为“REDIS”来判断是否为混合持久化。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1490,6 +1357,133 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xieyi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/" class="post-title-link" itemprop="url">Java并发-常见关键字</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-30 15:08:44" itemprop="dateCreated datePublished" datetime="2021-07-30T15:08:44+08:00">2021-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-05 21:04:04" itemprop="dateModified" datetime="2021-08-05T21:04:04+08:00">2021-08-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p>见《线程安全的机制》</p>
+<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。</p>
+<p>CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。</p>
+<p>CAS虽然很高效的解决了原子操作问题，但是CAS仍然存在三大问题。</p>
+<p><strong>循环时间长开销很大。</strong><br><strong>只能保证一个共享变量的原子操作。</strong><br><strong>ABA问题。</strong></p>
+<p><strong>如果CAS失败，会一直进行尝试</strong>。如果CAS长时间一直不成功，可能会给CPU带来很大的开销。</p>
+<p>当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候就可以用锁来保证原子性。</p>
+<p>如果值曾经被改成了B，后来又被改回为A，那CAS操作就会误认为它从来没有被改变过。这个漏洞称为CAS操作的“ABA”问题。</p>
+<p>Java并发包为了解决这个问题，提供了一个<strong>带有标记的原子引用类“AtomicStampedReference”，</strong>它可以通过<strong>控制变量值的版本</strong>来保证CAS的正确性。因此，在使用CAS前要考虑清楚“ABA”问题是否会影响程序并发的正确性，如果需要解决ABA问题，改用传统的互斥同步可能会比原子类更高效。</p>
+<h3 id="AQS-抽象队列同步器"><a href="#AQS-抽象队列同步器" class="headerlink" title="AQS-抽象队列同步器"></a>AQS-抽象队列同步器</h3><p><img src="https://i.loli.net/2021/08/03/ovkD8F5rExbgpBq.png" alt="image-20210803192200462"></p>
+<p><strong>AQS 核心思想是，</strong>如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设置为锁定状态。<strong>如果被请求的共享资源被占用</strong>，那么就需要一套线程阻塞等待以及被唤醒时锁分配的机制，这个机制 AQS 是用 <strong>CLH 队列锁</strong>实现的，即将暂时获取不到锁的线程加入到队列中。</p>
+<p>CLH(Craig,Landin,and Hagersten)队列是一个<strong>虚拟的双向队列</strong>（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将<strong>每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点</strong>（Node）来实现锁的分配。</p>
+<p><img src="https://i.loli.net/2021/08/05/FMUxJCKm7Gkn8Hv.png" alt="image-20210805140155989"></p>
+<p>AQS 使用一个 int 成员变量来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。</p>
+<h4 id="节点状态"><a href="#节点状态" class="headerlink" title="节点状态"></a>节点状态</h4><p>nt waitStatus：</p>
+<p>1、<strong>CANCELLED</strong>，值为1 。场景：当该线程<strong>等待超时或者被中断，需要从同步队列中取消等待</strong>，则该线程被置1，即被取消（这里该线程在取消之前是等待状态）。节点进入了取消状态则不再变化；</p>
+<p>2、<strong>SIGNAL</strong>，值为-1。场景：<strong>后继的节点处于等待状态</strong>，当前节点的线程如果释放了同步状态或者被取消（当前节点状态置为-1），将会通知后继节点，使后继节点的线程得以运行；</p>
+<p>3、<strong>CONDITION</strong>，值为-2。场景：<strong>节点处于等待队列中，节点线程等待在Condition上，</strong>当其他线程对Condition调用了signal()方法后，该节点从等待队列中转移到同步队列中，加入到对同步状态的获取中；</p>
+<p>4、<strong>PROPAGATE</strong>，值为-3。场景：表示<strong>下一次的共享状态会被无条件的传播下去</strong>；</p>
+<p>5、<strong>INITIAL</strong>，值为0，初始状态。</p>
+<h4 id="AQS-对资源的共享方式"><a href="#AQS-对资源的共享方式" class="headerlink" title="AQS 对资源的共享方式"></a>AQS 对资源的共享方式</h4><p><strong>AQS 定义两种资源共享方式</strong></p>
+<h5 id="Exclusive（独占）"><a href="#Exclusive（独占）" class="headerlink" title="Exclusive（独占）"></a>Exclusive（独占）</h5><p><strong>只有一个线程能执行</strong>，如 ReentrantLock。又可分为公平锁和非公平锁，ReentrantLock 同时支持两种锁，下面以 ReentrantLock 对这两种锁的定义做介绍：</p>
+<p>公平锁 ：<strong>按照线程在队列中的排队顺序，先到者先拿到锁</strong><br>非公平锁 ：当线程要获取锁时，先通过<strong>两次 CAS 操作去抢锁</strong>，如果没抢到，当前线程再加入到队列中等待唤醒。</p>
+<p>ReentrantLock 默认采用<strong>非公平锁</strong>，<strong>因为考虑获得更好的性能</strong>，通过 boolean 来决定是否用公平锁（传入 true 用公平锁）。</p>
+<p>非公平锁在<strong>调用 lock</strong> 后，首先就会调用 CAS 进行一次抢锁，如果这个时候恰巧锁没有被占用，那么直接就获取到锁返回了。<br>非公平锁<strong>在 CAS 失败后</strong>，和公平锁一样都会进入到 <strong>tryAcquire 方法</strong>，在 tryAcquire 方法中，如果发现锁这个时候被释放了（state == 0），<strong>非公平锁会直接 CAS 抢锁</strong>，<strong>但是公平锁会判断等待队列是否有线程处于等待状态，如果有则不去抢锁，乖乖排到后面。</strong></p>
+<p>公平锁和非公平锁就这两点区别，<strong>如果这两次 CAS 都不成功，那么后面非公平锁和公平锁是一样的，都要进入到阻塞队列等待唤醒。</strong></p>
+<p>相对来说，<strong>非公平锁会有更好的性能，因为它的吞吐量比较大</strong>。当然，非公平锁让获取锁的时间变得更加不确定，可能会导致在阻塞队列中的线程长期处于饥饿状态。</p>
+<h5 id="Share（共享）"><a href="#Share（共享）" class="headerlink" title="Share（共享）"></a>Share（共享）</h5><p>多个线程可同时执行，如Semaphore、CountDownLatCh、 CyclicBarrier、ReadWriteLock 。</p>
+<p>ReentrantReadWriteLock 可以看成是组合式，因为 ReentrantReadWriteLock 也就是读写锁允许多个线程同时对某一资源进行读。</p>
+<p>不同的<strong>自定义同步器</strong>争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队/唤醒出队等），AQS 已经在上层已经帮我们实现好了。</p>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><p>Java实现锁有两种语法<strong>，一种是synchronized语句，另外一种是reentrantlock关键字</strong>。</p>
+<h4 id="公平锁-非公平锁"><a href="#公平锁-非公平锁" class="headerlink" title="公平锁/非公平锁"></a>公平锁/非公平锁</h4><p>公平锁指<strong>多个线程按照申请锁的顺序获得锁。</strong></p>
+<p>非公平锁指多个线程获得锁的顺序不按照申请顺序。</p>
+<p>Java reentranthlock通过构造函数来指定锁是公平还是非公平，默认是非公平锁，对于synchronized而言，也是一种非公平锁。</p>
+<p><strong>非公平锁优点在于吞吐量比公平锁大。</strong></p>
+<h4 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h4><p>可重入锁又叫递归锁，是指同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。</p>
+<p>Synchronized也是一个可重入锁。</p>
+<p>可重入锁的优点是可以一定程度避免死锁。</p>
+<h4 id="独享锁-共享锁"><a href="#独享锁-共享锁" class="headerlink" title="独享锁/共享锁"></a>独享锁/共享锁</h4><p>独享锁是指该锁一次只能被一个线程所持有，共享锁可以被多个线程所持有。</p>
+<p>Java reentrantlock是一个独享锁，但是对于lock的另一个实现readwritelock，其读锁是一个共享锁，写锁是一个独享锁。</p>
+<p>对于synchronized是一个独享锁。</p>
+<h4 id="互斥锁-读写锁"><a href="#互斥锁-读写锁" class="headerlink" title="互斥锁/读写锁"></a>互斥锁/读写锁</h4><p>互斥锁在Java中具体实现就是reentrantlock。</p>
+<p>读写锁在Java中的具体实现就是readwritelock。</p>
+<h4 id="乐观锁-悲观锁"><a href="#乐观锁-悲观锁" class="headerlink" title="乐观锁/悲观锁"></a>乐观锁/悲观锁</h4><p>乐观锁和悲观锁不是指具体的锁类型，而是对于看待并发编程中加锁问题的角度。</p>
+<p>悲观锁认为，对于一个数据的并发操作，一定会改变数据，即使实际上数据没被改变，但是也悲观的认为被改变的可能性比较大，一定要加锁，不加锁早晚要出问题。</p>
+<p>乐观锁认为，对于一个数据的并发操作，是不会改变数据的，不加锁也不会出问题。</p>
+<p>乐观锁指java中的无所编程，适合读操作非常多的场景。</p>
+<p>悲观锁就是指java中，适合并发下写非常多的场景。</p>
+<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p>在java中，自旋锁是指尝试获取锁的线程不会立即阻塞，<strong>而是采用循环的方式去尝试获取锁</strong>，当循环条件被其他线程改变时，才能进入临界区。这样的好处是减少线程上下文切换的消耗，<strong>缺点是会消耗CPU。</strong></p>
+<p>由于自旋锁只是将当前线程不停地执行循环体，不进行线程状态的改变，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，占用CPU时间。<strong>如果线程竞争不激烈，并且保持锁的时间段。适合使用自旋锁。</strong></p>
+<h4 id="偏向锁-轻量级锁-重量级锁"><a href="#偏向锁-轻量级锁-重量级锁" class="headerlink" title="偏向锁/轻量级锁/重量级锁"></a>偏向锁/轻量级锁/重量级锁</h4><p>这三种锁，就是指锁的状态，针对synchronized。</p>
+<p>偏向锁是<strong>指一段代码一直被一个线程所访问</strong>，那么理论上，这个线程会自动获取这个锁，并一直拥有这个锁，这样就降低了获取锁的代价。</p>
+<p>轻量级锁是指当偏向锁的状态下，<strong>被另一个线程访问</strong>，偏向锁就会升级为<strong>轻量级锁</strong>，其他线程会通过自旋形式尝试获取锁，不会阻塞，提高效率。</p>
+<p>重量级锁是指在轻量级锁的状态下，<strong>另一个线程虽然自旋</strong>，但不会一直持续下去，当自旋一定次数的时候还没有获取到锁的话，<strong>就会进入阻塞</strong>，该锁就会膨胀为重量级锁，重量级锁会让其他申请的线程陷入阻塞，降低性能。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -1561,20 +1555,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">48</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
