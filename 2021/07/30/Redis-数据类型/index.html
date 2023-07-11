@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xieyi123456.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="redis总是键值对存储。 key总是string。 value有五种类型。 stringstring 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据还可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis-数据类型">
+<meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html">
+<meta property="og:site_name" content="XieYi&#39;s Blog">
+<meta property="og:description" content="redis总是键值对存储。 key总是string。 value有五种类型。 stringstring 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据还可以">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/08/04/zkHrifPgLS46UeR.png">
+<meta property="article:published_time" content="2021-07-30T07:12:00.000Z">
+<meta property="article:modified_time" content="2023-07-11T15:32:56.955Z">
+<meta property="article:author" content="XieYi">
+<meta property="article:tag" content="basic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/08/04/zkHrifPgLS46UeR.png">
+
+
+<link rel="canonical" href="https://xieyi123456.github.io/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xieyi123456.github.io/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/","path":"2021/07/30/Redis-数据类型/","title":"Redis-数据类型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Redis-数据类型 | XieYi's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="XieYi's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">XieYi's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">log something</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#string"><span class="nav-number">1.</span> <span class="nav-text">string</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list"><span class="nav-number">2.</span> <span class="nav-text">list</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash"><span class="nav-number">3.</span> <span class="nav-text">hash</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B8%90%E8%BF%9B%E5%BC%8Frehash%EF%BC%88%EF%BC%89%EF%BC%9B"><span class="nav-number">3.1.</span> <span class="nav-text">渐进式rehash（）；</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B8%90%E8%BF%9B%E5%BC%8F-rehash-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">3.2.</span> <span class="nav-text">渐进式 rehash 的优点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#set"><span class="nav-number">4.</span> <span class="nav-text">set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sorted-set"><span class="nav-number">5.</span> <span class="nav-text">sorted set</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Sorted-Set-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%90%8C%E6%97%B6%E4%BD%BF%E7%94%A8%E5%AD%97%E5%85%B8%E5%92%8C%E8%B7%B3%E8%B7%83%E8%A1%A8%EF%BC%9F"><span class="nav-number">5.1.</span> <span class="nav-text">Sorted Set 为什么同时使用字典和跳跃表？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sorted-Set-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%B7%83%E8%A1%A8%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E7%BA%A2%E9%BB%91%E6%A0%91%EF%BC%9F"><span class="nav-number">5.2.</span> <span class="nav-text">Sorted Set 为什么使用跳跃表，而不是红黑树？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bitmap"><span class="nav-number">6.</span> <span class="nav-text">bitmap</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="XieYi"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">XieYi</p>
+  <div class="site-description" itemprop="description">think and do</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="mailto:2643100268@qq.com" title="E-Mail → mailto:2643100268@qq.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xieyi123456.github.io/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="XieYi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XieYi's Blog">
+      <meta itemprop="description" content="think and do">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Redis-数据类型 | XieYi's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis-数据类型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-30 15:12:00" itemprop="dateCreated datePublished" datetime="2021-07-30T15:12:00+08:00">2021-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-07-11 23:32:56" itemprop="dateModified" datetime="2023-07-11T23:32:56+08:00">2023-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><strong>redis总是键值对存储。</strong></p>
+<p><strong>key总是string。</strong></p>
+<p><strong>value有五种类型。</strong></p>
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>string 数据结构是简单的 <strong>key-value</strong> 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 <strong>简单动态字符串（simple dynamic string，SDS）</strong>。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据<strong>还可以保存二进制数据</strong>，并且**获取字符串长度复杂度为 O(1)**（C 字符串为O(N)）,除此之外，Redis 的 SDS API 是安全的，不会造成缓冲区溢出。</p>
+<p><img src="https://i.loli.net/2021/08/04/zkHrifPgLS46UeR.png" alt="image-20210804150655994"></p>
+<p>常用命令： <strong>set,get,strlen,exists,decr,incr,setex</strong> 等等。</p>
+<p>应用场景： <strong>一般常用在需要计数的场景，比如用户的访问次数、热点文章的点赞转发数量等等。</strong></p>
+<p>127.0.0.1:6379&gt; set key value #设置 key-value 类型的值<br>127.0.0.1:6379&gt; get key # 根据 key 获得对应的 value<br>127.0.0.1:6379&gt; exists key  # 判断某个 key 是否存在<br>127.0.0.1:6379&gt; strlen key # 返回 key 所储存的字符串值的长度。<br>127.0.0.1:6379&gt; del key # 删除某个 key 对应的值<br>127.0.0.1:6379&gt; get key</p>
+<p>批量设置 :<br>127.0.0.1:6379&gt; mset key1 value1 key2 value2 # 批量设置 key-value 类型的值<br>127.0.0.1:6379&gt; mget key1 key2 # 批量获取多个 key 对应的 value</p>
+<p>计数器（字符串的内容为整数的时候可以使用）：<br>127.0.0.1:6379&gt; set number 1<br>127.0.0.1:6379&gt; incr number # 将 key 中储存的数字值增一<br>127.0.0.1:6379&gt; get number<br>127.0.0.1:6379&gt; decr number # 将 key 中储存的数字值减一<br>127.0.0.1:6379&gt; get number</p>
+<p>过期（默认为永不过期）：<br>127.0.0.1:6379&gt; <strong>expire</strong> key  60 # 数据在 60s 后过期<br>127.0.0.1:6379&gt; setex key 60 value # 数据在 60s 后过期 (setex:[set] + [ex]pire)<br>127.0.0.1:6379&gt; ttl key # 查看数据还有多久过期</p>
+<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p>list 即是 <strong>链表</strong>。链表是一种非常常见的数据结构，特点是易于数据元素的插入和删除并且可以灵活调整链表长度，但是链表的随机访问困难。Redis 的 list 的实现为一个 <strong>双向链表</strong>，即可以支持反向查找和遍历，更方便操作，不过带来了部分额外的内存开销。</p>
+<p>常用命令**: rpush,lpop,lpush,rpop,lrange,llen** 等。</p>
+<p>应用场景: <strong>发布与订阅或者说消息队列、慢查询。</strong></p>
+<p>通过 rpush&#x2F;lpop 实现队列：<br>127.0.0.1:6379&gt; rpush myList value1 # 向 list 的头部（右边）添加元素<br>127.0.0.1:6379&gt; rpush myList value2 value3 # 向list的头部（最右边）添加多个元素<br>127.0.0.1:6379&gt; lpop myList # 将 list的尾部(最左边)元素取出<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的list列表， 0 为 start,1为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1表示倒数第一</p>
+<p>通过 rpush&#x2F;rpop 实现栈：<br>127.0.0.1:6379&gt; rpush myList2 value1 value2 value3<br>127.0.0.1:6379&gt; rpop myList2 # 将 list的头部(最右边)元素取出</p>
+<p>通过 lrange 查看对应下标范围的列表元素：<br>127.0.0.1:6379&gt; rpush myList value1 value2 value3<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的list列表， 0 为 start,1为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1表示倒数第一<br>通过 lrange 命令，你可以基于 list 实现分页查询，性能非常高！</p>
+<p>通过 llen 查看链表长度：<br>127.0.0.1:6379&gt; llen myList</p>
+<h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p>hash 类似于 JDK1.8 前的 HashMap，**内部实现也差不多(数组 + 链表)**。不过，Redis 的 hash 做了更多优化。另外，hash 是一个 string 类型的 field 和 value 的映射表，特别适合用于存储对象，后续操作的时候，你可以直接仅仅修改这个对象中的某个字段的值。</p>
+<h4 id="渐进式rehash（）；"><a href="#渐进式rehash（）；" class="headerlink" title="渐进式rehash（）；"></a><strong>渐进式rehash（）；</strong></h4><p>hash 对象在扩容时使用了一种叫“<strong>渐进式 rehash</strong>”的方式，步骤如下：</p>
+<p>1）计算新表 size（*2且为2的幂次）、掩码，为新表 ht[1] 分配空间，让字典同时持有 ht[0] 和 ht[1] 两个哈希表。<br>2）将 rehash <strong>索引计数器变量 rehashidx</strong> 的值设置为 0，表示 rehash 正式开始。<br>3）在 rehash 进行期间，每次对字典执行添加、删除、査找、更新操作时，程序除了执行指定的操作以外，还会触发额外的 rehash 操作，在源码中的 _dictRehashStep 方法。</p>
+<p>_dictRehashStep：从名字也可以看出来，大意是 rehash 一步，也就是 rehash 一个索引位置。</p>
+<p>该方法会从 <strong>ht[0] 表的 rehashidx 索引位置上开始向后查找，找到第一个不为空的索引位置，将该索引位置的所有节点 rehash 到 ht[1]，当本次 rehash 工作完成之后，将 ht[0] 索引位置为 rehashidx 的节点清空，同时将 rehashidx属性的值加一。</strong></p>
+<p>4）将 rehash 分摊到每个操作上确实是非常妙的方式，但是万一此时服务器比较空闲，一直没有什么操作，难道 redis要一直持有两个哈希表吗？<br>答案当然不是的。我们知道，redis 除了文件事件外，还有时间事件，<strong>redis 会定期触发时间事件，这些时间事件用于执行一些后台操作，其中就包含 rehash 操作</strong>：当 redis 发现有字典正在进行 rehash 操作时，会花费 1 毫秒的时间，一起帮忙进行 rehash。</p>
+<p>5）随着操作的不断执行，最终在某个时间点上，<strong>ht[0] 的所有键值对都会被 rehash 至 ht[1]<strong>，此时 rehash 流程完成，会执行最后的清理工作：</strong>释放 ht[0] 的空间、将 ht[0] 指向 ht[1]、重置 ht[1]、重置 rehashidx</strong></p>
+<h4 id="渐进式-rehash-的优点"><a href="#渐进式-rehash-的优点" class="headerlink" title="渐进式 rehash 的优点"></a>渐进式 rehash 的优点</h4><p>渐进式 rehash 的好处在于它采取<strong>分而治之</strong>的方式，将 rehash 键值对所需的计算工作<strong>均摊到对字典的每个添加、删除、查找和更新操作上</strong>，从而避免了<strong>集中式 rehash 而带来的庞大计算量</strong>。</p>
+<p>在进行渐进式 rehash 的过程中，字典会同时使用 ht[0] 和 ht[1] 两个哈希表， 所以在渐进式 rehash 进行期间，字典的删除、査找、更新等操作会在两个哈希表上进行。例如，要在字典里面査找一个键的话，程序会先在 ht[0] 里面进行査找，如果没找到的话，就会继续到 ht[1] 里面进行査找，诸如此类。</p>
+<p>另外，在渐进式 rehash 执行期间，<strong>新增的键值对会被直接保存到 ht[1], ht[0] 不再进行任何添加操作，这样就保证了 ht[0] 包含的键值对数量会只减不增，并随着 rehash 操作的执行而最终变成空表。</strong></p>
+<p>常用命令： <strong>hset,hmset,hexists,hget,hgetall,hkeys,hvals 等</strong>。</p>
+<p>应用场景: 系统中对象数据的存储。 hash 数据结构来存储用户信息，商品信息等等。</p>
+<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p>set 类似于 Java 中的 HashSet 。Redis 中的 set 类型是一种<strong>无序集合</strong>，集合中的元素没有先后顺序。<strong>当你需要存储一个列表数据，又不希望出现重复数据时，set 是一个很好的选择</strong>，并且 set 提供了判断某个成员是否在一个 set 集合内的重要接口，这个也是 list 所不能提供的。</p>
+<p><strong>可以基于 set 轻易实现交集、并集、差集的操作。</strong></p>
+<p>常用命令： <strong>sadd,spop,smembers,sismember,scard,sinterstore,sunion</strong> 等。</p>
+<p>应用场景: 需要存放的数据不能重复以及需要获取多个数据源交集和并集等场景。比如：你可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。Redis 可以非常方便的实现如<strong>共同关注、共同粉丝、共同喜好等功能。</strong><br>127.0.0.1:6379&gt; smembers mySet # 查看 set 中所有的元素<br>127.0.0.1:6379&gt; scard mySet # 查看 set 的长度<br>127.0.0.1:6379&gt; sismember mySet value1 # 检查某个元素是否存在set 中，只能接收单个元素<br>127.0.0.1:6379&gt; sadd mySet2 value2 value3<br>127.0.0.1:6379&gt; sinterstore mySet3 mySet mySet2 # 获取 mySet 和 mySet2 的交集并存放在 mySet3 中</p>
+<h3 id="sorted-set"><a href="#sorted-set" class="headerlink" title="sorted set"></a>sorted set</h3><p>和 set 相比，sorted set 增加了一个<strong>权重参数 score</strong>，使得集合中的元素能够按 score 进行有序排列，还可以通过 score 的范围来获取元素的列表。有点像是 Java 中 HashMap 和 TreeSet 的结合体。</p>
+<p>常用命令： zadd,zcard,zscore,zrange,zrevrange,zrem 等。</p>
+<p>应用场景： 需要对数据根据某个权重进行排序的场景。比如在直播系统中，实时排行信息包含直播间在线用户列表，各种<strong>礼物排行榜，弹幕消息（可以理解为按消息维度的消息排行榜）等信息</strong>。</p>
+<h4 id="Sorted-Set-为什么同时使用字典和跳跃表？"><a href="#Sorted-Set-为什么同时使用字典和跳跃表？" class="headerlink" title="Sorted Set 为什么同时使用字典和跳跃表？"></a>Sorted Set 为什么同时使用字典和跳跃表？</h4><p>主要是为了提升性能。</p>
+<p>单独使用字典：在执行范围型操作，比如 zrank、zrange，字典需要进行排序，至少需要 O(NlogN) 的时间复杂度及额外 O(N) 的内存空间。<br>单独使用跳跃表：根据成员查找分值操作的复杂度从 O(1) 上升为 O(logN）</p>
+<h4 id="Sorted-Set-为什么使用跳跃表，而不是红黑树？"><a href="#Sorted-Set-为什么使用跳跃表，而不是红黑树？" class="headerlink" title="Sorted Set 为什么使用跳跃表，而不是红黑树？"></a>Sorted Set 为什么使用跳跃表，而不是红黑树？</h4><p>主要有以下几个原因：<br>1）跳表的性能和红黑树差不多。<br>2）<strong>跳表更容易实现和调试</strong>。</p>
+<h3 id="bitmap"><a href="#bitmap" class="headerlink" title="bitmap"></a>bitmap</h3><p>bitmap 存储的是连续的二进制数字（0 和 1），通过 bitmap, 只需要一个 bit 位来表示某个元素对应的值或者状态，key 就是对应元素本身 。我们知道 8 个 bit 可以组成一个 byte，所以 bitmap 本身会极大的节省储存空间。</p>
+<p>常用命令： setbit 、getbit 、bitcount、bitop</p>
+<p>应用场景： 适合需要保存状态信息（比如是否签到、是否登录…）并需要进一步对这些信息进行分析的场景。比如<strong>用户签到情况、活跃用户情况、用户行为统计（比如是否点赞过某个视频）</strong>。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/basic/" rel="tag"># basic</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/07/30/Mysql-%E7%B4%A2%E5%BC%95/" rel="prev" title="Mysql-索引">
+                  <i class="fa fa-chevron-left"></i> Mysql-索引
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/07/30/Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" rel="next" title="Redis-线程模型,事务">
+                  Redis-线程模型,事务 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="lv-container" data-id="city" data-uid="MTAyMC81ODY5NS8zNTE1Nw"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">XieYi</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">263k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:59</span>
+  </span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>-->
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+<script src="/js/third-party/comments/livere.js"></script>
+
+</body>
+</html>

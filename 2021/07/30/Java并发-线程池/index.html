@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xieyi123456.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="优点 降低资源消耗。通过重复利⽤已创建的线程降低线程创建和销毁造成的消耗。  提⾼响应速度。当任务到达时，任务可以不需要的等到线程创建就能⽴即执⾏。  提⾼线程的可管理性。线程是稀缺资源，如果⽆限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使⽤线程池可以进⾏统⼀的分配，调优和监控  创建的两种方式实现 Runnable 接⼝和 Callable 接⼝的区别Runnable ⾃ Java 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发-线程池">
+<meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E6%B1%A0/index.html">
+<meta property="og:site_name" content="XieYi&#39;s Blog">
+<meta property="og:description" content="优点 降低资源消耗。通过重复利⽤已创建的线程降低线程创建和销毁造成的消耗。  提⾼响应速度。当任务到达时，任务可以不需要的等到线程创建就能⽴即执⾏。  提⾼线程的可管理性。线程是稀缺资源，如果⽆限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使⽤线程池可以进⾏统⼀的分配，调优和监控  创建的两种方式实现 Runnable 接⼝和 Callable 接⼝的区别Runnable ⾃ Java 1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/08/03/uW46RI2PSrstC8M.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/03/md8cqo3w9B1KaLM.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/03/3zusmt1HMqZ24D5.png">
+<meta property="article:published_time" content="2021-07-30T07:08:57.000Z">
+<meta property="article:modified_time" content="2023-07-11T15:32:57.960Z">
+<meta property="article:author" content="XieYi">
+<meta property="article:tag" content="线程池">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/08/03/uW46RI2PSrstC8M.png">
+
+
+<link rel="canonical" href="https://xieyi123456.github.io/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xieyi123456.github.io/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E6%B1%A0/","path":"2021/07/30/Java并发-线程池/","title":"Java并发-线程池"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Java并发-线程池 | XieYi's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="XieYi's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">XieYi's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">log something</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">创建的两种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0-Runnable-%E6%8E%A5%E2%BC%9D%E5%92%8C-Callable-%E6%8E%A5%E2%BC%9D%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.1.</span> <span class="nav-text">实现 Runnable 接⼝和 Callable 接⼝的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E2%BE%8F-execute-%E2%BD%85%E6%B3%95%E5%92%8C-submit-%E2%BD%85%E6%B3%95%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%E5%91%A2%EF%BC%9F"><span class="nav-number">2.2.</span> <span class="nav-text">执⾏ execute()⽅法和 submit()⽅法的区别是什么呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E6%96%B9%E5%BC%8F%EF%BC%9A"><span class="nav-number">2.3.</span> <span class="nav-text">创建线程池的方式：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">核心参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadPoolExecutor-%E9%A5%B1%E5%92%8C%E7%AD%96%E7%95%A5%E5%AE%9A%E4%B9%89"><span class="nav-number">3.1.</span> <span class="nav-text">ThreadPoolExecutor 饱和策略定义:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">3.2.</span> <span class="nav-text">执行流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%8A%B6%E6%80%81"><span class="nav-number">3.3.</span> <span class="nav-text">线程池状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ctl"><span class="nav-number">3.4.</span> <span class="nav-text">ctl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E6%88%91%E4%BB%AC%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E4%B8%AD%EF%BC%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E5%A4%A7%E5%B0%8F%E9%85%8D%E7%BD%AE%E5%A4%9A%E5%B0%91%E5%90%88%E9%80%82%EF%BC%9F"><span class="nav-number">3.5.</span> <span class="nav-text">在我们实际使用中，线程池的大小配置多少合适？</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="XieYi"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">XieYi</p>
+  <div class="site-description" itemprop="description">think and do</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="mailto:2643100268@qq.com" title="E-Mail → mailto:2643100268@qq.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xieyi123456.github.io/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="XieYi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XieYi's Blog">
+      <meta itemprop="description" content="think and do">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Java并发-线程池 | XieYi's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java并发-线程池
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-30 15:08:57" itemprop="dateCreated datePublished" datetime="2021-07-30T15:08:57+08:00">2021-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-07-11 23:32:57" itemprop="dateModified" datetime="2023-07-11T23:32:57+08:00">2023-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ul>
+<li>降低资源消耗。通过重复利⽤已创建的线程降低线程创建和销毁造成的消耗。 </li>
+<li>提⾼响应速度。当任务到达时，任务可以不需要的等到线程创建就能⽴即执⾏。 </li>
+<li>提⾼线程的可管理性。线程是稀缺资源，如果⽆限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使⽤线程池可以进⾏统⼀的分配，调优和监控</li>
+</ul>
+<h2 id="创建的两种方式"><a href="#创建的两种方式" class="headerlink" title="创建的两种方式"></a>创建的两种方式</h2><h3 id="实现-Runnable-接⼝和-Callable-接⼝的区别"><a href="#实现-Runnable-接⼝和-Callable-接⼝的区别" class="headerlink" title="实现 Runnable 接⼝和 Callable 接⼝的区别"></a>实现 Runnable 接⼝和 Callable 接⼝的区别</h3><p>Runnable ⾃ Java 1.0 以来⼀直存在，但 Callable 仅在 Java 1.5 中引⼊,⽬的就是为了来处理 Runnable 不⽀持的⽤例。</p>
+<p>Runnable 接⼝<strong>不会返回结果或抛出检查异常</strong>，但是 Callable 接⼝可以。所以，如果任务不需要返回结果或抛出异常推荐使⽤ Runnable 接⼝，这样代码看起来会更加简洁。</p>
+<p>⼯具类 Executors 可以实现 Runnable 对象和 Callable 对象之间的相互转换。<br>（ Executors.callable（Runnable task ）或 Executors.callable（Runnable task，Object resule）。</p>
+<h3 id="执⾏-execute-⽅法和-submit-⽅法的区别是什么呢？"><a href="#执⾏-execute-⽅法和-submit-⽅法的区别是什么呢？" class="headerlink" title="执⾏ execute()⽅法和 submit()⽅法的区别是什么呢？"></a>执⾏ execute()⽅法和 submit()⽅法的区别是什么呢？</h3><ol>
+<li>execute() ⽅法⽤于<strong>提交不需要返回值的任务</strong>，所以⽆法判断任务是否被线程池执⾏成功与否；</li>
+<li>submit() ⽅法⽤于<strong>提交需要返回值的任务</strong>。线程池会<strong>返回⼀个 Future 类型的对象</strong>，通过这个 Future 对象可以判断任务是否执⾏成功，并且可以通过 Future 的 <strong>get() ⽅法来获取返回值</strong>， <strong>get() ⽅法会阻塞当前线程直到任务完成</strong>，⽽使⽤ get（long timeout，TimeUnitunit）⽅法则会阻塞当前线程⼀段时间后⽴即返回，这时候有可能任务没有执⾏完。</li>
+</ol>
+<p>《阿⾥巴巴 Java 开发⼿册》中强制线程池<strong>不允许使⽤ Executors 去创建，⽽是通ThreadPoolExecutor 的⽅式，</strong>这样的处理⽅式让写的同学更加明确线程池的运⾏规则，规避资源耗尽的⻛险。</p>
+<p><strong>Executors 返回线程池对象的弊端如下：</strong></p>
+<p>FixedThreadPool 和 SingleThreadExecutor ： 允许请求的<strong>队列⻓度为Integer.MAX_VALUE</strong> ，可能堆积⼤量的请求，从⽽导致 OOM。<br>CachedThreadPool 和 ScheduledThreadPool ： 允许<strong>创建的线程数量为Integer.MAX_VALUE</strong> ，可能会创建⼤量线程，从⽽导致 OOM。</p>
+<h3 id="创建线程池的方式："><a href="#创建线程池的方式：" class="headerlink" title="创建线程池的方式："></a>创建线程池的方式：</h3><ol>
+<li>构造方法：new Threadpoolexecutor(七大参数)。</li>
+<li>工具类：executors.new ….</li>
+</ol>
+<ul>
+<li><strong>FixedThreadPool</strong> ： 该⽅法返回⼀个<strong>固定线程数量</strong>的线程池。该线程池中的线程数量始终不变。当有⼀个新的任务提交时，线程池中若有空闲线程，则⽴即执⾏。若没有，则新的任务会被暂存在⼀个任务队列中，待有线程空闲时，便处理在任务队列中的任务。</li>
+<li><strong>SingleThreadExecutor</strong>： ⽅法返回⼀个<strong>只有⼀个线程的线程池</strong>。若多余⼀个任务被提交到该线程池，任务会被保存在⼀个任务队列中，待线程空闲，按先⼊先出的顺序执⾏队列中的任务。</li>
+<li><strong>CachedThreadPool</strong>： (适合于<strong>负载不高，每个线程时间较短</strong>)该⽅法返回⼀个可根据实际情况调整线程数量的线程池。线程池的线程数量不确定，但若有空闲线程可以复⽤，则会优先使⽤可复⽤的线程。若所有线程均在⼯作，⼜有新的任务提交，则会创建新的线程处理任务。所有线程在当前任务执⾏完毕后，将返回线程池进⾏复⽤。</li>
+<li><strong>newScheduledThreadPool</strong>：创建一个以延迟或定时的方式来执行任务的线程池，工作队列为 DelayedWorkQueue。适用于<strong>需要多个后台线程执行周期任务</strong>。</li>
+</ul>
+<h2 id="核心参数"><a href="#核心参数" class="headerlink" title="核心参数"></a>核心参数</h2><p><img src="https://i.loli.net/2021/08/03/uW46RI2PSrstC8M.png" alt="image-20210803222327559"></p>
+<p><strong>3 个最重要的参数：</strong></p>
+<ul>
+<li><strong>corePoolSize</strong> : 当线程池运行的线程少于 corePoolSize 时，将创建一个新线程来处理请求，即使其<br>他工作线程处于空闲状态，核⼼线程数线程数定义了最⼩可以同时运⾏的线程数量。</li>
+<li><strong>maximumPoolSize</strong> : 当队列中存放的任务达到队列容量的时候，当前可以同时运⾏的线程数量变为最⼤线程数。</li>
+<li><strong>workQueue</strong> : 当新任务来的时候会先判断当前运⾏的线程数量是否达到核⼼线程数，如果达到的话，新任务就会被存放在队列中。<br>其他常⻅参数:</li>
+<li><strong>keepAliveTime</strong> :当线程池中的线程数量⼤于 corePoolSize 的时候，如果这时没有新的任务提交，核⼼线程外的线程不会⽴即销毁，⽽是会等待，直到等待的时间超过了keepAliveTime 才会被回收销毁；</li>
+<li><strong>unit</strong> : keepAliveTime 参数的时间单位。</li>
+<li><strong>threadFactory</strong> :executor 创建新线程的时候会⽤到。</li>
+<li><strong>handler</strong> :饱和策略。</li>
+</ul>
+<h3 id="ThreadPoolExecutor-饱和策略定义"><a href="#ThreadPoolExecutor-饱和策略定义" class="headerlink" title="ThreadPoolExecutor 饱和策略定义:"></a>ThreadPoolExecutor 饱和策略定义:</h3><p> 如果当前<strong>同时运⾏的线程数量达到最⼤线程数量并且队列也已经被放满了任务时</strong>，   ThreadPoolTaskExecutor 定义⼀些策略:</p>
+<ul>
+<li><p>ThreadPoolExecutor.AbortPolicy ：抛出 RejectedExecutionException 来拒绝新任务的处理。</p>
+</li>
+<li><p>ThreadPoolExecutor.CallerRunsPolicy ：<strong>调⽤执⾏⾃⼰的线程运⾏任务</strong>。但是这种策略会降低对于新任务提交速度，影响程序的整体性能。另外，这个策略喜欢增加队列容量。如果您的应⽤程序可以承受此延迟并且你不能任务丢弃任何⼀个任务请求的话，你可以选择这个策略。</p>
+</li>
+<li><p>ThreadPoolExecutor.DiscardPolicy ： 不处理新任务，直接丢弃掉。</p>
+</li>
+<li><p>ThreadPoolExecutor.DiscardOldestPolicy ： 此策略将<strong>丢弃最早的未处理的任务请求</strong>。</p>
+</li>
+</ul>
+<h3 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h3><p><img src="https://i.loli.net/2021/08/03/md8cqo3w9B1KaLM.png" alt="image-20210803222534163"></p>
+<h3 id="线程池状态"><a href="#线程池状态" class="headerlink" title="线程池状态"></a>线程池状态</h3><p><img src="https://i.loli.net/2021/08/03/3zusmt1HMqZ24D5.png" alt="image-20210803223448446"></p>
+<h3 id="ctl"><a href="#ctl" class="headerlink" title="ctl"></a>ctl</h3><p>ctl 是一个<strong>打包两个概念字段的原子整数。</strong><br>1）workerCount：指示<strong>线程的有效数量</strong>；<br>2）runState：指示<strong>线程池的运行状态</strong>，有 RUNNING、SHUTDOWN、STOP、TIDYING、TERMINATED 等状态。<br>int 类型有 32 位，其中 ctl 的低 29 为用于表示 workerCount，高 3 位用于表示 runState，如下图所示。</p>
+<p>这么设计的主要好处是将对 runState 和 workerCount 的操作<strong>封装成了一个原子操作</strong>。</p>
+<p>runState 和 workerCount 是线程池正常运转中的 2 个最重要属性，线程池在某一时刻该做什么操作，取决于这 2个属性的值。</p>
+<p>因此无论是查询还是修改，我们必须保证对这 2 个属性的操作是属于“同一时刻”的，也就是原子操作，否则就会出现错乱的情况。如果我们使用 2 个变量来分别存储，要保证原子性则需要额外进行加锁操作，这显然会带来额外的开销，而将这 2 个变量封装成 1 个 AtomicInteger 则不会带来额外的加锁开销，而且<strong>只需使用简单的位操作</strong>就能分别得到 runState 和 workerCount。</p>
+<p>由于这个设计，workerCount 的上限 CAPACITY &#x3D; (1 &lt;&lt; 29) - 1，对应的二进制原码为：0001 1111 1111 1111 1111 1111 1111 1111（不用数了，29 个 1）。<br>通过 ctl 得到 runState，只需通过位操作：ctl &amp; <del>CAPACITY。<br>~（按位取反），于是“</del>CAPACITY”的值为：1110 0000 0000 0000 0000 0000 0000 0000，只有高 3 位为 1，与 ctl 进行 &amp; 操作，结果为 ctl 高 3 位的值，也就是 runState。</p>
+<p>通过 ctl 得到 workerCount 则更简单了，只需通过位操作：c &amp; CAPACITY</p>
+<h3 id="在我们实际使用中，线程池的大小配置多少合适？"><a href="#在我们实际使用中，线程池的大小配置多少合适？" class="headerlink" title="在我们实际使用中，线程池的大小配置多少合适？"></a>在我们实际使用中，线程池的大小配置多少合适？</h3><p>要想合理的配置线程池大小，首先我们需要区分任务是<strong>计算密集型还是 I&#x2F;O 密集型</strong>。</p>
+<p>对于计算密集型，设置 线程数 &#x3D; <strong>CPU 数 + 1</strong>，通常能实现最优的利用率。</p>
+<p>对于 I&#x2F;O 密集型，网上常见的说法是设置 线程数 &#x3D; <strong>CPU 数 * 2</strong> ，这个做法是可以的，但个人觉得不是最优的。</p>
+<p>在我们日常的开发中，我们的任务几乎是离不开 I&#x2F;O 的，常见的网络 I&#x2F;O（RPC 调用）、磁盘 I&#x2F;O（数据库操作），并且 I&#x2F;O 的等待时间通常会占整个任务处理时间的很大一部分，在这种情况下，开启更多的线程可以让 CPU 得到更充分的使用，一个较合理的计算公式如下：<br>线程数 &#x3D; <strong>CPU 数 * CPU 利用率 * (任务等待时间 &#x2F; 任务计算时间 + 1)</strong></p>
+<p>例如我们有个定时任务，部署在 4 核的服务器上，该任务有 100ms 在计算，900ms 在 I&#x2F;O 等待，则线程数约为：4 * 1 * (1 + 900 &#x2F; 100) &#x3D; 40 个。</p>
+<p>当然，具体我们还要结合实际的使用场景来考虑。如果要求比较精确，可以通过压测来获取一个合理的值。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" rel="tag"># 线程池</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/" rel="prev" title="Java并发-常见关键字">
+                  <i class="fa fa-chevron-left"></i> Java并发-常见关键字
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%90%8C%E6%AD%A5%E5%92%8C%E5%8D%8F%E4%BD%9C%E5%B7%A5%E5%85%B7%E7%B1%BB/" rel="next" title="Java并发-线程协作机制">
+                  Java并发-线程协作机制 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="lv-container" data-id="city" data-uid="MTAyMC81ODY5NS8zNTE1Nw"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">XieYi</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">263k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:59</span>
+  </span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>-->
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+<script src="/js/third-party/comments/livere.js"></script>
+
+</body>
+</html>

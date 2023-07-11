@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xieyi123456.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="集合框架  HashMap在 JDK 1.8，HashMap 底层是由 “数组+链表+红黑树” 组成，如下图所示，而在 JDK 1.8 之前是由 “数组+链表” 组成。 使用 “数组+链表” 是为了解决 hash 冲突的问题。 数组和链表有如下特点： 数组：查找容易，通过 index 快速定位；插入和删除困难，需要移动插入和删除位置之后的节点；链表：查找困难，需要从头结点或尾节点开始遍历，直到寻找">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础-Java集合框架">
+<meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/index.html">
+<meta property="og:site_name" content="XieYi&#39;s Blog">
+<meta property="og:description" content="集合框架  HashMap在 JDK 1.8，HashMap 底层是由 “数组+链表+红黑树” 组成，如下图所示，而在 JDK 1.8 之前是由 “数组+链表” 组成。 使用 “数组+链表” 是为了解决 hash 冲突的问题。 数组和链表有如下特点： 数组：查找容易，通过 index 快速定位；插入和删除困难，需要移动插入和删除位置之后的节点；链表：查找困难，需要从头结点或尾节点开始遍历，直到寻找">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/08/04/6xejDEtAQKSRpwv.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/04/leZ9CILv4hTbsYz.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/04/CDL1MPFjsV5k9Tw.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/04/FliNj7RXtm2oSv5.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/04/uMemQzWqZdTXxK1.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/04/jIZsbOmcCagN18q.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/05/ZP9ot578UVrd2RN.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/05/jNw9YtiOlCLV2Bf.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/05/7qwG2cHSj514gf3.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/05/qfBMmXg3ljFUEko.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/05/hrf2daRyeQqODsx.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/05/oKvs6jBOxzQUZhJ.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/05/KMzILTYf1nwu8ci.png">
+<meta property="og:image" content="https://i.loli.net/2021/08/04/I2VuKypq5o7xWrd.png">
+<meta property="article:published_time" content="2021-07-30T07:03:18.000Z">
+<meta property="article:modified_time" content="2023-07-11T15:32:57.868Z">
+<meta property="article:author" content="XieYi">
+<meta property="article:tag" content="框架">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/08/04/6xejDEtAQKSRpwv.png">
+
+
+<link rel="canonical" href="https://xieyi123456.github.io/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xieyi123456.github.io/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/","path":"2021/07/30/Java基础-Java集合框架/","title":"Java基础-Java集合框架"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Java基础-Java集合框架 | XieYi's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="XieYi's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">XieYi's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">log something</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">集合框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap"><span class="nav-number">2.</span> <span class="nav-text">HashMap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%94%B9%E6%88%90%E2%80%9C%E6%95%B0%E7%BB%84-%E9%93%BE%E8%A1%A8-%E7%BA%A2%E9%BB%91%E6%A0%91%E2%80%9D%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">为什么要改成“数组+链表+红黑树”？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%A3%E5%9C%A8%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8%E9%93%BE%E8%A1%A8%EF%BC%9F%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8%E7%BA%A2%E9%BB%91%E6%A0%91%EF%BC%9F"><span class="nav-number">2.2.</span> <span class="nav-text">那在什么时候用链表？什么时候用红黑树？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%93%BE%E8%A1%A8%E8%BD%AC%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E9%98%88%E5%80%BC%E6%98%AF-8%EF%BC%9F"><span class="nav-number">2.3.</span> <span class="nav-text">为什么链表转红黑树的阈值是 8？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%A3%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BD%AC%E5%9B%9E%E9%93%BE%E8%A1%A8%E8%8A%82%E7%82%B9%E6%98%AF%E7%94%A8%E7%9A%84-6-%E8%80%8C%E4%B8%8D%E6%98%AF%E5%A4%8D%E7%94%A8-8%EF%BC%9F"><span class="nav-number">2.4.</span> <span class="nav-text">那为什么转回链表节点是用的 6 而不是复用 8？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HashMap-%E6%9C%89%E5%93%AA%E4%BA%9B%E9%87%8D%E8%A6%81%E5%B1%9E%E6%80%A7%EF%BC%9F%E5%88%86%E5%88%AB%E7%94%A8%E4%BA%8E%E5%81%9A%E4%BB%80%E4%B9%88%E7%9A%84%EF%BC%9F"><span class="nav-number">2.5.</span> <span class="nav-text">HashMap 有哪些重要属性？分别用于做什么的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HashMap-%E7%9A%84%E9%BB%98%E8%AE%A4%E5%88%9D%E5%A7%8B%E5%AE%B9%E9%87%8F%E6%98%AF%E5%A4%9A%E5%B0%91%EF%BC%9FHashMap-%E7%9A%84%E5%AE%B9%E9%87%8F%E6%9C%89%E4%BB%80%E4%B9%88%E9%99%90%E5%88%B6%E5%90%97%EF%BC%9F"><span class="nav-number">2.6.</span> <span class="nav-text">HashMap 的默认初始容量是多少？HashMap 的容量有什么限制吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HashMap-%E7%9A%84%E5%AE%B9%E9%87%8F%E5%BF%85%E9%A1%BB%E6%98%AF-2-%E7%9A%84-N-%E6%AC%A1%E6%96%B9%EF%BC%8C%E8%BF%99%E6%98%AF%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.7.</span> <span class="nav-text">HashMap 的容量必须是 2 的 N 次方，这是为什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%B5%81%E7%A8%8B"><span class="nav-number">2.8.</span> <span class="nav-text">插入流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConcurrenHashMap%EF%BC%8C1-7-%E5%92%8C-1-8-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.9.</span> <span class="nav-text">ConcurrenHashMap，1.7 和 1.8 的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#map%E5%AF%B9%E6%AF%94%EF%BC%9F"><span class="nav-number">2.10.</span> <span class="nav-text">map对比？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94"><span class="nav-number">3.</span> <span class="nav-text">对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayList-%E5%92%8C-Vector-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.1.</span> <span class="nav-text">ArrayList 和 Vector 的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayList-%E5%92%8C-LinkedList-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">ArrayList 和 LinkedList 的区别？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#arraylist%E6%89%A9%E5%AE%B9"><span class="nav-number">3.2.1.</span> <span class="nav-text">arraylist扩容</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hashmap%E5%AF%B9%E6%AF%94hashtable"><span class="nav-number">3.3.</span> <span class="nav-text">hashmap对比hashtable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#List%E3%80%81Set%E3%80%81Map-%E4%B8%89%E8%80%85%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.4.</span> <span class="nav-text">List、Set、Map 三者的区别?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#map%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F%EF%BC%9A"><span class="nav-number">3.5.</span> <span class="nav-text">map遍历方式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Comparable-%E5%92%8C-Comparator-%E6%AF%94%E8%BE%83%EF%BC%9F"><span class="nav-number">3.6.</span> <span class="nav-text">Comparable 和 Comparator 比较？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Collection-%E4%B8%8E-Collections-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.7.</span> <span class="nav-text">Collection 与 Collections 的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HashSet-%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%B8%8D%E9%87%8D%E5%A4%8D%E7%9A%84%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">HashSet 是如何保证不重复的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Map%E3%80%81List%E3%80%81Set-%E5%AE%83%E4%BB%AC%E6%9C%89%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%B1%BB%E5%92%8C%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E7%B1%BB%EF%BC%9F"><span class="nav-number">4.2.</span> <span class="nav-text">Map、List、Set 它们有的线程安全类和线程不安全的类？</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="XieYi"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">XieYi</p>
+  <div class="site-description" itemprop="description">think and do</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="mailto:2643100268@qq.com" title="E-Mail → mailto:2643100268@qq.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xieyi123456.github.io/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="XieYi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XieYi's Blog">
+      <meta itemprop="description" content="think and do">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Java基础-Java集合框架 | XieYi's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java基础-Java集合框架
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-30 15:03:18" itemprop="dateCreated datePublished" datetime="2021-07-30T15:03:18+08:00">2021-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-07-11 23:32:57" itemprop="dateModified" datetime="2023-07-11T23:32:57+08:00">2023-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="集合框架"><a href="#集合框架" class="headerlink" title="集合框架"></a>集合框架</h2><p><img src="https://i.loli.net/2021/08/04/6xejDEtAQKSRpwv.png" alt="image-20210804212935827"></p>
+<p><img src="https://i.loli.net/2021/08/04/leZ9CILv4hTbsYz.png" alt="image-20210804213053882"></p>
+<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p>在 JDK 1.8，HashMap 底层是由 “数组+链表+红黑树” 组成，如下图所示，而在 JDK 1.8 之前是由 “数组+链表” 组成。</p>
+<p>使用 “数组+链表” 是为了解决 hash 冲突的问题。</p>
+<p>数组和链表有如下特点：</p>
+<p>数组：查找容易，通过 index 快速定位；插入和删除困难，需要移动插入和删除位置之后的节点；<br>链表：查找困难，需要从头结点或尾节点开始遍历，直到寻找到目标节点；插入和删除容易，只需修改目标节点前后节点的 next 或 prev 属性即可；</p>
+<p>HashMap 巧妙的将数组和链表结合在一起，发挥两者各自的优势，使用一种叫做 “拉链法” 的方式来解决哈希冲突。<br>首先通过 index 快速定位到索引位置，这边利用了数组的优点；然后遍历链表找到节点，进行节点的新增&#x2F;修改&#x2F;删除操作，这边利用了链表的优点。</p>
+<h3 id="为什么要改成“数组-链表-红黑树”？"><a href="#为什么要改成“数组-链表-红黑树”？" class="headerlink" title="为什么要改成“数组+链表+红黑树”？"></a>为什么要改成“数组+链表+红黑树”？</h3><p>“数组+链表” 在定位到索引位置后，需要先遍历链表找到节点，这个地方如果链表很长的话，也就是 hash 冲突很严重的时候，会有查找性能问题，因此在 JDK1.8 中，通过引入红黑树，来优化这个问题。<br>使用链表的查找性能是 O(n)，而使用红黑树是 O(logn)。</p>
+<h3 id="那在什么时候用链表？什么时候用红黑树？"><a href="#那在什么时候用链表？什么时候用红黑树？" class="headerlink" title="那在什么时候用链表？什么时候用红黑树？"></a>那在什么时候用链表？什么时候用红黑树？</h3><p>对于插入，默认情况下是使用链表节点。当同一个索引位置的节点在新增后超过 8 个（阈值 8）：如果此时数组长度大于等于 64，则会触发链表节点转红黑树节点（treeifyBin）；而如果数组长度小于 64，则不会触发链表转红黑树，而是会进行扩容，因为此时的数据量还比较小。</p>
+<p>对于移除，当同一个索引位置的节点在移除后<strong>达到 6 个（阈值 6）</strong>，并且该索引位置的节点为红黑树节点，会触发红黑树节点转链表节点（untreeify）。</p>
+<h3 id="为什么链表转红黑树的阈值是-8？"><a href="#为什么链表转红黑树的阈值是-8？" class="headerlink" title="为什么链表转红黑树的阈值是 8？"></a>为什么链表转红黑树的阈值是 8？</h3><p>我们平时在进行方案设计时，必须考虑的两个很重要的因素是：时间和空间。对于 HashMap 也是同样的道理，简单来说，阈值为 8 是在时间和空间上权衡的结果。</p>
+<p>红黑树节点大小约为链表节点的 2 倍，在节点太少时，红黑树的查找性能优势并不明显，付出 2 倍空间的代价不值得。</p>
+<p>理想情况下，使用随机的哈希码，节点分布在 hash 桶中的频率遵循泊松分布，按照泊松分布的公式计算，链表中<strong>节点个数为 8 时的概率</strong>为 0.00000006，这个概率足够低了，并且到 8 个节点时，红黑树的性能优势也会开始展现出来，因此 8 是一个较合理的数字。</p>
+<h3 id="那为什么转回链表节点是用的-6-而不是复用-8？"><a href="#那为什么转回链表节点是用的-6-而不是复用-8？" class="headerlink" title="那为什么转回链表节点是用的 6 而不是复用 8？"></a>那为什么转回链表节点是用的 6 而不是复用 8？</h3><p>如果我们设置节点多于 8 个转红黑树，少于 8 个就马上转链表，<strong>当节点个数在 8 徘徊时，就会频繁进行红黑树和链表的转换，造成性能的损耗。</strong></p>
+<h3 id="HashMap-有哪些重要属性？分别用于做什么的？"><a href="#HashMap-有哪些重要属性？分别用于做什么的？" class="headerlink" title="HashMap 有哪些重要属性？分别用于做什么的？"></a>HashMap 有哪些重要属性？分别用于做什么的？</h3><p>除了用来存储我们的节点 table 数组外，HashMap 还有以下几个重要属性：<br>1）size：HashMap 已经存储的节点个数；<br>2）<strong>threshold</strong>：1）扩容阈值（主要），当 HashMap 的个数达到该值，触发扩容。2）初始化时的容量，在我们新建HashMap 对象时， threshold 还会被用来存初始化时的容量。HashMap 直到我们第一次插入节点时，才会对 table进行初始化，避免不必要的空间浪费。<br>3）<strong>loadFactor</strong>：负载因子，扩容阈值 &#x3D; 容量 * 负载因子。</p>
+<h3 id="HashMap-的默认初始容量是多少？HashMap-的容量有什么限制吗？"><a href="#HashMap-的默认初始容量是多少？HashMap-的容量有什么限制吗？" class="headerlink" title="HashMap 的默认初始容量是多少？HashMap 的容量有什么限制吗？"></a>HashMap 的默认初始容量是多少？HashMap 的容量有什么限制吗？</h3><p>默认初始容量是 16。HashMap 的容量必须是 2 的 N 次方，HashMap 会根据我们传入的容量计算一个“大于等于该容量的最小的 2 的 N 次方”，例如传 16，容量为 16；传 17，容量为 32。</p>
+<h3 id="HashMap-的容量必须是-2-的-N-次方，这是为什么？"><a href="#HashMap-的容量必须是-2-的-N-次方，这是为什么？" class="headerlink" title="HashMap 的容量必须是 2 的 N 次方，这是为什么？"></a>HashMap 的容量必须是 2 的 N 次方，这是为什么？</h3><p>计算索引位置的公式为：**(n - 1) &amp; hash**</p>
+<p>当 n 为 2 的 N 次方时，n - 1 为低位全是 1 的值，此时任何值跟 n - 1 进行 &amp; 运算的结果为该值的低 N 位，达到了和取模同样的效果，实现了均匀分布。</p>
+<p>实际上，这个设计就是基于式：<br><strong>x mod 2^n &#x3D; x &amp; (2^n - 1)，因为 &amp; 运算比 mod 具有更高的效率。</strong></p>
+<h3 id="插入流程"><a href="#插入流程" class="headerlink" title="插入流程"></a>插入流程</h3><p><img src="https://i.loli.net/2021/08/04/CDL1MPFjsV5k9Tw.png" alt="image-20210804211704324"></p>
+<h3 id="ConcurrenHashMap，1-7-和-1-8-的区别"><a href="#ConcurrenHashMap，1-7-和-1-8-的区别" class="headerlink" title="ConcurrenHashMap，1.7 和 1.8 的区别"></a>ConcurrenHashMap，1.7 和 1.8 的区别</h3><p>ConcurrentHashMap 是 HashMap 的线程安全版本，和 HashMap 一样，在 JDK 1.8 中进行了较大的优化。</p>
+<p>JDK1.7：底层结构为：分段的数组+链表；实现线程安全的方式：分段锁（Segment，继承ReentrantLock），</p>
+<p><img src="https://i.loli.net/2021/08/04/FliNj7RXtm2oSv5.png" alt="image-20210804212122257"></p>
+<p>JDK1.8：底层结构为：数组+链表+红黑树；实现线程安全的方式：CAS + Synchronized，synchronized只会锁定当前链表或者红黑树的首节点。效率大大提高。</p>
+<p><img src="https://i.loli.net/2021/08/04/uMemQzWqZdTXxK1.png" alt="image-20210804212314272"></p>
+<p><strong>区别：</strong></p>
+<p>1、JDK1.8 中降低锁的粒度。JDK1.7 版本锁的粒度是基于 Segment 的，包含多个节点（HashEntry），而 JDK1.8 锁的粒度就是单节点（Node）。</p>
+<p>2、JDK1.8 版本的数据结构变得更加简单，使得操作也更加清晰流畅，因为已经使用 synchronized 来进行同步，所以不需要分段锁的概念，也就不需要 Segment 这种数据结构了，当前还保留仅为了兼容。</p>
+<p>3、JDK1.8 使用红黑树来优化链表，跟 HashMap 一样，优化了极端情况下，链表过长带来的性能问题。</p>
+<p>4、JDK1.8 使用内置锁 synchronized 来代替重入锁 ReentrantLock，synchronized 是官方一直在不断优化的，现在性能已经比较可观，也是官方推荐使用的加锁方式</p>
+<h3 id="map对比？"><a href="#map对比？" class="headerlink" title="map对比？"></a>map对比？</h3><p><img src="https://i.loli.net/2021/08/04/jIZsbOmcCagN18q.png" alt="image-20210804212504959"></p>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><h3 id="ArrayList-和-Vector-的区别"><a href="#ArrayList-和-Vector-的区别" class="headerlink" title="ArrayList 和 Vector 的区别"></a>ArrayList 和 Vector 的区别</h3><p>Vector 和 ArrayList 的实现几乎是一样的，区别在于：</p>
+<p>1）最重要的的区别：Vector 在方法上使用了 synchronized 来保证线程安全，同时由于这个原因，在性能上 ArrayList会有更好的表现。</p>
+<p>2） Vector 扩容后容量默认变为原来 2 倍，而 ArrayList 为原来的 1.5 倍。</p>
+<h3 id="ArrayList-和-LinkedList-的区别？"><a href="#ArrayList-和-LinkedList-的区别？" class="headerlink" title="ArrayList 和 LinkedList 的区别？"></a>ArrayList 和 LinkedList 的区别？</h3><h4 id="arraylist扩容"><a href="#arraylist扩容" class="headerlink" title="arraylist扩容"></a>arraylist扩容</h4><p>第一种情况，当ArrayList的容量为0时，此时添加元素的话，需要扩容，三种构造方法创建的ArrayList在扩容时略有不同：</p>
+<p>1.无参构造，创建ArrayList后容量为0，添加第一个元素后，<strong>容量变为10</strong>，此后若需要扩容，则正常扩容。</p>
+<p>2.传容量构造，当参数为0时，创建ArrayList后容量为0，添加第一个元素后，容量为1，此时ArrayList是满的，下次添加元素时需正常扩容。</p>
+<p>3.传列表构造，当列表为空时，创建ArrayList后容量为0，添加第一个元素后，容量为1，此时ArrayList是满的，下次添加元素时需正常扩容。</p>
+<p>第二种情况，当ArrayList的容量大于0，并且ArrayList是满的时，此时添加元素的话，进行正常扩容，每次扩容<strong>到原来的1.5倍。</strong></p>
+<p>1、ArrayList 底层基于<strong>动态数组</strong>实现，LinkedList 底层基于<strong>双向链表</strong>实现。</p>
+<p>2、对于<strong>随机访问（按 index 访问，get&#x2F;set 方法）</strong>：ArrayList 通过 index 直接定位到数组对应位置的节点，而 LinkedList需要从头结点或尾节点开始遍历，直到寻找到目标节点，<strong>在效率上 ArrayList 优于 LinkedList</strong>。</p>
+<p>3、对于<strong>随机插入和删除</strong>：ArrayList 需要移动目标节点后面的节点（使用 System.arraycopy 方法移动节点），而LinkedList 只需修改目标节点前后节点的 next 或 prev 属性即可，因此在效率上 LinkedList 优于 ArrayList。</p>
+<p>4、对于<strong>顺序插入和删除：由于 ArrayList 不需要移动节点，因此在效率上比 LinkedList 更好</strong>。这也是为什么在实际使用中 ArrayList 更多，因为<strong>大部分情况下我们的使用都是顺序插入。</strong></p>
+<p>5、两者都不是线程安全的。</p>
+<p>6、内存空间占用： ArrayList 的空 间浪费主要体现在在 list 列表的结尾会<strong>预留一定的容量空间</strong>，而 LinkedList 的空间花费则体现在它的每一个元素都需要消耗比 ArrayList 更多的空间（因为要存放直接后继和直接前驱以及数据）。</p>
+<h3 id="hashmap对比hashtable"><a href="#hashmap对比hashtable" class="headerlink" title="hashmap对比hashtable"></a>hashmap对比hashtable</h3><p>线程安全：hashmap不安全，hashtable安全（方法被synchronized修饰过）。</p>
+<p>效率：hashtable效率很低，被淘汰。</p>
+<p>null key value？：hashmap支持一个null key。hashtable不支持。</p>
+<p>扩容：hashtable初始：不指定的话为11，之后变为原来的2n+1。hashmap初始16，每次扩充两倍。hashmap在指定了初始容量后会扩充为2的幂次大小。</p>
+<p>底层：解决hash冲突，hashmap在链表大于8会转化成红黑树（如果数组长度小于64，会先进性扩容）。</p>
+<h3 id="List、Set、Map-三者的区别"><a href="#List、Set、Map-三者的区别" class="headerlink" title="List、Set、Map 三者的区别?"></a>List、Set、Map 三者的区别?</h3><p>List（对付<strong>顺序</strong>的好帮手）： 存储的对象是可重复的、有序的。<br>Set（注重<strong>独一无二</strong>的性质）：存储的对象是不可重复的、无序的。<br>Map（<strong>用 Key 来搜索的专业户</strong>）: 存储键值对（key-value），不能包含重复的键（key），每个键只能映射到一个值</p>
+<h3 id="map遍历方式："><a href="#map遍历方式：" class="headerlink" title="map遍历方式："></a>map遍历方式：</h3><p>HashMap 遍历从大的方向来说，可分为以下 4 类：</p>
+<p><strong>迭代器（Iterator）方式遍历；</strong></p>
+<p><strong>For Each 方式遍历；</strong></p>
+<p><strong>Lambda 表达式遍历（JDK 1.8+）;</strong></p>
+<p><strong>Streams API 遍历（JDK 1.8+）。</strong></p>
+<p>使用迭代器（Iterator）<strong>EntrySet</strong> 的方式进行遍历；</p>
+<p>使用迭代器（Iterator）<strong>KeySet</strong> 的方式进行遍历；</p>
+<p>使用 For Each <strong>EntrySet</strong> 的方式进行遍历；</p>
+<p>使用 For Each <strong>KeySet</strong> 的方式进行遍历；</p>
+<p>使用 Lambda 表达式的方式进行遍历；</p>
+<p>使用 Streams API <strong>单线程</strong>的方式进行遍历；</p>
+<p>使用 Streams API <strong>多线程</strong>的方式进行遍历</p>
+<p><img src="https://i.loli.net/2021/08/05/ZP9ot578UVrd2RN.png" alt="计算机生成了可选文字: Iterator(Map. Entry(Integer, Strlng»  (iterator.hasNext()) {  Map. Strlng) entry  ma p ． entrySet() ． iterator();  iterator ． n 巳 〔 ） ；  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/jNw9YtiOlCLV2Bf.png" alt="计算机生成了可选文字: map.keyset().iterator();  Iterator(Integer) Iterator  (iterator.hasNext()) {  Integer key  iterator ． n 巳 〔 ） ；  Sysæn. out ． println(key);  Sysæn. out.println(map• get 〔 k ey ） ); "></p>
+<p><img src="https://i.loli.net/2021/08/05/7qwG2cHSj514gf3.png" alt="计算机生成了可选文字: (Map.Entry(lnteger, String) entry ： ma p ． entrySet()) {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/qfBMmXg3ljFUEko.png" alt="计算机生成了可选文字: 〔 Integer key ： map.keySet()) {  Sysæn. out ． println(key);  Sysæn. out.println(map• get 〔 k ey ） ); "></p>
+<p><img src="https://i.loli.net/2021/08/05/hrf2daRyeQqODsx.png" alt="计算机生成了可选文字: map.forEach((key, value) 一 》 {  Sysæn. out ． println(key);  Sysæn. out ． println(ualue) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/oKvs6jBOxzQUZhJ.png" alt="计算机生成了可选文字: ma p ． entrySet().stream(). forEach((entry) 一 》 {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/KMzILTYf1nwu8ci.png" alt="计算机生成了可选文字: ma p ． entrySet().para11e1Stream(). forEach((entry) 一 》 {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><strong>EntrySet</strong> 之所以比 <strong>KeySet</strong> 的性能高是因为，**KeySet 在循环时使用了 map.get(key)**，而 map.get(key) 相当于又遍历了一遍 Map 集合去查询 key 所对应的值。为什么要用“又”这个词？那是因为在使用迭代器或者 for 循环时，其实已经遍历了一遍 Map 集合了，因此再使用 map.get(key) 查询时，相当于遍历了两遍。</p>
+<p>而 <strong>EntrySet</strong> 只遍历了一遍 Map 集合，之后通过代码“Entry&lt;Integer, String&gt; entry &#x3D; iterator.next()”把对象的 key 和 value 值都放入到了 Entry 对象中，因此再获取 key 和 value 值时就无需再遍历 Map 集合，只需要从 Entry 对象中取值就可以了。</p>
+<p>所以，<strong>EntrySet 的性能比 KeySet 的性能高出了一倍</strong>，因为 KeySet 相当于循环了两遍 Map 集合，而 EntrySet 只循环了一遍。</p>
+<p>我们不能在<strong>遍历中使用</strong>集合 map.remove() 来删除数据，这是非安全的操作方式，但我们可以使用迭代器的 <strong>iterator.remove() 的方法来删除数据</strong>，这是安全的删除集合的方式。</p>
+<p>同样的我们也可以使用 Lambda 中的 removeIf 来提前删除数据，或者是使用 Stream 中的 filter 过滤掉要删除的数据进行循环，这样都是安全的，当然我们也可以在 for 循环前删除数据在遍历也是线程安全的。</p>
+<p>综合性能和安全性来看，我们应该尽量使用<strong>迭代器（Iterator）来遍历 EntrySet 的遍历方式来操作 Map 集合</strong>，这样就会既安全又高效。</p>
+<h3 id="Comparable-和-Comparator-比较？"><a href="#Comparable-和-Comparator-比较？" class="headerlink" title="Comparable 和 Comparator 比较？"></a>Comparable 和 Comparator 比较？</h3><p>1、Comparable 是<strong>排序接口</strong>，一个类实现了 Comparable 接口，意味着“该类支持排序”。Comparator 是<strong>比较器，我们可以实现该接口，自定义比较算法，创建一个 “该类的比较器” 来进行排序</strong>。</p>
+<p>2、Comparable 相当于“内部比较器”，而 Comparator 相当于“外部比较器”。</p>
+<p>3、Comparable 的耦合性更强，<strong>Comparator 的灵活性和扩展性更优。</strong></p>
+<p>4、Comparable 可以用作类的默认排序方法，而 Comparator 则用于默认排序不满足时，提供自定义排序</p>
+<h3 id="Collection-与-Collections-的区别"><a href="#Collection-与-Collections-的区别" class="headerlink" title="Collection 与 Collections 的区别"></a>Collection 与 Collections 的区别</h3><p>Collection：<strong>集合类的一个顶级接口</strong>，提供了对集合对象进行基本操作的通用接口方法。Collection 接口的意义是为各种具体的集合提供了最大化的统一操作方式，常见的 List 与 Set 就是直接继承 Collection 接口。</p>
+<p>Collections：<strong>集合类的一个工具类&#x2F;帮助类</strong>，提供了一系列静态方法，用于对集合中元素进行排序、搜索以及线程安全等各种操作</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="HashSet-是如何保证不重复的？"><a href="#HashSet-是如何保证不重复的？" class="headerlink" title="HashSet 是如何保证不重复的？"></a>HashSet 是如何保证不重复的？</h3><p>HashSet 底层使用 <strong>HashMap</strong> 来实现，元素放在 HashMap 的 key 里，value 为固定的 Object 对象。</p>
+<p>当 add 时调用 HashMap 的 put 方法，如果元素不存在，则返回 null 表示 add 成功，否则 add 失败。</p>
+<p>由于 HashMap 的 Key 值本身就不允许重复，HashSet 正好利用 HashMap 中 key 不重复的特性来校验重复元素。<img src="https://i.loli.net/2021/08/04/I2VuKypq5o7xWrd.png" alt="image-20210804213228204"></p>
+<h3 id="Map、List、Set-它们有的线程安全类和线程不安全的类？"><a href="#Map、List、Set-它们有的线程安全类和线程不安全的类？" class="headerlink" title="Map、List、Set 它们有的线程安全类和线程不安全的类？"></a>Map、List、Set 它们有的线程安全类和线程不安全的类？</h3><p><strong>Map</strong></p>
+<p>线程安全：<strong>CocurrentHashMap、Hashtable</strong><br>线程不安全：HashMap、LinkedHashMap、TreeMap、WeakHashMap</p>
+<p><strong>List</strong></p>
+<p>线程安全<strong>：Vector（线程安全版的 ArrayList）、Stack（继承 Vector，增加 pop、push 方法）、CopyOnWriteArrayList</strong><br>线程不安全：ArrayList、LinkedList</p>
+<p><strong>Set</strong></p>
+<p><strong>线程安全：CopyOnWriteArraySet（底层使用 CopyOnWriteArrayList，通过在插入前判断是否存在实现 Set 不重复的效果</strong></p>
+<p>线程不安全：HashSet（基于 HashMap）、LinkedHashSet（基于 LinkedHashMap）、TreeSet（基于 TreeMap）、EnumSe</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag"># 框架</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/07/30/Java%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" rel="prev" title="Java基础-常见问题">
+                  <i class="fa fa-chevron-left"></i> Java基础-常见问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/" rel="next" title="计算机网络-网络模型">
+                  计算机网络-网络模型 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="lv-container" data-id="city" data-uid="MTAyMC81ODY5NS8zNTE1Nw"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">XieYi</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">263k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:59</span>
+  </span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>-->
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+<script src="/js/third-party/comments/livere.js"></script>
+
+</body>
+</html>
