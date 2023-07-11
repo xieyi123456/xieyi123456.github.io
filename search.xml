@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>MySQL 基础</title>
-    <url>/2023/07/11/MySQL-%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>技术</tag>
-        <tag>MySql</tag>
-        <tag>数据库</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MySQL 进阶</title>
     <url>/2023/07/11/MySQL-%E8%BF%9B%E9%98%B6/</url>
     <content><![CDATA[]]></content>
@@ -21,8 +11,18 @@
       </tags>
   </entry>
   <entry>
-    <title>golang 基础</title>
-    <url>/2023/07/11/golang-%E5%9F%BA%E7%A1%80/</url>
+    <title>MySQL 基础</title>
+    <url>/2023/07/11/MySQL-%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>技术</tag>
+        <tag>MySql</tag>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>golang 进阶</title>
+    <url>/2023/07/11/golang-%E8%BF%9B%E9%98%B6/</url>
     <content><![CDATA[]]></content>
       <tags>
         <tag>技术</tag>
@@ -41,8 +41,8 @@
       </tags>
   </entry>
   <entry>
-    <title>golang 进阶</title>
-    <url>/2023/07/11/golang-%E8%BF%9B%E9%98%B6/</url>
+    <title>golang 基础</title>
+    <url>/2023/07/11/golang-%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[]]></content>
       <tags>
         <tag>技术</tag>
