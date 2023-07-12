@@ -1,26 +1,21 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
-
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xieyi123456.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"livere","storage":true,"lazyload":true,"nav":null,"activeClass":"livere"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/avatar.gif">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XieYi">
+  <meta name="keywords" content="">
+  
     <meta name="description" content="面试官下午好，我叫谢谊，今年23岁，来自湖北恩施，本科和硕士都就读于华中科技大学。在本科的时候，我做了一个基于matlab机器视觉文字分割的课程设计，对于编程有了初步的了解。在研究生期间，我自学了计算机专业的相关课程，比如计算机网络，操作系统，数据结构，也学习了有关java后端有关的知识，比如，java基础，java虚拟机，数据库，等等然后自己做了个仿写rpc框架的小项目，实现了调用远程服务器上的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RPC-概述">
@@ -40,239 +35,246 @@
 <meta property="article:published_time" content="2021-07-06T03:03:03.000Z">
 <meta property="article:modified_time" content="2023-07-11T15:32:58.291Z">
 <meta property="article:author" content="XieYi">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://i.loli.net/2021/08/08/rG74PqAnCzLyYQ6.png">
+  
+  
+  
+  <title>RPC-概述 - XieYi&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-<link rel="canonical" href="https://xieyi123456.github.io/2021/07/06/a-RPC-%E6%A6%82%E8%BF%B0/">
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xieyi123456.github.io/2021/07/06/a-RPC-%E6%A6%82%E8%BF%B0/","path":"2021/07/06/a-RPC-概述/","title":"RPC-概述"}</script>
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>RPC-概述 | XieYi's Blog</title>
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
 
 
 
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xieyi123456.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
 
 
-
-
-  <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
-  </noscript>
-<link rel="alternate" href="/atom.xml" title="XieYi's Blog" type="application/atom+xml">
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="XieYi's Blog" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
-  <div class="headband"></div>
 
-  <main class="main">
-    <div class="column">
-      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏" role="button">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-    </div>
-  </div>
+<body>
+  
 
-  <div class="site-meta">
+  <header>
+    
 
-    <a href="/" class="brand" rel="start">
-      <i class="logo-line"></i>
-      <p class="site-title">XieYi's Blog</p>
-      <i class="logo-line"></i>
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XieYi&#39;s Blog</strong>
     </a>
-      <p class="site-subtitle" itemprop="description">log something</p>
-  </div>
 
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger" aria-label="搜索" role="button">
-        <i class="fa fa-search fa-fw fa-lg"></i>
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
     </div>
   </div>
-</div>
-
-
-
-<nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
-        </a>
-      </li>
-  </ul>
 </nav>
 
+  
 
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="RPC-概述"></span>
+          
+        </div>
 
-  <div class="search-pop-overlay">
-    <div class="popup search-popup"><div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off" maxlength="80"
-           placeholder="搜索..." spellcheck="false"
-           type="search" class="search-input">
-  </div>
-  <span class="popup-btn-close" role="button">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div class="search-result-container no-result">
-  <div class="search-result-icon">
-    <i class="fa fa-spinner fa-pulse fa-5x"></i>
-  </div>
-</div>
-
-    </div>
-  </div>
-
-</header>
         
-  
-  <aside class="sidebar">
-
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
-      <ul class="sidebar-nav">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <div class="sidebar-panel-container">
-        <!--noindex-->
-        <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFRPC"><span class="nav-number">1.</span> <span class="nav-text">什么是RPC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RPC-VS-HTTP"><span class="nav-number">2.</span> <span class="nav-text">RPC VS HTTP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#restful"><span class="nav-number">2.1.</span> <span class="nav-text">restful</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RPC-%E4%B8%AD%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.2.</span> <span class="nav-text">RPC 中网络传输协议</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%AF%B9%E6%AF%94-RPC-%E5%92%8C-Restful-API"><span class="nav-number">2.2.1.</span> <span class="nav-text">简单对比 RPC 和 Restful API</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#RPC-%E5%92%8C-Restful-API-%E5%AF%B9%E6%AF%94"><span class="nav-number">2.2.2.</span> <span class="nav-text">RPC 和 Restful API 对比</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.2.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84RPC%E6%A1%86%E6%9E%B6"><span class="nav-number">4.</span> <span class="nav-text">常见的RPC框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Dubbo"><span class="nav-number">4.1.</span> <span class="nav-text">Dubbo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Motan"><span class="nav-number">4.2.</span> <span class="nav-text">Motan</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gRPC"><span class="nav-number">4.3.</span> <span class="nav-text">gRPC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Thrift"><span class="nav-number">4.4.</span> <span class="nav-text">Thrift</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">4.5.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%B7%B1%E5%AE%9E%E7%8E%B0RPC%E6%A1%86%E6%9E%B6%E7%9A%84%E6%80%9D%E8%B7%AF"><span class="nav-number">5.</span> <span class="nav-text">自己实现RPC框架的思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83"><span class="nav-number">5.1.</span> <span class="nav-text">注册中心</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#zookeeper%E4%BD%9C%E4%B8%BA%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">5.1.1.</span> <span class="nav-text">zookeeper作为注册中心的问题？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#redis%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83"><span class="nav-number">5.1.2.</span> <span class="nav-text">redis注册中心</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="nav-number">5.1.3.</span> <span class="nav-text">服务发现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C"><span class="nav-number">5.1.4.</span> <span class="nav-text">服务注册</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">5.1.5.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5zookeeper"><span class="nav-number">5.1.6.</span> <span class="nav-text">连接zookeeper</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#zookeeper%E5%B8%B8%E8%A7%81%E6%A6%82%E5%BF%B5"><span class="nav-number">5.1.7.</span> <span class="nav-text">zookeeper常见概念</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ZooKeeper-%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">5.1.7.1.</span> <span class="nav-text">ZooKeeper 典型应用场景</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Data-model%EF%BC%88%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%EF%BC%89"><span class="nav-number">5.1.7.2.</span> <span class="nav-text">Data model（数据模型）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#znode-4-%E7%A7%8D%E7%B1%BB%E5%9E%8B"><span class="nav-number">5.1.7.3.</span> <span class="nav-text">znode 4 种类型</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#ACL%EF%BC%88%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%EF%BC%89"><span class="nav-number">5.1.7.4.</span> <span class="nav-text">ACL（权限控制）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Watcher%EF%BC%88%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC%E5%99%A8%EF%BC%89"><span class="nav-number">5.1.7.5.</span> <span class="nav-text">Watcher（事件监听器）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#ZooKeeper-%E9%9B%86%E7%BE%A4"><span class="nav-number">5.1.7.6.</span> <span class="nav-text">ZooKeeper 集群</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#ZooKeeper-%E9%9B%86%E7%BE%A4%E4%B8%BA%E5%95%A5%E6%9C%80%E5%A5%BD%E5%A5%87%E6%95%B0%E5%8F%B0%EF%BC%9F"><span class="nav-number">5.1.7.7.</span> <span class="nav-text">ZooKeeper 集群为啥最好奇数台？</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BD%95%E4%B8%BA%E9%9B%86%E7%BE%A4%E8%84%91%E8%A3%82%EF%BC%9F"><span class="nav-number">5.1.7.8.</span> <span class="nav-text">何为集群脑裂？</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#ZAB-%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D"><span class="nav-number">5.1.7.9.</span> <span class="nav-text">ZAB 协议介绍</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CAP"><span class="nav-number">5.1.8.</span> <span class="nav-text">CAP</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#raft%E5%8D%8F%E8%AE%AE"><span class="nav-number">5.1.9.</span> <span class="nav-text">raft协议</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">5.1.10.</span> <span class="nav-text">分布式锁</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">5.1.10.1.</span> <span class="nav-text">基于数据库</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8Eredis"><span class="nav-number">5.1.10.2.</span> <span class="nav-text">基于redis</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8Ezookeeper"><span class="nav-number">5.1.10.3.</span> <span class="nav-text">基于zookeeper</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93"><span class="nav-number">5.2.</span> <span class="nav-text">网络传输</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%AE%9E%E4%BD%93%E7%B1%BB"><span class="nav-number">5.2.1.</span> <span class="nav-text">网络传输实体类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#netty%E7%BD%91%E7%BB%9C%E5%AE%A2%E6%88%B7%E4%BC%A0%E8%BE%93"><span class="nav-number">5.2.2.</span> <span class="nav-text">netty网络客户传输</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#socket"><span class="nav-number">5.2.3.</span> <span class="nav-text">socket</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E5%A4%9A%E4%B8%AA%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">5.2.3.1.</span> <span class="nav-text">管理多个客户端</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Netty"><span class="nav-number">5.2.4.</span> <span class="nav-text">Netty</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">5.2.4.1.</span> <span class="nav-text">应用</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">5.2.4.2.</span> <span class="nav-text">客户端</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">5.2.4.3.</span> <span class="nav-text">服务端</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%99%A8"><span class="nav-number">5.2.4.4.</span> <span class="nav-text">编码器</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="nav-number">5.2.4.5.</span> <span class="nav-text">解码器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-number">5.3.</span> <span class="nav-text">序列化和反序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B1%9E%E4%BA%8E%E5%93%AA%E4%B8%80%E5%B1%82%EF%BC%9F"><span class="nav-number">5.3.1.</span> <span class="nav-text">属于哪一层？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%BA%8F%E5%88%97%E5%8C%96%E5%8D%8F%E8%AE%AE%E5%AF%B9%E6%AF%94"><span class="nav-number">5.3.2.</span> <span class="nav-text">常见序列化协议对比</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86"><span class="nav-number">5.4.</span> <span class="nav-text">动态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#JDK%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86"><span class="nav-number">5.4.1.</span> <span class="nav-text">JDK动态代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CGLIB%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86"><span class="nav-number">5.4.2.</span> <span class="nav-text">CGLIB动态代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%AF%94%E8%BE%83"><span class="nav-number">5.4.3.</span> <span class="nav-text">比较</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">5.4.4.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">5.5.</span> <span class="nav-text">负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="nav-number">5.5.1.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E7%AE%97%E6%B3%95"><span class="nav-number">5.6.</span> <span class="nav-text">具体算法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA"><span class="nav-number">5.6.1.</span> <span class="nav-text">随机</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BD%AE%E8%AF%A2"><span class="nav-number">5.6.2.</span> <span class="nav-text">轮询</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C"><span class="nav-number">5.6.3.</span> <span class="nav-text">一致性哈希</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E8%8A%82%E7%82%B9"><span class="nav-number">5.6.3.1.</span> <span class="nav-text">虚拟节点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E4%B8%80"><span class="nav-number">5.7.</span> <span class="nav-text">版本一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC2"><span class="nav-number">5.8.</span> <span class="nav-text">版本2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC3"><span class="nav-number">5.9.</span> <span class="nav-text">版本3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC4"><span class="nav-number">5.10.</span> <span class="nav-text">版本4</span></a></li></ol></li></ol></div>
-        </div>
-        <!--/noindex-->
-
-        <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="XieYi"
-      src="/images/avatar.gif">
-  <p class="site-author-name" itemprop="name">XieYi</p>
-  <div class="site-description" itemprop="description">think and do</div>
-</div>
-<div class="site-state-wrap animated">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-        <a href="/archives/">
-          <span class="site-state-item-count">54</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-          <a href="/categories/">
-        <span class="site-state-item-count">13</span>
-        <span class="site-state-item-name">分类</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-          <a href="/tags/">
-        <span class="site-state-item-count">37</span>
-        <span class="site-state-item-name">标签</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author animated">
-      <span class="links-of-author-item">
-        <a href="mailto:2643100268@qq.com" title="E-Mail → mailto:2643100268@qq.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-07-06 11:03" pubdate>
+          2021年7月6日 上午
+        </time>
       </span>
+    
   </div>
 
-        </div>
-      </div>
-    </div>
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          42k 字
+        
+      </span>
+    
 
     
-  </aside>
+
+    
+    
+  </div>
 
 
+        
+      </div>
+
+      
     </div>
-
-    <div class="main-inner post posts-expand">
-
-
-  
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xieyi123456.github.io/2021/07/06/a-RPC-%E6%A6%82%E8%BF%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="XieYi">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="XieYi's Blog">
-      <meta itemprop="description" content="think and do">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="RPC-概述 | XieYi's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          RPC-概述
-        </h1>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-07-06 11:03:03" itemprop="dateCreated datePublished" datetime="2021-07-06T11:03:03+08:00">2021-07-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-07-11 23:32:58" itemprop="dateModified" datetime="2023-07-11T23:32:58+08:00">2023-07-11</time>
-    </span>
-
-  
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>42k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>38 分钟</span>
-    </span>
+  </div>
 </div>
 
-        </div>
-      </header>
+</div>
 
+  </header>
+
+  <main>
     
-    
-    
-    <div class="post-body" itemprop="articleBody"><p>面试官下午好，我叫谢谊，今年23岁，来自湖北恩施，本科和硕士都就读于华中科技大学。<br>在本科的时候，我做了一个基于matlab机器视觉文字分割的课程设计，对于编程有了初步的了解。<br>在研究生期间，我自学了计算机专业的相关课程，比如计算机网络，操作系统，数据结构，也学习了有关java后端有关的知识，比如，java基础，java虚拟机，数据库，等等<br>然后自己做了个仿写rpc框架的小项目，实现了调用远程服务器上的方法的功能。<br>希望可以在未来从事后端开发的工作，谢谢</p>
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">RPC-概述</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>面试官下午好，我叫谢谊，今年23岁，来自湖北恩施，本科和硕士都就读于华中科技大学。<br>在本科的时候，我做了一个基于matlab机器视觉文字分割的课程设计，对于编程有了初步的了解。<br>在研究生期间，我自学了计算机专业的相关课程，比如计算机网络，操作系统，数据结构，也学习了有关java后端有关的知识，比如，java基础，java虚拟机，数据库，等等<br>然后自己做了个仿写rpc框架的小项目，实现了调用远程服务器上的方法的功能。<br>希望可以在未来从事后端开发的工作，谢谢</p>
 <p>client 调用远程方法-&gt; request序列化 -&gt; 协议编码 -&gt; 网络传输-&gt; 服务端 -&gt; 反序列化request -&gt; 调用本地方法得到response -&gt; 序列化 -&gt;编码-&gt;…..</p>
 <h3 id="什么是RPC"><a href="#什么是RPC" class="headerlink" title="什么是RPC"></a>什么是RPC</h3><p>RPC（Remote Procedure Call）即<strong>远程过程调用</strong>。</p>
 <p>为什么要 RPC  ？因为，两个不同的服务器上的服务提供的方法不在一个内存空间，所以，<strong>需要通过网络编程才能传递方法调用所需要的参数</strong>。并且，<strong>方法调用的结果也需要通过网络编程来接收</strong>。但是，如果我们自己手动网络编程来实现这个调用过程的话工作量是非常大的，因为，我们需要考虑底层传输方式（TCP还是UDP）、序列化方式等等方面。</p>
@@ -292,7 +294,7 @@
 <p>RESTful架构是对MVC架构改进后所形成的一种架构，<strong>通过使用事先定义好的接口与不同的服务联系起来</strong>。在RESTful架构中，<strong>浏览器使用POST，DELETE，PUT和GET四种请求方式分别对指定的URL资源进行增删改查操作</strong>。因此，<strong>RESTful是通过URI实现对资源的管理及访问，具有扩展性强、结构清晰的特点。</strong></p>
 <p>RESTful架构将服务器分成前端服务器和后端服务器两部分，前端服务器为用户提供无模型的视图；后端服务器为前端服务器提供接口。浏览器向前端服务器请求视图，通过视图中包含的AJAX函数发起接口请求获取模型。<br>项目开发引入RESTful架构，利于团队并行开发。在RESTful架构中，将多数HTTP请求转移到前端服务器上，降低服务器的负荷，使视图获取后端模型失败也能呈现。但RESTful架构却不适用于所有的项目，当项目比较小时无需使用RESTful架构，项目变得更加复杂。</p>
 <p>（1）每一个URI代表一种资源；<br>（2）客户端和服务器之间，传递这种资源的某种表现层；<br>（3）客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。</p>
-<p><img src="https://i.loli.net/2021/08/08/rG74PqAnCzLyYQ6.png" alt="image-20210808143751929"></p>
+<p><img src="https://i.loli.net/2021/08/08/rG74PqAnCzLyYQ6.png" srcset="/img/loading.gif" lazyload alt="image-20210808143751929"></p>
 <h4 id="RPC-中网络传输协议"><a href="#RPC-中网络传输协议" class="headerlink" title="RPC 中网络传输协议"></a>RPC 中网络传输协议</h4><p>基于 TCP 协议的 RPC 调用</p>
 <p>由服务的调用方与服务的提供方建立 Socket 连接，并由服务的调用方通过 Socket 将需要调用的接口名称、方法名称和参数序列化后传递给服务的提供方，服务的提供方反序列化后再利用反射调用相关的方法。</p>
 <p>将结果返回给服务的调用方，整个基于 TCP 协议的 RPC 调用大致如此。</p>
@@ -344,7 +346,7 @@
 <p>注册发布机制。RPC 框架一般都有注册中心，有丰富的监控管理;发布、下线接口、动态扩展等，对调用方来说是无感知、统一化的操作。</p>
 <p>安全性，没有暴露资源操作。</p>
 <p>微服务支持。就是最近流行的服务化架构、服务化治理，RPC 框架是一个强力的支撑。</p>
-<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p><img src="https://i.loli.net/2021/08/06/KWeIP5wtzvQ8SVU.png" alt="image-20210806114259901"></p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p><img src="https://i.loli.net/2021/08/06/KWeIP5wtzvQ8SVU.png" srcset="/img/loading.gif" lazyload alt="image-20210806114259901"></p>
 <p>client 调用远程方法-&gt; request序列化 -&gt; 协议编码 -&gt; 网络传输-&gt; 服务端 -&gt; 解码-&gt;反序列化request -&gt; 调用本地方法得到response -&gt; 序列化 -&gt;编码-&gt;…..</p>
 <h3 id="常见的RPC框架"><a href="#常见的RPC框架" class="headerlink" title="常见的RPC框架"></a>常见的RPC框架</h3><h4 id="Dubbo"><a href="#Dubbo" class="headerlink" title="Dubbo"></a>Dubbo</h4><p>是一款高性能、轻量级的开源 Java RPC 框架，它提供了三大核心能力：</p>
 <p>面向接口的远程方法调用<br>智能容错和负载均衡<br>服务自动注册和发现。</p>
@@ -360,7 +362,7 @@
 <h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p><strong>gRPC 和 Thrift</strong> 虽然支持跨语言的 RPC 调用，但是因为它们只提供了最基本的 RPC 框架功能，缺乏一系列配套的服务化组件和服务治理功能的支撑。</p>
 <p>Dubbo 不论是从功能完善程度、生态系统还是社区活跃度来说都是最优秀的。最重要的是其在国内有很多成功的案例比如当当网、滴滴等等。下图展示了 Dubbo 的生态系统。</p>
 <p>但是，Dubbo 和 Motan 主要是给 Java 语言使用。虽然，Dubbo 和 Motan 目前也能兼容部分语言，但是不太推荐。如果需要跨语言调用的话，可以考虑一下 Thrift 和 gRPC。</p>
-<h3 id="自己实现RPC框架的思路"><a href="#自己实现RPC框架的思路" class="headerlink" title="自己实现RPC框架的思路"></a>自己实现RPC框架的思路</h3><p><img src="https://i.loli.net/2021/08/06/aG7gWErNb9iymIU.png" alt="image-20210806144123153"></p>
+<h3 id="自己实现RPC框架的思路"><a href="#自己实现RPC框架的思路" class="headerlink" title="自己实现RPC框架的思路"></a>自己实现RPC框架的思路</h3><p><img src="https://i.loli.net/2021/08/06/aG7gWErNb9iymIU.png" srcset="/img/loading.gif" lazyload alt="image-20210806144123153"></p>
 <h4 id="注册中心"><a href="#注册中心" class="headerlink" title="注册中心"></a><strong>注册中心</strong></h4><h5 id="zookeeper作为注册中心的问题？"><a href="#zookeeper作为注册中心的问题？" class="headerlink" title="zookeeper作为注册中心的问题？"></a>zookeeper作为注册中心的问题？</h5><p>在实践中，注册中心不能因为自身的任何原因<strong>破坏服务之间本身的可连通性</strong><br>注册中心需要的是 AP，而 Zookeeper 是 CP</p>
 <p>CAP ：一致性、可用性、分区容忍性<br>一致性：是指在同一时刻，分布式系统中的所有数据备份为相同值<br>可用性：指集群中的某一个节点故障宕机后，集群还能响应客户端请求。<br>分区容忍性：当分布式系统中因为一些原因导致无法通信而分成多个分区，系统还能正常对外服务。</p>
 <p>在 CAP 模型中，<strong>zookeeper 是 CP，意味着面对网络分区时，为了保持一致性，他是不可用的。</strong></p>
@@ -392,9 +394,9 @@
 <p>从性能上来讲，zookeeper 也无法满足注册中心大规模且频繁注册写的场景。</p>
 <p><strong>zookeeper 的特长是做分布式协调服务，</strong>例如 kafka、hbase、flink、hadoop 等大项目都在用 zookeeper。</p>
 <h5 id="redis注册中心"><a href="#redis注册中心" class="headerlink" title="redis注册中心"></a>redis注册中心</h5><p>redis 作为dubbo的注册中心，实现的功能跟 zk相同，但是内部的实现机制大相径庭，因为zk 有临时节点，服务端在zk 中创建临时节点会一直保持连接，如果服务器出现崩溃，自动断连，而redis 则要靠主服务器 进行定时轮询</p>
-<h5 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public class ZkServiceDiscoveryImpl implements ServiceDiscovery &#123;</span><br><span class="line">    private final LoadBalance loadBalance;//负载均衡</span><br><span class="line"></span><br><span class="line">    public ZkServiceDiscoveryImpl() &#123;</span><br><span class="line">        this.loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(&quot;loadBalance&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public InetSocketAddress lookupService(RpcRequest rpcRequest) &#123;</span><br><span class="line">    	//服务名</span><br><span class="line">        String rpcServiceName = rpcRequest.getRpcServiceName();</span><br><span class="line">        CuratorFramework zkClient = CuratorUtils.getZkClient();</span><br><span class="line">        //找子节点</span><br><span class="line">        List&lt;String&gt; serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);</span><br><span class="line">        //找不到，就抛出not found</span><br><span class="line">        if (serviceUrlList == null || serviceUrlList.size() == 0) &#123;</span><br><span class="line">            throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);</span><br><span class="line">        &#125;</span><br><span class="line">        // load balancing</span><br><span class="line">        String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);</span><br><span class="line">        </span><br><span class="line">        String[] socketAddressArray = targetServiceUrl.split(&quot;:&quot;);</span><br><span class="line">        String host = socketAddressArray[0];</span><br><span class="line">        int port = Integer.parseInt(socketAddressArray[1]);</span><br><span class="line">        return new InetSocketAddress(host, port);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h5><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> ZkServiceDiscoveryImpl implements ServiceDiscovery &#123;<br>    <span class="hljs-keyword">private</span> final LoadBalance loadBalance;<span class="hljs-comment">//负载均衡</span><br><br>    public <span class="hljs-constructor">ZkServiceDiscoveryImpl()</span> &#123;<br>        this.loadBalance = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ExtensionLoader</span>.</span></span>get<span class="hljs-constructor">ExtensionLoader(LoadBalance.<span class="hljs-params">class</span>)</span>.get<span class="hljs-constructor">Extension(<span class="hljs-string">&quot;loadBalance&quot;</span>)</span>;<br>    &#125;<br><br>    @Override<br>    public InetSocketAddress lookup<span class="hljs-constructor">Service(RpcRequest <span class="hljs-params">rpcRequest</span>)</span> &#123;<br>    	<span class="hljs-comment">//服务名</span><br>        String rpcServiceName = rpcRequest.get<span class="hljs-constructor">RpcServiceName()</span>;<br>        CuratorFramework zkClient = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">CuratorUtils</span>.</span></span>get<span class="hljs-constructor">ZkClient()</span>;<br>        <span class="hljs-comment">//找子节点</span><br>        List&lt;String&gt; serviceUrlList = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">CuratorUtils</span>.</span></span>get<span class="hljs-constructor">ChildrenNodes(<span class="hljs-params">zkClient</span>, <span class="hljs-params">rpcServiceName</span>)</span>;<br>        <span class="hljs-comment">//找不到，就抛出not found</span><br>        <span class="hljs-keyword">if</span> (serviceUrlList<span class="hljs-operator"> == </span>null<span class="hljs-operator"> || </span>serviceUrlList.size<span class="hljs-literal">()</span><span class="hljs-operator"> == </span><span class="hljs-number">0</span>) &#123;<br>            throw <span class="hljs-keyword">new</span> <span class="hljs-constructor">RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, <span class="hljs-params">rpcServiceName</span>)</span>;<br>        &#125;<br>        <span class="hljs-comment">// load balancing</span><br>        String targetServiceUrl = loadBalance.select<span class="hljs-constructor">ServiceAddress(<span class="hljs-params">serviceUrlList</span>, <span class="hljs-params">rpcRequest</span>)</span>;<br>        <br>        String<span class="hljs-literal">[]</span> socketAddressArray = targetServiceUrl.split(<span class="hljs-string">&quot;:&quot;</span>);<br>        String host = socketAddressArray<span class="hljs-literal">[<span class="hljs-number">0</span>]</span>;<br>        <span class="hljs-built_in">int</span> port = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Integer</span>.</span></span>parse<span class="hljs-constructor">Int(<span class="hljs-params">socketAddressArray</span>[1])</span>;<br>        return <span class="hljs-keyword">new</span> <span class="hljs-constructor">InetSocketAddress(<span class="hljs-params">host</span>, <span class="hljs-params">port</span>)</span>;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
 
-<h5 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class ZkServiceRegistryImpl implements ServiceRegistry &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void registerService(String rpcServiceName, InetSocketAddress inetSocketAddress) &#123;</span><br><span class="line">        String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + &quot;/&quot; + rpcServiceName + inetSocketAddress.toString();</span><br><span class="line">        CuratorFramework zkClient = CuratorUtils.getZkClient();</span><br><span class="line">        //创建一个持久节点</span><br><span class="line">        CuratorUtils.createPersistentNode(zkClient, servicePath);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h5><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> ZkServiceRegistryImpl implements ServiceRegistry &#123;<br>    @Override<br>    public void register<span class="hljs-constructor">Service(String <span class="hljs-params">rpcServiceName</span>, InetSocketAddress <span class="hljs-params">inetSocketAddress</span>)</span> &#123;<br>        String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + <span class="hljs-string">&quot;/&quot;</span> + rpcServiceName + inetSocketAddress.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>;<br>        CuratorFramework zkClient = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">CuratorUtils</span>.</span></span>get<span class="hljs-constructor">ZkClient()</span>;<br>        <span class="hljs-comment">//创建一个持久节点</span><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">CuratorUtils</span>.</span></span>create<span class="hljs-constructor">PersistentNode(<span class="hljs-params">zkClient</span>, <span class="hljs-params">servicePath</span>)</span>;<br>    &#125;<br><br></code></pre></td></tr></table></figure>
 
 <p>推荐使用 Zookeeper 作为注册中心。当然了，你也可以使用 Nacos ，甚至是 Redis。</p>
 <p>ZooKeeper 为我们提供了高可用、高性能、稳定的分布式数据一致性解决方案，通常被用于实现诸如数据发布&#x2F;订阅、负载均衡、命名服务、分布式协调&#x2F;通知、集群管理、Master 选举、分布式锁和分布式队列等功能。并且<strong>，ZooKeeper 将数据保存在内存中，性能是非常棒的</strong>。 在“读”多于“写”的应用程序中尤其地高性能，因为“写”会导致所有的服务器间同步状态。（“读”多于“写”是协调服务的典型场景）。</p>
@@ -423,26 +425,26 @@
 <p><strong>删除节点(delete 命令)</strong></p>
 <p>这个命令很简单，但是需要注意的一点是如果你要删除某一个节点，那么这个节点必须无子节点才行。</p>
 <h5 id="连接zookeeper"><a href="#连接zookeeper" class="headerlink" title="连接zookeeper"></a>连接zookeeper</h5><p>通过 CuratorFrameworkFactory 创建 CuratorFramework 对象，然后再调用  CuratorFramework 对象的 start() 方法即可</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CuratorFramework zkClient = CuratorFrameworkFactory.builder()</span><br><span class="line">    // the server to connect to (can be a server list)</span><br><span class="line">    .connectString(&quot;127.0.0.1:2181&quot;)</span><br><span class="line">    .retryPolicy(retryPolicy)</span><br><span class="line">    .build();</span><br><span class="line">zkClient.start();</span><br></pre></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">CuratorFramework zkClient = CuratorFrameworkFactory.builder()<br>    // the <span class="hljs-keyword">server</span> <span class="hljs-keyword">to</span> <span class="hljs-keyword">connect</span> <span class="hljs-keyword">to</span> (can be a <span class="hljs-keyword">server</span> list)<br>    .connectString(&quot;127.0.0.1:2181&quot;)<br>    .retryPolicy(retryPolicy)<br>    .build();<br>zkClient.<span class="hljs-keyword">start</span>();<br></code></pre></td></tr></table></figure>
 
 <p>baseSleepTimeMs：重试之间等待的初始时间<br>maxRetries ：最大重试次数<br>connectString ：要连接的服务器列表<br>retryPolicy ：重试策略</p>
 <h5 id="zookeeper常见概念"><a href="#zookeeper常见概念" class="headerlink" title="zookeeper常见概念"></a>zookeeper常见概念</h5><h6 id="ZooKeeper-典型应用场景"><a href="#ZooKeeper-典型应用场景" class="headerlink" title="ZooKeeper 典型应用场景"></a><strong>ZooKeeper 典型应用场景</strong></h6><p>分布式锁 ： 通过创建唯一节点获得分布式锁，当获得锁的一方执行完相关代码或者是挂掉之后就释放锁。<br>命名服务 ：可以通过 ZooKeeper 的顺序节点生成全局唯一 ID<br>数据发布&#x2F;订阅 ：通过 Watcher 机制 可以很方便地实现数据发布&#x2F;订阅。当你将数据发布到 ZooKeeper 被监听的节点上，其他机器可通过监听 ZooKeeper 上节点的变化来实现配置的动态更新。</p>
 <h6 id="Data-model（数据模型）"><a href="#Data-model（数据模型）" class="headerlink" title="Data model（数据模型）"></a>Data model（数据模型）</h6><p>ZooKeeper 数据模型采用层次化的多叉树形结构，每个节点上都可以存储数据，这些数据可以是数字、字符串或者是二级制序列。并且。每个节点还可以拥有 N 个子节点，最上层是根节点以“&#x2F;”来代表。每个数据节点在 ZooKeeper 中被称为 znode，它是 ZooKeeper 中数据的最小单元。并且，每个 znode 都一个唯一的路径标识。</p>
 <p>ZooKeeper 主要是用来协调服务的，而不是用来存储业务数据的，所以不要放比较大的数据在 znode 上，ZooKeeper 给出的上限是每个结点的数据大小最大是 1M。</p>
-<p><img src="https://i.loli.net/2021/08/06/U4PZ357vfcK2QDT.png" alt="image-20210806184839468"></p>
+<p><img src="https://i.loli.net/2021/08/06/U4PZ357vfcK2QDT.png" srcset="/img/loading.gif" lazyload alt="image-20210806184839468"></p>
 <h6 id="znode-4-种类型"><a href="#znode-4-种类型" class="headerlink" title="znode 4 种类型"></a>znode 4 种类型</h6><p><strong>持久（PERSISTENT）节点</strong> ：一旦创建就一直存在即使 ZooKeeper 集群宕机，直到将其删除。<br><strong>临时（EPHEMERAL）节点</strong> ：临时节点的生命周期是与 客户端会话（session） 绑定的，会话消失则节点消失 。并且，临时节点只能做叶子节点 ，不能创建子节点。<br><strong>持久顺序（PERSISTENT_SEQUENTIAL）节点</strong> ：除了具有持久（PERSISTENT）节点的特性之外， 子节点的名称还具有顺序性。比如 &#x2F;node1&#x2F;app0000000001 、&#x2F;node1&#x2F;app0000000002 。<br><strong>临时顺序（EPHEMERAL_SEQUENTIAL）节点</strong> ：除了具备临时（EPHEMERAL）节点的特性之外，子节点的名称还具有顺序性。</p>
 <p>每个 znode 由 2 部分组成:</p>
 <p>stat ：状态信息<br>data ： 节点存放的数据的具体内容</p>
-<p><img src="https://i.loli.net/2021/08/06/CAHXpy2Qitw8M1h.png" alt="image-20210806184946339"></p>
+<p><img src="https://i.loli.net/2021/08/06/CAHXpy2Qitw8M1h.png" srcset="/img/loading.gif" lazyload alt="image-20210806184946339"></p>
 <h6 id="ACL（权限控制）"><a href="#ACL（权限控制）" class="headerlink" title="ACL（权限控制）"></a>ACL（权限控制）</h6><p>ZooKeeper 采用 ACL（AccessControlLists）策略来进行权限控制，类似于 UNIX 文件系统的权限控制。</p>
 <p>对于 znode 操作的权限，ZooKeeper 提供了以下 5 种：</p>
 <p>CREATE : 能创建子节点<br>READ ：能获取节点数据和列出其子节点<br>WRITE : 能设置&#x2F;更新节点数据<br>DELETE : 能删除子节点<br>ADMIN : 能设置节点 ACL 的权限</p>
 <h6 id="Watcher（事件监听器）"><a href="#Watcher（事件监听器）" class="headerlink" title="Watcher（事件监听器）"></a>Watcher（事件监听器）</h6><p>Watcher（事件监听器），是 ZooKeeper 中的一个很重要的特性。ZooKeeper 允许用户在<strong>指定节点上注册一些 Watcher</strong>，并且在一些特定事件触发的时候，ZooKeeper 服务端会将事件通知到感兴趣的客户端上去，该机制是 ZooKeeper 实现分布式协调服务的重要特性。</p>
-<p><img src="https://i.loli.net/2021/08/06/cYBTq4IkzRsagZF.png" alt="image-20210806185101550"></p>
+<p><img src="https://i.loli.net/2021/08/06/cYBTq4IkzRsagZF.png" srcset="/img/loading.gif" lazyload alt="image-20210806185101550"></p>
 <h6 id="ZooKeeper-集群"><a href="#ZooKeeper-集群" class="headerlink" title="ZooKeeper 集群"></a>ZooKeeper 集群</h6><p>为了保证高可用，最好是以集群形态来部署 ZooKeeper，这样只要集群中大部分机器是可用的（能够容忍一定的机器故障），那么 ZooKeeper 本身仍然是可用的。通常 3 台服务器就可以构成一个 ZooKeeper 集群了。ZooKeeper 官方提供的架构图就是一个 ZooKeeper 集群整体对外提供服务。</p>
 <p>集群间通过 <strong>ZAB 协议（ZooKeeper Atomic Broadcast）</strong>来保持数据的一致性。</p>
 <p>ZooKeeper 中没有选择传统的 Master&#x2F;Slave 概念，而是引入了 <strong>Leader、Follower 和 Observer</strong> 三种角色。</p>
-<p><img src="https://i.loli.net/2021/08/06/xSmqUpYf78lrvHk.png" alt="image-20210806185249694"></p>
+<p><img src="https://i.loli.net/2021/08/06/xSmqUpYf78lrvHk.png" srcset="/img/loading.gif" lazyload alt="image-20210806185249694"></p>
 <p>ZooKeeper 集群中的所有机器通过一个 Leader 选举过程 来选定一台称为 “Leader” 的机器，Leader 既可以为客户端提供写服务又能提供读服务。除了 Leader 外，<strong>Follower 和 Observer 都只能提供读服务</strong>。Follower 和 Observer 唯一的区别在于 <strong>Observer 机器不参与 Leader 的选举过程</strong>，<strong>也不参与写操作的“过半写成功”策略，</strong>因此 <strong>Observer 机器可以在不影响写性能的情况下提升集群的读性能。</strong></p>
 <p>当 Leader 服务器出现网络中断、崩溃退出与重启等异常情况时，就会进入 Leader 选举过程，这个过程会选举产生新的 Leader 服务器。</p>
 <p><strong>Leader election（选举阶段）</strong>：节点在一开始都处于选举阶段，只要有一个节点得到超半数节点的票数，它就可以当选准 leader。<br><strong>Discovery（发现阶段）</strong> ：在这个阶段，followers 跟准 leader 进行通信，同步 followers 最近接收的事务提议。<br><strong>Synchronization（同步阶段）</strong> :同步阶段主要是利用 leader 前一阶段获得的最新提议历史，同步集群中所有的副本。同步完成之后 准 leader 才会成为真正的 leader。<br><strong>Broadcast（广播阶段）</strong> :到了这个阶段，ZooKeeper 集群才能正式对外提供事务服务，并且 leader 可以进行消息广播。同时如果有新的节点加入，还需要对新节点进行同步。</p>
@@ -495,9 +497,9 @@
 <p>这个问题不常见是因为zk有重试机制，<strong>一旦zk集群检测不到客户端的心跳，就会重试</strong>，Curator客户端支持多种重试策略。多次重试之后还不行的话才会删除临时节点。</p>
 <p><strong>从性能角度（从高到低）</strong><br><strong>缓存 &gt; Zookeeper &gt;&#x3D; 数据库</strong></p>
 <p><strong>从可靠性角度（从高到低）</strong><br><strong>Zookeeper &gt; 缓存 &gt; 数据库</strong></p>
-<h4 id="网络传输"><a href="#网络传输" class="headerlink" title="网络传输"></a>网络传输</h4><h5 id="网络传输实体类"><a href="#网络传输实体类" class="headerlink" title="网络传输实体类"></a>网络传输实体类</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class RpcRequest implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = 1905122041950251207L;//序列化版本控制</span><br><span class="line">    private String requestId;</span><br><span class="line">    private String interfaceName;</span><br><span class="line">    private String methodName;</span><br><span class="line">    private Object[] parameters;</span><br><span class="line">    private Class&lt;?&gt;[] paramTypes;</span><br><span class="line">    private String version;</span><br><span class="line">    private String group;//处理一个接口有多个实现类的情况</span><br><span class="line">    //服务名称：接口名加对应的实现方法。</span><br><span class="line">    public String getRpcServiceName() &#123;</span><br><span class="line">        return this.getInterfaceName() + this.getGroup() + this.getVersion();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="网络传输"><a href="#网络传输" class="headerlink" title="网络传输"></a>网络传输</h4><h5 id="网络传输实体类"><a href="#网络传输实体类" class="headerlink" title="网络传输实体类"></a>网络传输实体类</h5><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RpcRequest</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Serializable</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final long serialVersionUID = 1905122041950251207L;<span class="hljs-comment">//序列化版本控制</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> requestId;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> interfaceName;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> methodName;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">Object</span>[] parameters;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">Class</span>&lt;?&gt;[] paramTypes;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> version;<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> group;<span class="hljs-comment">//处理一个接口有多个实现类的情况</span><br>    <span class="hljs-comment">//服务名称：接口名加对应的实现方法。</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">getRpcServiceName</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInterfaceName</span>() + <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getGroup</span>() + <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getVersion</span>();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class RpcResponse&lt;T&gt; implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = 715745410605631233L;</span><br><span class="line">    private String requestId;//唯一标识每一个请求</span><br><span class="line">    private Integer code;//返回数字</span><br><span class="line">    private String message;//返回的string</span><br><span class="line">    private T data;</span><br><span class="line"></span><br><span class="line">    public static &lt;T&gt; RpcResponse&lt;T&gt; success(T data, String requestId) &#123;</span><br><span class="line">        RpcResponse&lt;T&gt; response = new RpcResponse&lt;&gt;();</span><br><span class="line">        response.setCode(RpcResponseCodeEnum.SUCCESS.getCode());</span><br><span class="line">        response.setMessage(RpcResponseCodeEnum.SUCCESS.getMessage());</span><br><span class="line">        response.setRequestId(requestId);</span><br><span class="line">        if (null != data) &#123;</span><br><span class="line">            response.setData(data);</span><br><span class="line">        &#125;</span><br><span class="line">        return response;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static &lt;T&gt; RpcResponse&lt;T&gt; fail(RpcResponseCodeEnum rpcResponseCodeEnum) &#123;</span><br><span class="line">        RpcResponse&lt;T&gt; response = new RpcResponse&lt;&gt;();</span><br><span class="line">        response.setCode(rpcResponseCodeEnum.getCode());</span><br><span class="line">        response.setMessage(rpcResponseCodeEnum.getMessage());</span><br><span class="line">        return response;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RpcResponse</span>&lt;<span class="hljs-title">T</span>&gt; <span class="hljs-keyword"><span class="hljs-keyword">implements</span> <span class="hljs-type">Serializable</span></span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final long serialVersionUID = <span class="hljs-number">715745410605631233</span>L;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">String</span> requestId;<span class="hljs-comment">//唯一标识每一个请求</span><br>    <span class="hljs-keyword">private</span> Integer code;<span class="hljs-comment">//返回数字</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">String</span> message;<span class="hljs-comment">//返回的string</span><br>    <span class="hljs-keyword">private</span> T data;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; RpcResponse&lt;T&gt; success(T data, <span class="hljs-keyword">String</span> requestId) &#123;<br>        RpcResponse&lt;T&gt; response = <span class="hljs-keyword">new</span> <span class="hljs-type">RpcResponse</span>&lt;&gt;();<br>        response.setCode(RpcResponseCodeEnum.SUCCESS.getCode());<br>        response.setMessage(RpcResponseCodeEnum.SUCCESS.getMessage());<br>        response.setRequestId(requestId);<br>        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> != data) &#123;<br>            response.setData(data);<br>        &#125;<br>        <span class="hljs-keyword">return</span> response;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; RpcResponse&lt;T&gt; fail(RpcResponseCodeEnum rpcResponseCodeEnum) &#123;<br>        RpcResponse&lt;T&gt; response = <span class="hljs-keyword">new</span> <span class="hljs-type">RpcResponse</span>&lt;&gt;();<br>        response.setCode(rpcResponseCodeEnum.getCode());<br>        response.setMessage(rpcResponseCodeEnum.getMessage());<br>        <span class="hljs-keyword">return</span> response;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
 
 <h5 id="netty网络客户传输"><a href="#netty网络客户传输" class="headerlink" title="netty网络客户传输"></a>netty网络客户传输</h5><p><strong>NettyClient.java</strong></p>
 <p>doConnect() :用于连接服务端（目标方法所在的服务器）并返回对应的 Channel。当我们知道了服务端的地址之后，我们就可以通过 NettyClient 成功连接服务端了。（有了 Channel 之后就能发送数据到服务端了）</p>
@@ -507,7 +509,7 @@
 <p><strong>NettyClientHandler</strong></p>
 <p>自定义客户端 ChannelHandler 用于处理服务器发送的数据。</p>
 <p>从代码中，可以看出当 rpc 请求被成功处理（客户端收到服务端的执行结果）之后，我们调用了 <strong>unprocessedRequests.complete(rpcResponse) 方法</strong>，这样的话，你只需要通过下面的方式就能成功接收到客户端返回的结果</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CompletableFuture&lt;RpcResponse&gt; completableFuture = (CompletableFuture&lt;RpcResponse&gt;) clientTransport.sendRpcRequest(rpcRequest);</span><br><span class="line">rpcResponse = completableFuture.get();</span><br></pre></td></tr></table></figure>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">CompletableFuture&lt;RpcResponse&gt; completableFuture <span class="hljs-operator">=</span> (CompletableFuture&lt;RpcResponse&gt;) clientTransport.sendRpcRequest(rpcRequest)<span class="hljs-comment">;</span><br><span class="hljs-attribute">rpcResponse</span> <span class="hljs-operator">=</span> completableFuture.get()<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>ChannelProvider.java</strong></p>
 <p>用于存放 Channel（Channel用于在服务端和客户端之间传输数据）。</p>
@@ -522,26 +524,26 @@
 <p>Netty 是一个基于 NIO 的 client-server(客户端服务器)框架，使用它可以快速简单地开发网络应用程序。<br>它极大地简化并简化了 TCP 和 UDP 套接字服务器等网络编程,并且性能以及安全性等很多方面甚至都要更好。<br>支持多种协议如 FTP，SMTP，HTTP 以及各种二进制和基于文本的传统协议。</p>
 <h5 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h5><p><strong>服务器端：</strong></p>
 <p>创建 <strong>ServerSocket 对象</strong>并且绑定地址（ip）和端口号(port)：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server.bind(new InetSocketAddress(host, port))</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">server.bind(<span class="hljs-keyword">new</span> <span class="hljs-constructor">InetSocketAddress(<span class="hljs-params">host</span>, <span class="hljs-params">port</span>)</span>)<br></code></pre></td></tr></table></figure>
 
 <p>通过 <strong>accept()方法监听</strong>客户端请求<br>连接建立后，通过输入流读取客户端发送的请求信息</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Message message = (Message) objectInputStream.readObject();</span><br></pre></td></tr></table></figure>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">Message</span> <span class="hljs-keyword">message</span> = (<span class="hljs-keyword">Message</span>) objectInputStream.readObject();<br></code></pre></td></tr></table></figure>
 
 <p>通过输出流向客户端发送响应信息</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objectOutputStream.writeObject(message);</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">objectOutputStream.write<span class="hljs-constructor">Object(<span class="hljs-params">message</span>)</span>;<br></code></pre></td></tr></table></figure>
 
 <p>关闭相关资源</p>
-<h6 id="管理多个客户端"><a href="#管理多个客户端" class="headerlink" title="管理多个客户端"></a>管理多个客户端</h6><p><img src="https://i.loli.net/2021/08/06/1bNwXIjGmecq7K9.png" alt="image-20210806153434387"></p>
+<h6 id="管理多个客户端"><a href="#管理多个客户端" class="headerlink" title="管理多个客户端"></a>管理多个客户端</h6><p><img src="https://i.loli.net/2021/08/06/1bNwXIjGmecq7K9.png" srcset="/img/loading.gif" lazyload alt="image-20210806153434387"></p>
 <p> 比较简单并且实际的改进方法就是使用<strong>线程池</strong>。线程池还可以让线程的创建和回收成本相对较低，并且我们可以指定线程池的可创建线程的最大数量，这样就不会导致线程创建过多，机器资源被不合理消耗。</p>
 <p><strong>客户端：</strong></p>
 <p>创建Socket 对象并且连接指定的服务器的地址（ip）和端口号(port)：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socket.connect(inetSocketAddress)</span><br></pre></td></tr></table></figure>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">socket.<span class="hljs-keyword">connect</span><span class="hljs-params">(inetSocketAddress)</span><br></code></pre></td></tr></table></figure>
 
 <p>连接建立后，通过输出流向服务器端发送请求信息</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objectOutputStream.writeObject(message)</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">objectOutputStream.write<span class="hljs-constructor">Object(<span class="hljs-params">message</span>)</span><br></code></pre></td></tr></table></figure>
 
 <p>通过输入流获取服务器响应的信息</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return objectInputStream.readObject();</span><br></pre></td></tr></table></figure>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-function"><span class="hljs-keyword">return</span> objectInputStream.<span class="hljs-title">readObject</span><span class="hljs-params">()</span></span>;<br></code></pre></td></tr></table></figure>
 
 <p>关闭相关资源</p>
 <h5 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h5><p>Netty 是一个基于 NIO 的 client-server(客户端服务器)框架，使用它可以快速简单地开发网络应用程序。</p>
@@ -557,29 +559,29 @@
 <h6 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h6><p>客户端中主要有一个用于向服务端发送消息的 **sendMessage()**方法，通过这个方法你可以将消息也就是RpcRequest 对象发送到服务端，并且你可以同步获取到服务端返回的结果也就是RpcResponse 对象。 </p>
 <p><strong>sendMessage()方法分析：</strong></p>
 <p>首先初始化了一个 Bootstrap</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> @Override</span><br><span class="line">protected void initChannel(SocketChannel ch) &#123;</span><br><span class="line">/*</span><br><span class="line">自定义序列化编解码器</span><br><span class="line">*/</span><br><span class="line">// RpcResponse -&gt; ByteBuf</span><br><span class="line">ch.pipeline().addLast(new NettyKryoDecoder(kryoSerializer, RpcResponse.class));</span><br><span class="line">// ByteBuf -&gt; RpcRequest</span><br><span class="line">ch.pipeline().addLast(new NettyKryoEncoder(kryoSerializer, RpcRequest.class));</span><br><span class="line">ch.pipeline().addLast(new NettyClientHandler());</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"> @Override<br>protected void init<span class="hljs-constructor">Channel(SocketChannel <span class="hljs-params">ch</span>)</span> &#123;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">自定义序列化编解码器</span><br><span class="hljs-comment">*/</span><br><span class="hljs-comment">// RpcResponse -&gt; ByteBuf</span><br>ch.pipeline<span class="hljs-literal">()</span>.add<span class="hljs-constructor">Last(<span class="hljs-params">new</span> NettyKryoDecoder(<span class="hljs-params">kryoSerializer</span>, RpcResponse.<span class="hljs-params">class</span>)</span>);<br><span class="hljs-comment">// ByteBuf -&gt; RpcRequest</span><br>ch.pipeline<span class="hljs-literal">()</span>.add<span class="hljs-constructor">Last(<span class="hljs-params">new</span> NettyKryoEncoder(<span class="hljs-params">kryoSerializer</span>, RpcRequest.<span class="hljs-params">class</span>)</span>);<br>ch.pipeline<span class="hljs-literal">()</span>.add<span class="hljs-constructor">Last(<span class="hljs-params">new</span> NettyClientHandler()</span>);<br>&#125;<br><br></code></pre></td></tr></table></figure>
 
 <p>通过 Bootstrap 对象连接服务端</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ChannelFuture f = b.connect(host, port).sync();</span><br><span class="line">Channel futureChannel = f.channel();</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">ChannelFuture</span> <span class="hljs-variable">f</span> <span class="hljs-operator">=</span> b.connect(host, port).sync();<br><span class="hljs-type">Channel</span> <span class="hljs-variable">futureChannel</span> <span class="hljs-operator">=</span> f.channel();<br></code></pre></td></tr></table></figure>
 
 <p>通过 Channel 向服务端发送消息RpcRequest</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">futureChannel.writeAndFlush(rpcRequest)</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">futureChannel.write<span class="hljs-constructor">AndFlush(<span class="hljs-params">rpcRequest</span>)</span><br></code></pre></td></tr></table></figure>
 
 <p>发送成功后，阻塞等待 ，直到Channel关闭</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">futureChannel.closeFuture().sync();</span><br></pre></td></tr></table></figure>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss">futureChannel<span class="hljs-selector-class">.closeFuture</span>()<span class="hljs-selector-class">.sync</span>();<br></code></pre></td></tr></table></figure>
 
 <p>拿到服务端返回的结果 RpcResponse</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">NettyClientHandler</span><br><span class="line"></span><br><span class="line">// 声明一个 AttributeKey 对象</span><br><span class="line">AttributeKey&lt;RpcResponse&gt; key = AttributeKey.valueOf(&quot;rpcResponse&quot;);</span><br><span class="line">// 将服务端的返回结果保存到 AttributeMap 上，AttributeMap 可以看作是一个Channel的共享数据源</span><br><span class="line">// AttributeMap的key是AttributeKey，value是Attribute</span><br><span class="line">ctx.channel().attr(key).set(rpcResponse);</span><br></pre></td></tr></table></figure>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs q">NettyClientHandler<br><br><span class="hljs-comment">// 声明一个 AttributeKey 对象</span><br>AttributeKey&lt;RpcResponse&gt; <span class="hljs-built_in">key</span> = AttributeKey.valueOf(<span class="hljs-string">&quot;rpcResponse&quot;</span>);<br><span class="hljs-comment">// 将服务端的返回结果保存到 AttributeMap 上，AttributeMap 可以看作是一个Channel的共享数据源</span><br><span class="hljs-comment">// AttributeMap的key是AttributeKey，value是Attribute</span><br>ctx.channel().<span class="hljs-built_in">attr</span>(<span class="hljs-built_in">key</span>).<span class="hljs-built_in">set</span>(rpcResponse);<br></code></pre></td></tr></table></figure>
 
 <p>（<strong>NettyClientHandler</strong>用于读取服务端发送过来的 RpcResponse 消息对象，并将 RpcResponse 消息对象保存到 AttributeMap 上。</p>
 <p>AttributeMap 可以看作是一个Channel的共享数据源。这样的话，我们就能通过 channel 和 key 将数据读取出来。</p>
 <p>AttributeMap ,AttributeMap 是一个接口，但是类似于 Map 数据结构 。</p>
 <p>Channel 实现了 <strong>AttributeMap 接口</strong>，这样也就表明它存在了AttributeMap 相关的属性。 <strong>每个 Channel上的AttributeMap属于共享数据</strong>。AttributeMap 的结构，和Map很像，我们可以把 key 看作是AttributeKey，value 看作是Attribute，我们可以根据 AttributeKey找到对应的Attribute。）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AttributeKey&lt;RpcResponse&gt; key = AttributeKey.valueOf(&quot;rpcResponse&quot;);</span><br><span class="line">return futureChannel.attr(key).get();</span><br></pre></td></tr></table></figure>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs maxima">AttributeKey&lt;RpcResponse&gt; <span class="hljs-built_in">key</span> = AttributeKey.valueOf(<span class="hljs-string">&quot;rpcResponse&quot;</span>);<br><span class="hljs-built_in">return</span> futureChannel.attr(<span class="hljs-built_in">key</span>).<span class="hljs-built_in">get</span>();<br></code></pre></td></tr></table></figure>
 
 
 
-<h6 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">ServerBootstrap b = new ServerBootstrap();</span><br><span class="line">b.group(bossGroup, workerGroup)</span><br><span class="line">                    .channel(NioServerSocketChannel.class)</span><br><span class="line">                    // TCP默认开启了 Nagle 算法，该算法的作用是尽可能的发送大数据快，减少网络传输。TCP_NODELAY 参数的作用就是控制是否启用 Nagle 算法。</span><br><span class="line">                    .childOption(ChannelOption.TCP_NODELAY, true)</span><br><span class="line">                    // 是否开启 TCP 底层心跳机制</span><br><span class="line">                    .childOption(ChannelOption.SO_KEEPALIVE, true)</span><br><span class="line">                    //表示系统用于临时存放已完成三次握手的请求的队列的最大长度,如果连接建立频繁，服务器处理创建新连接较慢，可以适当调大这个参数</span><br><span class="line">                    .option(ChannelOption.SO_BACKLOG, 128)</span><br><span class="line">                    .handler(new LoggingHandler(LogLevel.INFO))</span><br><span class="line">                    .childHandler(new ChannelInitializer&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                        @Override</span><br><span class="line">                        protected void initChannel(SocketChannel ch) &#123;</span><br><span class="line">     ch.pipeline().addLast(new NettyKryoDecoder(kryoSerializer, RpcRequest.class));</span><br><span class="line">     ch.pipeline().addLast(new NettyKryoEncoder(kryoSerializer, RpcResponse.class));</span><br><span class="line">     ch.pipeline().addLast(new NettyServerHandler());</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line"></span><br><span class="line">            // 绑定端口，同步等待绑定成功</span><br><span class="line">            ChannelFuture f = b.bind(port).sync();</span><br><span class="line">            // 等待服务端监听端口关闭</span><br><span class="line">            f.channel().closeFuture().sync();</span><br></pre></td></tr></table></figure>
+<h6 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h6><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">ServerBootstrap b = <span class="hljs-keyword">new</span> <span class="hljs-constructor">ServerBootstrap()</span>;<br>b.group(bossGroup, workerGroup)<br>                    .channel(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">NioServerSocketChannel</span>.</span></span><span class="hljs-keyword">class</span>)<br>                    <span class="hljs-comment">// TCP默认开启了 Nagle 算法，该算法的作用是尽可能的发送大数据快，减少网络传输。TCP_NODELAY 参数的作用就是控制是否启用 Nagle 算法。</span><br>                    .child<span class="hljs-constructor">Option(ChannelOption.TCP_NODELAY, <span class="hljs-params">true</span>)</span><br>                    <span class="hljs-comment">// 是否开启 TCP 底层心跳机制</span><br>                    .child<span class="hljs-constructor">Option(ChannelOption.SO_KEEPALIVE, <span class="hljs-params">true</span>)</span><br>                    <span class="hljs-comment">//表示系统用于临时存放已完成三次握手的请求的队列的最大长度,如果连接建立频繁，服务器处理创建新连接较慢，可以适当调大这个参数</span><br>                    .option(ChannelOption.SO_BACKLOG, <span class="hljs-number">128</span>)<br>                    .handler(<span class="hljs-keyword">new</span> <span class="hljs-constructor">LoggingHandler(LogLevel.INFO)</span>)<br>                    .child<span class="hljs-constructor">Handler(<span class="hljs-params">new</span> ChannelInitializer&lt;SocketChannel&gt;()</span> &#123;<br>                        @Override<br>                        protected void init<span class="hljs-constructor">Channel(SocketChannel <span class="hljs-params">ch</span>)</span> &#123;<br>     ch.pipeline<span class="hljs-literal">()</span>.add<span class="hljs-constructor">Last(<span class="hljs-params">new</span> NettyKryoDecoder(<span class="hljs-params">kryoSerializer</span>, RpcRequest.<span class="hljs-params">class</span>)</span>);<br>     ch.pipeline<span class="hljs-literal">()</span>.add<span class="hljs-constructor">Last(<span class="hljs-params">new</span> NettyKryoEncoder(<span class="hljs-params">kryoSerializer</span>, RpcResponse.<span class="hljs-params">class</span>)</span>);<br>     ch.pipeline<span class="hljs-literal">()</span>.add<span class="hljs-constructor">Last(<span class="hljs-params">new</span> NettyServerHandler()</span>);<br>                        &#125;<br>                    &#125;);<br><br>            <span class="hljs-comment">// 绑定端口，同步等待绑定成功</span><br>            ChannelFuture f = b.bind(port).sync<span class="hljs-literal">()</span>;<br>            <span class="hljs-comment">// 等待服务端监听端口关闭</span><br>            f.channel<span class="hljs-literal">()</span>.close<span class="hljs-constructor">Future()</span>.sync<span class="hljs-literal">()</span>;<br></code></pre></td></tr></table></figure>
 
 <h6 id="编码器"><a href="#编码器" class="headerlink" title="编码器"></a>编码器</h6><p>NettyKryoEncoder 是我们自定义的编码器。它负责处理”出站”消息，将消息格式转换为字节数组然后写入到字节数据的容器 ByteBuf 对象中。</p>
 <p>4B  magic code（魔法数）  </p>
@@ -589,9 +591,9 @@
 <p>1B compress（压缩类型） </p>
 <p>1B codec（序列化类型）    </p>
 <p>4B  requestId（请求的Id）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"> @Override</span><br><span class="line">protected void encode(ChannelHandlerContext ctx, RpcMessage rpcMessage, ByteBuf out) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            out.writeBytes(RpcConstants.MAGIC_NUMBER);//魔数4</span><br><span class="line">            out.writeByte(RpcConstants.VERSION);//版本1</span><br><span class="line">            out.writerIndex(out.writerIndex() + 4);//跳过4字节，留着写长度</span><br><span class="line">            byte messageType = rpcMessage.getMessageType();</span><br><span class="line">            out.writeByte(messageType);//消息类型1</span><br><span class="line">            out.writeByte(rpcMessage.getCodec());//序列化类型1</span><br><span class="line">            out.writeByte(CompressTypeEnum.GZIP.getCode());//压缩类型1</span><br><span class="line">            out.writeInt(ATOMIC_INTEGER.getAndIncrement());//请求ID4</span><br><span class="line">            </span><br><span class="line">            byte[] bodyBytes = null;</span><br><span class="line">            int fullLength = RpcConstants.HEAD_LENGTH;//头部长度</span><br><span class="line">            </span><br><span class="line">            if (messageType != RpcConstants.HEARTBEAT_REQUEST_TYPE</span><br><span class="line">                    &amp;&amp; messageType != RpcConstants.HEARTBEAT_RESPONSE_TYPE) &#123;</span><br><span class="line">                // 序列化</span><br><span class="line">         String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());</span><br><span class="line">         Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class)</span><br><span class="line">                        .getExtension(codecName);</span><br><span class="line">          bodyBytes = serializer.serialize(rpcMessage.getData());//序列化</span><br><span class="line">                // 压缩</span><br><span class="line">        String compressName = CompressTypeEnum.getName(rpcMessage.getCompress());</span><br><span class="line">        Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)</span><br><span class="line">                        .getExtension(compressName);</span><br><span class="line">         bodyBytes = compress.compress(bodyBytes);//压缩后的长度</span><br><span class="line">          </span><br><span class="line">         fullLength += bodyBytes.length;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            if (bodyBytes != null) &#123;</span><br><span class="line">                out.writeBytes(bodyBytes);</span><br><span class="line">            &#125;</span><br><span class="line">            int writeIndex = out.writerIndex();</span><br><span class="line">            //跳过魔术加版本</span><br><span class="line">            out.writerIndex(writeIndex - fullLength + RpcConstants.MAGIC_NUMBER.length + 1);</span><br><span class="line">            //写全长</span><br><span class="line">            out.writeInt(fullLength);</span><br><span class="line">            out.writerIndex(writeIndex);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            log.error(&quot;Encode request error!&quot;, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs csharp"> @Override<br><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">encode</span>(<span class="hljs-params">ChannelHandlerContext ctx, RpcMessage rpcMessage, ByteBuf <span class="hljs-keyword">out</span></span>)</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">out</span>.writeBytes(RpcConstants.MAGIC_NUMBER);<span class="hljs-comment">//魔数4</span><br>            <span class="hljs-keyword">out</span>.writeByte(RpcConstants.VERSION);<span class="hljs-comment">//版本1</span><br>            <span class="hljs-keyword">out</span>.writerIndex(<span class="hljs-keyword">out</span>.writerIndex() + <span class="hljs-number">4</span>);<span class="hljs-comment">//跳过4字节，留着写长度</span><br>            <span class="hljs-built_in">byte</span> messageType = rpcMessage.getMessageType();<br>            <span class="hljs-keyword">out</span>.writeByte(messageType);<span class="hljs-comment">//消息类型1</span><br>            <span class="hljs-keyword">out</span>.writeByte(rpcMessage.getCodec());<span class="hljs-comment">//序列化类型1</span><br>            <span class="hljs-keyword">out</span>.writeByte(CompressTypeEnum.GZIP.getCode());<span class="hljs-comment">//压缩类型1</span><br>            <span class="hljs-keyword">out</span>.writeInt(ATOMIC_INTEGER.getAndIncrement());<span class="hljs-comment">//请求ID4</span><br>            <br>            <span class="hljs-built_in">byte</span>[] bodyBytes = <span class="hljs-literal">null</span>;<br>            <span class="hljs-built_in">int</span> fullLength = RpcConstants.HEAD_LENGTH;<span class="hljs-comment">//头部长度</span><br>            <br>            <span class="hljs-keyword">if</span> (messageType != RpcConstants.HEARTBEAT_REQUEST_TYPE<br>                    &amp;&amp; messageType != RpcConstants.HEARTBEAT_RESPONSE_TYPE) &#123;<br>                <span class="hljs-comment">// 序列化</span><br>         String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());<br>         Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.<span class="hljs-keyword">class</span>)<br>                        .getExtension(codecName);<br>          bodyBytes = serializer.serialize(rpcMessage.getData());<span class="hljs-comment">//序列化</span><br>                <span class="hljs-comment">// 压缩</span><br>        String compressName = CompressTypeEnum.getName(rpcMessage.getCompress());<br>        Compress compress = ExtensionLoader.getExtensionLoader(Compress.<span class="hljs-keyword">class</span>)<br>                        .getExtension(compressName);<br>         bodyBytes = compress.compress(bodyBytes);<span class="hljs-comment">//压缩后的长度</span><br>          <br>         fullLength += bodyBytes.length;<br>            &#125;<br>            <br>            <span class="hljs-keyword">if</span> (bodyBytes != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-keyword">out</span>.writeBytes(bodyBytes);<br>            &#125;<br>            <span class="hljs-built_in">int</span> writeIndex = <span class="hljs-keyword">out</span>.writerIndex();<br>            <span class="hljs-comment">//跳过魔术加版本</span><br>            <span class="hljs-keyword">out</span>.writerIndex(writeIndex - fullLength + RpcConstants.MAGIC_NUMBER.length + <span class="hljs-number">1</span>);<br>            <span class="hljs-comment">//写全长</span><br>            <span class="hljs-keyword">out</span>.writeInt(fullLength);<br>            <span class="hljs-keyword">out</span>.writerIndex(writeIndex);<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            log.error(<span class="hljs-string">&quot;Encode request error!&quot;</span>, e);<br>        &#125;<br>    &#125;<br><br></code></pre></td></tr></table></figure>
 
-<h6 id="解码器"><a href="#解码器" class="headerlink" title="解码器"></a>解码器</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">private Object decodeFrame(ByteBuf in) &#123;</span><br><span class="line">        // 有序的bytebuf</span><br><span class="line">        checkMagicNumber(in);//魔术</span><br><span class="line">        checkVersion(in);//版本</span><br><span class="line">        int fullLength = in.readInt();</span><br><span class="line">        // 构建返回对象</span><br><span class="line">        byte messageType = in.readByte();</span><br><span class="line">        byte codecType = in.readByte();</span><br><span class="line">        byte compressType = in.readByte();</span><br><span class="line">        int requestId = in.readInt();</span><br><span class="line">        RpcMessage rpcMessage = RpcMessage.builder()</span><br><span class="line">                .codec(codecType)</span><br><span class="line">                .requestId(requestId)</span><br><span class="line">                .messageType(messageType).build();</span><br><span class="line">        //心跳请求？</span><br><span class="line">        if (messageType == RpcConstants.HEARTBEAT_REQUEST_TYPE) &#123;</span><br><span class="line">            rpcMessage.setData(RpcConstants.PING);</span><br><span class="line">            return rpcMessage;</span><br><span class="line">        &#125;</span><br><span class="line">        //心跳返回？</span><br><span class="line">        if (messageType == RpcConstants.HEARTBEAT_RESPONSE_TYPE) &#123;</span><br><span class="line">            rpcMessage.setData(RpcConstants.PONG);</span><br><span class="line">            return rpcMessage;</span><br><span class="line">        &#125;</span><br><span class="line">        //正文长度</span><br><span class="line">        int bodyLength = fullLength - RpcConstants.HEAD_LENGTH;</span><br><span class="line">        if (bodyLength &gt; 0) &#123;</span><br><span class="line">            byte[] bs = new byte[bodyLength];</span><br><span class="line">            in.readBytes(bs);</span><br><span class="line">            // 解压缩</span><br><span class="line">            String compressName = CompressTypeEnum.getName(compressType);</span><br><span class="line">            Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)</span><br><span class="line">                    .getExtension(compressName);</span><br><span class="line">            bs = compress.decompress(bs);</span><br><span class="line">            // 反序列化</span><br><span class="line">            String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());</span><br><span class="line">            Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class)</span><br><span class="line">                    .getExtension(codecName);</span><br><span class="line">            //rqcreauest？</span><br><span class="line">            if (messageType == RpcConstants.REQUEST_TYPE) &#123;</span><br><span class="line">                RpcRequest tmpValue = serializer.deserialize(bs, RpcRequest.class);</span><br><span class="line">                rpcMessage.setData(tmpValue);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                RpcResponse tmpValue = serializer.deserialize(bs, RpcResponse.class);</span><br><span class="line">                rpcMessage.setData(tmpValue);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return rpcMessage;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h6 id="解码器"><a href="#解码器" class="headerlink" title="解码器"></a>解码器</h6><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">private</span> Object decode<span class="hljs-constructor">Frame(ByteBuf <span class="hljs-params">in</span>)</span> &#123;<br>        <span class="hljs-comment">// 有序的bytebuf</span><br>        check<span class="hljs-constructor">MagicNumber(<span class="hljs-params">in</span>)</span>;<span class="hljs-comment">//魔术</span><br>        check<span class="hljs-constructor">Version(<span class="hljs-params">in</span>)</span>;<span class="hljs-comment">//版本</span><br>        <span class="hljs-built_in">int</span> fullLength = <span class="hljs-keyword">in</span>.read<span class="hljs-constructor">Int()</span>;<br>        <span class="hljs-comment">// 构建返回对象</span><br>        byte messageType = <span class="hljs-keyword">in</span>.read<span class="hljs-constructor">Byte()</span>;<br>        byte codecType = <span class="hljs-keyword">in</span>.read<span class="hljs-constructor">Byte()</span>;<br>        byte compressType = <span class="hljs-keyword">in</span>.read<span class="hljs-constructor">Byte()</span>;<br>        <span class="hljs-built_in">int</span> requestId = <span class="hljs-keyword">in</span>.read<span class="hljs-constructor">Int()</span>;<br>        RpcMessage rpcMessage = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RpcMessage</span>.</span></span>builder<span class="hljs-literal">()</span><br>                .codec(codecType)<br>                .request<span class="hljs-constructor">Id(<span class="hljs-params">requestId</span>)</span><br>                .message<span class="hljs-constructor">Type(<span class="hljs-params">messageType</span>)</span>.build<span class="hljs-literal">()</span>;<br>        <span class="hljs-comment">//心跳请求？</span><br>        <span class="hljs-keyword">if</span> (messageType<span class="hljs-operator"> == </span>RpcConstants.HEARTBEAT_REQUEST_TYPE) &#123;<br>            rpcMessage.set<span class="hljs-constructor">Data(RpcConstants.PING)</span>;<br>            return rpcMessage;<br>        &#125;<br>        <span class="hljs-comment">//心跳返回？</span><br>        <span class="hljs-keyword">if</span> (messageType<span class="hljs-operator"> == </span>RpcConstants.HEARTBEAT_RESPONSE_TYPE) &#123;<br>            rpcMessage.set<span class="hljs-constructor">Data(RpcConstants.PONG)</span>;<br>            return rpcMessage;<br>        &#125;<br>        <span class="hljs-comment">//正文长度</span><br>        <span class="hljs-built_in">int</span> bodyLength = fullLength - RpcConstants.HEAD_LENGTH;<br>        <span class="hljs-keyword">if</span> (bodyLength &gt; <span class="hljs-number">0</span>) &#123;<br>            byte<span class="hljs-literal">[]</span> bs = <span class="hljs-keyword">new</span> byte<span class="hljs-literal">[<span class="hljs-identifier">bodyLength</span>]</span>;<br>            <span class="hljs-keyword">in</span>.read<span class="hljs-constructor">Bytes(<span class="hljs-params">bs</span>)</span>;<br>            <span class="hljs-comment">// 解压缩</span><br>            String compressName = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">CompressTypeEnum</span>.</span></span>get<span class="hljs-constructor">Name(<span class="hljs-params">compressType</span>)</span>;<br>            Compress compress = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ExtensionLoader</span>.</span></span>get<span class="hljs-constructor">ExtensionLoader(Compress.<span class="hljs-params">class</span>)</span><br>                    .get<span class="hljs-constructor">Extension(<span class="hljs-params">compressName</span>)</span>;<br>            bs = compress.decompress(bs);<br>            <span class="hljs-comment">// 反序列化</span><br>            String codecName = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">SerializationTypeEnum</span>.</span></span>get<span class="hljs-constructor">Name(<span class="hljs-params">rpcMessage</span>.<span class="hljs-params">getCodec</span>()</span>);<br>            Serializer serializer = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ExtensionLoader</span>.</span></span>get<span class="hljs-constructor">ExtensionLoader(Serializer.<span class="hljs-params">class</span>)</span><br>                    .get<span class="hljs-constructor">Extension(<span class="hljs-params">codecName</span>)</span>;<br>            <span class="hljs-comment">//rqcreauest？</span><br>            <span class="hljs-keyword">if</span> (messageType<span class="hljs-operator"> == </span>RpcConstants.REQUEST_TYPE) &#123;<br>                RpcRequest tmpValue = serializer.deserialize(bs, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RpcRequest</span>.</span></span><span class="hljs-keyword">class</span>);<br>                rpcMessage.set<span class="hljs-constructor">Data(<span class="hljs-params">tmpValue</span>)</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                RpcResponse tmpValue = serializer.deserialize(bs, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RpcResponse</span>.</span></span><span class="hljs-keyword">class</span>);<br>                rpcMessage.set<span class="hljs-constructor">Data(<span class="hljs-params">tmpValue</span>)</span>;<br>            &#125;<br>        &#125;<br>        return rpcMessage;<br>    &#125;<br></code></pre></td></tr></table></figure>
 
 
 
@@ -600,7 +602,7 @@
 <p>另外，<strong>不仅网络传输的时候需要用到序列化和反序列化，将对象存储到文件、数据库等场景都需要用到序列化和反序列化。</strong></p>
 <p>JDK 自带的序列化，只需实现 java.io.Serializable接口即可，不过这种方式不推荐，因为不支持跨语言调用并且性能比较差。</p>
 <p>现在比较常用序列化的有 hessian、kyro、protostuff ….</p>
-<h5 id="属于哪一层？"><a href="#属于哪一层？" class="headerlink" title="属于哪一层？"></a>属于哪一层？</h5><p><img src="https://i.loli.net/2021/08/06/G4DzcJvQf2Z9mku.png" alt="image-20210806150427787"></p>
+<h5 id="属于哪一层？"><a href="#属于哪一层？" class="headerlink" title="属于哪一层？"></a>属于哪一层？</h5><p><img src="https://i.loli.net/2021/08/06/G4DzcJvQf2Z9mku.png" srcset="/img/loading.gif" lazyload alt="image-20210806150427787"></p>
 <p>OSI七层协议模型中，<strong>表示层</strong>做的事情主要就是对应用层的用户数据进行处理转换为二进制流。反过来的话，就是将二进制流转换成应用层的用户数据。</p>
 <p>因为，OSI七层协议模型中的应用层、表示层和会话层对应的都是TCP&#x2F;IP 四层模型中的应用层，所以序列化协议属于TCP&#x2F;IP协议应用层的一部分。</p>
 <h5 id="常见序列化协议对比"><a href="#常见序列化协议对比" class="headerlink" title="常见序列化协议对比"></a>常见序列化协议对比</h5><p>JDK自带的序列化方式一般不会用 ，因为序列化效率低并且部分版本有安全漏洞。比较常用的序列化协议有 <strong>hessian、kyro、protostuff。</strong></p>
@@ -611,7 +613,7 @@
 <p><strong>kyro</strong></p>
 <p>Kryo是一个高性能的序列化&#x2F;反序列化工具，由于其变长存储特性并使用了字节码生成机制，拥有较高的运行速度和较小的字节码体积。</p>
 <p>另外，Kryo 已经是一种非常成熟的序列化实现了，已经在Twitter、Groupon、Yahoo以及多个著名开源项目（如Hive、Storm）中广泛的使用。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">public class KryoSerializer implements Serializer &#123;</span><br><span class="line">    //Lambda方式传入实现了 Supplier 函数接口的参数。</span><br><span class="line">    private final ThreadLocal&lt;Kryo&gt; kryoThreadLocal = ThreadLocal.withInitial(new Supplier&lt;Kryo&gt;() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public Kryo get() &#123;</span><br><span class="line">            //先注册</span><br><span class="line">            Kryo kryo = new Kryo();</span><br><span class="line">            kryo.register(RpcResponse.class);</span><br><span class="line">            kryo.register(RpcRequest.class);</span><br><span class="line">            return kryo;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public byte[] serialize(Object obj) &#123;</span><br><span class="line">        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();</span><br><span class="line">             Output output = new Output(byteArrayOutputStream)) &#123;</span><br><span class="line">            Kryo kryo = kryoThreadLocal.get();</span><br><span class="line">            // Object-&gt;byte:将对象序列化为byte数组</span><br><span class="line">            kryo.writeObject(output, obj);</span><br><span class="line">            kryoThreadLocal.remove();</span><br><span class="line">            return output.toBytes();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            throw new SerializeException(&quot;Serialization failed&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public &lt;T&gt; T deserialize(byte[] bytes, Class&lt;T&gt; clazz) &#123;</span><br><span class="line">        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);</span><br><span class="line">             Input input = new Input(byteArrayInputStream)) &#123;</span><br><span class="line">            Kryo kryo = kryoThreadLocal.get();</span><br><span class="line">            // byte-&gt;Object:从byte数组中反序列化出对对象</span><br><span class="line">            Object o = kryo.readObject(input, clazz);</span><br><span class="line">            kryoThreadLocal.remove();</span><br><span class="line">            return clazz.cast(o);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            throw new SerializeException(&quot;Deserialization failed&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">KryoSerializer</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Serializer</span> &#123;<br>    <span class="hljs-comment">//Lambda方式传入实现了 Supplier 函数接口的参数。</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ThreadLocal&lt;Kryo&gt; kryoThreadLocal = ThreadLocal.withInitial(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Supplier</span>&lt;Kryo&gt;() &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> Kryo <span class="hljs-title function_">get</span><span class="hljs-params">()</span> &#123;<br>            <span class="hljs-comment">//先注册</span><br>            <span class="hljs-type">Kryo</span> <span class="hljs-variable">kryo</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Kryo</span>();<br>            kryo.register(RpcResponse.class);<br>            kryo.register(RpcRequest.class);<br>            <span class="hljs-keyword">return</span> kryo;<br>        &#125;<br>    &#125;);<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">byte</span>[] serialize(Object obj) &#123;<br>        <span class="hljs-keyword">try</span> (<span class="hljs-type">ByteArrayOutputStream</span> <span class="hljs-variable">byteArrayOutputStream</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayOutputStream</span>();<br>             <span class="hljs-type">Output</span> <span class="hljs-variable">output</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Output</span>(byteArrayOutputStream)) &#123;<br>            <span class="hljs-type">Kryo</span> <span class="hljs-variable">kryo</span> <span class="hljs-operator">=</span> kryoThreadLocal.get();<br>            <span class="hljs-comment">// Object-&gt;byte:将对象序列化为byte数组</span><br>            kryo.writeObject(output, obj);<br>            kryoThreadLocal.remove();<br>            <span class="hljs-keyword">return</span> output.toBytes();<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SerializeException</span>(<span class="hljs-string">&quot;Serialization failed&quot;</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> &lt;T&gt; T <span class="hljs-title function_">deserialize</span><span class="hljs-params">(<span class="hljs-type">byte</span>[] bytes, Class&lt;T&gt; clazz)</span> &#123;<br>        <span class="hljs-keyword">try</span> (<span class="hljs-type">ByteArrayInputStream</span> <span class="hljs-variable">byteArrayInputStream</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayInputStream</span>(bytes);<br>             <span class="hljs-type">Input</span> <span class="hljs-variable">input</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Input</span>(byteArrayInputStream)) &#123;<br>            <span class="hljs-type">Kryo</span> <span class="hljs-variable">kryo</span> <span class="hljs-operator">=</span> kryoThreadLocal.get();<br>            <span class="hljs-comment">// byte-&gt;Object:从byte数组中反序列化出对对象</span><br>            <span class="hljs-type">Object</span> <span class="hljs-variable">o</span> <span class="hljs-operator">=</span> kryo.readObject(input, clazz);<br>            kryoThreadLocal.remove();<br>            <span class="hljs-keyword">return</span> clazz.cast(o);<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SerializeException</span>(<span class="hljs-string">&quot;Deserialization failed&quot;</span>);<br>        &#125;<br>    &#125;<br><br></code></pre></td></tr></table></figure>
 
 <p><strong>hession</strong></p>
 <p>hessian 是一个轻量级的,自定义描述的二进制RPC协议。hessian是一个比较老的序列化实现了，并且同样也是跨语言的。</p>
@@ -622,7 +624,7 @@
 <p>当你调用远程方法的时候，<strong>实际会通过代理对象来传输网络请求</strong>，不然的话，怎么可能直接就调用到远程方法。</p>
 <h5 id="JDK动态代理"><a href="#JDK动态代理" class="headerlink" title="JDK动态代理"></a>JDK动态代理</h5><p>在 Java 动态代理机制中 <strong>InvocationHandler 接口和 Proxy 类是核心。</strong></p>
 <p>Proxy 类中使用频率最高的方法是：newProxyInstance() ，这个方法主要用来生成一个代理对象。</p>
-<pre><code>public static Object newProxyInstance(ClassLoader loader,
+<pre><code class="hljs">public static Object newProxyInstance(ClassLoader loader,
                                       Class&lt;?&gt;[] interfaces,
                                       InvocationHandler h)
 </code></pre>
@@ -634,7 +636,7 @@
 <p>也就是说：你通过Proxy 类的 newProxyInstance() 创建的代理对象在调用方法的时候，<strong>实际会调用到实现InvocationHandler 接口的类的 invoke()方法。 你可以在 invoke() 方法中自定义处理逻辑</strong>，比如在方法执行前后做什么事情。</p>
 <p><strong>步骤</strong>：</p>
 <p>定义一个接口及其实现类；<br>自定义 InvocationHandler 并重写invoke方法，在 invoke 方法中我们会调用原生方法（被代理类的方法）并自定义一些处理逻辑；<br>通过 Proxy.newProxyInstance(ClassLoader loader,Class&lt;?&gt;[] interfaces,InvocationHandler h) 方法创建代理对象；</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public Object invoke(Object proxy, Method method, Object[] args) &#123;</span><br><span class="line">      //生成RPCrequest</span><br><span class="line">       RpcRequest rpcRequest = RpcRequest.builder().methodName(method.getName())</span><br><span class="line">               .parameters(args)</span><br><span class="line">               .interfaceName(method.getDeclaringClass().getName())</span><br><span class="line">               .paramTypes(method.getParameterTypes())</span><br><span class="line">               .requestId(UUID.randomUUID().toString())</span><br><span class="line">               .group(rpcServiceConfig.getGroup())</span><br><span class="line">               .version(rpcServiceConfig.getVersion())</span><br><span class="line">               .build();</span><br><span class="line">       RpcResponse&lt;Object&gt; rpcResponse = null;</span><br><span class="line">       </span><br><span class="line">       if (rpcRequestTransport instanceof NettyRpcClient) &#123;</span><br><span class="line">           CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt; completableFuture = (CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt;) </span><br><span class="line">           //发送rpcrequest</span><br><span class="line">           rpcRequestTransport.sendRpcRequest(rpcRequest);</span><br><span class="line">           rpcResponse = completableFuture.get();</span><br><span class="line">       &#125;</span><br><span class="line">       if (rpcRequestTransport instanceof SocketRpcClient) &#123;</span><br><span class="line">           rpcResponse = (RpcResponse&lt;Object&gt;) </span><br><span class="line">           rpcRequestTransport.sendRpcRequest(rpcRequest);</span><br><span class="line">       &#125;</span><br><span class="line">       this.check(rpcResponse, rpcRequest);</span><br><span class="line">       return rpcResponse.getData();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public Object invoke(Object proxy, Method <span class="hljs-keyword">method</span>, Object<span class="hljs-literal">[]</span> args) &#123;<br>      <span class="hljs-comment">//生成RPCrequest</span><br>       RpcRequest rpcRequest = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RpcRequest</span>.</span></span>builder<span class="hljs-literal">()</span>.<span class="hljs-keyword">method</span><span class="hljs-constructor">Name(<span class="hljs-params">method</span>.<span class="hljs-params">getName</span>()</span>)<br>               .parameters(args)<br>               .interface<span class="hljs-constructor">Name(<span class="hljs-params">method</span>.<span class="hljs-params">getDeclaringClass</span>()</span>.get<span class="hljs-constructor">Name()</span>)<br>               .param<span class="hljs-constructor">Types(<span class="hljs-params">method</span>.<span class="hljs-params">getParameterTypes</span>()</span>)<br>               .request<span class="hljs-constructor">Id(UUID.<span class="hljs-params">randomUUID</span>()</span>.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>)<br>               .group(rpcServiceConfig.get<span class="hljs-constructor">Group()</span>)<br>               .version(rpcServiceConfig.get<span class="hljs-constructor">Version()</span>)<br>               .build<span class="hljs-literal">()</span>;<br>       RpcResponse&lt;Object&gt; rpcResponse = null;<br>       <br>       <span class="hljs-keyword">if</span> (rpcRequestTransport instanceof NettyRpcClient) &#123;<br>           CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt; completableFuture = (CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt;) <br>           <span class="hljs-comment">//发送rpcrequest</span><br>           rpcRequestTransport.send<span class="hljs-constructor">RpcRequest(<span class="hljs-params">rpcRequest</span>)</span>;<br>           rpcResponse = completableFuture.get<span class="hljs-literal">()</span>;<br>       &#125;<br>       <span class="hljs-keyword">if</span> (rpcRequestTransport instanceof SocketRpcClient) &#123;<br>           rpcResponse = (RpcResponse&lt;Object&gt;) <br>           rpcRequestTransport.send<span class="hljs-constructor">RpcRequest(<span class="hljs-params">rpcRequest</span>)</span>;<br>       &#125;<br>       this.check(rpcResponse, rpcRequest);<br>       return rpcResponse.get<span class="hljs-constructor">Data()</span>;<br>   &#125;<br></code></pre></td></tr></table></figure>
 
 
 
@@ -653,22 +655,22 @@
 <h5 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h5><p>RpcClientProxy.java</p>
 <p>当我们去调用一个远程的方法的时候，实际上是通过代理对象调用的。</p>
 <p>网络传输细节都被封装在了  <code>invoke()</code>  方法中。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public Object invoke(Object proxy, Method method, Object[] args) &#123;</span><br><span class="line">      //构造rpcrequset</span><br><span class="line">       RpcRequest rpcRequest = RpcRequest.builder().methodName(method.getName())</span><br><span class="line">               .parameters(args)</span><br><span class="line">               .interfaceName(method.getDeclaringClass().getName())</span><br><span class="line">               .paramTypes(method.getParameterTypes())</span><br><span class="line">               .requestId(UUID.randomUUID().toString())</span><br><span class="line">               .group(rpcServiceProperties.getGroup())</span><br><span class="line">               .version(rpcServiceProperties.getVersion())</span><br><span class="line">               .build();</span><br><span class="line">       RpcResponse&lt;Object&gt; rpcResponse = null;</span><br><span class="line">       if (rpcRequestTransport instanceof NettyRpcClient) &#123;</span><br><span class="line">           CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt; completableFuture = (CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt;) rpcRequestTransport.sendRpcRequest(rpcRequest);</span><br><span class="line">           rpcResponse = completableFuture.get();</span><br><span class="line">       &#125;</span><br><span class="line">       if (rpcRequestTransport instanceof SocketRpcClient) &#123;</span><br><span class="line">           rpcResponse = (RpcResponse&lt;Object&gt;) rpcRequestTransport.sendRpcRequest(rpcRequest);</span><br><span class="line">       &#125;</span><br><span class="line">       this.check(rpcResponse, rpcRequest);</span><br><span class="line">       return rpcResponse.getData();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public Object invoke(Object proxy, Method <span class="hljs-keyword">method</span>, Object<span class="hljs-literal">[]</span> args) &#123;<br>      <span class="hljs-comment">//构造rpcrequset</span><br>       RpcRequest rpcRequest = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RpcRequest</span>.</span></span>builder<span class="hljs-literal">()</span>.<span class="hljs-keyword">method</span><span class="hljs-constructor">Name(<span class="hljs-params">method</span>.<span class="hljs-params">getName</span>()</span>)<br>               .parameters(args)<br>               .interface<span class="hljs-constructor">Name(<span class="hljs-params">method</span>.<span class="hljs-params">getDeclaringClass</span>()</span>.get<span class="hljs-constructor">Name()</span>)<br>               .param<span class="hljs-constructor">Types(<span class="hljs-params">method</span>.<span class="hljs-params">getParameterTypes</span>()</span>)<br>               .request<span class="hljs-constructor">Id(UUID.<span class="hljs-params">randomUUID</span>()</span>.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>)<br>               .group(rpcServiceProperties.get<span class="hljs-constructor">Group()</span>)<br>               .version(rpcServiceProperties.get<span class="hljs-constructor">Version()</span>)<br>               .build<span class="hljs-literal">()</span>;<br>       RpcResponse&lt;Object&gt; rpcResponse = null;<br>       <span class="hljs-keyword">if</span> (rpcRequestTransport instanceof NettyRpcClient) &#123;<br>           CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt; completableFuture = (CompletableFuture&lt;RpcResponse&lt;Object&gt;&gt;) rpcRequestTransport.send<span class="hljs-constructor">RpcRequest(<span class="hljs-params">rpcRequest</span>)</span>;<br>           rpcResponse = completableFuture.get<span class="hljs-literal">()</span>;<br>       &#125;<br>       <span class="hljs-keyword">if</span> (rpcRequestTransport instanceof SocketRpcClient) &#123;<br>           rpcResponse = (RpcResponse&lt;Object&gt;) rpcRequestTransport.send<span class="hljs-constructor">RpcRequest(<span class="hljs-params">rpcRequest</span>)</span>;<br>       &#125;<br>       this.check(rpcResponse, rpcRequest);<br>       return rpcResponse.get<span class="hljs-constructor">Data()</span>;<br>   &#125;<br></code></pre></td></tr></table></figure>
 
 
 
 <h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h4><p>系统中的某个服务的访问量特别大，我们将这个服务部署在了多台服务器上，当客户端发起请求的时候，多台服务器都可以处理这个请求。那么，如何正确选择处理该请求的服务器就很关键。假如，你就要一台服务器来处理该服务的请求，那该服务部署在多台服务器的意义就不复存在了。负载均衡就是为了避免单个服务器响应同一请求，容易造成服务器宕机、崩溃等问题。</p>
 <h5 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h5><p>我们定义了两个接口 ServiceDiscovery.java 和 ServiceRegistry.java，这两个接口分别定义了服务发现和服务注册行为。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class ZkServiceRegistryImpl implements ServiceRegistry &#123;</span><br><span class="line">@Override</span><br><span class="line">public void registerService(String rpcServiceName, InetSocketAddress inetSocketAddress) &#123;</span><br><span class="line"> String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + &quot;/&quot; + rpcServiceName + inetSocketAddress.toString();</span><br><span class="line">CuratorFramework zkClient = CuratorUtils.getZkClient();</span><br><span class="line">CuratorUtils.createPersistentNode(zkClient, servicePath);//创建一个用永久节点</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> ZkServiceRegistryImpl implements ServiceRegistry &#123;<br>@Override<br>public void register<span class="hljs-constructor">Service(String <span class="hljs-params">rpcServiceName</span>, InetSocketAddress <span class="hljs-params">inetSocketAddress</span>)</span> &#123;<br> String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + <span class="hljs-string">&quot;/&quot;</span> + rpcServiceName + inetSocketAddress.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>;<br>CuratorFramework zkClient = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">CuratorUtils</span>.</span></span>get<span class="hljs-constructor">ZkClient()</span>;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">CuratorUtils</span>.</span></span>create<span class="hljs-constructor">PersistentNode(<span class="hljs-params">zkClient</span>, <span class="hljs-params">servicePath</span>)</span>;<span class="hljs-comment">//创建一个用永久节点</span><br> &#125;<br></code></pre></td></tr></table></figure>
 
 <p>当我们的服务被注册进 zookeeper 的时候，我们将完整的服务名称 <strong>rpcServiceName</strong> （class name+group+version）作为根节点 ，子节点是对应的服务地址（ip+端口号）。</p>
 <p>class name : <strong>服务接口名</strong>也就是类名比如：github.javaguide.HelloService。<br>version :（服务版本）主要是为后续不兼容升级提供可能<br>group :主要用于处理一个接口有多个类实现的情况。</p>
 <p>一个根节点（rpcServiceName）<strong>可能会对应多个服务地址</strong>（相同服务被部署多份的情况）。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class ZkServiceDiscoveryImpl implements ServiceDiscovery &#123;</span><br><span class="line">    private final LoadBalance loadBalance;</span><br><span class="line"></span><br><span class="line">public ZkServiceDiscoveryImpl() &#123;</span><br><span class="line">this.loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension(&quot;loadBalance&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public InetSocketAddress lookupService(RpcRequest rpcRequest) &#123;</span><br><span class="line">        String rpcServiceName = rpcRequest.getRpcServiceName();</span><br><span class="line">        CuratorFramework zkClient = CuratorUtils.getZkClient();</span><br><span class="line">        List&lt;String&gt; serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);</span><br><span class="line">        if (serviceUrlList == null || serviceUrlList.size() == 0) &#123;</span><br><span class="line">            throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);</span><br><span class="line">        &#125;</span><br><span class="line">        // load balancing</span><br><span class="line">        String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);</span><br><span class="line">        </span><br><span class="line">        String[] socketAddressArray = targetServiceUrl.split(&quot;:&quot;);</span><br><span class="line">        String host = socketAddressArray[0];</span><br><span class="line">        int port = Integer.parseInt(socketAddressArray[1]);</span><br><span class="line">        return new InetSocketAddress(host, port);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-keyword">class</span> ZkServiceDiscoveryImpl implements ServiceDiscovery &#123;<br>    <span class="hljs-keyword">private</span> final LoadBalance loadBalance;<br><br>public <span class="hljs-constructor">ZkServiceDiscoveryImpl()</span> &#123;<br>this.loadBalance = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ExtensionLoader</span>.</span></span>get<span class="hljs-constructor">ExtensionLoader(LoadBalance.<span class="hljs-params">class</span>)</span>.get<span class="hljs-constructor">Extension(<span class="hljs-string">&quot;loadBalance&quot;</span>)</span>;<br>    &#125;<br><br>    @Override<br>    public InetSocketAddress lookup<span class="hljs-constructor">Service(RpcRequest <span class="hljs-params">rpcRequest</span>)</span> &#123;<br>        String rpcServiceName = rpcRequest.get<span class="hljs-constructor">RpcServiceName()</span>;<br>        CuratorFramework zkClient = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">CuratorUtils</span>.</span></span>get<span class="hljs-constructor">ZkClient()</span>;<br>        List&lt;String&gt; serviceUrlList = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">CuratorUtils</span>.</span></span>get<span class="hljs-constructor">ChildrenNodes(<span class="hljs-params">zkClient</span>, <span class="hljs-params">rpcServiceName</span>)</span>;<br>        <span class="hljs-keyword">if</span> (serviceUrlList<span class="hljs-operator"> == </span>null<span class="hljs-operator"> || </span>serviceUrlList.size<span class="hljs-literal">()</span><span class="hljs-operator"> == </span><span class="hljs-number">0</span>) &#123;<br>            throw <span class="hljs-keyword">new</span> <span class="hljs-constructor">RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, <span class="hljs-params">rpcServiceName</span>)</span>;<br>        &#125;<br>        <span class="hljs-comment">// load balancing</span><br>        String targetServiceUrl = loadBalance.select<span class="hljs-constructor">ServiceAddress(<span class="hljs-params">serviceUrlList</span>, <span class="hljs-params">rpcRequest</span>)</span>;<br>        <br>        String<span class="hljs-literal">[]</span> socketAddressArray = targetServiceUrl.split(<span class="hljs-string">&quot;:&quot;</span>);<br>        String host = socketAddressArray<span class="hljs-literal">[<span class="hljs-number">0</span>]</span>;<br>        <span class="hljs-built_in">int</span> port = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Integer</span>.</span></span>parse<span class="hljs-constructor">Int(<span class="hljs-params">socketAddressArray</span>[1])</span>;<br>        return <span class="hljs-keyword">new</span> <span class="hljs-constructor">InetSocketAddress(<span class="hljs-params">host</span>, <span class="hljs-params">port</span>)</span>;<br>    &#125;<br></code></pre></td></tr></table></figure>
 
 
 
-<h4 id="具体算法"><a href="#具体算法" class="headerlink" title="具体算法"></a>具体算法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface LoadBalance &#123;</span><br><span class="line">    String selectServiceAddress(List&lt;String&gt; serviceAddresses, RpcRequest rpcRequest);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="具体算法"><a href="#具体算法" class="headerlink" title="具体算法"></a>具体算法</h4><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">LoadBalance</span> </span>&#123;<br>    <span class="hljs-keyword">String</span> selectServiceAddress(List&lt;<span class="hljs-keyword">String</span>&gt; serviceAddresses, RpcRequest rpcRequest);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 
@@ -701,7 +703,7 @@
 <p>问题：服务端与客户端通信的host与port预先就必须知道的，每一个客户端都必须知道对应服务的ip与端口号， 并且如果服务挂了或者换地址了，就很麻烦。扩展性也不强。</p>
 <h4 id="版本4"><a href="#版本4" class="headerlink" title="版本4"></a>版本4</h4><p>zookeeper注册中心<br>public void registerService(String rpcServiceName, InetSocketAddress inetSocketAddress) {<br>    String servicePath &#x3D; CuratorUtils.ZK_REGISTER_ROOT_PATH + “&#x2F;“ + rpcServiceName + inetSocketAddress.toString();<br>    CuratorFramework zkClient &#x3D; CuratorUtils.getZkClient();<br>    CuratorUtils.createPersistentNode(zkClient, servicePath);<br>}</p>
 <p>public InetSocketAddress lookupService(RpcRequest rpcRequest) {<br>    String rpcServiceName &#x3D; rpcRequest.getRpcServiceName();<br>    CuratorFramework zkClient &#x3D; CuratorUtils.getZkClient();<br>    List<String> serviceUrlList &#x3D; CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);<br>    if (serviceUrlList &#x3D;&#x3D; null || serviceUrlList.size() &#x3D;&#x3D; 0) {<br>        throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);<br>    }<br>    &#x2F;&#x2F; load balancing<br>    String targetServiceUrl &#x3D; loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);</p>
-<pre><code>String[] socketAddressArray = targetServiceUrl.split(&quot;:&quot;);
+<pre><code class="hljs">String[] socketAddressArray = targetServiceUrl.split(&quot;:&quot;);
 String host = socketAddressArray[0];
 int port = Integer.parseInt(socketAddressArray[1]);
 return new InetSocketAddress(host, port);
@@ -756,101 +758,309 @@ return new InetSocketAddress(host, port);
 <p>RPC 使用场景(大型的网站，内部子系统较多、接口非常多的情况下适合使用 RPC)：</p>
 <p>长链接。不必每次通信都要像 HTTP 一样去 3 次握手，减少了网络开销。<br>注册发布机制。RPC 框架一般都有注册中心，有丰富的监控管理;发布、下线接口、动态扩展等，对调用方来说是无感知、统一化的操作。<br>安全性，没有暴露资源操作。<br>微服务支持。就是最近流行的服务化架构、服务化治理，RPC 框架是一个强力的支撑。</p>
 
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/07/30/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2%EF%BC%88%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%89/" title="最长回文子串（子序列）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">最长回文子串（子序列）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="lv-container" data-id="city" data-uid="MTAyMC81ODY5NS8zNTE1Nw">
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#lv-container', function() {
+        Fluid.utils.createScript('https://cdn-city.livere.com/js/embed.dist.js');
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
     </div>
 
-    
-    
-    
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
-    <footer class="post-footer">
 
-        
 
-          <div class="post-nav">
-            <div class="post-nav-item">
-            </div>
-            <div class="post-nav-item">
-                <a href="/2021/07/30/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2%EF%BC%88%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%89/" rel="next" title="最长回文子串（子序列）">
-                  最长回文子串（子序列） <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-          </div>
-    </footer>
-  </article>
+  </aside>
+
+
+    </div>
+  </div>
 </div>
 
 
 
 
 
+  
 
-    <div class="comments" id="lv-container" data-id="city" data-uid="MTAyMC81ODY5NS8zNTE1Nw"></div>
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
 </div>
+
+    
+
+    
   </main>
 
-  <footer class="footer">
+  <footer>
     <div class="footer-inner">
-
-  <div class="copyright">
-    &copy; 
-    <span itemprop="copyrightYear">2023</span>
-    <span class="with-love">
-      <i class="fa fa-heart"></i>
-    </span>
-    <span class="author" itemprop="copyrightHolder">XieYi</span>
-  </div>
-<div class="wordcount">
-  <span class="post-meta-item">
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-line"></i>
-    </span>
-    <span title="站点总字数">263k</span>
-  </span>
-  <span class="post-meta-item">
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-    <span title="站点阅读时长">3:59</span>
-  </span>
+  
+  
+  
+  
 </div>
-<!--
-  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
-  </div>-->
 
-    </div>
   </footer>
 
+  <!-- Scripts -->
   
-  <div class="back-to-top" role="button" aria-label="返回顶部">
-    <i class="fa fa-arrow-up fa-lg"></i>
-    <span>0%</span>
-  </div>
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
 
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
-<script src="/js/third-party/search/local-search.js"></script>
-
-
-
-
-
-  <script src="/js/third-party/pace.js"></script>
-
-
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
 
 
-<script src="/js/third-party/comments/livere.js"></script>
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
 
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>
