@@ -344,142 +344,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java并发-线程协作机制</title>
-    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%90%8C%E6%AD%A5%E5%92%8C%E5%8D%8F%E4%BD%9C%E5%B7%A5%E5%85%B7%E7%B1%BB/</url>
-    <content><![CDATA[<h2 id="wait、notify"><a href="#wait、notify" class="headerlink" title="wait、notify"></a>wait、notify</h2><p>属于Object类中。</p>
-<p>当条件不成立时，线程调用wait进入条件等待队列。</p>
-<p>另一个线程修改了条件变量后调用notify，调用wait的线程唤醒后需要重新检查条件变量。</p>
-<h2 id="显示条件"><a href="#显示条件" class="headerlink" title="显示条件"></a>显示条件</h2><p>sychronized：wait，notify</p>
-<p>reentranlock：显式条件-condition接口：await，signal</p>
-<h2 id="线程中断"><a href="#线程中断" class="headerlink" title="线程中断"></a>线程中断</h2><h2 id="协作工具类"><a href="#协作工具类" class="headerlink" title="协作工具类"></a>协作工具类</h2><h3 id="读写锁reentrantreadwritelock"><a href="#读写锁reentrantreadwritelock" class="headerlink" title="读写锁reentrantreadwritelock"></a>读写锁reentrantreadwritelock</h3><p>读读是并行的。</p>
-<h4 id="实现："><a href="#实现：" class="headerlink" title="实现："></a>实现：</h4><p><img src="https://i.loli.net/2021/08/03/Qdk7pGoAtMq1NmJ.png" alt="image-20210803205028306"></p>
-<h3 id="信号量semaphore"><a href="#信号量semaphore" class="headerlink" title="信号量semaphore"></a>信号量semaphore</h3><p>信号量，用来控制同时访问特定资源的线程数量，它通过协调各个线程以保证合理的使用公共资源，可以用做流量控制，譬如数据库连接场景控制等；</p>
-<p>Semaphore 的构造方法 Semaphore(int permits) 接收一个整型参数，表示可用的许可证数量，即<strong>最大并发数量</strong>，使用方法就是在线程里面首先调用 acquire 方法获取一个许可，使用完后接着调用 <strong>release 归还一个许可，</strong>还可以使用 <strong>tryAcquire 尝试获取许可</strong>。</p>
-<h3 id="倒计时门栓countdownlatch"><a href="#倒计时门栓countdownlatch" class="headerlink" title="倒计时门栓countdownlatch"></a>倒计时门栓countdownlatch</h3><p>CountDownLatch <strong>允许 count 个线程阻塞在一个地方</strong>，直至所有线程的任务都执行完毕。</p>
-<p>CountDownLatch 是共享锁的一种实现,它默认构造 AQS 的 state 值为 count。</p>
-<p>线程使用 <strong>countDown()</strong> 方法时,使用了tryReleaseShared方法以 CAS 的操作来<strong>减少 state</strong>,直至 state 为 0 。</p>
-<p>当调用 <strong>await() 方法</strong>的时候，如果 state 不为 0，那就证明任务还没有执行完毕，await() 方法就会一直阻塞，也就是说 <strong>await() 方法之后的语句不会被执行</strong>。然后，CountDownLatch 会自旋 CAS 判断 state &#x3D;&#x3D; 0，如果 state &#x3D;&#x3D; 0 的话，就会释放所有等待的线程，await() 方法之后的语句得到执行。</p>
-<h4 id="CountDownLatch-的两种典型用法"><a href="#CountDownLatch-的两种典型用法" class="headerlink" title="CountDownLatch 的两种典型用法"></a>CountDownLatch 的两种典型用法</h4><p>1、某一线程在开始运行前等待 n 个线程执行完毕。</p>
-<p>将 CountDownLatch 的计数器初始化为 n （new CountDownLatch(n)），每当一个任务线程执行完毕，就将计数器减 1 （countdownlatch.countDown()），当计数器的值变为 0 时，在 CountDownLatch 上 await() 的线程就会被唤醒。一个典型应用场景就是<strong>启动一个服务时，主线程需要等待多个组件加载完毕</strong>，之后再继续执行。</p>
-<p>2、实现多个线程开始执行任务的<strong>最大并行性。</strong></p>
-<p>注意是并行性，不是并发，强调的是<strong>多个线程在某一时刻同时开始执行</strong>。类似于赛跑，将多个线程放到起点，等待发令枪响，然后同时开跑。做法是初始化一个共享的 CountDownLatch 对象，将其计数器初始化为 1 （new CountDownLatch(1)），多个线程在开始执行任务前首先 coundownlatch.await()，当主线程调用 countDown() 时，计数器变为 0，多个线程同时被唤醒。</p>
-<h4 id="CountDownLatch-的不足"><a href="#CountDownLatch-的不足" class="headerlink" title="CountDownLatch 的不足"></a>CountDownLatch 的不足</h4><p>CountDownLatch 是一次性的，计数器的值只能在构造方法中初始化一次，之后没有任何机制再次对其设置值，当 CountDownLatch 使用完毕后，它不能再次被使用。</p>
-<h3 id="循环栅栏cyclicbarrier"><a href="#循环栅栏cyclicbarrier" class="headerlink" title="循环栅栏cyclicbarrier"></a>循环栅栏cyclicbarrier</h3><p>CountDownLatch 的实现是基于 AQS 的，而 CycliBarrier 是基于 ReentrantLock(ReentrantLock 也属于 AQS 同步器)和 Condition 的。</p>
-<p>CyclicBarrier 的字面意思是<strong>可循环使用（Cyclic）的屏障（Barrier）</strong>。它要做的事情是：让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续干活。</p>
-<p>CyclicBarrier 默认的构造方法是 CyclicBarrier(int parties)，其参数表示屏障拦截的线程数量，每个线程调用 <strong>await() 方法告诉 CyclicBarrier 我已经到达了屏障，然后当前线程被阻塞。</strong></p>
-<p>CyclicBarrier 内部通过一个 <strong>count 变量作为计数器</strong>，count 的初始值为 parties 属性的初始化值，每当一个线程到了栅栏这里了，那么就将计数器减一。如果 count 值为 0 了，表示这是这一代最后一个线程到达栅栏，就尝试执行我们构造方法中输入的任务。</p>
-<h4 id="CyclicBarrier-的应用场景"><a href="#CyclicBarrier-的应用场景" class="headerlink" title="CyclicBarrier 的应用场景"></a>CyclicBarrier 的应用场景</h4><p>CyclicBarrier 可以用于<strong>多线程计算数据，最后合并计算结果的应用场景</strong>。比如我们用一个 Excel 保存了用户所有银行流水，每个 Sheet 保存一个帐户近一年的每笔银行流水，现在需要统计用户的日均银行流水，先用多线程处理每个 sheet 里的银行流水，都执行完之后，得到每个 sheet 的日均银行流水，最后，再用 barrierAction 用这些线程的计算结果，计算出整个 Excel 的日均银行流水。</p>
-<p>CyclicBarrier 还提供一个更高级的构造函数 CyclicBarrier(int parties, Runnable barrierAction)，用于在线程到达屏障时，优先执行 barrierAction，方便处理更复杂的业务场景。</p>
-<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p><img src="https://i.loli.net/2021/08/03/OP6kMEHuTK14R89.png" alt="image-20210803210950957"></p>
-<p>CountDownLatch 是计数器，<strong>只能使用一次</strong>，而 CyclicBarrier 的计数器提供 reset 功能，<strong>可以多次使用</strong>。</p>
-<p>CountDownLatch: <strong>一个或者多个线程</strong>，等待<strong>其他多个线程完成某件事情之后</strong>才能执行；</p>
-<p>CyclicBarrier : <strong>多个线程互相等待，直到到达同一个同步点，再继续一起执行。</strong></p>
-<p>对于 CountDownLatch 来说，重点是“<strong>一个线程（多个线程）等待</strong>”，而其他的 N 个线程在完成“某件事情”之后，可以终止，也可以等待。</p>
-<p>而对于 CyclicBarrier，重点是<strong>多个线程，在任意一个线程没有完成，所有的线程都必须等待。</strong></p>
-<p>CountDownLatch 是计数器，线程完成一个记录一个，只不过计数不是递增而是递减，而 CyclicBarrier 更像是一个阀门，需要所有线程都到达，阀门才能打开，然后继续执行。</p>
-<h2 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h2><p><img src="https://i.loli.net/2021/08/05/vjqPYt4JX1xfGlk.png" alt="image-20210805141923139"></p>
-<p>线程 1 往阻塞队列中添加元素，而线程 2 从阻塞队列中移除元素</p>
-<p><strong>当阻塞队列是空时</strong>，从队列中获取元素的操作将会被阻塞。</p>
-<p><strong>当阻塞队列是满时</strong>，从队列中添加元素的操作将会被阻塞。</p>
-<p>试图从空的阻塞队列中获取元素的线程将会阻塞，直到其他的线程往空的队列插入新的元素，同样，试图往已满的阻塞队列添加新元素的线程同样也会阻塞，直到其他的线程从列中移除一个或多个元素或者完全清空队列后继续新增。</p>
-<h3 id="为什么要用阻塞队列，有什么好处吗"><a href="#为什么要用阻塞队列，有什么好处吗" class="headerlink" title="为什么要用阻塞队列，有什么好处吗"></a>为什么要用阻塞队列，有什么好处吗</h3><p>在多线程领域：所谓阻塞，是指在某些情况下会<strong>挂起线程（即阻塞）</strong>，一旦条件满足，<strong>被挂起的线程又会自动被唤醒。</strong></p>
-<p>好处是我们<strong>不需要关心什么时候需要阻塞线程，什么时候需要唤醒线程，因为这些 BlockingQueue 都包办了。</strong></p>
-<p>在 concurrent 包发布以前，多线程环境下，我们每个程序员都必须自己去实现这些细节，尤其还要兼顾效率和线程安全，这会给我们的程序带来不小的复杂性。</p>
-<p>JDK 提供了 7 个阻塞队列。分别是</p>
-<p>ArrayBlockingQueue ：一个由数组结构组成的有界阻塞队列<br>LinkedBlockingQueue ：一个由链表结构组成的有界阻塞队列<br>PriorityBlockingQueue ：一个支持优先级排序的无界阻塞队列<br>DelayQueue：一个使用优先级队列实现的无界阻塞队列<br>SynchronousQueue：一个不存储元素的阻塞队列<br>LinkedTransferQueue：一个由链表结构组成的无界阻塞队列（实现了继承于 BlockingQueue的 TransferQueue）<br>LinkedBlockingDeque：一个由链表结构组成的双向阻塞队列</p>
-<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><p><img src="https://i.loli.net/2021/08/05/dv943bwnZLAeIKt.png" alt="image-20210805142222849"></p>
-<h2 id="future-x2F-futuretask"><a href="#future-x2F-futuretask" class="headerlink" title="future&#x2F;futuretask"></a>future&#x2F;futuretask</h2>]]></content>
-      <categories>
-        <category>Java并发</category>
-      </categories>
-      <tags>
-        <tag>工具类</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java并发-常见基础</title>
-    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h3 id="线程与进程与协程"><a href="#线程与进程与协程" class="headerlink" title="线程与进程与协程"></a>线程与进程与协程</h3><p><strong>进程是程序的一次执行过程，是系统资源分配的基本单位</strong>。进程间基本上是独立的。</p>
-<p>线程是更小的运行单位。线程是调度执行的基本单位。线程间极有可能相互影响。</p>
-<p>多个线程可以共享同一块内存空间与系统资源（<strong>堆，方法区（元空间）</strong>），也有自己独立的<strong>程序计数器与虚拟机栈，本地方法栈</strong>。</p>
-<p>线程的切换负担要小很多。也被称为轻量级的进程。</p>
-<p>程序计数器：为了线程切换后可以恢复到正确的执行位置。<br>虚拟机栈：方法调用对应着栈帧，存储着局部变量表，操作数栈，常量池。方法调用执行完成对应着栈帧的入栈与出栈。–<strong>保证局部变量私有</strong>。<br>堆：最大的一块，存放对象。<br>方法区：已被<strong>加载的类信息，常量，静态变量</strong>等等。<br>上下文切换：cpu时间片切换。</p>
-<p>一个java应用程序实际上至少有三个线程，<strong>main主线程，gc()垃圾回收机制的运行线程，异常处理线程。</strong></p>
-<p><strong>线程分为两类：用户线程和守护线程</strong>。守护线程适用于服务用户线程的。<strong>用户线程结束，守护线程也就结束</strong>，所以守护线程是依赖于用户线程的。举个例子：java程序中，main是用户线程，垃圾回收就是守护线程。可以利用thread.setDaemon(true)将用户线程变成守护线程。</p>
-<h4 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h4><p>操作系统在线程等待IO的时候，会阻塞当前线程，切换到其它线程，这样在当前线程等待IO的过程中，其它线程可以继续执行。当系统线程较少的时候没有什么问题，但是当线程数量非常多的时候，却产生了问题。<strong>一是系统线程会占用非常多的内存空间，二是过多的线程切换会占用大量的系统时间。</strong></p>
-<p>协程运行在线程之上，当一个协程执行完成后，可以选择主动让出，让另一个协程运行在当前线程之上。协程并没有增加线程数量，<strong>只是在线程的基础之上通过分时复用的方式运行多个协程</strong>，而且协程的切换在用户态完成，切换的代价比线程从用户态到内核态的代价小很多。</p>
-<p>假设协程运行在线程之上，并且协程调用了一个阻塞IO操作，这时候会发生什么？</p>
-<p>实际上操作系统并不知道协程的存在，它只知道线程，因此在协程调用阻塞IO操作的时候，操作系统会让线程进入阻塞状态，当前的协程和其它绑定在该线程之上的协程都会陷入阻塞而得不到调度，这往往是不能接受的。</p>
-<p><strong>在有大量IO操作业务的情况下，</strong>我们采用协程替换线程，可以到达很好的效果，一是降低了系统内存，二是减少了系统切换开销，因此系统的性能也会提升。</p>
-<p>在协程中尽量不要调用阻塞IO的方法，比如打印，读取文件，Socket接口等，除非改为<strong>异步调用</strong>的方式，并且协程只有在IO密集型的任务中才会发挥作用。</p>
-<p>协程只有和异步IO结合起来才能发挥出最大的威力。</p>
-<p><strong>线程的相关方法：</strong></p>
-<p>sleep-</p>
-<p>yield-让出cpu，当然实际情况得看调度器</p>
-<p>join-调用join的线程会让其他线程等待他结束后再结束。</p>
-<h4 id="sleep-与wait-方法的区别"><a href="#sleep-与wait-方法的区别" class="headerlink" title="sleep()与wait()方法的区别"></a>sleep()与wait()方法的区别</h4><ol>
-<li>sleep方法不会释放锁，wait方法会释放。</li>
-<li>都可以暂停线程。</li>
-<li>wait用于线程交互，sleep用于暂停。</li>
-<li>wait被调用后，线程不会自动苏醒（无超时等待），需要notify()。</li>
-</ol>
-<h4 id="java线程的状态"><a href="#java线程的状态" class="headerlink" title="java线程的状态"></a><strong>java线程的状态</strong></h4><ul>
-<li><strong>new</strong>：线程创建，还没调用start方法。</li>
-<li><strong>runnable</strong>：（操作系统中的就绪，运行）new–调用start–ready-<strong>-获得cpu时间片</strong>–running</li>
-<li><strong>blocked</strong>：阻塞。调用同步方法，在没获取到锁的情况下会阻塞。</li>
-<li><strong>waitting</strong>：等待其他线程做一些操作。wait</li>
-<li><strong>time_waiting</strong>：超时等待。-wait，sleep，超时时间到后，进入runnable。</li>
-<li><strong>terminated</strong>：线程执行完毕。</li>
-</ul>
-<p><strong>wait&#x2F;notify属于Object类。</strong></p>
-<p><img src="https://i.loli.net/2021/08/03/BhDXCyWdjGSMvuR.png" alt="image-20210803151242958"></p>
-<h3 id="创建线程的方式"><a href="#创建线程的方式" class="headerlink" title="创建线程的方式"></a>创建线程的方式</h3><p><strong>继承thread类</strong>，重写run（）方法，调用子类的start（）。</p>
-<p>为什么调用的是start，执行的确是run?</p>
-<p>start表示启动该线程，进入就绪状态，成为单独的执行流。操作系统会分配相关资源。</p>
-<p>直接执行run就相当于执行main中的普通方法了，就不是多线程了。</p>
-<p><strong>实现runnable接口</strong>，重写run，启动start。</p>
-<p>java只支持单继承，因此引入runnable接口。</p>
-<p><strong>通过 Callable 和 Future 创建线程。</strong>覆盖call（）方法。</p>
-<p>可以获得任务执行返回值；</p>
-<ol>
-<li><strong>创建 Callable 接口的实现类</strong>，并实现 call() 方法，该 call() 方法将作为线程执行体，并且有返回值。</li>
-<li>创建 <strong>Callable 实现类的实例</strong>，使用 <strong>FutureTask 类来包装 Callable 对象</strong>，该 FutureTask 对象封装了该 Callable 对象的 call() 方法的返回值。</li>
-<li>使用 <strong>FutureTask 对象作为 Thread 对象的 target</strong> 创建并启动新线程。</li>
-<li>调用 <strong>FutureTask 对象的 get() 方法来获得子线程执行结束后的返回值</strong>。</li>
-</ol>
-<figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> <span class="hljs-keyword">class</span> CallableThreadTest implements Callable&lt;<span class="hljs-type">Integer</span>&gt; &#123;<br>    <span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> main(String[] args)&#123;  <br>        CallableThreadTest ctt = <span class="hljs-built_in">new</span> CallableThreadTest();  <br>        FutureTask&lt;<span class="hljs-type">Integer</span>&gt; ft = <span class="hljs-built_in">new</span> FutureTask&lt;&gt;(ctt);  <br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;i &lt; <span class="hljs-number">100</span>;i++)&#123;  <br>            <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(Thread.currentThread().getName()+&quot; 的循环变量i的值&quot;+i);  <br>            <span class="hljs-keyword">if</span>(i==<span class="hljs-number">20</span>)&#123;  <br>                <span class="hljs-built_in">new</span> Thread(ft,&quot;有返回值的线程&quot;).<span class="hljs-keyword">start</span>();  <br>            &#125;  <br>        &#125;try&#123;  <br>            <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(&quot;子线程的返回值：&quot;+ft.<span class="hljs-keyword">get</span>());  <br>        &#125; catch (InterruptedException e)&#123;  <br>            e.printStackTrace();  <br>        &#125; catch (ExecutionException e)&#123;  <br>            e.printStackTrace();  <br>        &#125;  <br>    &#125;<br>    @Override  <br>    <span class="hljs-built_in">public</span> <span class="hljs-type">Integer</span> <span class="hljs-keyword">call</span>() throws <span class="hljs-keyword">Exception</span>&#123;  <br>        <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;  <br>        <span class="hljs-keyword">for</span>(;i&lt;<span class="hljs-number">100</span>;i++)&#123;  <br>            <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(Thread.currentThread().getName()+&quot; &quot;+i);  <br>        &#125;  <br>        <span class="hljs-keyword">return</span> i;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>通过与Future的结合，可以实现利用Future来跟踪异步计算的结果。</p>
-<p>JDK5.0新特性。需要借助Future接口的唯一实现类<strong>FutureTask</strong>辅助线程的对象创建和返回值获取（FutureTask还实现了Runnable接口），再创建Thread对象，将FutureTask类的对象作为构造器参数传入，完成线程的创建，最后调用start()方法完成线程启动。</p>
-<p><strong>Runnable和Callable的区别：</strong></p>
-<p>1、Callable规定的方法是call(),  Runnable规定的方法是run()<br>2、Callable的任务执行后可返回值，而Runnable的任务是不能返回值<br>3、call方法可以抛出异常，run方法不可以<br>4、运行Callable任务可以拿到一个Future对象，<strong>表示异步计算的结果。</strong>它提供了检查计算是否完成的方法，以等待计算的完成，并检索计算的结果。通过Future对象可以了解任务执行情况，可取消任务的执行，还可获取执行结果</p>
-<p><strong>使用线程池。</strong></p>
-<p>使用线程池，提前创建好多个线程放入线程池中，使用时直接获取，使用完放回线程池中。可以做到提高响应速度（减少线程创建的时间）和降低资源消耗（可重复利用线程）。利用Executors工具类创建线程池，然后提供Runnable(excute())或Callable(submit())接口的实现类的对象，执行指定线程的操作。最后，关闭线程池shutdown()。</p>
-<h3 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h3><h4 id="为什么会有内存屏障"><a href="#为什么会有内存屏障" class="headerlink" title="为什么会有内存屏障"></a>为什么会有内存屏障</h4><p>每个CPU都会有自己的缓存（有的甚至L1,L2,L3），缓存的目的就是为了提高性能，避免每次都要向内存取。但是这样的弊端也很明显<strong>：不能实时的和内存发生信息交换</strong>，分在不同CPU执行的不同线程对同一个变量的缓存值不同。</p>
-<p>用volatile关键字修饰变量可以解决上述问题，那么volatile是如何做到这一点的呢？那就是<strong>内存屏障</strong>，内存屏障是硬件层的概念，不同的硬件平台实现内存屏障的手段并不是一样，java通过屏蔽这些差异，统一由jvm来生成内存屏障的指令。</p>
-<h4 id="内存屏障是什么"><a href="#内存屏障是什么" class="headerlink" title="内存屏障是什么"></a>内存屏障是什么</h4><p>硬件层的内存屏障分为两种：Load Barrier 和 Store Barrier即<strong>读屏障和写屏障。</strong></p>
-<p><strong>内存屏障有两个作用：</strong></p>
-<p>阻止屏障两侧的指令重排序；<br>强制把写缓冲区&#x2F;高速缓存中的脏数据等写回主内存，让缓存中相应的数据失效。</p>
-<p>对于Load Barrier来说，在指令前插入Load Barrier，可以让高速缓存中的数据失效，强制从新从主内存加载数据；<br>对于Store Barrier来说，在指令后插入Store Barrier，能让写入缓存中的最新数据更新写入主内存，让其他线程可见。</p>
-<h4 id="java内存屏障"><a href="#java内存屏障" class="headerlink" title="java内存屏障"></a>java内存屏障</h4><p>java的内存屏障通常所谓的四种即LoadLoad,StoreStore,LoadStore,StoreLoad实际上也是上述两种的组合，完成一系列的屏障和数据同步功能。</p>
-<p><strong>volatile语义中的内存屏障</strong></p>
-<p>volatile的内存屏障策略非常严格保守，<strong>非常悲观</strong>：<br>在每个volatile写操作前插入StoreStore屏障，在写操作后插入StoreLoad屏障；<br>在每个volatile读操作前插入LoadLoad屏障，在读操作后插入LoadStore屏障；</p>
-<p><strong>由于内存屏障的作用，避免了volatile变量和其它指令重排序、线程之间实现了通信，使得volatile表现出了锁的特性</strong>。</p>
-<h4 id="final语义中的内存屏障"><a href="#final语义中的内存屏障" class="headerlink" title="final语义中的内存屏障"></a>final语义中的内存屏障</h4><p>对于final域，编译器和CPU会遵循两个排序规则：</p>
-<p>新建对象过程中，构造体中对final域的初始化写入和这个对象赋值给其他引用变量，这两个操作不能重排序；</p>
-<p>初次读包含final域的对象引用和读取这个final域，这两个操作不能重排序；（晦涩，意思就是先赋值引用，再调用final值）</p>
-<p>​	必需保证一个对象的所有final域被写入完毕后才能引用和读取。这也是内存屏障的起的作用：</p>
-<p>​	写final域：在编译器写final域完毕，构造体结束之前，会插入一个StoreStore屏障，保证前面的对final写入对其他线程&#x2F;CPU可见，并阻止重排序。</p>
-<p>​	读final域：读final域前插入了LoadLoad屏障。</p>
-]]></content>
-      <categories>
-        <category>Java并发</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java并发-常见关键字</title>
     <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/</url>
     <content><![CDATA[<h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p>见《线程安全的机制》</p>
@@ -542,6 +406,59 @@
       </categories>
       <tags>
         <tag>关键字</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java并发-线程协作机制</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%90%8C%E6%AD%A5%E5%92%8C%E5%8D%8F%E4%BD%9C%E5%B7%A5%E5%85%B7%E7%B1%BB/</url>
+    <content><![CDATA[<h2 id="wait、notify"><a href="#wait、notify" class="headerlink" title="wait、notify"></a>wait、notify</h2><p>属于Object类中。</p>
+<p>当条件不成立时，线程调用wait进入条件等待队列。</p>
+<p>另一个线程修改了条件变量后调用notify，调用wait的线程唤醒后需要重新检查条件变量。</p>
+<h2 id="显示条件"><a href="#显示条件" class="headerlink" title="显示条件"></a>显示条件</h2><p>sychronized：wait，notify</p>
+<p>reentranlock：显式条件-condition接口：await，signal</p>
+<h2 id="线程中断"><a href="#线程中断" class="headerlink" title="线程中断"></a>线程中断</h2><h2 id="协作工具类"><a href="#协作工具类" class="headerlink" title="协作工具类"></a>协作工具类</h2><h3 id="读写锁reentrantreadwritelock"><a href="#读写锁reentrantreadwritelock" class="headerlink" title="读写锁reentrantreadwritelock"></a>读写锁reentrantreadwritelock</h3><p>读读是并行的。</p>
+<h4 id="实现："><a href="#实现：" class="headerlink" title="实现："></a>实现：</h4><p><img src="https://i.loli.net/2021/08/03/Qdk7pGoAtMq1NmJ.png" alt="image-20210803205028306"></p>
+<h3 id="信号量semaphore"><a href="#信号量semaphore" class="headerlink" title="信号量semaphore"></a>信号量semaphore</h3><p>信号量，用来控制同时访问特定资源的线程数量，它通过协调各个线程以保证合理的使用公共资源，可以用做流量控制，譬如数据库连接场景控制等；</p>
+<p>Semaphore 的构造方法 Semaphore(int permits) 接收一个整型参数，表示可用的许可证数量，即<strong>最大并发数量</strong>，使用方法就是在线程里面首先调用 acquire 方法获取一个许可，使用完后接着调用 <strong>release 归还一个许可，</strong>还可以使用 <strong>tryAcquire 尝试获取许可</strong>。</p>
+<h3 id="倒计时门栓countdownlatch"><a href="#倒计时门栓countdownlatch" class="headerlink" title="倒计时门栓countdownlatch"></a>倒计时门栓countdownlatch</h3><p>CountDownLatch <strong>允许 count 个线程阻塞在一个地方</strong>，直至所有线程的任务都执行完毕。</p>
+<p>CountDownLatch 是共享锁的一种实现,它默认构造 AQS 的 state 值为 count。</p>
+<p>线程使用 <strong>countDown()</strong> 方法时,使用了tryReleaseShared方法以 CAS 的操作来<strong>减少 state</strong>,直至 state 为 0 。</p>
+<p>当调用 <strong>await() 方法</strong>的时候，如果 state 不为 0，那就证明任务还没有执行完毕，await() 方法就会一直阻塞，也就是说 <strong>await() 方法之后的语句不会被执行</strong>。然后，CountDownLatch 会自旋 CAS 判断 state &#x3D;&#x3D; 0，如果 state &#x3D;&#x3D; 0 的话，就会释放所有等待的线程，await() 方法之后的语句得到执行。</p>
+<h4 id="CountDownLatch-的两种典型用法"><a href="#CountDownLatch-的两种典型用法" class="headerlink" title="CountDownLatch 的两种典型用法"></a>CountDownLatch 的两种典型用法</h4><p>1、某一线程在开始运行前等待 n 个线程执行完毕。</p>
+<p>将 CountDownLatch 的计数器初始化为 n （new CountDownLatch(n)），每当一个任务线程执行完毕，就将计数器减 1 （countdownlatch.countDown()），当计数器的值变为 0 时，在 CountDownLatch 上 await() 的线程就会被唤醒。一个典型应用场景就是<strong>启动一个服务时，主线程需要等待多个组件加载完毕</strong>，之后再继续执行。</p>
+<p>2、实现多个线程开始执行任务的<strong>最大并行性。</strong></p>
+<p>注意是并行性，不是并发，强调的是<strong>多个线程在某一时刻同时开始执行</strong>。类似于赛跑，将多个线程放到起点，等待发令枪响，然后同时开跑。做法是初始化一个共享的 CountDownLatch 对象，将其计数器初始化为 1 （new CountDownLatch(1)），多个线程在开始执行任务前首先 coundownlatch.await()，当主线程调用 countDown() 时，计数器变为 0，多个线程同时被唤醒。</p>
+<h4 id="CountDownLatch-的不足"><a href="#CountDownLatch-的不足" class="headerlink" title="CountDownLatch 的不足"></a>CountDownLatch 的不足</h4><p>CountDownLatch 是一次性的，计数器的值只能在构造方法中初始化一次，之后没有任何机制再次对其设置值，当 CountDownLatch 使用完毕后，它不能再次被使用。</p>
+<h3 id="循环栅栏cyclicbarrier"><a href="#循环栅栏cyclicbarrier" class="headerlink" title="循环栅栏cyclicbarrier"></a>循环栅栏cyclicbarrier</h3><p>CountDownLatch 的实现是基于 AQS 的，而 CycliBarrier 是基于 ReentrantLock(ReentrantLock 也属于 AQS 同步器)和 Condition 的。</p>
+<p>CyclicBarrier 的字面意思是<strong>可循环使用（Cyclic）的屏障（Barrier）</strong>。它要做的事情是：让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续干活。</p>
+<p>CyclicBarrier 默认的构造方法是 CyclicBarrier(int parties)，其参数表示屏障拦截的线程数量，每个线程调用 <strong>await() 方法告诉 CyclicBarrier 我已经到达了屏障，然后当前线程被阻塞。</strong></p>
+<p>CyclicBarrier 内部通过一个 <strong>count 变量作为计数器</strong>，count 的初始值为 parties 属性的初始化值，每当一个线程到了栅栏这里了，那么就将计数器减一。如果 count 值为 0 了，表示这是这一代最后一个线程到达栅栏，就尝试执行我们构造方法中输入的任务。</p>
+<h4 id="CyclicBarrier-的应用场景"><a href="#CyclicBarrier-的应用场景" class="headerlink" title="CyclicBarrier 的应用场景"></a>CyclicBarrier 的应用场景</h4><p>CyclicBarrier 可以用于<strong>多线程计算数据，最后合并计算结果的应用场景</strong>。比如我们用一个 Excel 保存了用户所有银行流水，每个 Sheet 保存一个帐户近一年的每笔银行流水，现在需要统计用户的日均银行流水，先用多线程处理每个 sheet 里的银行流水，都执行完之后，得到每个 sheet 的日均银行流水，最后，再用 barrierAction 用这些线程的计算结果，计算出整个 Excel 的日均银行流水。</p>
+<p>CyclicBarrier 还提供一个更高级的构造函数 CyclicBarrier(int parties, Runnable barrierAction)，用于在线程到达屏障时，优先执行 barrierAction，方便处理更复杂的业务场景。</p>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p><img src="https://i.loli.net/2021/08/03/OP6kMEHuTK14R89.png" alt="image-20210803210950957"></p>
+<p>CountDownLatch 是计数器，<strong>只能使用一次</strong>，而 CyclicBarrier 的计数器提供 reset 功能，<strong>可以多次使用</strong>。</p>
+<p>CountDownLatch: <strong>一个或者多个线程</strong>，等待<strong>其他多个线程完成某件事情之后</strong>才能执行；</p>
+<p>CyclicBarrier : <strong>多个线程互相等待，直到到达同一个同步点，再继续一起执行。</strong></p>
+<p>对于 CountDownLatch 来说，重点是“<strong>一个线程（多个线程）等待</strong>”，而其他的 N 个线程在完成“某件事情”之后，可以终止，也可以等待。</p>
+<p>而对于 CyclicBarrier，重点是<strong>多个线程，在任意一个线程没有完成，所有的线程都必须等待。</strong></p>
+<p>CountDownLatch 是计数器，线程完成一个记录一个，只不过计数不是递增而是递减，而 CyclicBarrier 更像是一个阀门，需要所有线程都到达，阀门才能打开，然后继续执行。</p>
+<h2 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h2><p><img src="https://i.loli.net/2021/08/05/vjqPYt4JX1xfGlk.png" alt="image-20210805141923139"></p>
+<p>线程 1 往阻塞队列中添加元素，而线程 2 从阻塞队列中移除元素</p>
+<p><strong>当阻塞队列是空时</strong>，从队列中获取元素的操作将会被阻塞。</p>
+<p><strong>当阻塞队列是满时</strong>，从队列中添加元素的操作将会被阻塞。</p>
+<p>试图从空的阻塞队列中获取元素的线程将会阻塞，直到其他的线程往空的队列插入新的元素，同样，试图往已满的阻塞队列添加新元素的线程同样也会阻塞，直到其他的线程从列中移除一个或多个元素或者完全清空队列后继续新增。</p>
+<h3 id="为什么要用阻塞队列，有什么好处吗"><a href="#为什么要用阻塞队列，有什么好处吗" class="headerlink" title="为什么要用阻塞队列，有什么好处吗"></a>为什么要用阻塞队列，有什么好处吗</h3><p>在多线程领域：所谓阻塞，是指在某些情况下会<strong>挂起线程（即阻塞）</strong>，一旦条件满足，<strong>被挂起的线程又会自动被唤醒。</strong></p>
+<p>好处是我们<strong>不需要关心什么时候需要阻塞线程，什么时候需要唤醒线程，因为这些 BlockingQueue 都包办了。</strong></p>
+<p>在 concurrent 包发布以前，多线程环境下，我们每个程序员都必须自己去实现这些细节，尤其还要兼顾效率和线程安全，这会给我们的程序带来不小的复杂性。</p>
+<p>JDK 提供了 7 个阻塞队列。分别是</p>
+<p>ArrayBlockingQueue ：一个由数组结构组成的有界阻塞队列<br>LinkedBlockingQueue ：一个由链表结构组成的有界阻塞队列<br>PriorityBlockingQueue ：一个支持优先级排序的无界阻塞队列<br>DelayQueue：一个使用优先级队列实现的无界阻塞队列<br>SynchronousQueue：一个不存储元素的阻塞队列<br>LinkedTransferQueue：一个由链表结构组成的无界阻塞队列（实现了继承于 BlockingQueue的 TransferQueue）<br>LinkedBlockingDeque：一个由链表结构组成的双向阻塞队列</p>
+<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><p><img src="https://i.loli.net/2021/08/05/dv943bwnZLAeIKt.png" alt="image-20210805142222849"></p>
+<h2 id="future-x2F-futuretask"><a href="#future-x2F-futuretask" class="headerlink" title="future&#x2F;futuretask"></a>future&#x2F;futuretask</h2>]]></content>
+      <categories>
+        <category>Java并发</category>
+      </categories>
+      <tags>
+        <tag>工具类</tag>
       </tags>
   </entry>
   <entry>
@@ -758,6 +675,89 @@
       </tags>
   </entry>
   <entry>
+    <title>Java并发-常见基础</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h3 id="线程与进程与协程"><a href="#线程与进程与协程" class="headerlink" title="线程与进程与协程"></a>线程与进程与协程</h3><p><strong>进程是程序的一次执行过程，是系统资源分配的基本单位</strong>。进程间基本上是独立的。</p>
+<p>线程是更小的运行单位。线程是调度执行的基本单位。线程间极有可能相互影响。</p>
+<p>多个线程可以共享同一块内存空间与系统资源（<strong>堆，方法区（元空间）</strong>），也有自己独立的<strong>程序计数器与虚拟机栈，本地方法栈</strong>。</p>
+<p>线程的切换负担要小很多。也被称为轻量级的进程。</p>
+<p>程序计数器：为了线程切换后可以恢复到正确的执行位置。<br>虚拟机栈：方法调用对应着栈帧，存储着局部变量表，操作数栈，常量池。方法调用执行完成对应着栈帧的入栈与出栈。–<strong>保证局部变量私有</strong>。<br>堆：最大的一块，存放对象。<br>方法区：已被<strong>加载的类信息，常量，静态变量</strong>等等。<br>上下文切换：cpu时间片切换。</p>
+<p>一个java应用程序实际上至少有三个线程，<strong>main主线程，gc()垃圾回收机制的运行线程，异常处理线程。</strong></p>
+<p><strong>线程分为两类：用户线程和守护线程</strong>。守护线程适用于服务用户线程的。<strong>用户线程结束，守护线程也就结束</strong>，所以守护线程是依赖于用户线程的。举个例子：java程序中，main是用户线程，垃圾回收就是守护线程。可以利用thread.setDaemon(true)将用户线程变成守护线程。</p>
+<h4 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h4><p>操作系统在线程等待IO的时候，会阻塞当前线程，切换到其它线程，这样在当前线程等待IO的过程中，其它线程可以继续执行。当系统线程较少的时候没有什么问题，但是当线程数量非常多的时候，却产生了问题。<strong>一是系统线程会占用非常多的内存空间，二是过多的线程切换会占用大量的系统时间。</strong></p>
+<p>协程运行在线程之上，当一个协程执行完成后，可以选择主动让出，让另一个协程运行在当前线程之上。协程并没有增加线程数量，<strong>只是在线程的基础之上通过分时复用的方式运行多个协程</strong>，而且协程的切换在用户态完成，切换的代价比线程从用户态到内核态的代价小很多。</p>
+<p>假设协程运行在线程之上，并且协程调用了一个阻塞IO操作，这时候会发生什么？</p>
+<p>实际上操作系统并不知道协程的存在，它只知道线程，因此在协程调用阻塞IO操作的时候，操作系统会让线程进入阻塞状态，当前的协程和其它绑定在该线程之上的协程都会陷入阻塞而得不到调度，这往往是不能接受的。</p>
+<p><strong>在有大量IO操作业务的情况下，</strong>我们采用协程替换线程，可以到达很好的效果，一是降低了系统内存，二是减少了系统切换开销，因此系统的性能也会提升。</p>
+<p>在协程中尽量不要调用阻塞IO的方法，比如打印，读取文件，Socket接口等，除非改为<strong>异步调用</strong>的方式，并且协程只有在IO密集型的任务中才会发挥作用。</p>
+<p>协程只有和异步IO结合起来才能发挥出最大的威力。</p>
+<p><strong>线程的相关方法：</strong></p>
+<p>sleep-</p>
+<p>yield-让出cpu，当然实际情况得看调度器</p>
+<p>join-调用join的线程会让其他线程等待他结束后再结束。</p>
+<h4 id="sleep-与wait-方法的区别"><a href="#sleep-与wait-方法的区别" class="headerlink" title="sleep()与wait()方法的区别"></a>sleep()与wait()方法的区别</h4><ol>
+<li>sleep方法不会释放锁，wait方法会释放。</li>
+<li>都可以暂停线程。</li>
+<li>wait用于线程交互，sleep用于暂停。</li>
+<li>wait被调用后，线程不会自动苏醒（无超时等待），需要notify()。</li>
+</ol>
+<h4 id="java线程的状态"><a href="#java线程的状态" class="headerlink" title="java线程的状态"></a><strong>java线程的状态</strong></h4><ul>
+<li><strong>new</strong>：线程创建，还没调用start方法。</li>
+<li><strong>runnable</strong>：（操作系统中的就绪，运行）new–调用start–ready-<strong>-获得cpu时间片</strong>–running</li>
+<li><strong>blocked</strong>：阻塞。调用同步方法，在没获取到锁的情况下会阻塞。</li>
+<li><strong>waitting</strong>：等待其他线程做一些操作。wait</li>
+<li><strong>time_waiting</strong>：超时等待。-wait，sleep，超时时间到后，进入runnable。</li>
+<li><strong>terminated</strong>：线程执行完毕。</li>
+</ul>
+<p><strong>wait&#x2F;notify属于Object类。</strong></p>
+<p><img src="https://i.loli.net/2021/08/03/BhDXCyWdjGSMvuR.png" alt="image-20210803151242958"></p>
+<h3 id="创建线程的方式"><a href="#创建线程的方式" class="headerlink" title="创建线程的方式"></a>创建线程的方式</h3><p><strong>继承thread类</strong>，重写run（）方法，调用子类的start（）。</p>
+<p>为什么调用的是start，执行的确是run?</p>
+<p>start表示启动该线程，进入就绪状态，成为单独的执行流。操作系统会分配相关资源。</p>
+<p>直接执行run就相当于执行main中的普通方法了，就不是多线程了。</p>
+<p><strong>实现runnable接口</strong>，重写run，启动start。</p>
+<p>java只支持单继承，因此引入runnable接口。</p>
+<p><strong>通过 Callable 和 Future 创建线程。</strong>覆盖call（）方法。</p>
+<p>可以获得任务执行返回值；</p>
+<ol>
+<li><strong>创建 Callable 接口的实现类</strong>，并实现 call() 方法，该 call() 方法将作为线程执行体，并且有返回值。</li>
+<li>创建 <strong>Callable 实现类的实例</strong>，使用 <strong>FutureTask 类来包装 Callable 对象</strong>，该 FutureTask 对象封装了该 Callable 对象的 call() 方法的返回值。</li>
+<li>使用 <strong>FutureTask 对象作为 Thread 对象的 target</strong> 创建并启动新线程。</li>
+<li>调用 <strong>FutureTask 对象的 get() 方法来获得子线程执行结束后的返回值</strong>。</li>
+</ol>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> <span class="hljs-keyword">class</span> CallableThreadTest implements Callable&lt;<span class="hljs-type">Integer</span>&gt; &#123;<br>    <span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> main(String[] args)&#123;  <br>        CallableThreadTest ctt = <span class="hljs-built_in">new</span> CallableThreadTest();  <br>        FutureTask&lt;<span class="hljs-type">Integer</span>&gt; ft = <span class="hljs-built_in">new</span> FutureTask&lt;&gt;(ctt);  <br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;i &lt; <span class="hljs-number">100</span>;i++)&#123;  <br>            <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(Thread.currentThread().getName()+&quot; 的循环变量i的值&quot;+i);  <br>            <span class="hljs-keyword">if</span>(i==<span class="hljs-number">20</span>)&#123;  <br>                <span class="hljs-built_in">new</span> Thread(ft,&quot;有返回值的线程&quot;).<span class="hljs-keyword">start</span>();  <br>            &#125;  <br>        &#125;try&#123;  <br>            <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(&quot;子线程的返回值：&quot;+ft.<span class="hljs-keyword">get</span>());  <br>        &#125; catch (InterruptedException e)&#123;  <br>            e.printStackTrace();  <br>        &#125; catch (ExecutionException e)&#123;  <br>            e.printStackTrace();  <br>        &#125;  <br>    &#125;<br>    @Override  <br>    <span class="hljs-built_in">public</span> <span class="hljs-type">Integer</span> <span class="hljs-keyword">call</span>() throws <span class="hljs-keyword">Exception</span>&#123;  <br>        <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;  <br>        <span class="hljs-keyword">for</span>(;i&lt;<span class="hljs-number">100</span>;i++)&#123;  <br>            <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(Thread.currentThread().getName()+&quot; &quot;+i);  <br>        &#125;  <br>        <span class="hljs-keyword">return</span> i;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>通过与Future的结合，可以实现利用Future来跟踪异步计算的结果。</p>
+<p>JDK5.0新特性。需要借助Future接口的唯一实现类<strong>FutureTask</strong>辅助线程的对象创建和返回值获取（FutureTask还实现了Runnable接口），再创建Thread对象，将FutureTask类的对象作为构造器参数传入，完成线程的创建，最后调用start()方法完成线程启动。</p>
+<p><strong>Runnable和Callable的区别：</strong></p>
+<p>1、Callable规定的方法是call(),  Runnable规定的方法是run()<br>2、Callable的任务执行后可返回值，而Runnable的任务是不能返回值<br>3、call方法可以抛出异常，run方法不可以<br>4、运行Callable任务可以拿到一个Future对象，<strong>表示异步计算的结果。</strong>它提供了检查计算是否完成的方法，以等待计算的完成，并检索计算的结果。通过Future对象可以了解任务执行情况，可取消任务的执行，还可获取执行结果</p>
+<p><strong>使用线程池。</strong></p>
+<p>使用线程池，提前创建好多个线程放入线程池中，使用时直接获取，使用完放回线程池中。可以做到提高响应速度（减少线程创建的时间）和降低资源消耗（可重复利用线程）。利用Executors工具类创建线程池，然后提供Runnable(excute())或Callable(submit())接口的实现类的对象，执行指定线程的操作。最后，关闭线程池shutdown()。</p>
+<h3 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h3><h4 id="为什么会有内存屏障"><a href="#为什么会有内存屏障" class="headerlink" title="为什么会有内存屏障"></a>为什么会有内存屏障</h4><p>每个CPU都会有自己的缓存（有的甚至L1,L2,L3），缓存的目的就是为了提高性能，避免每次都要向内存取。但是这样的弊端也很明显<strong>：不能实时的和内存发生信息交换</strong>，分在不同CPU执行的不同线程对同一个变量的缓存值不同。</p>
+<p>用volatile关键字修饰变量可以解决上述问题，那么volatile是如何做到这一点的呢？那就是<strong>内存屏障</strong>，内存屏障是硬件层的概念，不同的硬件平台实现内存屏障的手段并不是一样，java通过屏蔽这些差异，统一由jvm来生成内存屏障的指令。</p>
+<h4 id="内存屏障是什么"><a href="#内存屏障是什么" class="headerlink" title="内存屏障是什么"></a>内存屏障是什么</h4><p>硬件层的内存屏障分为两种：Load Barrier 和 Store Barrier即<strong>读屏障和写屏障。</strong></p>
+<p><strong>内存屏障有两个作用：</strong></p>
+<p>阻止屏障两侧的指令重排序；<br>强制把写缓冲区&#x2F;高速缓存中的脏数据等写回主内存，让缓存中相应的数据失效。</p>
+<p>对于Load Barrier来说，在指令前插入Load Barrier，可以让高速缓存中的数据失效，强制从新从主内存加载数据；<br>对于Store Barrier来说，在指令后插入Store Barrier，能让写入缓存中的最新数据更新写入主内存，让其他线程可见。</p>
+<h4 id="java内存屏障"><a href="#java内存屏障" class="headerlink" title="java内存屏障"></a>java内存屏障</h4><p>java的内存屏障通常所谓的四种即LoadLoad,StoreStore,LoadStore,StoreLoad实际上也是上述两种的组合，完成一系列的屏障和数据同步功能。</p>
+<p><strong>volatile语义中的内存屏障</strong></p>
+<p>volatile的内存屏障策略非常严格保守，<strong>非常悲观</strong>：<br>在每个volatile写操作前插入StoreStore屏障，在写操作后插入StoreLoad屏障；<br>在每个volatile读操作前插入LoadLoad屏障，在读操作后插入LoadStore屏障；</p>
+<p><strong>由于内存屏障的作用，避免了volatile变量和其它指令重排序、线程之间实现了通信，使得volatile表现出了锁的特性</strong>。</p>
+<h4 id="final语义中的内存屏障"><a href="#final语义中的内存屏障" class="headerlink" title="final语义中的内存屏障"></a>final语义中的内存屏障</h4><p>对于final域，编译器和CPU会遵循两个排序规则：</p>
+<p>新建对象过程中，构造体中对final域的初始化写入和这个对象赋值给其他引用变量，这两个操作不能重排序；</p>
+<p>初次读包含final域的对象引用和读取这个final域，这两个操作不能重排序；（晦涩，意思就是先赋值引用，再调用final值）</p>
+<p>​	必需保证一个对象的所有final域被写入完毕后才能引用和读取。这也是内存屏障的起的作用：</p>
+<p>​	写final域：在编译器写final域完毕，构造体结束之前，会插入一个StoreStore屏障，保证前面的对final写入对其他线程&#x2F;CPU可见，并阻止重排序。</p>
+<p>​	读final域：读final域前插入了LoadLoad屏障。</p>
+]]></content>
+      <categories>
+        <category>Java并发</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java虚拟机-String-table</title>
     <url>/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-String-table/</url>
     <content><![CDATA[<h3 id="String的基本特性"><a href="#String的基本特性" class="headerlink" title="String的基本特性"></a>String的基本特性</h3><p>String：字符串，使用一对 “” 引起来表示<br>String s1 &#x3D; “qweq” ;               &#x2F;&#x2F; 字面量的定义方式<br>String s2 &#x3D;  new String(“hello”);     &#x2F;&#x2F; new 对象的方式</p>
@@ -857,6 +857,141 @@
       </categories>
       <tags>
         <tag>结构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java虚拟机-垃圾回收器</title>
+    <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</url>
+    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><h4 id="评估-GC-的性能指标"><a href="#评估-GC-的性能指标" class="headerlink" title="评估 GC 的性能指标"></a>评估 GC 的性能指标</h4><p><strong>吞吐量</strong>：运行用户代码的时间占总运行时间的比例（总运行时间 &#x3D; 程序的运行时间 + 内存回收的时间）<br>垃圾收集开销：吞吐量的补数，垃圾收集所用时间与总运行时间的比例。<br><strong>暂停时间</strong>：执行垃圾收集时，程序的工作线程被暂停的时间。<br>收集频率：相对于应用程序的执行，收集操作发生的频率。<br>内存占用：Java堆区所占的内存大小。<br>快速：一个对象从诞生到被回收所经历的时间。</p>
+<p><strong>吞吐量、暂停时间、内存占用</strong>这三者共同构成一个“不可能三角”。三者总体的表现会随着技术进步而越来越好。一款优秀的收集器通常最多同时满足其中的两项。</p>
+<p>这三项里，<strong>暂停时间的重要性日益凸显</strong>。因为随着硬件发展，内存占用多些越来越能容忍，硬件性能的提升也有助于降低收集器运行时对应用程序的影响，即提高了吞吐量。而内存的扩大，对延迟反而带来负面效果。</p>
+<p>简单来说，主要抓住两点：<br><strong>吞吐量</strong><br><strong>暂停时间</strong></p>
+<h4 id="吞吐量-vs-暂停时间"><a href="#吞吐量-vs-暂停时间" class="headerlink" title="吞吐量 vs 暂停时间"></a>吞吐量 vs 暂停时间</h4><p><strong>高吞吐量较好</strong>因为这会让应用程序的最终用户感觉只有应用程序线程在做“生产性”工作。直觉上，吞吐量越高程序运行越快。</p>
+<p><strong>低暂停时间（低延迟）较好</strong>，是从最终用户的角度来看，不管是GC还是其他原因导致一个应用被挂起始终是不好的。这取决于应用程序的类型，有时候甚至短暂的200毫秒暂停都可能打断终端用户体验。因此，具有较低的暂停时间是非常重要的，特别是对于一个<strong>交互式应用程序</strong>（就是和用户交互比较多的场景）。</p>
+<p>不幸的是”高吞吐量”和”低暂停时间”是一对相互竞争的目标（矛盾）。</p>
+<p>因为如果选择以<strong>吞吐量优先，那么必然需要降低内存回收的执行频率，但是这样会导致GC需要更长的暂停时间来执行内存回收。</strong><br>相反的，如果选择以低延迟优先为原则，那么为了降低每次执行内存回收时的暂停时间，也只能频繁地执行内存回收，但这又引起了年轻代内存的缩减和导致程序吞吐量的下降。<br>在设计（或使用）GC算法时，我们必须确定我们的目标：一个GC算法只可能针对两个目标之一（即只专注于较大吞吐量或最小暂停时间），或尝试找到一个二者的折中。</p>
+<p>现在标准：<strong>在最大吞吐量优先的情况下，降低停顿时间。</strong></p>
+<p>1999年随JDK1.3.1一起来的是串行方式的Serial GC，它是第一款GC。ParNew垃圾收集器是Serial收集器的多线程版本<br>2002年2月26日，Parallel GC和Concurrent Mark Sweep GC跟随JDK1.4.2一起发布Parallel GC在JDK6之后成为HotSpot默认GC。<br>2012年，在JDK1.7u4版本中，G1可用。<br>2017年，<strong>JDK9中G1变成默认的垃圾收集器，以替代CMS。</strong><br>2018年3月，JDK10中G1垃圾回收器的并行完整垃圾回收，实现并行性来改善最坏情况下的延迟。<br>2018年9月，JDK11发布。引入Epsilon 垃圾回收器，又被称为 “No-Op(无操作)“ 回收器。同时，引入ZGC：可伸缩的低延迟垃圾回收器（Experimental）<br>2019年3月，JDK12发布。增强G1，自动返回未用堆内存给操作系统。同时，引入Shenandoah GC：低停顿时间的GC（Experimental）。<br>2019年9月，JDK13发布。增强ZGC，自动返回未用堆内存给操作系统。<br><strong>2020年3月，JDK14发布。删除CMS垃圾回收器</strong>。扩展ZGC在macOS和Windows上的应用</p>
+<p>7款经典的垃圾收集器<br><strong>串行回收器：Serial、Serial old</strong><br><strong>并行回收器：ParNew、Parallel Scavenge、Parallel old</strong><br><strong>并发回收器：CMS、G1</strong></p>
+<p><img src="https://i.loli.net/2021/08/05/DeJERlKAhL34BoQ.png" alt="image-20210802151315089"></p>
+<p><img src="https://i.loli.net/2021/08/05/9rHwzoCX1SKYuag.png" alt="image-20210802151245677"></p>
+<p>为什么要有很多收集器，一个不够吗？因为Java的使用场景很多，移动端，服务器等。所以就需要针对不同的场景，提供不同的垃圾收集器，提高垃圾收集的性能。</p>
+<p>JDK 8 中默认使用 ParallelGC 和 ParallelOldGC 的组合。</p>
+<h3 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h3><p>串行的。</p>
+<h3 id="Parnew"><a href="#Parnew" class="headerlink" title="Parnew"></a>Parnew</h3><p>如果说Serial GC是年轻代中的单线程垃圾收集器，那么<strong>ParNew收集器则是Serial收集器的多线程版本。</strong><br>Par是Parallel的缩写，New：只能处理新生代<br>ParNew 收集器除了采用<strong>并行回收</strong>的方式执行内存回收外，两款垃圾收集器之间几乎没有任何区别。ParNew收集器在年轻代中同样也是采用复制算法、”Stop-the-World”机制。<br>ParNew 是很多JVM运行在Server模式下新生代的默认垃圾收集器。</p>
+<p>对于新生代，回收次数频繁，<strong>使用并行方式高效</strong>。<br>对于老年代，回收次数少，<strong>使用串行方式节省资源</strong>。（CPU并行需要切换线程，串行可以省去切换线程的资源）</p>
+<p><strong>ParNew 回收器与 Serial 回收器比较</strong></p>
+<p>Q：由于ParNew收集器基于并行回收，那么是否可以断定ParNew收集器的回收效率在任何场景下都会比Serial收集器更高效？</p>
+<p>A：不能<br>ParNew收集器运行在多CPU的环境下，由于可以充分利用多CPU、多核心等物理硬件资源优势，可以更快速地完成垃圾收集，提升程序的吞吐量。<br>但是在单个CPU的环境下，ParNew收集器不比Serial收集器更高效。虽然Serial收集器是基于串行回收，但是由于CPU不需要频繁地做任务切换，因此可以有效避免多线程交互过程中产生的一些额外开销。<br><strong>除Serial外，目前只有ParNew GC能与CMS收集器配合工作</strong></p>
+<h3 id="Parallel"><a href="#Parallel" class="headerlink" title="Parallel"></a>Parallel</h3><p>HotSpot的年轻代中除了拥有ParNew收集器是基于并行回收的以外，Parallel Scavenge收集器同样也采用了复制算法、并行回收和”Stop the World”机制。</p>
+<p><strong>那么Parallel收集器的出现是否多此一举？</strong></p>
+<p>和ParNew收集器不同，Parallel Scavenge收集器的目标则是达到一个<strong>可控制的吞吐量（Throughput）</strong>，它也被称为<strong>吞吐量优先的垃圾收集器。</strong></p>
+<p><strong>自适应调节策略</strong>也是Parallel Scavenge与ParNew一个重要区别。（<strong>动态调整内存分配情况，以达到一个最优的吞吐量或低延迟</strong>）</p>
+<p>高吞吐量则可以高效率地利用CPU时间，<strong>尽快完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务。因此，常见在服务器环境中使用。</strong>例如，那些执行批量处理、订单处理、工资支付、科学计算的应用程序。</p>
+<p>Parallel收集器在JDK1.6时提供了用于执行老年代垃圾收集的Parallel Old收集器，用来代替老年代的Serial Old收集器。</p>
+<p>Parallel Old收集器采用了<strong>标记-压缩算</strong>法，但同样也是基于并行回收和”Stop-the-World”机制。</p>
+<p>在程序吞吐量优先的应用场景中，Parallel收集器和Parallel Old收集器的组合，在server模式下的内存回收性能很不错。</p>
+<p><strong>在Java8中，默认是此垃圾收集器。</strong></p>
+<h3 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h3><p>在JDK1.5时期，Hotspot推出了一款在<strong>强交互应用</strong>中（就是和用户打交道的引用）几乎可认为有划时代意义的垃圾收集器：CMS（Concurrent-Mark-Sweep）收集器，这款收集器是HotSpot虚拟机中第一款真正意义上的并发收集器，<strong>它第一次实现了让垃圾收集线程与用户线程同时工作。</strong></p>
+<p>CMS收集器的关注点是尽可能缩短垃圾收集时用户线程的停顿时间。停顿时间越短（低延迟）就越适合与用户交互的程序，良好的响应速度能提升用户体验。</p>
+<p>目前很大一部分的Java应用集中在互联网站或者B&#x2F;S系统的服务端上，这类应用尤其重视服务的响应速度，希望系统停顿时间最短，以给用户带来较好的体验。CMS收集器就非常符合这类应用的需求。</p>
+<p>CMS的垃圾收集算法采用<strong>标记-清除算法</strong>，并且也会”Stop-the-World”，不幸的是，CMS作为老年代的收集器，却无法与JDK1.4.0中已经存在的新生代收集器Parallel Scavenge配合工作（因为实现的框架不一样，没办法兼容使用），<strong>所以在JDK1.5中使用CMS来收集老年代的时候，新生代只能选择ParNew或者Serial收集器中的一个。</strong><br>在G1出现之前，CMS使用还是非常广泛的。一直到今天，仍然有很多系统使用CMS GC。</p>
+<p><img src="https://i.loli.net/2021/08/05/u6cqdol4AvgW8eK.png" alt="image-20210802151828157"></p>
+<h4 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h4><p>CMS整个过程比之前的收集器要复杂，整个过程分为4个主要阶段，即初始标记阶段、并发标记阶段、重新标记阶段和并发清除阶段。(涉及STW的阶段主要是：初始标记 和 重新标记)</p>
+<p><strong>初始标记（Initial-Mark）阶段</strong>：在这个阶段中，程序中所有的工作线程都将会因为“Stop-the-World”机制而出现<strong>短暂的暂停</strong>，这个阶段的主要任务仅仅只是标记出GC Roots能直接关联到的对象。一旦标记完成之后就会恢复之前被暂停的所有应用线程。由于直接关联对象比较小，所以这里的速度非常快。</p>
+<p><strong>并发标记（Concurrent-Mark）阶段</strong>：从GC Roots的直接关联对象开始遍历整个对象图的过程，这个过程耗时较长但是不需要停顿用户线程，可以与垃圾收集线程一起并发运行。</p>
+<p><strong>重新标记（Remark）阶段</strong>：由于在并发标记阶段中，<strong>程序的工作线程会和垃圾收集线程同时运行或者交叉运行，因此为了修正并发标记期间</strong>，因用户程序继续运作而<strong>导致标记产生变动的那一部分对象的标记记录</strong>，这个阶段的停顿时间通常会比初始标记阶段稍长一些，并且也会导致“Stop-the-World”的发生，但也远比并发标记阶段的时间短。</p>
+<p><strong>并发清除（Concurrent-Sweep）阶段</strong>：此阶段清理删除掉标记阶段判断的已经死亡的对象，释放内存空间。由于不需要移动存活对象，所以这个阶段也是可以与用户线程同时并发的</p>
+<p>CMS分析</p>
+<p>尽管CMS收集器采用的是并发回收（非独占式），<strong>但是在其初始化标记和再次标记这两个阶段中仍然需要执行“Stop-the-World”机制暂停程序中的工作线程，不过暂停时间并不会太长</strong>，因此可以说明目前所有的垃圾收集器都做不到完全不需要“Stop-the-World”，只是尽可能地缩短暂停时间。</p>
+<p>由于<strong>最耗费时间的并发标记与并发清除阶段</strong>都不需要暂停工作，所以整体的回收是低停顿的。</p>
+<p>CMS收集器的垃圾收集算法采用的是<strong>标记清除算法</strong>，这意味着每次执行完内存回收后，由于被执行内存回收的无用对象所占用的内存空间极有可能是不连续的一些内存块，不可避免地将会产生一些内存碎片。那么CMS在为新对象分配内存空间时，将无法使用指针碰撞（Bump the Pointer）技术，而只能够选择<strong>空闲列表（Free List）执行内存分配。</strong></p>
+<p><strong>为什么 CMS 不采用标记-压缩算法呢？</strong></p>
+<p>答案其实很简答，因为当并发清除的时候，用Compact整理内存的话，原来的用户线程使用的内存还怎么用呢？要保证用户线程能继续执行，前提的它运行的资源不受影响。Mark Compact更适合“stop the world”这种场景下使用。</p>
+<h4 id="CMS-的优点与弊端"><a href="#CMS-的优点与弊端" class="headerlink" title="CMS 的优点与弊端"></a>CMS 的优点与弊端</h4><p>优点</p>
+<p><strong>并发收集</strong><br><strong>低延迟</strong></p>
+<p>弊端</p>
+<p><strong>会产生内存碎片</strong>，导致并发清除后，用户线程可用的空间不足。在无法分配大对象的情况下，不得不提前触发Full GC。</p>
+<p>CMS收集器对<strong>CPU资源非常敏感</strong>。在并发阶段，它虽然不会导致用户停顿，但是会因为占用了一部分线程而导致应用程序变慢，总吞吐量会降低。<br>CMS收集器<strong>无法处理浮动垃圾</strong>。可能出现“Concurrent Mode Failure”失败而导致另一次Full GC的产生。在并发标记阶段由于程序的工作线程和垃圾收集线程是同时运行或者交叉运行的，那么在并发标记阶段如果产生新的垃圾对象，CMS将无法对这些垃圾对象进行标记，最终会导致这些新产生的垃圾对象没有被及时回收，从而只能在下一次执行GC时释放这些之前未被回收的内存空间。</p>
+<h3 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h3><p>G1 回收器：<strong>区域化分代式</strong></p>
+<p>应用程序所应对的业务越来越庞大、复杂，用户越来越多，没有GC就不能保证应用程序正常进行，而经常造成STW的GC又跟不上实际的需求，所以才会不断地尝试对GC进行优化。<br>G1（Garbage-First）垃圾回收器是在Java7 update4之后引入的一个新的垃圾回收器，是当今收集器技术发展的最前沿成果之一。<br>与此同时，<strong>为了适应现在不断扩大的内存和不断增加的处理器数量，进一步降低暂停时间（pause time），同时兼顾良好的吞吐量。</strong><br>官方给G1设定的目标是<strong>在延迟可控的情况下获得尽可能高的吞吐量</strong>，所以才担当起“全功能收集器”的重任与期望。</p>
+<p>为什么名字叫**Garbage First(G1)**呢？</p>
+<p>因为G1是一个并行回收器，它把堆内存分割为很多不相关的区域（Region）（物理上不连续的）。使用不同的Region来表示Eden、幸存者0区，幸存者1区，老年代等。<br>G1 GC有计划地避免在整个Java堆中进行全区域的垃圾收集。<strong>G1跟踪各个Region里面的垃圾堆积的价值大小（回收所获得的空间大小以及回收所需时间的经验值），在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region。</strong><br>由于这种方式的侧重点在于回收垃圾最大量的区间（Region），所以我们给G1一个名字：垃圾优先（Garbage First）。</p>
+<p>G1（Garbage-First）是一款<strong>面向服务端应用</strong>的垃圾收集器，主要针对配备<strong>多核CPU及大容量内存的机器</strong>，以极高概率满足GC停顿时间的同时，还兼具高吞吐量的性能特征。</p>
+<p>在JDK1.7版本正式启用，移除了Experimental的标识，是JDK9以后的默认垃圾回收器，取代了CMS回收器以及Parallel+Parallel Old组合。被Oracle官方称为“全功能的垃圾收集器”。<br>与此同时，CMS已经在JDK9中被标记为废弃（deprecated）。G1在JDK8中还不是默认的垃圾回收器，需要使用-XX:+UseG1GC来启用。</p>
+<h4 id="G1-回收器的优势"><a href="#G1-回收器的优势" class="headerlink" title="G1 回收器的优势"></a>G1 回收器的优势</h4><p>与其他GC收集器相比，G1使用了全新的分区算法，其特点如下所示：</p>
+<p><strong>1，并行与并发兼备</strong></p>
+<p>并行性：G1在回收期间，可以有多个GC线程同时工作，有效利用多核计算能力。此时用户线程STW<br>并发性：G1拥有与应用程序交替执行的能力，部分工作可以和应用程序同时执行，因此，一般来说，不会在整个回收阶段发生完全阻塞应用程序的情况<br><strong>2，分代收集</strong></p>
+<p>从分代上看，G1依然属于分代型垃圾回收器，它会区分年轻代和老年代，年轻代依然有Eden区和Survivor区。但从堆的结构上看，它不要求整个Eden区、年轻代或者老年代都是连续的，也不再坚持固定大小和固定数量。<br>将堆空间分为若干个区域（Region），这些区域中包含了逻辑上的年轻代和老年代。<br><strong>和之前的各类回收器不同，它同时兼顾年轻代和老年代。</strong>对比其他回收器，或者工作在年轻代，或者工作在老年代；</p>
+<p><img src="https://i.loli.net/2021/08/05/KFNiqT1SUnylwGc.png" alt="image-20210802152854640"></p>
+<p><strong>3，空间整合</strong><br>CMS：“标记-清除”算法、内存碎片、若干次GC后进行一次碎片整理</p>
+<p>G1将内存划分为一个个的region。<strong>内存的回收是以region作为基本单位的</strong>。Region之间是复制算法，但整体上实际可看作是标记-压缩（Mark-Compact）算法，两种算法都可以避免内存碎片。这种特性有利于程序长时间运行，分配大对象时不会因为无法找到连续内存空间而提前触发下一次GC。<strong>尤其是当Java堆非常大的时候，G1的优势更加明显。</strong></p>
+<p><strong>4，可预测的停顿时间模型（软实时soft real-time）</strong></p>
+<p>这是G1相对于CMS的另一大优势，G1除了追求低停顿外，<strong>还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒。</strong></p>
+<p>由于分区的原因，G1可以只选取部分区域进行内存回收，这样缩小了回收的范围，因此对于全局停顿情况的发生也能得到较好的控制。</p>
+<p>G1跟踪各个Region里面的垃圾堆积的价值大小（回收所获得的空间大小以及回收所需时间的经验值），在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region。保证了G1收集器在有限的时间内可以获取尽可能高的收集效率。</p>
+<p>相比于CMS GC，G1未必能做到CMS在最好情况下的延时停顿，但是最差情况要好很多。</p>
+<h4 id="G1-回收器的缺点"><a href="#G1-回收器的缺点" class="headerlink" title="G1 回收器的缺点"></a>G1 回收器的缺点</h4><p>相较于CMS，G1还不具备全方位、压倒性优势。比如在用户程序运行过程中，G1无论是<strong>为了垃圾收集产生的内存占用（Footprint）还是程序运行时的额外执行负载（overload）都要比CMS要高</strong>。</p>
+<p>从经验上来说，在小内存应用上CMS的表现大概率会优于G1，而G1在大内存应用上则发挥其优势。平衡点在6-8GB之间。</p>
+<h4 id="G1-的适用场景"><a href="#G1-的适用场景" class="headerlink" title="G1 的适用场景"></a>G1 的适用场景</h4><p>面向服务端应用，针对具有<strong>大内存、多处理器</strong>的机器。<br>最主要的应用是需要低GC延迟，并具有大堆的应用程序提供解决方案；</p>
+<p>如：在堆大小约6GB或更大时，可预测的暂停时间可以低于0.5秒；（G1通过每次只清理一部分而不是全部的Region的增量式清理来保证每次GC停顿时间不会过长）。</p>
+<p>用来替换掉JDK1.5中的CMS收集器；在下面的情况时，使用G1可能比CMS好：</p>
+<p>超过50%的Java堆被活动数据占用；<br>对象分配频率或年代提升频率变化很大；<br>GC停顿时间过长（长于0.5至1秒）</p>
+<p>HotSpot垃圾收集器里，除了G1以外，其他的垃圾收集器均使用内置的JVM线程执行GC的多线程操作，而G1 GC可以采用应用线程承担后台运行的GC工作，即当JVM的GC线程处理速度慢时，系统会调用应用程序线程帮助加速垃圾回收过程。</p>
+<p><strong>分区 Region：化整为零</strong></p>
+<p>使用G1收集器时，它将整个Java堆划分成<strong>约2048个大小相同的独立Region块</strong>，每个Region块大小根据堆空间的实际大小而定，<strong>整体被控制在1MB到32MB之间</strong>，<strong>且为2的N次幂，即1MB，2MB，4MB，8MB，16MB，32MB。</strong>可以通过XX:G1HeapRegionSize设定。所有的Region大小相同，且在JVM生命周期内不会被改变。</p>
+<p>虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，它们都是一部分Region（不需要连续）的集合。通过Region的动态分配方式实现逻辑上的连续。</p>
+<p>一个Region有可能属于Eden，Survivor或者Old&#x2F;Tenured内存区域。但是一个Region只可能属于一个角色。</p>
+<p>G1垃圾收集器还增加了一种新的内存区域，<strong>叫做Humongous内存区域</strong>，如图中的H块。主要用于存储大对象，<strong>如果超过0.5个Region，就放到H。</strong></p>
+<p><img src="https://i.loli.net/2021/08/05/Drv4WB8nqwNjigm.png" alt="image-20210802153249024"></p>
+<h4 id="设置-H-的原因"><a href="#设置-H-的原因" class="headerlink" title="设置 H 的原因"></a>设置 H 的原因</h4><p>对于堆中的大对象，默认直接会被分配到老年代，但是如果它是一个短期存在的大对象就会对垃圾收集器造成负面影响。</p>
+<p>为了解决这个问题，G1划分了一个Humongous区，它用来专门存放大对象。如果一个H区装不下一个大对象，那么G1会寻找连续的H区来存储。为了能找到连续的H区，有时候不得不启动Full GC。<strong>G1的大多数行为都把H区作为老年代的一部分来看待。</strong></p>
+<p><strong>每个Region都是通过指针碰撞来分配空间</strong></p>
+<p>G1为每一个Region设 计了两个名为TAMS（Top at Mark Start）的指针，把Region中的一部分空间划分出来用于并发回收过程中的新对象分配，并发回收时新分配的对象地址都必须要在这两个指针位置以上。</p>
+<h4 id="G1-GC的垃圾回收过程"><a href="#G1-GC的垃圾回收过程" class="headerlink" title="G1 GC的垃圾回收过程"></a>G1 GC的垃圾回收过程</h4><p>年轻代GC（Young GC）</p>
+<p>老年代并发标记过程（Concurrent Marking）</p>
+<p>混合回收（Mixed GC）<br>（如果需要，单线程、独占式、高强度的Full GC还是继续存在的。它针对GC的评估失败提供了一种失败保护机制，即强力回收。）</p>
+<p>应用程序分配内存，当年轻代的Eden区用尽时开始年轻代回收过程；<strong>G1的年轻代收集阶段是一个并行的独占式收集器。</strong>在年轻代回收期，G1 GC暂停所有应用程序线程，启动多线程执行年轻代回收。然后从年轻代区间移动存活对象到Survivor区间或者老年区间，也有可能是两个区间都会涉及。</p>
+<p><strong>当堆内存使用达到一定值（默认45%）时，开始老年代并发标记过程。</strong></p>
+<p>标记完成马上开始<strong>混合回收过程</strong>。对于一个混合回收期，G1 GC从老年区间移动存活对象到空闲区间，这些空闲区间也就成为了老年代的一部分。和年轻代不同，老年代的G1回收器和其他GC不同，G1的老年代回收器不需要整个老年代被回收，一次只需要扫描&#x2F;回收一小部分老年代的Region就可以了。同时，这个老年代Region是和年轻代一起被回收的。</p>
+<h4 id="Remembered-Set（记忆集）"><a href="#Remembered-Set（记忆集）" class="headerlink" title="Remembered Set（记忆集）"></a>Remembered Set（记忆集）</h4><p>无论G1还是其他分代收集器，JVM都是使用<strong>Remembered Set来避免全堆扫描；</strong><br>每个Region都有一个对应的<strong>Remembered Set</strong><br>每次Reference类型数据写操作时，都会产生一个Write Barrier暂时中断操作；<br>然后检查<strong>将要写入的引用指向的对象是否和该Reference类型数据在不同的Region</strong>（其他收集器：检查老年代对象是否引用了新生代对象）；<br>如果不同，通过CardTable把相关引用信息记录到引用指向对象的所在Region对应的Remembered Set中；<br>当进行垃圾收集时，<strong>在GC根节点的枚举范围加入Remembered Set；就可以保证不进行全局扫描，也不会有遗漏。</strong></p>
+<h4 id="G1回收过程一：年轻代-GC"><a href="#G1回收过程一：年轻代-GC" class="headerlink" title="G1回收过程一：年轻代 GC"></a>G1回收过程一：年轻代 GC</h4><p>JVM启动时，G1先准备好Eden区，程序在运行过程中不断创建对象到Eden区，当Eden空间耗尽时，G1会启动一次年轻代垃圾回收过程。<br>年轻代回收<strong>只回收Eden区和Survivor区</strong><br>YGC时，首先G1停止应用程序的执行（Stop-The-World），G1创建回收集（Collection Set），回收集是指需要被回收的内存分段的集合，年轻代回收过程的回收集包含<strong>年轻代Eden区和Survivor区所有的内存分段。</strong></p>
+<p>第一阶段，<strong>扫描根</strong><br>根是指GC Roots，根引用连同RSet记录的外部引用作为扫描存活对象的入口。</p>
+<p>第二阶段，<strong>更新RSet</strong></p>
+<p>第三阶段，<strong>处理RSet</strong><br><strong>识别被老年代对象指向的Eden中的对象，这些被指向的Eden中的对象被认为是存活的对象。</strong></p>
+<p>第四阶段，<strong>复制对象。</strong><br>此阶段，对象树被遍历，Eden区内存段中存活的对象会被复制到Survivor区中空的内存分段，Survivor区内存段中存活的对象，如果年龄未达阈值，年龄会加1，达到阀值会被会被复制到Old区中空的内存分段。如果Survivor空间不够，Eden空间的部分数据会直接晋升到老年代空间。</p>
+<p>第五阶段，<strong>处理引用</strong><br>处理Soft，Weak，Phantom，Final，JNI Weak 等引用。<strong>最终Eden空间的数据为空，GC停止工作</strong>，而目标内存中的对象都是连续存储的，没有碎片，所以复制过程可以达到内存整理的效果，减少碎片。</p>
+<h4 id="G1回收过程二：并发标记过程"><a href="#G1回收过程二：并发标记过程" class="headerlink" title="G1回收过程二：并发标记过程"></a>G1回收过程二：并发标记过程</h4><p><strong>初始标记阶段</strong>：标记从根节点直接可达的对象。这个阶段是STW的，并且会触发一次年轻代GC。正是由于该阶段时STW的，所以我们只扫描根节点可达的对象，以节省时间。</p>
+<p><strong>根区域扫描（Root Region Scanning）</strong>：G1 GC扫描Survivor区直接可达的老年代区域对象，并标记被引用的对象。这一过程必须在Young GC之前完成，因为Young GC会使用复制算法对Survivor区进行GC。</p>
+<p><strong>并发标记（Concurrent Marking）</strong>：在整个堆中进行并发标记（和应用程序并发执行），此过程可能被Young GC中断。在并发标记阶段，若发现区域对象中的所有对象都是垃圾，那这个区域会被立即回收。同时，并发标记过程中，<strong>会计算每个区域的对象活性（区域中存活对象的比例）。</strong></p>
+<p><strong>再次标记（Remark）：</strong>由于应用程序持续进行，<strong>需要修正上一次的标记结果</strong>。是STW的。G1中采用了比CMS更快的原始快照算法：<strong>Snapshot-At-The-Beginning（SATB）。</strong></p>
+<p><strong>独占清理（cleanup，STW）</strong>：<strong>计算各个区域的存活对象和GC回收比例，并进行排序，识别可以混合回收的区域</strong>。为下阶段做铺垫。是STW的。这个阶段并不会实际上去做垃圾的收集</p>
+<p><strong>并发清理阶段：</strong>识别并清理完全空闲的区域。</p>
+<h4 id="G1回收过程三：混合回收过程"><a href="#G1回收过程三：混合回收过程" class="headerlink" title="G1回收过程三：混合回收过程"></a>G1回收过程三：混合回收过程</h4><p>当越来越多的对象晋升到老年代Old Region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即Mixed GC，该算法并不是一个Old GC，<strong>除了回收整个Young Region，还会回收一部分的Old Region。</strong>这里需要注意：<strong>是一部分老年代，而不是全部老年代</strong>。可以选择哪些Old Region进行收集，从而可以对垃圾回收的耗时时间进行控制。也要注意的是Mixed GC并不是Full GC。</p>
+<p><strong>混合回收的细节</strong></p>
+<p>并发标记结束以后，老年代中百分百为垃圾的内存分段被回收了，部分为垃圾的内存分段被计算了出来。默认情况下，这些老年代的内存分段会分8次（可以通过-XX:G1MixedGCCountTarget设置）被回收。【意思就是一个Region会被分为8个内存段】</p>
+<p>混合回收的回收集（Collection Set）包括<strong>八分之一的老年代内存分段，Eden区内存分段，Survivor区内存分段</strong>。混合回收的算法和年轻代回收的算法完全一样，只是回收集多了老年代的内存分段。具体过程请参考上面的年轻代回收过程。</p>
+<p>由于老年代中的内存分段默认分8次回收，G1会优先回收垃圾多的内存分段。<strong>垃圾占内存分段比例越高的，越会被先回收。</strong></p>
+<p>并且有一个阈值会决定内存分段是否被回收。XX:G1MixedGCLiveThresholdPercent，默认为65%<strong>，意思是垃圾占内存分段比例要达到65%才会被回收</strong>。如果垃圾占比太低，意味着存活的对象占比高，在复制的时候会花费更多的时间。</p>
+<p>混合回收并不一定要进行8次。有一个阈值-XX:G1HeapWastePercent，默认值为10%，<strong>意思是允许整个堆内存中有10%的空间被浪费</strong>，意味着如果发现可以回收的垃圾占堆内存的比例低于10%，则不再进行混合回收。因为GC会花费很多的时间但是回收到的内存却很少。</p>
+<h4 id="G1-回收可选的过程四：Full-GC"><a href="#G1-回收可选的过程四：Full-GC" class="headerlink" title="G1 回收可选的过程四：Full GC"></a>G1 回收可选的过程四：Full GC</h4><p>G1的初衷就是要避免Full GC的出现。但是如果上述方式不能正常工作，G1会停止应用程序的执行（Stop-The-World），使用单线程的内存回收算法进行垃圾回收，性能会非常差，应用程序停顿时间会很长。</p>
+<p>要避免Full GC的发生，一旦发生Full GC，需要对JVM参数进行调整。什么时候会发生Ful1GC呢？比如堆内存太小，当G1在复制存活对象的时候没有空的内存分段可用，则会回退到Full GC，这种情况可以通过增大内存解决。</p>
+<p>导致G1 Full GC的原因可能有两个：<br><strong>EVacuation的时候没有足够的to-space来存放晋升的对象；</strong><br><strong>并发处理过程完成之前空间耗尽。</strong></p>
+<p><strong>G1 回收器的优化建议</strong></p>
+<p>年轻代大小<br>避免使用-Xmn或-XX:NewRatio等相关选项显式设置年轻代大小，因为固定年轻代的大小会覆盖可预测的暂停时间目标。<strong>我们让G1自己去调整</strong></p>
+<p><strong>暂停时间目标不要太过严苛</strong></p>
+<p>G1 GC的吞吐量目标是90%的应用程序时间和10%的垃圾回收时间<br>评估G1 GC的吞吐量时，暂停时间目标不要太严苛。目标太过严苛表示你愿意承受更多的垃圾回收开销，而这些会直接影响到吞吐量。</p>
+<p><strong>第一步：开启G1垃圾收集器</strong><br><strong>第二步：设置堆的最大内存</strong><br><strong>第三步：设置最大的停顿时间</strong></p>
+<h3 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC?"></a>ZGC?</h3><p>ZGC收集器是一款<strong>基于Region内存布局</strong>的，（暂时）不设分代的，使用了<strong>读屏障、染色指针和内存多重映射</strong>等技术来实现可并发的标记-压缩算法的，以低延迟为首要目标的一款垃圾收集器。</p>
+<p>ZGC的工作过程可以分为4个阶段：<strong>并发标记 - 并发预备重分配 - 并发重分配 - 并发重映射</strong> 等。</p>
+<p>ZGC几乎在所有地方并发执行的，<strong>除了初始标记的是STW的</strong>。所以停顿时间几乎就耗费在初始标记上，这部分的实际时间是非常少的。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="https://i.loli.net/2021/08/05/haoOkViNCXmSW6Z.png" alt="image-20210802154953900"></p>
+]]></content>
+      <categories>
+        <category>JVM</category>
+      </categories>
+      <tags>
+        <tag>实现</tag>
       </tags>
   </entry>
   <entry>
@@ -1051,141 +1186,6 @@
 <p>优点：直接指针是局部变量表中的引用，直接指向堆中的实例，在对象实例中有类型指针，指向的是方法区中的对象类型数据<br>缺点：对象被移动（垃圾收集时移动对象很普遍）时需要修改 reference 的值</p>
 <p><img src="https://i.loli.net/2021/08/04/zPn2hVUtgM4miOo.png" alt="image-20210804214056219"></p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>Java虚拟机-垃圾回收器</title>
-    <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</url>
-    <content><![CDATA[<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><h4 id="评估-GC-的性能指标"><a href="#评估-GC-的性能指标" class="headerlink" title="评估 GC 的性能指标"></a>评估 GC 的性能指标</h4><p><strong>吞吐量</strong>：运行用户代码的时间占总运行时间的比例（总运行时间 &#x3D; 程序的运行时间 + 内存回收的时间）<br>垃圾收集开销：吞吐量的补数，垃圾收集所用时间与总运行时间的比例。<br><strong>暂停时间</strong>：执行垃圾收集时，程序的工作线程被暂停的时间。<br>收集频率：相对于应用程序的执行，收集操作发生的频率。<br>内存占用：Java堆区所占的内存大小。<br>快速：一个对象从诞生到被回收所经历的时间。</p>
-<p><strong>吞吐量、暂停时间、内存占用</strong>这三者共同构成一个“不可能三角”。三者总体的表现会随着技术进步而越来越好。一款优秀的收集器通常最多同时满足其中的两项。</p>
-<p>这三项里，<strong>暂停时间的重要性日益凸显</strong>。因为随着硬件发展，内存占用多些越来越能容忍，硬件性能的提升也有助于降低收集器运行时对应用程序的影响，即提高了吞吐量。而内存的扩大，对延迟反而带来负面效果。</p>
-<p>简单来说，主要抓住两点：<br><strong>吞吐量</strong><br><strong>暂停时间</strong></p>
-<h4 id="吞吐量-vs-暂停时间"><a href="#吞吐量-vs-暂停时间" class="headerlink" title="吞吐量 vs 暂停时间"></a>吞吐量 vs 暂停时间</h4><p><strong>高吞吐量较好</strong>因为这会让应用程序的最终用户感觉只有应用程序线程在做“生产性”工作。直觉上，吞吐量越高程序运行越快。</p>
-<p><strong>低暂停时间（低延迟）较好</strong>，是从最终用户的角度来看，不管是GC还是其他原因导致一个应用被挂起始终是不好的。这取决于应用程序的类型，有时候甚至短暂的200毫秒暂停都可能打断终端用户体验。因此，具有较低的暂停时间是非常重要的，特别是对于一个<strong>交互式应用程序</strong>（就是和用户交互比较多的场景）。</p>
-<p>不幸的是”高吞吐量”和”低暂停时间”是一对相互竞争的目标（矛盾）。</p>
-<p>因为如果选择以<strong>吞吐量优先，那么必然需要降低内存回收的执行频率，但是这样会导致GC需要更长的暂停时间来执行内存回收。</strong><br>相反的，如果选择以低延迟优先为原则，那么为了降低每次执行内存回收时的暂停时间，也只能频繁地执行内存回收，但这又引起了年轻代内存的缩减和导致程序吞吐量的下降。<br>在设计（或使用）GC算法时，我们必须确定我们的目标：一个GC算法只可能针对两个目标之一（即只专注于较大吞吐量或最小暂停时间），或尝试找到一个二者的折中。</p>
-<p>现在标准：<strong>在最大吞吐量优先的情况下，降低停顿时间。</strong></p>
-<p>1999年随JDK1.3.1一起来的是串行方式的Serial GC，它是第一款GC。ParNew垃圾收集器是Serial收集器的多线程版本<br>2002年2月26日，Parallel GC和Concurrent Mark Sweep GC跟随JDK1.4.2一起发布Parallel GC在JDK6之后成为HotSpot默认GC。<br>2012年，在JDK1.7u4版本中，G1可用。<br>2017年，<strong>JDK9中G1变成默认的垃圾收集器，以替代CMS。</strong><br>2018年3月，JDK10中G1垃圾回收器的并行完整垃圾回收，实现并行性来改善最坏情况下的延迟。<br>2018年9月，JDK11发布。引入Epsilon 垃圾回收器，又被称为 “No-Op(无操作)“ 回收器。同时，引入ZGC：可伸缩的低延迟垃圾回收器（Experimental）<br>2019年3月，JDK12发布。增强G1，自动返回未用堆内存给操作系统。同时，引入Shenandoah GC：低停顿时间的GC（Experimental）。<br>2019年9月，JDK13发布。增强ZGC，自动返回未用堆内存给操作系统。<br><strong>2020年3月，JDK14发布。删除CMS垃圾回收器</strong>。扩展ZGC在macOS和Windows上的应用</p>
-<p>7款经典的垃圾收集器<br><strong>串行回收器：Serial、Serial old</strong><br><strong>并行回收器：ParNew、Parallel Scavenge、Parallel old</strong><br><strong>并发回收器：CMS、G1</strong></p>
-<p><img src="https://i.loli.net/2021/08/05/DeJERlKAhL34BoQ.png" alt="image-20210802151315089"></p>
-<p><img src="https://i.loli.net/2021/08/05/9rHwzoCX1SKYuag.png" alt="image-20210802151245677"></p>
-<p>为什么要有很多收集器，一个不够吗？因为Java的使用场景很多，移动端，服务器等。所以就需要针对不同的场景，提供不同的垃圾收集器，提高垃圾收集的性能。</p>
-<p>JDK 8 中默认使用 ParallelGC 和 ParallelOldGC 的组合。</p>
-<h3 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h3><p>串行的。</p>
-<h3 id="Parnew"><a href="#Parnew" class="headerlink" title="Parnew"></a>Parnew</h3><p>如果说Serial GC是年轻代中的单线程垃圾收集器，那么<strong>ParNew收集器则是Serial收集器的多线程版本。</strong><br>Par是Parallel的缩写，New：只能处理新生代<br>ParNew 收集器除了采用<strong>并行回收</strong>的方式执行内存回收外，两款垃圾收集器之间几乎没有任何区别。ParNew收集器在年轻代中同样也是采用复制算法、”Stop-the-World”机制。<br>ParNew 是很多JVM运行在Server模式下新生代的默认垃圾收集器。</p>
-<p>对于新生代，回收次数频繁，<strong>使用并行方式高效</strong>。<br>对于老年代，回收次数少，<strong>使用串行方式节省资源</strong>。（CPU并行需要切换线程，串行可以省去切换线程的资源）</p>
-<p><strong>ParNew 回收器与 Serial 回收器比较</strong></p>
-<p>Q：由于ParNew收集器基于并行回收，那么是否可以断定ParNew收集器的回收效率在任何场景下都会比Serial收集器更高效？</p>
-<p>A：不能<br>ParNew收集器运行在多CPU的环境下，由于可以充分利用多CPU、多核心等物理硬件资源优势，可以更快速地完成垃圾收集，提升程序的吞吐量。<br>但是在单个CPU的环境下，ParNew收集器不比Serial收集器更高效。虽然Serial收集器是基于串行回收，但是由于CPU不需要频繁地做任务切换，因此可以有效避免多线程交互过程中产生的一些额外开销。<br><strong>除Serial外，目前只有ParNew GC能与CMS收集器配合工作</strong></p>
-<h3 id="Parallel"><a href="#Parallel" class="headerlink" title="Parallel"></a>Parallel</h3><p>HotSpot的年轻代中除了拥有ParNew收集器是基于并行回收的以外，Parallel Scavenge收集器同样也采用了复制算法、并行回收和”Stop the World”机制。</p>
-<p><strong>那么Parallel收集器的出现是否多此一举？</strong></p>
-<p>和ParNew收集器不同，Parallel Scavenge收集器的目标则是达到一个<strong>可控制的吞吐量（Throughput）</strong>，它也被称为<strong>吞吐量优先的垃圾收集器。</strong></p>
-<p><strong>自适应调节策略</strong>也是Parallel Scavenge与ParNew一个重要区别。（<strong>动态调整内存分配情况，以达到一个最优的吞吐量或低延迟</strong>）</p>
-<p>高吞吐量则可以高效率地利用CPU时间，<strong>尽快完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务。因此，常见在服务器环境中使用。</strong>例如，那些执行批量处理、订单处理、工资支付、科学计算的应用程序。</p>
-<p>Parallel收集器在JDK1.6时提供了用于执行老年代垃圾收集的Parallel Old收集器，用来代替老年代的Serial Old收集器。</p>
-<p>Parallel Old收集器采用了<strong>标记-压缩算</strong>法，但同样也是基于并行回收和”Stop-the-World”机制。</p>
-<p>在程序吞吐量优先的应用场景中，Parallel收集器和Parallel Old收集器的组合，在server模式下的内存回收性能很不错。</p>
-<p><strong>在Java8中，默认是此垃圾收集器。</strong></p>
-<h3 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h3><p>在JDK1.5时期，Hotspot推出了一款在<strong>强交互应用</strong>中（就是和用户打交道的引用）几乎可认为有划时代意义的垃圾收集器：CMS（Concurrent-Mark-Sweep）收集器，这款收集器是HotSpot虚拟机中第一款真正意义上的并发收集器，<strong>它第一次实现了让垃圾收集线程与用户线程同时工作。</strong></p>
-<p>CMS收集器的关注点是尽可能缩短垃圾收集时用户线程的停顿时间。停顿时间越短（低延迟）就越适合与用户交互的程序，良好的响应速度能提升用户体验。</p>
-<p>目前很大一部分的Java应用集中在互联网站或者B&#x2F;S系统的服务端上，这类应用尤其重视服务的响应速度，希望系统停顿时间最短，以给用户带来较好的体验。CMS收集器就非常符合这类应用的需求。</p>
-<p>CMS的垃圾收集算法采用<strong>标记-清除算法</strong>，并且也会”Stop-the-World”，不幸的是，CMS作为老年代的收集器，却无法与JDK1.4.0中已经存在的新生代收集器Parallel Scavenge配合工作（因为实现的框架不一样，没办法兼容使用），<strong>所以在JDK1.5中使用CMS来收集老年代的时候，新生代只能选择ParNew或者Serial收集器中的一个。</strong><br>在G1出现之前，CMS使用还是非常广泛的。一直到今天，仍然有很多系统使用CMS GC。</p>
-<p><img src="https://i.loli.net/2021/08/05/u6cqdol4AvgW8eK.png" alt="image-20210802151828157"></p>
-<h4 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h4><p>CMS整个过程比之前的收集器要复杂，整个过程分为4个主要阶段，即初始标记阶段、并发标记阶段、重新标记阶段和并发清除阶段。(涉及STW的阶段主要是：初始标记 和 重新标记)</p>
-<p><strong>初始标记（Initial-Mark）阶段</strong>：在这个阶段中，程序中所有的工作线程都将会因为“Stop-the-World”机制而出现<strong>短暂的暂停</strong>，这个阶段的主要任务仅仅只是标记出GC Roots能直接关联到的对象。一旦标记完成之后就会恢复之前被暂停的所有应用线程。由于直接关联对象比较小，所以这里的速度非常快。</p>
-<p><strong>并发标记（Concurrent-Mark）阶段</strong>：从GC Roots的直接关联对象开始遍历整个对象图的过程，这个过程耗时较长但是不需要停顿用户线程，可以与垃圾收集线程一起并发运行。</p>
-<p><strong>重新标记（Remark）阶段</strong>：由于在并发标记阶段中，<strong>程序的工作线程会和垃圾收集线程同时运行或者交叉运行，因此为了修正并发标记期间</strong>，因用户程序继续运作而<strong>导致标记产生变动的那一部分对象的标记记录</strong>，这个阶段的停顿时间通常会比初始标记阶段稍长一些，并且也会导致“Stop-the-World”的发生，但也远比并发标记阶段的时间短。</p>
-<p><strong>并发清除（Concurrent-Sweep）阶段</strong>：此阶段清理删除掉标记阶段判断的已经死亡的对象，释放内存空间。由于不需要移动存活对象，所以这个阶段也是可以与用户线程同时并发的</p>
-<p>CMS分析</p>
-<p>尽管CMS收集器采用的是并发回收（非独占式），<strong>但是在其初始化标记和再次标记这两个阶段中仍然需要执行“Stop-the-World”机制暂停程序中的工作线程，不过暂停时间并不会太长</strong>，因此可以说明目前所有的垃圾收集器都做不到完全不需要“Stop-the-World”，只是尽可能地缩短暂停时间。</p>
-<p>由于<strong>最耗费时间的并发标记与并发清除阶段</strong>都不需要暂停工作，所以整体的回收是低停顿的。</p>
-<p>CMS收集器的垃圾收集算法采用的是<strong>标记清除算法</strong>，这意味着每次执行完内存回收后，由于被执行内存回收的无用对象所占用的内存空间极有可能是不连续的一些内存块，不可避免地将会产生一些内存碎片。那么CMS在为新对象分配内存空间时，将无法使用指针碰撞（Bump the Pointer）技术，而只能够选择<strong>空闲列表（Free List）执行内存分配。</strong></p>
-<p><strong>为什么 CMS 不采用标记-压缩算法呢？</strong></p>
-<p>答案其实很简答，因为当并发清除的时候，用Compact整理内存的话，原来的用户线程使用的内存还怎么用呢？要保证用户线程能继续执行，前提的它运行的资源不受影响。Mark Compact更适合“stop the world”这种场景下使用。</p>
-<h4 id="CMS-的优点与弊端"><a href="#CMS-的优点与弊端" class="headerlink" title="CMS 的优点与弊端"></a>CMS 的优点与弊端</h4><p>优点</p>
-<p><strong>并发收集</strong><br><strong>低延迟</strong></p>
-<p>弊端</p>
-<p><strong>会产生内存碎片</strong>，导致并发清除后，用户线程可用的空间不足。在无法分配大对象的情况下，不得不提前触发Full GC。</p>
-<p>CMS收集器对<strong>CPU资源非常敏感</strong>。在并发阶段，它虽然不会导致用户停顿，但是会因为占用了一部分线程而导致应用程序变慢，总吞吐量会降低。<br>CMS收集器<strong>无法处理浮动垃圾</strong>。可能出现“Concurrent Mode Failure”失败而导致另一次Full GC的产生。在并发标记阶段由于程序的工作线程和垃圾收集线程是同时运行或者交叉运行的，那么在并发标记阶段如果产生新的垃圾对象，CMS将无法对这些垃圾对象进行标记，最终会导致这些新产生的垃圾对象没有被及时回收，从而只能在下一次执行GC时释放这些之前未被回收的内存空间。</p>
-<h3 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h3><p>G1 回收器：<strong>区域化分代式</strong></p>
-<p>应用程序所应对的业务越来越庞大、复杂，用户越来越多，没有GC就不能保证应用程序正常进行，而经常造成STW的GC又跟不上实际的需求，所以才会不断地尝试对GC进行优化。<br>G1（Garbage-First）垃圾回收器是在Java7 update4之后引入的一个新的垃圾回收器，是当今收集器技术发展的最前沿成果之一。<br>与此同时，<strong>为了适应现在不断扩大的内存和不断增加的处理器数量，进一步降低暂停时间（pause time），同时兼顾良好的吞吐量。</strong><br>官方给G1设定的目标是<strong>在延迟可控的情况下获得尽可能高的吞吐量</strong>，所以才担当起“全功能收集器”的重任与期望。</p>
-<p>为什么名字叫**Garbage First(G1)**呢？</p>
-<p>因为G1是一个并行回收器，它把堆内存分割为很多不相关的区域（Region）（物理上不连续的）。使用不同的Region来表示Eden、幸存者0区，幸存者1区，老年代等。<br>G1 GC有计划地避免在整个Java堆中进行全区域的垃圾收集。<strong>G1跟踪各个Region里面的垃圾堆积的价值大小（回收所获得的空间大小以及回收所需时间的经验值），在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region。</strong><br>由于这种方式的侧重点在于回收垃圾最大量的区间（Region），所以我们给G1一个名字：垃圾优先（Garbage First）。</p>
-<p>G1（Garbage-First）是一款<strong>面向服务端应用</strong>的垃圾收集器，主要针对配备<strong>多核CPU及大容量内存的机器</strong>，以极高概率满足GC停顿时间的同时，还兼具高吞吐量的性能特征。</p>
-<p>在JDK1.7版本正式启用，移除了Experimental的标识，是JDK9以后的默认垃圾回收器，取代了CMS回收器以及Parallel+Parallel Old组合。被Oracle官方称为“全功能的垃圾收集器”。<br>与此同时，CMS已经在JDK9中被标记为废弃（deprecated）。G1在JDK8中还不是默认的垃圾回收器，需要使用-XX:+UseG1GC来启用。</p>
-<h4 id="G1-回收器的优势"><a href="#G1-回收器的优势" class="headerlink" title="G1 回收器的优势"></a>G1 回收器的优势</h4><p>与其他GC收集器相比，G1使用了全新的分区算法，其特点如下所示：</p>
-<p><strong>1，并行与并发兼备</strong></p>
-<p>并行性：G1在回收期间，可以有多个GC线程同时工作，有效利用多核计算能力。此时用户线程STW<br>并发性：G1拥有与应用程序交替执行的能力，部分工作可以和应用程序同时执行，因此，一般来说，不会在整个回收阶段发生完全阻塞应用程序的情况<br><strong>2，分代收集</strong></p>
-<p>从分代上看，G1依然属于分代型垃圾回收器，它会区分年轻代和老年代，年轻代依然有Eden区和Survivor区。但从堆的结构上看，它不要求整个Eden区、年轻代或者老年代都是连续的，也不再坚持固定大小和固定数量。<br>将堆空间分为若干个区域（Region），这些区域中包含了逻辑上的年轻代和老年代。<br><strong>和之前的各类回收器不同，它同时兼顾年轻代和老年代。</strong>对比其他回收器，或者工作在年轻代，或者工作在老年代；</p>
-<p><img src="https://i.loli.net/2021/08/05/KFNiqT1SUnylwGc.png" alt="image-20210802152854640"></p>
-<p><strong>3，空间整合</strong><br>CMS：“标记-清除”算法、内存碎片、若干次GC后进行一次碎片整理</p>
-<p>G1将内存划分为一个个的region。<strong>内存的回收是以region作为基本单位的</strong>。Region之间是复制算法，但整体上实际可看作是标记-压缩（Mark-Compact）算法，两种算法都可以避免内存碎片。这种特性有利于程序长时间运行，分配大对象时不会因为无法找到连续内存空间而提前触发下一次GC。<strong>尤其是当Java堆非常大的时候，G1的优势更加明显。</strong></p>
-<p><strong>4，可预测的停顿时间模型（软实时soft real-time）</strong></p>
-<p>这是G1相对于CMS的另一大优势，G1除了追求低停顿外，<strong>还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒。</strong></p>
-<p>由于分区的原因，G1可以只选取部分区域进行内存回收，这样缩小了回收的范围，因此对于全局停顿情况的发生也能得到较好的控制。</p>
-<p>G1跟踪各个Region里面的垃圾堆积的价值大小（回收所获得的空间大小以及回收所需时间的经验值），在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region。保证了G1收集器在有限的时间内可以获取尽可能高的收集效率。</p>
-<p>相比于CMS GC，G1未必能做到CMS在最好情况下的延时停顿，但是最差情况要好很多。</p>
-<h4 id="G1-回收器的缺点"><a href="#G1-回收器的缺点" class="headerlink" title="G1 回收器的缺点"></a>G1 回收器的缺点</h4><p>相较于CMS，G1还不具备全方位、压倒性优势。比如在用户程序运行过程中，G1无论是<strong>为了垃圾收集产生的内存占用（Footprint）还是程序运行时的额外执行负载（overload）都要比CMS要高</strong>。</p>
-<p>从经验上来说，在小内存应用上CMS的表现大概率会优于G1，而G1在大内存应用上则发挥其优势。平衡点在6-8GB之间。</p>
-<h4 id="G1-的适用场景"><a href="#G1-的适用场景" class="headerlink" title="G1 的适用场景"></a>G1 的适用场景</h4><p>面向服务端应用，针对具有<strong>大内存、多处理器</strong>的机器。<br>最主要的应用是需要低GC延迟，并具有大堆的应用程序提供解决方案；</p>
-<p>如：在堆大小约6GB或更大时，可预测的暂停时间可以低于0.5秒；（G1通过每次只清理一部分而不是全部的Region的增量式清理来保证每次GC停顿时间不会过长）。</p>
-<p>用来替换掉JDK1.5中的CMS收集器；在下面的情况时，使用G1可能比CMS好：</p>
-<p>超过50%的Java堆被活动数据占用；<br>对象分配频率或年代提升频率变化很大；<br>GC停顿时间过长（长于0.5至1秒）</p>
-<p>HotSpot垃圾收集器里，除了G1以外，其他的垃圾收集器均使用内置的JVM线程执行GC的多线程操作，而G1 GC可以采用应用线程承担后台运行的GC工作，即当JVM的GC线程处理速度慢时，系统会调用应用程序线程帮助加速垃圾回收过程。</p>
-<p><strong>分区 Region：化整为零</strong></p>
-<p>使用G1收集器时，它将整个Java堆划分成<strong>约2048个大小相同的独立Region块</strong>，每个Region块大小根据堆空间的实际大小而定，<strong>整体被控制在1MB到32MB之间</strong>，<strong>且为2的N次幂，即1MB，2MB，4MB，8MB，16MB，32MB。</strong>可以通过XX:G1HeapRegionSize设定。所有的Region大小相同，且在JVM生命周期内不会被改变。</p>
-<p>虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，它们都是一部分Region（不需要连续）的集合。通过Region的动态分配方式实现逻辑上的连续。</p>
-<p>一个Region有可能属于Eden，Survivor或者Old&#x2F;Tenured内存区域。但是一个Region只可能属于一个角色。</p>
-<p>G1垃圾收集器还增加了一种新的内存区域，<strong>叫做Humongous内存区域</strong>，如图中的H块。主要用于存储大对象，<strong>如果超过0.5个Region，就放到H。</strong></p>
-<p><img src="https://i.loli.net/2021/08/05/Drv4WB8nqwNjigm.png" alt="image-20210802153249024"></p>
-<h4 id="设置-H-的原因"><a href="#设置-H-的原因" class="headerlink" title="设置 H 的原因"></a>设置 H 的原因</h4><p>对于堆中的大对象，默认直接会被分配到老年代，但是如果它是一个短期存在的大对象就会对垃圾收集器造成负面影响。</p>
-<p>为了解决这个问题，G1划分了一个Humongous区，它用来专门存放大对象。如果一个H区装不下一个大对象，那么G1会寻找连续的H区来存储。为了能找到连续的H区，有时候不得不启动Full GC。<strong>G1的大多数行为都把H区作为老年代的一部分来看待。</strong></p>
-<p><strong>每个Region都是通过指针碰撞来分配空间</strong></p>
-<p>G1为每一个Region设 计了两个名为TAMS（Top at Mark Start）的指针，把Region中的一部分空间划分出来用于并发回收过程中的新对象分配，并发回收时新分配的对象地址都必须要在这两个指针位置以上。</p>
-<h4 id="G1-GC的垃圾回收过程"><a href="#G1-GC的垃圾回收过程" class="headerlink" title="G1 GC的垃圾回收过程"></a>G1 GC的垃圾回收过程</h4><p>年轻代GC（Young GC）</p>
-<p>老年代并发标记过程（Concurrent Marking）</p>
-<p>混合回收（Mixed GC）<br>（如果需要，单线程、独占式、高强度的Full GC还是继续存在的。它针对GC的评估失败提供了一种失败保护机制，即强力回收。）</p>
-<p>应用程序分配内存，当年轻代的Eden区用尽时开始年轻代回收过程；<strong>G1的年轻代收集阶段是一个并行的独占式收集器。</strong>在年轻代回收期，G1 GC暂停所有应用程序线程，启动多线程执行年轻代回收。然后从年轻代区间移动存活对象到Survivor区间或者老年区间，也有可能是两个区间都会涉及。</p>
-<p><strong>当堆内存使用达到一定值（默认45%）时，开始老年代并发标记过程。</strong></p>
-<p>标记完成马上开始<strong>混合回收过程</strong>。对于一个混合回收期，G1 GC从老年区间移动存活对象到空闲区间，这些空闲区间也就成为了老年代的一部分。和年轻代不同，老年代的G1回收器和其他GC不同，G1的老年代回收器不需要整个老年代被回收，一次只需要扫描&#x2F;回收一小部分老年代的Region就可以了。同时，这个老年代Region是和年轻代一起被回收的。</p>
-<h4 id="Remembered-Set（记忆集）"><a href="#Remembered-Set（记忆集）" class="headerlink" title="Remembered Set（记忆集）"></a>Remembered Set（记忆集）</h4><p>无论G1还是其他分代收集器，JVM都是使用<strong>Remembered Set来避免全堆扫描；</strong><br>每个Region都有一个对应的<strong>Remembered Set</strong><br>每次Reference类型数据写操作时，都会产生一个Write Barrier暂时中断操作；<br>然后检查<strong>将要写入的引用指向的对象是否和该Reference类型数据在不同的Region</strong>（其他收集器：检查老年代对象是否引用了新生代对象）；<br>如果不同，通过CardTable把相关引用信息记录到引用指向对象的所在Region对应的Remembered Set中；<br>当进行垃圾收集时，<strong>在GC根节点的枚举范围加入Remembered Set；就可以保证不进行全局扫描，也不会有遗漏。</strong></p>
-<h4 id="G1回收过程一：年轻代-GC"><a href="#G1回收过程一：年轻代-GC" class="headerlink" title="G1回收过程一：年轻代 GC"></a>G1回收过程一：年轻代 GC</h4><p>JVM启动时，G1先准备好Eden区，程序在运行过程中不断创建对象到Eden区，当Eden空间耗尽时，G1会启动一次年轻代垃圾回收过程。<br>年轻代回收<strong>只回收Eden区和Survivor区</strong><br>YGC时，首先G1停止应用程序的执行（Stop-The-World），G1创建回收集（Collection Set），回收集是指需要被回收的内存分段的集合，年轻代回收过程的回收集包含<strong>年轻代Eden区和Survivor区所有的内存分段。</strong></p>
-<p>第一阶段，<strong>扫描根</strong><br>根是指GC Roots，根引用连同RSet记录的外部引用作为扫描存活对象的入口。</p>
-<p>第二阶段，<strong>更新RSet</strong></p>
-<p>第三阶段，<strong>处理RSet</strong><br><strong>识别被老年代对象指向的Eden中的对象，这些被指向的Eden中的对象被认为是存活的对象。</strong></p>
-<p>第四阶段，<strong>复制对象。</strong><br>此阶段，对象树被遍历，Eden区内存段中存活的对象会被复制到Survivor区中空的内存分段，Survivor区内存段中存活的对象，如果年龄未达阈值，年龄会加1，达到阀值会被会被复制到Old区中空的内存分段。如果Survivor空间不够，Eden空间的部分数据会直接晋升到老年代空间。</p>
-<p>第五阶段，<strong>处理引用</strong><br>处理Soft，Weak，Phantom，Final，JNI Weak 等引用。<strong>最终Eden空间的数据为空，GC停止工作</strong>，而目标内存中的对象都是连续存储的，没有碎片，所以复制过程可以达到内存整理的效果，减少碎片。</p>
-<h4 id="G1回收过程二：并发标记过程"><a href="#G1回收过程二：并发标记过程" class="headerlink" title="G1回收过程二：并发标记过程"></a>G1回收过程二：并发标记过程</h4><p><strong>初始标记阶段</strong>：标记从根节点直接可达的对象。这个阶段是STW的，并且会触发一次年轻代GC。正是由于该阶段时STW的，所以我们只扫描根节点可达的对象，以节省时间。</p>
-<p><strong>根区域扫描（Root Region Scanning）</strong>：G1 GC扫描Survivor区直接可达的老年代区域对象，并标记被引用的对象。这一过程必须在Young GC之前完成，因为Young GC会使用复制算法对Survivor区进行GC。</p>
-<p><strong>并发标记（Concurrent Marking）</strong>：在整个堆中进行并发标记（和应用程序并发执行），此过程可能被Young GC中断。在并发标记阶段，若发现区域对象中的所有对象都是垃圾，那这个区域会被立即回收。同时，并发标记过程中，<strong>会计算每个区域的对象活性（区域中存活对象的比例）。</strong></p>
-<p><strong>再次标记（Remark）：</strong>由于应用程序持续进行，<strong>需要修正上一次的标记结果</strong>。是STW的。G1中采用了比CMS更快的原始快照算法：<strong>Snapshot-At-The-Beginning（SATB）。</strong></p>
-<p><strong>独占清理（cleanup，STW）</strong>：<strong>计算各个区域的存活对象和GC回收比例，并进行排序，识别可以混合回收的区域</strong>。为下阶段做铺垫。是STW的。这个阶段并不会实际上去做垃圾的收集</p>
-<p><strong>并发清理阶段：</strong>识别并清理完全空闲的区域。</p>
-<h4 id="G1回收过程三：混合回收过程"><a href="#G1回收过程三：混合回收过程" class="headerlink" title="G1回收过程三：混合回收过程"></a>G1回收过程三：混合回收过程</h4><p>当越来越多的对象晋升到老年代Old Region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即Mixed GC，该算法并不是一个Old GC，<strong>除了回收整个Young Region，还会回收一部分的Old Region。</strong>这里需要注意：<strong>是一部分老年代，而不是全部老年代</strong>。可以选择哪些Old Region进行收集，从而可以对垃圾回收的耗时时间进行控制。也要注意的是Mixed GC并不是Full GC。</p>
-<p><strong>混合回收的细节</strong></p>
-<p>并发标记结束以后，老年代中百分百为垃圾的内存分段被回收了，部分为垃圾的内存分段被计算了出来。默认情况下，这些老年代的内存分段会分8次（可以通过-XX:G1MixedGCCountTarget设置）被回收。【意思就是一个Region会被分为8个内存段】</p>
-<p>混合回收的回收集（Collection Set）包括<strong>八分之一的老年代内存分段，Eden区内存分段，Survivor区内存分段</strong>。混合回收的算法和年轻代回收的算法完全一样，只是回收集多了老年代的内存分段。具体过程请参考上面的年轻代回收过程。</p>
-<p>由于老年代中的内存分段默认分8次回收，G1会优先回收垃圾多的内存分段。<strong>垃圾占内存分段比例越高的，越会被先回收。</strong></p>
-<p>并且有一个阈值会决定内存分段是否被回收。XX:G1MixedGCLiveThresholdPercent，默认为65%<strong>，意思是垃圾占内存分段比例要达到65%才会被回收</strong>。如果垃圾占比太低，意味着存活的对象占比高，在复制的时候会花费更多的时间。</p>
-<p>混合回收并不一定要进行8次。有一个阈值-XX:G1HeapWastePercent，默认值为10%，<strong>意思是允许整个堆内存中有10%的空间被浪费</strong>，意味着如果发现可以回收的垃圾占堆内存的比例低于10%，则不再进行混合回收。因为GC会花费很多的时间但是回收到的内存却很少。</p>
-<h4 id="G1-回收可选的过程四：Full-GC"><a href="#G1-回收可选的过程四：Full-GC" class="headerlink" title="G1 回收可选的过程四：Full GC"></a>G1 回收可选的过程四：Full GC</h4><p>G1的初衷就是要避免Full GC的出现。但是如果上述方式不能正常工作，G1会停止应用程序的执行（Stop-The-World），使用单线程的内存回收算法进行垃圾回收，性能会非常差，应用程序停顿时间会很长。</p>
-<p>要避免Full GC的发生，一旦发生Full GC，需要对JVM参数进行调整。什么时候会发生Ful1GC呢？比如堆内存太小，当G1在复制存活对象的时候没有空的内存分段可用，则会回退到Full GC，这种情况可以通过增大内存解决。</p>
-<p>导致G1 Full GC的原因可能有两个：<br><strong>EVacuation的时候没有足够的to-space来存放晋升的对象；</strong><br><strong>并发处理过程完成之前空间耗尽。</strong></p>
-<p><strong>G1 回收器的优化建议</strong></p>
-<p>年轻代大小<br>避免使用-Xmn或-XX:NewRatio等相关选项显式设置年轻代大小，因为固定年轻代的大小会覆盖可预测的暂停时间目标。<strong>我们让G1自己去调整</strong></p>
-<p><strong>暂停时间目标不要太过严苛</strong></p>
-<p>G1 GC的吞吐量目标是90%的应用程序时间和10%的垃圾回收时间<br>评估G1 GC的吞吐量时，暂停时间目标不要太严苛。目标太过严苛表示你愿意承受更多的垃圾回收开销，而这些会直接影响到吞吐量。</p>
-<p><strong>第一步：开启G1垃圾收集器</strong><br><strong>第二步：设置堆的最大内存</strong><br><strong>第三步：设置最大的停顿时间</strong></p>
-<h3 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC?"></a>ZGC?</h3><p>ZGC收集器是一款<strong>基于Region内存布局</strong>的，（暂时）不设分代的，使用了<strong>读屏障、染色指针和内存多重映射</strong>等技术来实现可并发的标记-压缩算法的，以低延迟为首要目标的一款垃圾收集器。</p>
-<p>ZGC的工作过程可以分为4个阶段：<strong>并发标记 - 并发预备重分配 - 并发重分配 - 并发重映射</strong> 等。</p>
-<p>ZGC几乎在所有地方并发执行的，<strong>除了初始标记的是STW的</strong>。所以停顿时间几乎就耗费在初始标记上，这部分的实际时间是非常少的。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="https://i.loli.net/2021/08/05/haoOkViNCXmSW6Z.png" alt="image-20210802154953900"></p>
-]]></content>
-      <categories>
-        <category>JVM</category>
-      </categories>
-      <tags>
-        <tag>实现</tag>
-      </tags>
   </entry>
   <entry>
     <title>Java虚拟机-类加载子系统</title>
@@ -2047,31 +2047,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Netty-零拷贝</title>
-    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
-    <content><![CDATA[<p>零拷⻉技术是指计算机执⾏操作时，CPU 不需要先将数 据从某处内存复制到另⼀个特定区域。这种技术通常⽤于通过⽹络传输⽂件时节省CPU周期和内存带宽。 </p>
-<p>在 OS 层⾯上的 Zero-copy 通常指避免在用户态和内核态之间来回 拷⻉数据。</p>
-<p>⽽在 Netty 层⾯ ，零拷⻉主要体现在对于数据操作的优化。 </p>
-<ol>
-<li>使⽤ Netty 提供的 CompositeByteBuf 类, 可以将多个 ByteBuf 合并为⼀个逻辑上的 ByteBuf , 避免了各个 ByteBuf 之间的拷⻉。 </li>
-<li>ByteBuf ⽀持 slice 操作, 因此可以将 ByteBuf 分解为多个共享同⼀个存储区域的 ByteBuf , 避免了内存的拷⻉。 </li>
-<li>通过 FileRegion 包装的 FileChannel.tranferTo 实现⽂件传输（底层是sendfile方法）, 可以直接将⽂件缓冲区的数据发送到⽬标 Channel , 避免了传统通过循环 write ⽅式导致的内存拷⻉问题 。</li>
-<li>duplicate。逻辑上的复制。</li>
-</ol>
-<h3 id="slice（si-lai-si）"><a href="#slice（si-lai-si）" class="headerlink" title="slice（si lai si）"></a>slice（si lai si）</h3><p>对原始 ByteBuf 进行切片成多个 ByteBuf，切片后的 ByteBuf 并没有发生内存复制，还是使用原始 ByteBuf 的内存，切片后的 ByteBuf 维护独立的 read，write 指针</p>
-<p><img src="https://i.loli.net/2021/08/04/XkAyOUa6xiMPqV8.png" alt="image-20210804201821413"></p>
-<h3 id="duplicate"><a href="#duplicate" class="headerlink" title="duplicate"></a>duplicate</h3><p>就好比截取了原始 ByteBuf 所有内容，并且没有 max capacity 的限制，也是与原始 ByteBuf 使用同一块底层内存，只是读写指针是独立的。</p>
-<p><img src="https://i.loli.net/2021/08/04/2sbl13NIuMo5jwZ.png" alt="image-20210804201834603"></p>
-<h3 id="CompositeByteBuf（composite）"><a href="#CompositeByteBuf（composite）" class="headerlink" title="CompositeByteBuf（composite）"></a>CompositeByteBuf（composite）</h3><p>可以将多个 ByteBuf 合并为一个逻辑上的 ByteBuf，避免拷贝。</p>
-]]></content>
-      <categories>
-        <category>Netty</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Netty-长连接，心跳机制</title>
     <url>/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/</url>
     <content><![CDATA[<h3 id="tcp粘包？netty解决办法？"><a href="#tcp粘包？netty解决办法？" class="headerlink" title="tcp粘包？netty解决办法？"></a>tcp粘包？netty解决办法？</h3><ul>
@@ -2109,6 +2084,31 @@
       </categories>
       <tags>
         <tag>机制</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Netty-零拷贝</title>
+    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
+    <content><![CDATA[<p>零拷⻉技术是指计算机执⾏操作时，CPU 不需要先将数 据从某处内存复制到另⼀个特定区域。这种技术通常⽤于通过⽹络传输⽂件时节省CPU周期和内存带宽。 </p>
+<p>在 OS 层⾯上的 Zero-copy 通常指避免在用户态和内核态之间来回 拷⻉数据。</p>
+<p>⽽在 Netty 层⾯ ，零拷⻉主要体现在对于数据操作的优化。 </p>
+<ol>
+<li>使⽤ Netty 提供的 CompositeByteBuf 类, 可以将多个 ByteBuf 合并为⼀个逻辑上的 ByteBuf , 避免了各个 ByteBuf 之间的拷⻉。 </li>
+<li>ByteBuf ⽀持 slice 操作, 因此可以将 ByteBuf 分解为多个共享同⼀个存储区域的 ByteBuf , 避免了内存的拷⻉。 </li>
+<li>通过 FileRegion 包装的 FileChannel.tranferTo 实现⽂件传输（底层是sendfile方法）, 可以直接将⽂件缓冲区的数据发送到⽬标 Channel , 避免了传统通过循环 write ⽅式导致的内存拷⻉问题 。</li>
+<li>duplicate。逻辑上的复制。</li>
+</ol>
+<h3 id="slice（si-lai-si）"><a href="#slice（si-lai-si）" class="headerlink" title="slice（si lai si）"></a>slice（si lai si）</h3><p>对原始 ByteBuf 进行切片成多个 ByteBuf，切片后的 ByteBuf 并没有发生内存复制，还是使用原始 ByteBuf 的内存，切片后的 ByteBuf 维护独立的 read，write 指针</p>
+<p><img src="https://i.loli.net/2021/08/04/XkAyOUa6xiMPqV8.png" alt="image-20210804201821413"></p>
+<h3 id="duplicate"><a href="#duplicate" class="headerlink" title="duplicate"></a>duplicate</h3><p>就好比截取了原始 ByteBuf 所有内容，并且没有 max capacity 的限制，也是与原始 ByteBuf 使用同一块底层内存，只是读写指针是独立的。</p>
+<p><img src="https://i.loli.net/2021/08/04/2sbl13NIuMo5jwZ.png" alt="image-20210804201834603"></p>
+<h3 id="CompositeByteBuf（composite）"><a href="#CompositeByteBuf（composite）" class="headerlink" title="CompositeByteBuf（composite）"></a>CompositeByteBuf（composite）</h3><p>可以将多个 ByteBuf 合并为一个逻辑上的 ByteBuf，避免拷贝。</p>
+]]></content>
+      <categories>
+        <category>Netty</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
       </tags>
   </entry>
   <entry>
@@ -2320,6 +2320,41 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis-缓存击穿，雪崩，穿透</title>
+    <url>/2021/07/30/Redis-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%8C%E9%9B%AA%E5%B4%A9%EF%BC%8C%E7%A9%BF%E9%80%8F/</url>
+    <content><![CDATA[<h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>访问一个缓存和数据库都不存在的 key，此时会直接打到数据库上，并且查不到数据，没法写缓存，所以下<br>一次同样会打到数据库上。此时，缓存起不到作用，请求每次都会走到数据库，流量大时数据库可能会被打挂。此时缓存就好像被“穿透”了一样，起不到任何作用。</p>
+<h3 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h3><p>1）接口校验。在正常业务流程中可能会存在少量访问不存在 key 的情况，但是一般不会出现大量的情况，所以这种场景最大的可能性是遭受了非法攻击。可以在最外层先做一层校验：用户鉴权、数据合法性校验等，例如商品查询中，商品的 ID 是正整数，则可以直接对非正整数直接过滤等等。</p>
+<p>2）缓存空值。当访问缓存和 DB 都没有查询到值时，可以将空值写进缓存，但是设置较短的过期时间，该时间需要根据产品业务特性来设置。</p>
+<p>3）布隆过滤器。使用布隆过滤器存储所有可能访问的 key，不存在的 key 直接被过滤，存在的 key 则再进一步查询缓存和数据库</p>
+<h2 id="布隆过滤器"><a href="#布隆过滤器" class="headerlink" title="布隆过滤器"></a>布隆过滤器</h2><p>布隆过滤器的特点是<strong>判断不存在的，则一定不存在</strong>；<strong>判断存在的，大概率存在</strong>，但也有小概率不存在。并且这个概率是可控的，我们可以让这个概率变小或者变高，取决于用户本身的需求。</p>
+<p>布隆过滤器<strong>由一个 bitSet 和 一组 Hash 函数（算法）组成</strong>，是一种空间效率极高的概率型算法和数据结构，主要用来判断<strong>一个元素是否在海量数据集合中存在</strong>。</p>
+<p>在初始化时，bitSet 的每一位被初始化为 0，同时会定义 Hash 函数，例如有 3 组 Hash 函数：hash1、hash2、hash3。</p>
+<h3 id="写入流程"><a href="#写入流程" class="headerlink" title="写入流程"></a>写入流程</h3><p>当我们要写入一个值时，过程如下，以“x”为例：<br>1）首先将“x”跟 3 组 Hash 函数分别计算，得到 bitSet 的下标为：1、7、10。<br>2）将 bitSet 的这 3 个下标标记为 1。</p>
+<p>假设我们还有另外两个值：java 和 q，按上面的流程跟 3 组 Hash 函数分别计算，结果如下：<br>java：Hash 函数计算 bitSet 下标为：1、7、11<br>q函数计算 bitSet 下标为：4、10、11</p>
+<h3 id="查询流程"><a href="#查询流程" class="headerlink" title="查询流程"></a>查询流程</h3><p>当我们要查询一个值时，过程如下，同样以“x”为例：：<br>1）首先将“x”跟 3 组 Hash 函数分别计算，得到 bitSet 的下标为：1、7、10。<br>2）查看 bitSet 的这 3 个下标是否都为 1，如果这 3 个下标不都为 1，则说明该值必然不存在，如果这 3 个下标都为 1，则只能说明可能存在，并不能说明一定存在。</p>
+<p><img src="https://i.loli.net/2021/08/04/nZqz2gG4hsDHpwm.png" alt="image-20210804194430890"></p>
+<p>其根本原因是，<strong>不同的值在跟 Hash 函数计算后，可能会得到相同的下标</strong>，所以某个值的标记位，可能会被其他值给标上了。<br>这也是为啥布隆过滤器只能判断某个值可能存在，无法判断必然存在的原因。但是反过来，如果该值根据 Hash 函数计算的标记位没有全部都为 1，那么则说明必然不存在，这个是肯定的。</p>
+<p>降低这种误判率的思路也比较简单：<br>一个是<strong>加大 bitSet 的长度</strong>，这样不同的值出现“冲突”的概率就降低了，从而误判率也降低。<br><strong>提升 Hash 函数的个数</strong>，Hash 函数越多，每个值对应的 bit 越多，从而误判率也降低。</p>
+<h2 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h2><p>某一个<strong>热点 key，在缓存过期的一瞬间，同时有大量的请求打进来</strong>，由于此时缓存过期了，所以请求最终都<br>会走到数据库，造成瞬时数据库请求量大、压力骤增，甚至可能打垮数据库。</p>
+<h3 id="解决方案：-1"><a href="#解决方案：-1" class="headerlink" title="解决方案："></a>解决方案：</h3><p><strong>预先准备</strong>，以电商为例，每个商家根据店铺等级，指定若干款主打商品，在购物节期间，加大此类信息key的过期时长。</p>
+<p><strong>现场调整</strong><br>监控访问量，对自然流量激增的数据延长过期时间或设置为永久性key</p>
+<p><strong>后台刷新数据</strong><br>启动定时任务，高峰期来临之前，刷新数据有效期，确保不丢失</p>
+<p><strong>二级缓存</strong><br><strong>设置不同的失效时间，保障不会被同时淘汰就行</strong></p>
+<p><strong>加锁</strong><br>分布式锁，防止被击穿，但是要注意也是性能瓶颈，慎重！</p>
+<p><strong>总结</strong><br>缓存击穿就是单个高热数据过期的瞬间，数据访问量较大，未命中redis后，发起了大量对同一数据的数据库访问，导致对数据库服务器造成压力。应对策略应该在业务数据分析与预防方面进行，配合运行监控测试与即时调整策略，毕竟单个key的过期监控难度较高，配合雪崩处理策略即可。</p>
+<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>大量的热点 key 设置了相同的过期时间，导在缓存在同一时刻全部失效，造成瞬时数据库请求量大、压力<br>骤增，引起雪崩，甚至导致数据库被打挂。<br>缓存雪崩其实有点像“升级版的缓存击穿”，缓存击穿是一个热点 key，缓存雪崩是一组热点 key。</p>
+<h3 id="解决方案：-2"><a href="#解决方案：-2" class="headerlink" title="解决方案："></a>解决方案：</h3><p><strong>过期时间打散</strong>。既然是大量缓存集中失效，那最容易想到就是让他们不集中生效。可以给缓存的过期时间时加上一个<strong>随机值时间</strong>，使得每个 key 的过期时间分布开来，不会集中在同一时刻失效。</p>
+<p><strong>热点数据不过期</strong>。该方式和缓存击穿一样，也是要着重考虑刷新的时间间隔和数据异常如何处理的情况。</p>
+<p><strong>加互斥锁</strong>。该方式和缓存击穿一样，按 key 维度加锁，对于同一个 key，只允许一个线程去计算，其他线程原<br>地阻塞等待第一个线程的计算结果，然后直接走缓存即可</p>
+]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>概念</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis-集群</title>
     <url>/2021/07/30/Redis-%E9%9B%86%E7%BE%A4/</url>
     <content><![CDATA[<h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><p>主从复制，是指将一台Redis服务器的数据，复制到其他的Redis服务器。前者称为主节点(master)，后者称为从节点(slave)；数据的复制是单向的，只能由主节点到从节点。</p>
@@ -2426,41 +2461,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Redis-缓存击穿，雪崩，穿透</title>
-    <url>/2021/07/30/Redis-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%8C%E9%9B%AA%E5%B4%A9%EF%BC%8C%E7%A9%BF%E9%80%8F/</url>
-    <content><![CDATA[<h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>访问一个缓存和数据库都不存在的 key，此时会直接打到数据库上，并且查不到数据，没法写缓存，所以下<br>一次同样会打到数据库上。此时，缓存起不到作用，请求每次都会走到数据库，流量大时数据库可能会被打挂。此时缓存就好像被“穿透”了一样，起不到任何作用。</p>
-<h3 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h3><p>1）接口校验。在正常业务流程中可能会存在少量访问不存在 key 的情况，但是一般不会出现大量的情况，所以这种场景最大的可能性是遭受了非法攻击。可以在最外层先做一层校验：用户鉴权、数据合法性校验等，例如商品查询中，商品的 ID 是正整数，则可以直接对非正整数直接过滤等等。</p>
-<p>2）缓存空值。当访问缓存和 DB 都没有查询到值时，可以将空值写进缓存，但是设置较短的过期时间，该时间需要根据产品业务特性来设置。</p>
-<p>3）布隆过滤器。使用布隆过滤器存储所有可能访问的 key，不存在的 key 直接被过滤，存在的 key 则再进一步查询缓存和数据库</p>
-<h2 id="布隆过滤器"><a href="#布隆过滤器" class="headerlink" title="布隆过滤器"></a>布隆过滤器</h2><p>布隆过滤器的特点是<strong>判断不存在的，则一定不存在</strong>；<strong>判断存在的，大概率存在</strong>，但也有小概率不存在。并且这个概率是可控的，我们可以让这个概率变小或者变高，取决于用户本身的需求。</p>
-<p>布隆过滤器<strong>由一个 bitSet 和 一组 Hash 函数（算法）组成</strong>，是一种空间效率极高的概率型算法和数据结构，主要用来判断<strong>一个元素是否在海量数据集合中存在</strong>。</p>
-<p>在初始化时，bitSet 的每一位被初始化为 0，同时会定义 Hash 函数，例如有 3 组 Hash 函数：hash1、hash2、hash3。</p>
-<h3 id="写入流程"><a href="#写入流程" class="headerlink" title="写入流程"></a>写入流程</h3><p>当我们要写入一个值时，过程如下，以“x”为例：<br>1）首先将“x”跟 3 组 Hash 函数分别计算，得到 bitSet 的下标为：1、7、10。<br>2）将 bitSet 的这 3 个下标标记为 1。</p>
-<p>假设我们还有另外两个值：java 和 q，按上面的流程跟 3 组 Hash 函数分别计算，结果如下：<br>java：Hash 函数计算 bitSet 下标为：1、7、11<br>q函数计算 bitSet 下标为：4、10、11</p>
-<h3 id="查询流程"><a href="#查询流程" class="headerlink" title="查询流程"></a>查询流程</h3><p>当我们要查询一个值时，过程如下，同样以“x”为例：：<br>1）首先将“x”跟 3 组 Hash 函数分别计算，得到 bitSet 的下标为：1、7、10。<br>2）查看 bitSet 的这 3 个下标是否都为 1，如果这 3 个下标不都为 1，则说明该值必然不存在，如果这 3 个下标都为 1，则只能说明可能存在，并不能说明一定存在。</p>
-<p><img src="https://i.loli.net/2021/08/04/nZqz2gG4hsDHpwm.png" alt="image-20210804194430890"></p>
-<p>其根本原因是，<strong>不同的值在跟 Hash 函数计算后，可能会得到相同的下标</strong>，所以某个值的标记位，可能会被其他值给标上了。<br>这也是为啥布隆过滤器只能判断某个值可能存在，无法判断必然存在的原因。但是反过来，如果该值根据 Hash 函数计算的标记位没有全部都为 1，那么则说明必然不存在，这个是肯定的。</p>
-<p>降低这种误判率的思路也比较简单：<br>一个是<strong>加大 bitSet 的长度</strong>，这样不同的值出现“冲突”的概率就降低了，从而误判率也降低。<br><strong>提升 Hash 函数的个数</strong>，Hash 函数越多，每个值对应的 bit 越多，从而误判率也降低。</p>
-<h2 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h2><p>某一个<strong>热点 key，在缓存过期的一瞬间，同时有大量的请求打进来</strong>，由于此时缓存过期了，所以请求最终都<br>会走到数据库，造成瞬时数据库请求量大、压力骤增，甚至可能打垮数据库。</p>
-<h3 id="解决方案：-1"><a href="#解决方案：-1" class="headerlink" title="解决方案："></a>解决方案：</h3><p><strong>预先准备</strong>，以电商为例，每个商家根据店铺等级，指定若干款主打商品，在购物节期间，加大此类信息key的过期时长。</p>
-<p><strong>现场调整</strong><br>监控访问量，对自然流量激增的数据延长过期时间或设置为永久性key</p>
-<p><strong>后台刷新数据</strong><br>启动定时任务，高峰期来临之前，刷新数据有效期，确保不丢失</p>
-<p><strong>二级缓存</strong><br><strong>设置不同的失效时间，保障不会被同时淘汰就行</strong></p>
-<p><strong>加锁</strong><br>分布式锁，防止被击穿，但是要注意也是性能瓶颈，慎重！</p>
-<p><strong>总结</strong><br>缓存击穿就是单个高热数据过期的瞬间，数据访问量较大，未命中redis后，发起了大量对同一数据的数据库访问，导致对数据库服务器造成压力。应对策略应该在业务数据分析与预防方面进行，配合运行监控测试与即时调整策略，毕竟单个key的过期监控难度较高，配合雪崩处理策略即可。</p>
-<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>大量的热点 key 设置了相同的过期时间，导在缓存在同一时刻全部失效，造成瞬时数据库请求量大、压力<br>骤增，引起雪崩，甚至导致数据库被打挂。<br>缓存雪崩其实有点像“升级版的缓存击穿”，缓存击穿是一个热点 key，缓存雪崩是一组热点 key。</p>
-<h3 id="解决方案：-2"><a href="#解决方案：-2" class="headerlink" title="解决方案："></a>解决方案：</h3><p><strong>过期时间打散</strong>。既然是大量缓存集中失效，那最容易想到就是让他们不集中生效。可以给缓存的过期时间时加上一个<strong>随机值时间</strong>，使得每个 key 的过期时间分布开来，不会集中在同一时刻失效。</p>
-<p><strong>热点数据不过期</strong>。该方式和缓存击穿一样，也是要着重考虑刷新的时间间隔和数据异常如何处理的情况。</p>
-<p><strong>加互斥锁</strong>。该方式和缓存击穿一样，按 key 维度加锁，对于同一个 key，只允许一个线程去计算，其他线程原<br>地阻塞等待第一个线程的计算结果，然后直接走缓存即可</p>
-]]></content>
-      <categories>
-        <category>Redis</category>
-      </categories>
-      <tags>
-        <tag>概念</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>a-Linux常用命令</title>
     <url>/2021/08/05/a-Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<h3 id="使⽤两种命令创建⼀个⽂件？"><a href="#使⽤两种命令创建⼀个⽂件？" class="headerlink" title="使⽤两种命令创建⼀个⽂件？"></a>使⽤两种命令创建⼀个⽂件？</h3><p>a. touch a.txt</p>
@@ -2564,118 +2564,6 @@
       <tags>
         <tag>basic</tag>
         <tag>adsadasd</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>a设计模式</title>
-    <url>/2021/08/05/a%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<h2 id="设计模式类型"><a href="#设计模式类型" class="headerlink" title="设计模式类型"></a>设计模式类型</h2><h3 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h3><p>这些设计模式提供了一种在<strong>创建对象的同时隐藏创建逻辑的方式</strong>，而不是使用 new 运算符直接实例化对象。这使得程序在判断针对某个给定实例需要创建哪些对象时更加灵活。</p>
-<p><strong>工厂模式（Factory Pattern）</strong><br><strong>抽象工厂模式（Abstract Factory Pattern）</strong><br><strong>单例模式（Singleton Pattern）</strong><br>建造者模式（Builder Pattern）<br>原型模式（Prototype Pattern）</p>
-<h3 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h3><p>这些设计模式关注<strong>类和对象的组合</strong>。继承的概念被用来组合接口和定义组合对象获得新功能的方式。</p>
-<p><strong>适配器模式（Adapter Pattern）</strong><br>桥接模式（Bridge Pattern）<br>过滤器模式（Filter、Criteria Pattern）<br>组合模式（Composite Pattern）<br><strong>装饰器模式（Decorator Pattern）</strong><br>外观模式（Facade Pattern）<br>享元模式（Flyweight Pattern）<br><strong>代理模式（Proxy Pattern）</strong></p>
-<h3 id="行为型模式"><a href="#行为型模式" class="headerlink" title="行为型模式"></a>行为型模式</h3><p>这些设计模式特别关注<strong>对象之间的通信。</strong>	</p>
-<p>责任链模式（Chain of Responsibility Pattern）<br>命令模式（Command Pattern）<br>解释器模式（Interpreter Pattern）<br>迭代器模式（Iterator Pattern）<br>中介者模式（Mediator Pattern）<br>备忘录模式（Memento Pattern）<br>观察者模式（Observer Pattern）<br>状态模式（State Pattern）<br>空对象模式（Null Object Pattern）<br>策略模式（Strategy Pattern）<br>模板模式（Template Pattern）<br>访问者模式（Visitor Pattern）</p>
-<h3 id="J2EE-模式"><a href="#J2EE-模式" class="headerlink" title="J2EE 模式"></a>J2EE 模式</h3><p>这些设计模式特别关注<strong>表示层</strong>。这些模式是由 Sun Java Center 鉴定的。	</p>
-<p>MVC 模式（MVC Pattern）<br>业务代表模式（Business Delegate Pattern）<br>组合实体模式（Composite Entity Pattern）<br>数据访问对象模式（Data Access Object Pattern）<br>前端控制器模式（Front Controller Pattern）<br>拦截过滤器模式（Intercepting Filter Pattern）<br>服务定位器模式（Service Locator Pattern）<br>传输对象模式（Transfer Object Pattern）</p>
-<h2 id="设计模式的六大原则"><a href="#设计模式的六大原则" class="headerlink" title="设计模式的六大原则"></a>设计模式的六大原则</h2><p>0、<strong>单一职责原则</strong>(Single Responsibility Principle)</p>
-<p>单一职责原则表示一个模块的组成元素之间的功能相关性。从软件变化的角度来看，就一个类而言，应该仅有一个让它变化的原因；通俗地说，<strong>即一个类只负责一项职责。</strong></p>
-<p>假设某个类 P 负责两个不同的职责，职责 P1 和 职责 P2，那么当职责 P1 需求发生改变而需要修改类 P，有可能会导致原来运行正常的职责 P2 功能发生故障。</p>
-<p>1、<strong>开闭原则</strong>（Open Close Principle）</p>
-<p>开闭原则的意思是：<strong>对扩展开放，对修改关闭</strong>。在程序需要进行拓展的时候，不能去修改原有的代码，实现一个热插拔的效果。简言之，<strong>是为了使程序的扩展性好，易于维护和升级</strong>。想要达到这样的效果，我们需要使用接口和抽象类，后面的具体设计中我们会提到这点。</p>
-<p>2、<strong>里氏代换原则</strong>（Liskov Substitution Principle）</p>
-<p>里氏代换原则是<strong>面向对象设计</strong>的基本原则之一。 里氏代换原则中说，<strong>任何基类可以出现的地方，子类一定可以出现</strong>。LSP 是继承复用的基石，只有当派生类可以替换掉基类，且软件单位的功能不受到影响时，基类才能真正被复用，而派生类也能够在基类的基础上增加新的行为。</p>
-<p>里氏代换原则是对开闭原则的补充。实现开闭原则的关键步骤就是<strong>抽象化</strong>，而基类与子类的继承关系就是抽象化的具体实现，所以里氏代换原则是对实现抽象化的具体步骤的规范。</p>
-<p>3、<strong>依赖倒转原则</strong>（Dependence Inversion Principle）</p>
-<p>这个原则是开闭原则的基础，具体内容：针对接口编程，依赖于抽象而不依赖于具体。</p>
-<p>4、<strong>接口隔离原则</strong>（Interface Segregation Principle）</p>
-<p>这个原则的意思是：使用多个隔离的接口，比使用单个接口要好。它还有另外一个意思是：<strong>降低类之间的耦合度。</strong></p>
-<p>5、<strong>迪米特法则，又称最少知道原则</strong>（Demeter Principle）</p>
-<p>最少知道原则是指：一个<strong>实体应当尽量少地与其他实体之间发生相互作用</strong>，使得系统功能模块相对独立。</p>
-<p>6、<strong>合成复用原则（</strong>Composite Reuse Principle）</p>
-<p>合成复用原则是指：<strong>尽量使用合成&#x2F;聚合的方式，而不是使用继承</strong>。</p>
-<h2 id="常见设计模式"><a href="#常见设计模式" class="headerlink" title="常见设计模式"></a>常见设计模式</h2><h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><p>单例模式（Singleton）的目的是为了保证在一个进程中，某个类有且仅有一个实例。</p>
-<p>因为这个类只有一个实例，因此，自然不能让调用方使用new Xyz()来创建实例了。所以，单例的构造方法必须是private，这样就防止了调用方自己创建实例。</p>
-<p>只有private构造方法，确保外部无法实例化；</p>
-<p>通过private static变量持有唯一实例，<strong>保证全局唯一性；</strong></p>
-<p>通过public static方法返回此唯一实例，<strong>使外部调用方能获取到实例。</strong></p>
-<h4 id="懒汉式，线程不安全"><a href="#懒汉式，线程不安全" class="headerlink" title="懒汉式，线程不安全"></a>懒汉式，线程不安全</h4><p>是否 Lazy 初始化：是</p>
-<p>是否多线程安全：否</p>
-<p>这种写法起到了Lazy Loading的效果，但是只能在单线程下使用。</p>
-<p>如果在多线程下，一个线程进入了if (singleton &#x3D;&#x3D; null)判断语句块，还未来得及往下执行，另一个线程也通过了这个判断语句，这时便会产生多个实例。所以在多线程环境下不可使用这种方式。</p>
-<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton instance;  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br><br><span class="hljs-keyword">	public</span><span class="hljs-keyword"> static</span> Singleton getInstance() &#123;  <br><span class="hljs-built_in">	if </span>(instance == null) &#123;  <br>   <span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>	&#125;  <br><span class="hljs-built_in">	return </span>instance;  <br>	&#125;  <br>	&#125;<br></code></pre></td></tr></table></figure>
-
-<h4 id="懒汉式，线程安全"><a href="#懒汉式，线程安全" class="headerlink" title="懒汉式，线程安全"></a>懒汉式，线程安全</h4><p>是否 Lazy 初始化：是</p>
-<p>是否多线程安全：是</p>
-<p>描述：这种方式具备很好的 lazy loading，能够在多线程中很好的工作，但是，效率很低，99% 情况下不需要同步。<br>优点：<strong>第一次调用才初始化，避免内存浪费。</strong><br>缺点：<strong>必须加锁 synchronized 才能保证单例，但加锁会影响效率</strong>。<br>getInstance() 的性能对应用程序不是很关键（该方法使用不太频繁）。</p>
-<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton instance;  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br>   <span class="hljs-keyword"> public</span><span class="hljs-keyword"> static</span> synchronized Singleton getInstance() &#123;  <br>   <span class="hljs-built_in"> if </span>(instance == null) &#123;  <br>       <span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>    &#125;  <br>   <span class="hljs-built_in"> return </span>instance;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h4 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h4><p>是否 Lazy 初始化：否</p>
-<p>是否多线程安全：是</p>
-<p>优点：这种写法比较简单，<strong>就是在类装载的时候就完成实例化</strong>。避免了线程同步问题。</p>
-<p>缺点：在类装载的时候就完成实例化，<strong>没有达到Lazy Loading的效果</strong>。<strong>如果从始至终从未使用过这个实例，则会造成内存的浪费。</strong></p>
-<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton<span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br>   <span class="hljs-keyword"> public</span><span class="hljs-keyword"> static</span> Singleton getInstance() &#123;  <br>   <span class="hljs-built_in"> return </span>instance;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="双检锁-x2F-双重校验锁（DCL，即-double-checked-locking）"><a href="#双检锁-x2F-双重校验锁（DCL，即-double-checked-locking）" class="headerlink" title="双检锁&#x2F;双重校验锁（DCL，即 double-checked locking）"></a>双检锁&#x2F;双重校验锁（DCL，即 double-checked locking）</h4><p><strong>是否 Lazy 初始化：</strong>是</p>
-<p><strong>是否多线程安全：</strong>是</p>
-<p><strong>描述：</strong>我们进行了两次if (singleton &#x3D;&#x3D; null)检查，这样就可以保证线程安全了。这样，实例化代码只用执行一次，后面再次访问时，判断if (singleton &#x3D;&#x3D; null)，直接return实例化对象。</p>
-<p>优点：线程安全；延迟加载；效率较高。</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">static</span> Singleton uniqueInstance;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span>()</span>&#123;<br>        <br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getUniqueInstance</span>()</span>&#123;<br>        <span class="hljs-keyword">if</span> (uniqueInstance==<span class="hljs-literal">null</span>)&#123;<br>            synchronized (Singleton.<span class="hljs-keyword">class</span>)&#123;<br>                <span class="hljs-keyword">if</span> (uniqueInstance==<span class="hljs-literal">null</span>)&#123;<br>                    uniqueInstance=<span class="hljs-keyword">new</span> Singleton();<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> uniqueInstance;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>volatile修饰uniqueinstance的必要性：</p>
-<p>uniqueinstance&#x3D;new singleton()；实际上分为3步。</p>
-<ul>
-<li>1，为uniqueinstance分配内存。</li>
-<li>2，初始化uniqueinstance。</li>
-<li>3，将uniqueinstance指向分配的内存地址。</li>
-</ul>
-<p>因此：</p>
-<ul>
-<li>代码读取到instance不为null时，instance引用的对象可能还没有完成初始化。</li>
-<li><strong>防止指令重排。</strong></li>
-</ul>
-<h4 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4><figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> &#123;<br><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span>()</span> &#123;&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title">SingletonInstance</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final Singleton INSTANCE = <span class="hljs-keyword">new</span> Singleton();<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getInstance</span>()</span> &#123;<br>    <span class="hljs-keyword">return</span> SingletonInstance.INSTANCE;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了<strong>类装载的机制</strong>来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式<strong>在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</strong></p>
-<p>复制代码<br>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了类装载的机制来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</p>
-<p><strong>类的静态属性只会在第一次加载类的时候初始化，所以在这里，JVM帮助我们保证了线程的安全性</strong>，在类进行初始化时，别的线程是无法进入的。</p>
-<p>优点：避免了线程不安全，延迟加载，效率高。</p>
-<h4 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h4><figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-built_in">enum</span> Singleton &#123;<br>    INSTANCE;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">whateverMethod</span>()</span> &#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>借助JDK1.5中添加的枚举来实现单例模式。不仅能避免多线程同步问题，而且还能防止反序列化重新创建新的对象。可能是因为枚举在JDK1.5中才添加，所以在实际项目开发中，很少见人这么写过。</p>
-<p>优点<br>系统内存中该类只存在一个对象，节省了系统资源，对于一些需要频繁创建销毁的对象，使用单例模式可以提高系统性能。</p>
-<p>缺点<br>当想实例化一个单例类的时候，必须要记住使用相应的获取对象的方法，而不是使用new，可能会给其他开发人员造成困扰，特别是看不到源码的时候。</p>
-<p>适用场合<br>需要频繁的进行创建和销毁的对象；<br>创建对象时耗时过多或耗费资源过多，但又经常用到的对象；<br>工具类对象；<br>频繁访问数据库或文件的对象。</p>
-<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p>工厂方法是指定义<strong>工厂接口和产品接口</strong>，但如何创建实际工厂和实际产品被推迟到子类实现，从而使调用方只和抽象工厂与抽象产品打交道。</p>
-<p>实际更常用的是更简单的<strong>静态工厂方法</strong>，它允许工厂内部对创建产品进行优化。</p>
-<p>调用方尽量持有接口或抽象类，避免持有具体类型的子类，以便工厂方法能随时切换不同的子类返回，却不影响调用方代码。</p>
-<p><strong>Integer n &#x3D; Integer.valueOf(100);</strong></p>
-<p>Integer既是产品又是静态工厂。它提供了静态方法valueOf()来创建Integer。那么这种方式和直接写new Integer(100)有何区别呢？我们观察valueOf()方法：</p>
-<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Integer</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> Integer <span class="hljs-title">valueOf</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)<br>            <span class="hljs-keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Integer</span>(i);<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-<p>它的好处在于，valueOf()内部可能会使用new创建一个新的Integer实例，<strong>但也可能直接返回一个缓存的Integer实例。对于调用方来说，没必要知道Integer创建的细节。</strong></p>
-<h3 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h3><p>策略模式：Strategy，是指，定义一组算法，并把其封装到一个对象中。然后在运行时，<strong>可以灵活的使用其中的一个算法。</strong></p>
-<p>策略模式在Java标准库中应用非常广泛，Arrays.sort()：</p>
-<p>我们观察Arrays.sort(T[] a, Comparator&lt;? super T&gt; c)，这个排序方法，它在内部实现了TimSort排序，但是，排序算法在比较两个元素大小的时候，需要借助我们<strong>传入的Comparator对象</strong>，才能完成比较。因此，这里的策略是指比较两个元素大小的策略，可以是忽略大小写比较，可以是倒序比较，也可以根据字符串长度比较。</p>
-<p>因此，上述排序使用到了策略模式，它实际上指，在一个方法中，流程是确定的，但是，<strong>某些关键步骤的算法依赖调用方传入的策略，这样，传入不同的策略，即可获得不同的结果，大大增强了系统的灵活性。</strong></p>
-<h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p>将一个类的接口转换成客户希望的另外一个接口，使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。</p>
-<p>适配器模式在Java标准库中有广泛应用。比如我们持有数据类型是String[]，但是需要List接口时，可以用一个Adapter：</p>
-<figure class="highlight dart"><table><tr><td class="code"><pre><code class="hljs dart"><span class="hljs-built_in">String</span>[] exist = <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>[] &#123;<span class="hljs-string">&quot;Good&quot;</span>, <span class="hljs-string">&quot;morning&quot;</span>, <span class="hljs-string">&quot;Bob&quot;</span>, <span class="hljs-string">&quot;and&quot;</span>, <span class="hljs-string">&quot;Alice&quot;</span>&#125;;<br><span class="hljs-built_in">Set</span>&lt;<span class="hljs-built_in">String</span>&gt; <span class="hljs-keyword">set</span> = <span class="hljs-keyword">new</span> HashSet&lt;&gt;(Arrays.asList(exist));<br></code></pre></td></tr></table></figure>
-
-
-<p>注意到List<T> Arrays.asList(T[])就相当于一个转换器，它可以把数组转换为List。</p>
-<h3 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h3><p>动态地给一个对象添加一些额外的职责。就增加功能来说，相比生成子类更为灵活。</p>
-<p><img src="https://i.loli.net/2021/08/05/MAzhEK9sGqicf3T.png" alt="image-20210805184859592"></p>
-<p>最顶层的Component是接口，对应到IO的就是InputStream这个抽象类。ComponentA、ComponentB是实际的子类，对应到IO的就是FileInputStream、ServletInputStream这些数据源。Decorator是用于实现各个附加功能的抽象装饰器，对应到IO的就是FilterInputStream。而从Decorator派生的就是一个一个的装饰器，它们每个都有独立的功能，对应到IO的就是BufferedInputStream、GZIPInputStream等。</p>
-<p>Decorator模式有什么好处？它实际上把核心功能和附加功能给分开了。核心功能指FileInputStream这些真正读数据的源头，附加功能指加缓冲、压缩、解密这些功能。如果我们要新增核心功能，就增加Component的子类，例如ByteInputStream。如果我们要增加附加功能，就增加Decorator的子类，例如CipherInputStream。两部分都可以独立地扩展，而具体如何附加功能，由调用方自由组合，从而极大地增强了灵活性。</p>
-]]></content>
-      <categories>
-        <category>top</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
       </tags>
   </entry>
   <entry>
@@ -3167,6 +3055,138 @@ return new InetSocketAddress(host, port);
 ]]></content>
   </entry>
   <entry>
+    <title>a设计模式</title>
+    <url>/2021/08/05/a%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="设计模式类型"><a href="#设计模式类型" class="headerlink" title="设计模式类型"></a>设计模式类型</h2><h3 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h3><p>这些设计模式提供了一种在<strong>创建对象的同时隐藏创建逻辑的方式</strong>，而不是使用 new 运算符直接实例化对象。这使得程序在判断针对某个给定实例需要创建哪些对象时更加灵活。</p>
+<p><strong>工厂模式（Factory Pattern）</strong><br><strong>抽象工厂模式（Abstract Factory Pattern）</strong><br><strong>单例模式（Singleton Pattern）</strong><br>建造者模式（Builder Pattern）<br>原型模式（Prototype Pattern）</p>
+<h3 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h3><p>这些设计模式关注<strong>类和对象的组合</strong>。继承的概念被用来组合接口和定义组合对象获得新功能的方式。</p>
+<p><strong>适配器模式（Adapter Pattern）</strong><br>桥接模式（Bridge Pattern）<br>过滤器模式（Filter、Criteria Pattern）<br>组合模式（Composite Pattern）<br><strong>装饰器模式（Decorator Pattern）</strong><br>外观模式（Facade Pattern）<br>享元模式（Flyweight Pattern）<br><strong>代理模式（Proxy Pattern）</strong></p>
+<h3 id="行为型模式"><a href="#行为型模式" class="headerlink" title="行为型模式"></a>行为型模式</h3><p>这些设计模式特别关注<strong>对象之间的通信。</strong>	</p>
+<p>责任链模式（Chain of Responsibility Pattern）<br>命令模式（Command Pattern）<br>解释器模式（Interpreter Pattern）<br>迭代器模式（Iterator Pattern）<br>中介者模式（Mediator Pattern）<br>备忘录模式（Memento Pattern）<br>观察者模式（Observer Pattern）<br>状态模式（State Pattern）<br>空对象模式（Null Object Pattern）<br>策略模式（Strategy Pattern）<br>模板模式（Template Pattern）<br>访问者模式（Visitor Pattern）</p>
+<h3 id="J2EE-模式"><a href="#J2EE-模式" class="headerlink" title="J2EE 模式"></a>J2EE 模式</h3><p>这些设计模式特别关注<strong>表示层</strong>。这些模式是由 Sun Java Center 鉴定的。	</p>
+<p>MVC 模式（MVC Pattern）<br>业务代表模式（Business Delegate Pattern）<br>组合实体模式（Composite Entity Pattern）<br>数据访问对象模式（Data Access Object Pattern）<br>前端控制器模式（Front Controller Pattern）<br>拦截过滤器模式（Intercepting Filter Pattern）<br>服务定位器模式（Service Locator Pattern）<br>传输对象模式（Transfer Object Pattern）</p>
+<h2 id="设计模式的六大原则"><a href="#设计模式的六大原则" class="headerlink" title="设计模式的六大原则"></a>设计模式的六大原则</h2><p>0、<strong>单一职责原则</strong>(Single Responsibility Principle)</p>
+<p>单一职责原则表示一个模块的组成元素之间的功能相关性。从软件变化的角度来看，就一个类而言，应该仅有一个让它变化的原因；通俗地说，<strong>即一个类只负责一项职责。</strong></p>
+<p>假设某个类 P 负责两个不同的职责，职责 P1 和 职责 P2，那么当职责 P1 需求发生改变而需要修改类 P，有可能会导致原来运行正常的职责 P2 功能发生故障。</p>
+<p>1、<strong>开闭原则</strong>（Open Close Principle）</p>
+<p>开闭原则的意思是：<strong>对扩展开放，对修改关闭</strong>。在程序需要进行拓展的时候，不能去修改原有的代码，实现一个热插拔的效果。简言之，<strong>是为了使程序的扩展性好，易于维护和升级</strong>。想要达到这样的效果，我们需要使用接口和抽象类，后面的具体设计中我们会提到这点。</p>
+<p>2、<strong>里氏代换原则</strong>（Liskov Substitution Principle）</p>
+<p>里氏代换原则是<strong>面向对象设计</strong>的基本原则之一。 里氏代换原则中说，<strong>任何基类可以出现的地方，子类一定可以出现</strong>。LSP 是继承复用的基石，只有当派生类可以替换掉基类，且软件单位的功能不受到影响时，基类才能真正被复用，而派生类也能够在基类的基础上增加新的行为。</p>
+<p>里氏代换原则是对开闭原则的补充。实现开闭原则的关键步骤就是<strong>抽象化</strong>，而基类与子类的继承关系就是抽象化的具体实现，所以里氏代换原则是对实现抽象化的具体步骤的规范。</p>
+<p>3、<strong>依赖倒转原则</strong>（Dependence Inversion Principle）</p>
+<p>这个原则是开闭原则的基础，具体内容：针对接口编程，依赖于抽象而不依赖于具体。</p>
+<p>4、<strong>接口隔离原则</strong>（Interface Segregation Principle）</p>
+<p>这个原则的意思是：使用多个隔离的接口，比使用单个接口要好。它还有另外一个意思是：<strong>降低类之间的耦合度。</strong></p>
+<p>5、<strong>迪米特法则，又称最少知道原则</strong>（Demeter Principle）</p>
+<p>最少知道原则是指：一个<strong>实体应当尽量少地与其他实体之间发生相互作用</strong>，使得系统功能模块相对独立。</p>
+<p>6、<strong>合成复用原则（</strong>Composite Reuse Principle）</p>
+<p>合成复用原则是指：<strong>尽量使用合成&#x2F;聚合的方式，而不是使用继承</strong>。</p>
+<h2 id="常见设计模式"><a href="#常见设计模式" class="headerlink" title="常见设计模式"></a>常见设计模式</h2><h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><p>单例模式（Singleton）的目的是为了保证在一个进程中，某个类有且仅有一个实例。</p>
+<p>因为这个类只有一个实例，因此，自然不能让调用方使用new Xyz()来创建实例了。所以，单例的构造方法必须是private，这样就防止了调用方自己创建实例。</p>
+<p>只有private构造方法，确保外部无法实例化；</p>
+<p>通过private static变量持有唯一实例，<strong>保证全局唯一性；</strong></p>
+<p>通过public static方法返回此唯一实例，<strong>使外部调用方能获取到实例。</strong></p>
+<h4 id="懒汉式，线程不安全"><a href="#懒汉式，线程不安全" class="headerlink" title="懒汉式，线程不安全"></a>懒汉式，线程不安全</h4><p>是否 Lazy 初始化：是</p>
+<p>是否多线程安全：否</p>
+<p>这种写法起到了Lazy Loading的效果，但是只能在单线程下使用。</p>
+<p>如果在多线程下，一个线程进入了if (singleton &#x3D;&#x3D; null)判断语句块，还未来得及往下执行，另一个线程也通过了这个判断语句，这时便会产生多个实例。所以在多线程环境下不可使用这种方式。</p>
+<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton instance;  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br><br><span class="hljs-keyword">	public</span><span class="hljs-keyword"> static</span> Singleton getInstance() &#123;  <br><span class="hljs-built_in">	if </span>(instance == null) &#123;  <br>   <span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>	&#125;  <br><span class="hljs-built_in">	return </span>instance;  <br>	&#125;  <br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="懒汉式，线程安全"><a href="#懒汉式，线程安全" class="headerlink" title="懒汉式，线程安全"></a>懒汉式，线程安全</h4><p>是否 Lazy 初始化：是</p>
+<p>是否多线程安全：是</p>
+<p>描述：这种方式具备很好的 lazy loading，能够在多线程中很好的工作，但是，效率很低，99% 情况下不需要同步。<br>优点：<strong>第一次调用才初始化，避免内存浪费。</strong><br>缺点：<strong>必须加锁 synchronized 才能保证单例，但加锁会影响效率</strong>。<br>getInstance() 的性能对应用程序不是很关键（该方法使用不太频繁）。</p>
+<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton instance;  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br>   <span class="hljs-keyword"> public</span><span class="hljs-keyword"> static</span> synchronized Singleton getInstance() &#123;  <br>   <span class="hljs-built_in"> if </span>(instance == null) &#123;  <br>       <span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>    &#125;  <br>   <span class="hljs-built_in"> return </span>instance;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h4><p>是否 Lazy 初始化：否</p>
+<p>是否多线程安全：是</p>
+<p>优点：这种写法比较简单，<strong>就是在类装载的时候就完成实例化</strong>。避免了线程同步问题。</p>
+<p>缺点：在类装载的时候就完成实例化，<strong>没有达到Lazy Loading的效果</strong>。<strong>如果从始至终从未使用过这个实例，则会造成内存的浪费。</strong></p>
+<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton<span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br>   <span class="hljs-keyword"> public</span><span class="hljs-keyword"> static</span> Singleton getInstance() &#123;  <br>   <span class="hljs-built_in"> return </span>instance;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="双检锁-x2F-双重校验锁（DCL，即-double-checked-locking）"><a href="#双检锁-x2F-双重校验锁（DCL，即-double-checked-locking）" class="headerlink" title="双检锁&#x2F;双重校验锁（DCL，即 double-checked locking）"></a>双检锁&#x2F;双重校验锁（DCL，即 double-checked locking）</h4><p><strong>是否 Lazy 初始化：</strong>是</p>
+<p><strong>是否多线程安全：</strong>是</p>
+<p><strong>描述：</strong>我们进行了两次if (singleton &#x3D;&#x3D; null)检查，这样就可以保证线程安全了。这样，实例化代码只用执行一次，后面再次访问时，判断if (singleton &#x3D;&#x3D; null)，直接return实例化对象。</p>
+<p>优点：线程安全；延迟加载；效率较高。</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">static</span> Singleton uniqueInstance;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span>()</span>&#123;<br>        <br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getUniqueInstance</span>()</span>&#123;<br>        <span class="hljs-keyword">if</span> (uniqueInstance==<span class="hljs-literal">null</span>)&#123;<br>            synchronized (Singleton.<span class="hljs-keyword">class</span>)&#123;<br>                <span class="hljs-keyword">if</span> (uniqueInstance==<span class="hljs-literal">null</span>)&#123;<br>                    uniqueInstance=<span class="hljs-keyword">new</span> Singleton();<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> uniqueInstance;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>volatile修饰uniqueinstance的必要性：</p>
+<p>uniqueinstance&#x3D;new singleton()；实际上分为3步。</p>
+<ul>
+<li>1，为uniqueinstance分配内存。</li>
+<li>2，初始化uniqueinstance。</li>
+<li>3，将uniqueinstance指向分配的内存地址。</li>
+</ul>
+<p>因此：</p>
+<ul>
+<li>代码读取到instance不为null时，instance引用的对象可能还没有完成初始化。</li>
+<li><strong>防止指令重排。</strong></li>
+</ul>
+<h4 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4><figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> &#123;<br><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span>()</span> &#123;&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title">SingletonInstance</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final Singleton INSTANCE = <span class="hljs-keyword">new</span> Singleton();<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getInstance</span>()</span> &#123;<br>    <span class="hljs-keyword">return</span> SingletonInstance.INSTANCE;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了<strong>类装载的机制</strong>来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式<strong>在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</strong></p>
+<p>复制代码<br>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了类装载的机制来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</p>
+<p><strong>类的静态属性只会在第一次加载类的时候初始化，所以在这里，JVM帮助我们保证了线程的安全性</strong>，在类进行初始化时，别的线程是无法进入的。</p>
+<p>优点：避免了线程不安全，延迟加载，效率高。</p>
+<h4 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h4><figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-built_in">enum</span> Singleton &#123;<br>    INSTANCE;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">whateverMethod</span>()</span> &#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>借助JDK1.5中添加的枚举来实现单例模式。不仅能避免多线程同步问题，而且还能防止反序列化重新创建新的对象。可能是因为枚举在JDK1.5中才添加，所以在实际项目开发中，很少见人这么写过。</p>
+<p>优点<br>系统内存中该类只存在一个对象，节省了系统资源，对于一些需要频繁创建销毁的对象，使用单例模式可以提高系统性能。</p>
+<p>缺点<br>当想实例化一个单例类的时候，必须要记住使用相应的获取对象的方法，而不是使用new，可能会给其他开发人员造成困扰，特别是看不到源码的时候。</p>
+<p>适用场合<br>需要频繁的进行创建和销毁的对象；<br>创建对象时耗时过多或耗费资源过多，但又经常用到的对象；<br>工具类对象；<br>频繁访问数据库或文件的对象。</p>
+<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p>工厂方法是指定义<strong>工厂接口和产品接口</strong>，但如何创建实际工厂和实际产品被推迟到子类实现，从而使调用方只和抽象工厂与抽象产品打交道。</p>
+<p>实际更常用的是更简单的<strong>静态工厂方法</strong>，它允许工厂内部对创建产品进行优化。</p>
+<p>调用方尽量持有接口或抽象类，避免持有具体类型的子类，以便工厂方法能随时切换不同的子类返回，却不影响调用方代码。</p>
+<p><strong>Integer n &#x3D; Integer.valueOf(100);</strong></p>
+<p>Integer既是产品又是静态工厂。它提供了静态方法valueOf()来创建Integer。那么这种方式和直接写new Integer(100)有何区别呢？我们观察valueOf()方法：</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Integer</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> Integer <span class="hljs-title">valueOf</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)<br>            <span class="hljs-keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Integer</span>(i);<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>它的好处在于，valueOf()内部可能会使用new创建一个新的Integer实例，<strong>但也可能直接返回一个缓存的Integer实例。对于调用方来说，没必要知道Integer创建的细节。</strong></p>
+<h3 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h3><p>策略模式：Strategy，是指，定义一组算法，并把其封装到一个对象中。然后在运行时，<strong>可以灵活的使用其中的一个算法。</strong></p>
+<p>策略模式在Java标准库中应用非常广泛，Arrays.sort()：</p>
+<p>我们观察Arrays.sort(T[] a, Comparator&lt;? super T&gt; c)，这个排序方法，它在内部实现了TimSort排序，但是，排序算法在比较两个元素大小的时候，需要借助我们<strong>传入的Comparator对象</strong>，才能完成比较。因此，这里的策略是指比较两个元素大小的策略，可以是忽略大小写比较，可以是倒序比较，也可以根据字符串长度比较。</p>
+<p>因此，上述排序使用到了策略模式，它实际上指，在一个方法中，流程是确定的，但是，<strong>某些关键步骤的算法依赖调用方传入的策略，这样，传入不同的策略，即可获得不同的结果，大大增强了系统的灵活性。</strong></p>
+<h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p>将一个类的接口转换成客户希望的另外一个接口，使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。</p>
+<p>适配器模式在Java标准库中有广泛应用。比如我们持有数据类型是String[]，但是需要List接口时，可以用一个Adapter：</p>
+<figure class="highlight dart"><table><tr><td class="code"><pre><code class="hljs dart"><span class="hljs-built_in">String</span>[] exist = <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>[] &#123;<span class="hljs-string">&quot;Good&quot;</span>, <span class="hljs-string">&quot;morning&quot;</span>, <span class="hljs-string">&quot;Bob&quot;</span>, <span class="hljs-string">&quot;and&quot;</span>, <span class="hljs-string">&quot;Alice&quot;</span>&#125;;<br><span class="hljs-built_in">Set</span>&lt;<span class="hljs-built_in">String</span>&gt; <span class="hljs-keyword">set</span> = <span class="hljs-keyword">new</span> HashSet&lt;&gt;(Arrays.asList(exist));<br></code></pre></td></tr></table></figure>
+
+
+<p>注意到List<T> Arrays.asList(T[])就相当于一个转换器，它可以把数组转换为List。</p>
+<h3 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h3><p>动态地给一个对象添加一些额外的职责。就增加功能来说，相比生成子类更为灵活。</p>
+<p><img src="https://i.loli.net/2021/08/05/MAzhEK9sGqicf3T.png" alt="image-20210805184859592"></p>
+<p>最顶层的Component是接口，对应到IO的就是InputStream这个抽象类。ComponentA、ComponentB是实际的子类，对应到IO的就是FileInputStream、ServletInputStream这些数据源。Decorator是用于实现各个附加功能的抽象装饰器，对应到IO的就是FilterInputStream。而从Decorator派生的就是一个一个的装饰器，它们每个都有独立的功能，对应到IO的就是BufferedInputStream、GZIPInputStream等。</p>
+<p>Decorator模式有什么好处？它实际上把核心功能和附加功能给分开了。核心功能指FileInputStream这些真正读数据的源头，附加功能指加缓冲、压缩、解密这些功能。如果我们要新增核心功能，就增加Component的子类，例如ByteInputStream。如果我们要增加附加功能，就增加Decorator的子类，例如CipherInputStream。两部分都可以独立地扩展，而具体如何附加功能，由调用方自由组合，从而极大地增强了灵活性。</p>
+]]></content>
+      <categories>
+        <category>top</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>golang 基础</title>
+    <url>/2023/07/11/golang-%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>技术</tag>
+        <tag>golang</tag>
+        <tag>语言</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>golang 进阶</title>
+    <url>/2023/07/11/golang-%E8%BF%9B%E9%98%B6/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>技术</tag>
+        <tag>golang</tag>
+        <tag>语言</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>常见数据结构和算法</title>
     <url>/2021/08/05/a-%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h2 id="常见数据结构"><a href="#常见数据结构" class="headerlink" title="常见数据结构"></a>常见数据结构</h2><p>根据数据访问的特点，可分为线性数据结构和非线性数据结构。</p>
@@ -3608,32 +3628,37 @@ return new InetSocketAddress(host, port);
       </tags>
   </entry>
   <entry>
-    <title>golang 基础</title>
-    <url>/2023/07/11/golang-%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>技术</tag>
-        <tag>golang</tag>
-        <tag>语言</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>golang 进阶</title>
-    <url>/2023/07/11/golang-%E8%BF%9B%E9%98%B6/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>技术</tag>
-        <tag>golang</tag>
-        <tag>语言</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>下划线转驼峰</title>
     <url>/2021/08/09/%E4%B8%8B%E5%88%92%E7%BA%BF%E8%BD%AC%E9%A9%BC%E5%B3%B0/</url>
     <content><![CDATA[<p>举例：Hello_woRLD&#x3D;&#x3D;helloWorld</p>
 <figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">public static String camel<span class="hljs-constructor">Name(String <span class="hljs-params">name</span>)</span> &#123;<br>       StringBuilder result = <span class="hljs-keyword">new</span> <span class="hljs-constructor">StringBuilder()</span>;<br>       <span class="hljs-keyword">if</span> (name<span class="hljs-operator"> == </span>null<span class="hljs-operator"> || </span>name.is<span class="hljs-constructor">Empty()</span>) &#123;<br>           return <span class="hljs-string">&quot;&quot;</span>;<br>       &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!name.contains(<span class="hljs-string">&quot;_&quot;</span>)) &#123;<br>           <span class="hljs-comment">// 不含下划线，仅将首字母小写</span><br>           return name.substring(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>).<span class="hljs-keyword">to</span><span class="hljs-constructor">LowerCase()</span> + name.substring(<span class="hljs-number">1</span>);<br>       &#125;<br>       <span class="hljs-comment">// 用下划线将原始字符串分割</span><br>       String camels<span class="hljs-literal">[]</span> = name.split(<span class="hljs-string">&quot;_&quot;</span>);<br>       <span class="hljs-keyword">for</span> (String camel : camels) &#123;<br>           <span class="hljs-comment">// 跳过原始字符串中开头、结尾的下换线或双重下划线</span><br>           <span class="hljs-keyword">if</span> (camel.is<span class="hljs-constructor">Empty()</span>) &#123;<br>               continue;<br>           &#125;<br>           <span class="hljs-comment">// 处理真正的驼峰片段</span><br>           <span class="hljs-keyword">if</span> (result.length<span class="hljs-literal">()</span><span class="hljs-operator"> == </span><span class="hljs-number">0</span>) &#123;<br>               <span class="hljs-comment">// 第一个驼峰片段，全部字母都小写</span><br>               result.append(camel.<span class="hljs-keyword">to</span><span class="hljs-constructor">LowerCase()</span>);<br>           &#125; <span class="hljs-keyword">else</span> &#123;<br>               <span class="hljs-comment">// 其他的驼峰片段，首字母大写</span><br>               result.append(camel.substring(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>).<span class="hljs-keyword">to</span><span class="hljs-constructor">UpperCase()</span>);<br>               result.append(camel.substring(<span class="hljs-number">1</span>).<span class="hljs-keyword">to</span><span class="hljs-constructor">LowerCase()</span>);<br>           &#125;<br>       &#125;<br>       return result.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>;<br>   &#125;<br></code></pre></td></tr></table></figure>
 
 ]]></content>
+  </entry>
+  <entry>
+    <title>操作系统-fork</title>
+    <url>/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-fork/</url>
+    <content><![CDATA[<h3 id="简单概念介绍"><a href="#简单概念介绍" class="headerlink" title="简单概念介绍"></a>简单概念介绍</h3><h4 id="逻辑地址"><a href="#逻辑地址" class="headerlink" title="逻辑地址"></a>逻辑地址</h4><p>CPU所生成的地址。CPU产生的<strong>逻辑地址</strong>被分为 :p （页号） 它包含每个页在物理内存中的基址，用来作为页表的索引；d （页偏移），同基址相结合，用来确定送入内存设备的物理内存地址。</p>
+<h4 id="物理地址"><a href="#物理地址" class="headerlink" title="物理地址"></a>物理地址</h4><p>内存单元所看到的地址。用户程序看不见真正的物理地址。<strong>用户只生成逻辑地址，且认为进程的地址空间为0到max。</strong>物理地址范围从R+0到R+max，R为基地址,地址映射－将程序地址空间中使用的逻辑地址变换成内存中的物理地址的过程。由<strong>内存管理单元（MMU）</strong>来完成。</p>
+<p>可执行程序在存储（没有调入内存）时分为<strong>代码区，数据区，未初始化数据区</strong>三部分。</p>
+<p>（1）代码区存放CPU执行的<strong>机器指令</strong>。通常代码区是共享的，即其它执行程序可调用它。代码段（code segment&#x2F;text segment）通常是只读的，有些构架也允许自行修改。<br>（2）数据区存放<strong>已初始化的全局变量，静态变量（包括全局和局部的），常量</strong>。static全局变量和static函数只能在当前文件中被调用。<br>（3）未初始化数据区（Block Started by Symbol,BSS)<strong>存放全局未初始化的变量</strong>。BSS的数据在程序开始执行之前被初始化为0或NULL。</p>
+<p> 可执行程序在运行时又多出了两个区域：<strong>栈区和堆区。</strong><br>    （4）<strong>栈区</strong>。由编译器自动释放，存放函数的<strong>参数值，局部变量</strong>等。每当一个函数被调用时，该函数的返回类型和一些调用的信息被存储到栈中。然后这个被调用的函数再为它的自动变量和临时变量在栈上分配空间。<strong>每调用一个函数一个新的栈就会被使用</strong>。栈区是从高地址位向低地址位增长的，<strong>是一块连续的内在区域</strong>，最大容量是由系统预先定义好的，申请的栈空间超过这个界限时会提示溢出，用户能从栈中获取的空间较小。<br>    （5）<strong>堆区</strong>。用于<strong>动态内存分配</strong>，位于BSS和栈中间的地址位。由程序员<strong>申请分配（malloc)和释放（free）</strong>。堆是从低地址位向高地址位增长，<strong>采用链式存储结构</strong>。频繁地malloc&#x2F;free造成内存空间的不连续，<strong>产生碎片。</strong>当申请堆空间时库函数按照一定的算法搜索可用的足够大的空间。<strong>因此堆的效率比栈要低的多。</strong></p>
+<h3 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h3><p>fork（）会<strong>产生一个和父进程完全相同的子进程</strong>，但子进程在此后多会exec<strong>系统调用</strong>，出于效率考虑，linux中引入了“<strong>写时复制</strong>“技术，也就是<strong>只有进程空间的各段的内容要发生变化时，才会将父进程的内容复制一份给子进程</strong>。在fork之后exec之前两个进程用的是<strong>相同的物理空间（内存区）</strong>，子进程的代码段、数据段、堆栈都是指向父进程的物理空间，也就是说，两者的虚拟空间不同，但其对应的物理空间是同一个。</p>
+<p><strong>当父子进程中有更改相应段的行为发生时</strong>，再为子进程相应的段分配物理空间。</p>
+<p>如果<strong>不是因为exec</strong>，内核会给子进程的数据段、堆栈段分配相应的物理空间（至此两者有各自的进程空间，互不影响），而<strong>代码段继续共享父进程的物理空间</strong>（两者的代码完全相同）。</p>
+<p>如果<strong>是因为exec</strong>，由于两者<strong>执行的代码不同</strong>，子进程的代码段也会分配单独的物理空间。</p>
+<p>fork时子进程获得父进程<strong>数据空间、堆和栈的复制，所以变量的地址是一样的。</strong></p>
+<p>fork子进程完全复制父进程的栈空间，也复制了页表，<strong>但没有复制物理页面</strong>，所以这时<strong>虚拟地址相同，物理地址也相同</strong>，但是会把父子共享的页面标记为“<strong>只读</strong>”（类似mmap的private的方式），如果父子进程一直对这个页面是同一个页面，知道其中<strong>任何一个进程要对共享的页面“写操作”</strong>，这时<strong>内核会复制一个物理页面给这个进程使用，同时修改页表。而把原来的只读页面标记为“可写”，留给另外一个进程使用</strong>。</p>
+<p>这就是所谓的“<strong>写时复制</strong>”。正因为fork采用了这种写时复制的机制，所以fork出来子进程之后，父子进程哪个先调度呢？内核一般会先调度子进程，因为很多情况下子进程是要马上执行exec，会清空栈、堆。这些和父进程共享的空间，加载新的代码段，这就避免了“写时复制”拷贝共享页面的机会。<strong>如果父进程先调度很可能写共享页面，会产生“写时复制”的无用功。</strong></p>
+<p>在理解时，你可以认为fork后，这两个相同的虚拟地址指向的是不同的物理地址，这样方便理解父子进程之间的独立性</p>
+<h4 id="写时复制"><a href="#写时复制" class="headerlink" title="写时复制"></a>写时复制</h4><p>但实际上，linux为了提高 fork 的效率，采用了 <strong>copy-on-write</strong> 技术，fork后，这两个虚拟地址实际上指向相同的物理地址（内存页），只有任何一个进程试图修改这个虚拟地址里的内容前，两个虚拟地址才会指向不同的物理地址（新的物理地址的内容从原物理地址中复制得到）。</p>
+]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
+      <tags>
+        <tag>概念</tag>
+      </tags>
   </entry>
   <entry>
     <title>操作系统-内存管理</title>
@@ -3709,31 +3734,6 @@ return new InetSocketAddress(host, port);
       </categories>
       <tags>
         <tag>内存管理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>操作系统-fork</title>
-    <url>/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-fork/</url>
-    <content><![CDATA[<h3 id="简单概念介绍"><a href="#简单概念介绍" class="headerlink" title="简单概念介绍"></a>简单概念介绍</h3><h4 id="逻辑地址"><a href="#逻辑地址" class="headerlink" title="逻辑地址"></a>逻辑地址</h4><p>CPU所生成的地址。CPU产生的<strong>逻辑地址</strong>被分为 :p （页号） 它包含每个页在物理内存中的基址，用来作为页表的索引；d （页偏移），同基址相结合，用来确定送入内存设备的物理内存地址。</p>
-<h4 id="物理地址"><a href="#物理地址" class="headerlink" title="物理地址"></a>物理地址</h4><p>内存单元所看到的地址。用户程序看不见真正的物理地址。<strong>用户只生成逻辑地址，且认为进程的地址空间为0到max。</strong>物理地址范围从R+0到R+max，R为基地址,地址映射－将程序地址空间中使用的逻辑地址变换成内存中的物理地址的过程。由<strong>内存管理单元（MMU）</strong>来完成。</p>
-<p>可执行程序在存储（没有调入内存）时分为<strong>代码区，数据区，未初始化数据区</strong>三部分。</p>
-<p>（1）代码区存放CPU执行的<strong>机器指令</strong>。通常代码区是共享的，即其它执行程序可调用它。代码段（code segment&#x2F;text segment）通常是只读的，有些构架也允许自行修改。<br>（2）数据区存放<strong>已初始化的全局变量，静态变量（包括全局和局部的），常量</strong>。static全局变量和static函数只能在当前文件中被调用。<br>（3）未初始化数据区（Block Started by Symbol,BSS)<strong>存放全局未初始化的变量</strong>。BSS的数据在程序开始执行之前被初始化为0或NULL。</p>
-<p> 可执行程序在运行时又多出了两个区域：<strong>栈区和堆区。</strong><br>    （4）<strong>栈区</strong>。由编译器自动释放，存放函数的<strong>参数值，局部变量</strong>等。每当一个函数被调用时，该函数的返回类型和一些调用的信息被存储到栈中。然后这个被调用的函数再为它的自动变量和临时变量在栈上分配空间。<strong>每调用一个函数一个新的栈就会被使用</strong>。栈区是从高地址位向低地址位增长的，<strong>是一块连续的内在区域</strong>，最大容量是由系统预先定义好的，申请的栈空间超过这个界限时会提示溢出，用户能从栈中获取的空间较小。<br>    （5）<strong>堆区</strong>。用于<strong>动态内存分配</strong>，位于BSS和栈中间的地址位。由程序员<strong>申请分配（malloc)和释放（free）</strong>。堆是从低地址位向高地址位增长，<strong>采用链式存储结构</strong>。频繁地malloc&#x2F;free造成内存空间的不连续，<strong>产生碎片。</strong>当申请堆空间时库函数按照一定的算法搜索可用的足够大的空间。<strong>因此堆的效率比栈要低的多。</strong></p>
-<h3 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h3><p>fork（）会<strong>产生一个和父进程完全相同的子进程</strong>，但子进程在此后多会exec<strong>系统调用</strong>，出于效率考虑，linux中引入了“<strong>写时复制</strong>“技术，也就是<strong>只有进程空间的各段的内容要发生变化时，才会将父进程的内容复制一份给子进程</strong>。在fork之后exec之前两个进程用的是<strong>相同的物理空间（内存区）</strong>，子进程的代码段、数据段、堆栈都是指向父进程的物理空间，也就是说，两者的虚拟空间不同，但其对应的物理空间是同一个。</p>
-<p><strong>当父子进程中有更改相应段的行为发生时</strong>，再为子进程相应的段分配物理空间。</p>
-<p>如果<strong>不是因为exec</strong>，内核会给子进程的数据段、堆栈段分配相应的物理空间（至此两者有各自的进程空间，互不影响），而<strong>代码段继续共享父进程的物理空间</strong>（两者的代码完全相同）。</p>
-<p>如果<strong>是因为exec</strong>，由于两者<strong>执行的代码不同</strong>，子进程的代码段也会分配单独的物理空间。</p>
-<p>fork时子进程获得父进程<strong>数据空间、堆和栈的复制，所以变量的地址是一样的。</strong></p>
-<p>fork子进程完全复制父进程的栈空间，也复制了页表，<strong>但没有复制物理页面</strong>，所以这时<strong>虚拟地址相同，物理地址也相同</strong>，但是会把父子共享的页面标记为“<strong>只读</strong>”（类似mmap的private的方式），如果父子进程一直对这个页面是同一个页面，知道其中<strong>任何一个进程要对共享的页面“写操作”</strong>，这时<strong>内核会复制一个物理页面给这个进程使用，同时修改页表。而把原来的只读页面标记为“可写”，留给另外一个进程使用</strong>。</p>
-<p>这就是所谓的“<strong>写时复制</strong>”。正因为fork采用了这种写时复制的机制，所以fork出来子进程之后，父子进程哪个先调度呢？内核一般会先调度子进程，因为很多情况下子进程是要马上执行exec，会清空栈、堆。这些和父进程共享的空间，加载新的代码段，这就避免了“写时复制”拷贝共享页面的机会。<strong>如果父进程先调度很可能写共享页面，会产生“写时复制”的无用功。</strong></p>
-<p>在理解时，你可以认为fork后，这两个相同的虚拟地址指向的是不同的物理地址，这样方便理解父子进程之间的独立性</p>
-<h4 id="写时复制"><a href="#写时复制" class="headerlink" title="写时复制"></a>写时复制</h4><p>但实际上，linux为了提高 fork 的效率，采用了 <strong>copy-on-write</strong> 技术，fork后，这两个虚拟地址实际上指向相同的物理地址（内存页），只有任何一个进程试图修改这个虚拟地址里的内容前，两个虚拟地址才会指向不同的物理地址（新的物理地址的内容从原物理地址中复制得到）。</p>
-]]></content>
-      <categories>
-        <category>操作系统</category>
-      </categories>
-      <tags>
-        <tag>概念</tag>
       </tags>
   </entry>
   <entry>
