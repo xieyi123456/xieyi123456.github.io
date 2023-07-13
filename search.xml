@@ -1,109 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Java基础-Java集合框架</title>
-    <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/</url>
-    <content><![CDATA[<h2 id="集合框架"><a href="#集合框架" class="headerlink" title="集合框架"></a>集合框架</h2><p><img src="https://i.loli.net/2021/08/04/6xejDEtAQKSRpwv.png" alt="image-20210804212935827"></p>
-<p><img src="https://i.loli.net/2021/08/04/leZ9CILv4hTbsYz.png" alt="image-20210804213053882"></p>
-<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p>在 JDK 1.8，HashMap 底层是由 “数组+链表+红黑树” 组成，如下图所示，而在 JDK 1.8 之前是由 “数组+链表” 组成。</p>
-<p>使用 “数组+链表” 是为了解决 hash 冲突的问题。</p>
-<p>数组和链表有如下特点：</p>
-<p>数组：查找容易，通过 index 快速定位；插入和删除困难，需要移动插入和删除位置之后的节点；<br>链表：查找困难，需要从头结点或尾节点开始遍历，直到寻找到目标节点；插入和删除容易，只需修改目标节点前后节点的 next 或 prev 属性即可；</p>
-<p>HashMap 巧妙的将数组和链表结合在一起，发挥两者各自的优势，使用一种叫做 “拉链法” 的方式来解决哈希冲突。<br>首先通过 index 快速定位到索引位置，这边利用了数组的优点；然后遍历链表找到节点，进行节点的新增&#x2F;修改&#x2F;删除操作，这边利用了链表的优点。</p>
-<h3 id="为什么要改成“数组-链表-红黑树”？"><a href="#为什么要改成“数组-链表-红黑树”？" class="headerlink" title="为什么要改成“数组+链表+红黑树”？"></a>为什么要改成“数组+链表+红黑树”？</h3><p>“数组+链表” 在定位到索引位置后，需要先遍历链表找到节点，这个地方如果链表很长的话，也就是 hash 冲突很严重的时候，会有查找性能问题，因此在 JDK1.8 中，通过引入红黑树，来优化这个问题。<br>使用链表的查找性能是 O(n)，而使用红黑树是 O(logn)。</p>
-<h3 id="那在什么时候用链表？什么时候用红黑树？"><a href="#那在什么时候用链表？什么时候用红黑树？" class="headerlink" title="那在什么时候用链表？什么时候用红黑树？"></a>那在什么时候用链表？什么时候用红黑树？</h3><p>对于插入，默认情况下是使用链表节点。当同一个索引位置的节点在新增后超过 8 个（阈值 8）：如果此时数组长度大于等于 64，则会触发链表节点转红黑树节点（treeifyBin）；而如果数组长度小于 64，则不会触发链表转红黑树，而是会进行扩容，因为此时的数据量还比较小。</p>
-<p>对于移除，当同一个索引位置的节点在移除后<strong>达到 6 个（阈值 6）</strong>，并且该索引位置的节点为红黑树节点，会触发红黑树节点转链表节点（untreeify）。</p>
-<h3 id="为什么链表转红黑树的阈值是-8？"><a href="#为什么链表转红黑树的阈值是-8？" class="headerlink" title="为什么链表转红黑树的阈值是 8？"></a>为什么链表转红黑树的阈值是 8？</h3><p>我们平时在进行方案设计时，必须考虑的两个很重要的因素是：时间和空间。对于 HashMap 也是同样的道理，简单来说，阈值为 8 是在时间和空间上权衡的结果。</p>
-<p>红黑树节点大小约为链表节点的 2 倍，在节点太少时，红黑树的查找性能优势并不明显，付出 2 倍空间的代价不值得。</p>
-<p>理想情况下，使用随机的哈希码，节点分布在 hash 桶中的频率遵循泊松分布，按照泊松分布的公式计算，链表中<strong>节点个数为 8 时的概率</strong>为 0.00000006，这个概率足够低了，并且到 8 个节点时，红黑树的性能优势也会开始展现出来，因此 8 是一个较合理的数字。</p>
-<h3 id="那为什么转回链表节点是用的-6-而不是复用-8？"><a href="#那为什么转回链表节点是用的-6-而不是复用-8？" class="headerlink" title="那为什么转回链表节点是用的 6 而不是复用 8？"></a>那为什么转回链表节点是用的 6 而不是复用 8？</h3><p>如果我们设置节点多于 8 个转红黑树，少于 8 个就马上转链表，<strong>当节点个数在 8 徘徊时，就会频繁进行红黑树和链表的转换，造成性能的损耗。</strong></p>
-<h3 id="HashMap-有哪些重要属性？分别用于做什么的？"><a href="#HashMap-有哪些重要属性？分别用于做什么的？" class="headerlink" title="HashMap 有哪些重要属性？分别用于做什么的？"></a>HashMap 有哪些重要属性？分别用于做什么的？</h3><p>除了用来存储我们的节点 table 数组外，HashMap 还有以下几个重要属性：<br>1）size：HashMap 已经存储的节点个数；<br>2）<strong>threshold</strong>：1）扩容阈值（主要），当 HashMap 的个数达到该值，触发扩容。2）初始化时的容量，在我们新建HashMap 对象时， threshold 还会被用来存初始化时的容量。HashMap 直到我们第一次插入节点时，才会对 table进行初始化，避免不必要的空间浪费。<br>3）<strong>loadFactor</strong>：负载因子，扩容阈值 &#x3D; 容量 * 负载因子。</p>
-<h3 id="HashMap-的默认初始容量是多少？HashMap-的容量有什么限制吗？"><a href="#HashMap-的默认初始容量是多少？HashMap-的容量有什么限制吗？" class="headerlink" title="HashMap 的默认初始容量是多少？HashMap 的容量有什么限制吗？"></a>HashMap 的默认初始容量是多少？HashMap 的容量有什么限制吗？</h3><p>默认初始容量是 16。HashMap 的容量必须是 2 的 N 次方，HashMap 会根据我们传入的容量计算一个“大于等于该容量的最小的 2 的 N 次方”，例如传 16，容量为 16；传 17，容量为 32。</p>
-<h3 id="HashMap-的容量必须是-2-的-N-次方，这是为什么？"><a href="#HashMap-的容量必须是-2-的-N-次方，这是为什么？" class="headerlink" title="HashMap 的容量必须是 2 的 N 次方，这是为什么？"></a>HashMap 的容量必须是 2 的 N 次方，这是为什么？</h3><p>计算索引位置的公式为：**(n - 1) &amp; hash**</p>
-<p>当 n 为 2 的 N 次方时，n - 1 为低位全是 1 的值，此时任何值跟 n - 1 进行 &amp; 运算的结果为该值的低 N 位，达到了和取模同样的效果，实现了均匀分布。</p>
-<p>实际上，这个设计就是基于式：<br><strong>x mod 2^n &#x3D; x &amp; (2^n - 1)，因为 &amp; 运算比 mod 具有更高的效率。</strong></p>
-<h3 id="插入流程"><a href="#插入流程" class="headerlink" title="插入流程"></a>插入流程</h3><p><img src="https://i.loli.net/2021/08/04/CDL1MPFjsV5k9Tw.png" alt="image-20210804211704324"></p>
-<h3 id="ConcurrenHashMap，1-7-和-1-8-的区别"><a href="#ConcurrenHashMap，1-7-和-1-8-的区别" class="headerlink" title="ConcurrenHashMap，1.7 和 1.8 的区别"></a>ConcurrenHashMap，1.7 和 1.8 的区别</h3><p>ConcurrentHashMap 是 HashMap 的线程安全版本，和 HashMap 一样，在 JDK 1.8 中进行了较大的优化。</p>
-<p>JDK1.7：底层结构为：分段的数组+链表；实现线程安全的方式：分段锁（Segment，继承ReentrantLock），</p>
-<p><img src="https://i.loli.net/2021/08/04/FliNj7RXtm2oSv5.png" alt="image-20210804212122257"></p>
-<p>JDK1.8：底层结构为：数组+链表+红黑树；实现线程安全的方式：CAS + Synchronized，synchronized只会锁定当前链表或者红黑树的首节点。效率大大提高。</p>
-<p><img src="https://i.loli.net/2021/08/04/uMemQzWqZdTXxK1.png" alt="image-20210804212314272"></p>
-<p><strong>区别：</strong></p>
-<p>1、JDK1.8 中降低锁的粒度。JDK1.7 版本锁的粒度是基于 Segment 的，包含多个节点（HashEntry），而 JDK1.8 锁的粒度就是单节点（Node）。</p>
-<p>2、JDK1.8 版本的数据结构变得更加简单，使得操作也更加清晰流畅，因为已经使用 synchronized 来进行同步，所以不需要分段锁的概念，也就不需要 Segment 这种数据结构了，当前还保留仅为了兼容。</p>
-<p>3、JDK1.8 使用红黑树来优化链表，跟 HashMap 一样，优化了极端情况下，链表过长带来的性能问题。</p>
-<p>4、JDK1.8 使用内置锁 synchronized 来代替重入锁 ReentrantLock，synchronized 是官方一直在不断优化的，现在性能已经比较可观，也是官方推荐使用的加锁方式</p>
-<h3 id="map对比？"><a href="#map对比？" class="headerlink" title="map对比？"></a>map对比？</h3><p><img src="https://i.loli.net/2021/08/04/jIZsbOmcCagN18q.png" alt="image-20210804212504959"></p>
-<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><h3 id="ArrayList-和-Vector-的区别"><a href="#ArrayList-和-Vector-的区别" class="headerlink" title="ArrayList 和 Vector 的区别"></a>ArrayList 和 Vector 的区别</h3><p>Vector 和 ArrayList 的实现几乎是一样的，区别在于：</p>
-<p>1）最重要的的区别：Vector 在方法上使用了 synchronized 来保证线程安全，同时由于这个原因，在性能上 ArrayList会有更好的表现。</p>
-<p>2） Vector 扩容后容量默认变为原来 2 倍，而 ArrayList 为原来的 1.5 倍。</p>
-<h3 id="ArrayList-和-LinkedList-的区别？"><a href="#ArrayList-和-LinkedList-的区别？" class="headerlink" title="ArrayList 和 LinkedList 的区别？"></a>ArrayList 和 LinkedList 的区别？</h3><h4 id="arraylist扩容"><a href="#arraylist扩容" class="headerlink" title="arraylist扩容"></a>arraylist扩容</h4><p>第一种情况，当ArrayList的容量为0时，此时添加元素的话，需要扩容，三种构造方法创建的ArrayList在扩容时略有不同：</p>
-<p>1.无参构造，创建ArrayList后容量为0，添加第一个元素后，<strong>容量变为10</strong>，此后若需要扩容，则正常扩容。</p>
-<p>2.传容量构造，当参数为0时，创建ArrayList后容量为0，添加第一个元素后，容量为1，此时ArrayList是满的，下次添加元素时需正常扩容。</p>
-<p>3.传列表构造，当列表为空时，创建ArrayList后容量为0，添加第一个元素后，容量为1，此时ArrayList是满的，下次添加元素时需正常扩容。</p>
-<p>第二种情况，当ArrayList的容量大于0，并且ArrayList是满的时，此时添加元素的话，进行正常扩容，每次扩容<strong>到原来的1.5倍。</strong></p>
-<p>1、ArrayList 底层基于<strong>动态数组</strong>实现，LinkedList 底层基于<strong>双向链表</strong>实现。</p>
-<p>2、对于<strong>随机访问（按 index 访问，get&#x2F;set 方法）</strong>：ArrayList 通过 index 直接定位到数组对应位置的节点，而 LinkedList需要从头结点或尾节点开始遍历，直到寻找到目标节点，<strong>在效率上 ArrayList 优于 LinkedList</strong>。</p>
-<p>3、对于<strong>随机插入和删除</strong>：ArrayList 需要移动目标节点后面的节点（使用 System.arraycopy 方法移动节点），而LinkedList 只需修改目标节点前后节点的 next 或 prev 属性即可，因此在效率上 LinkedList 优于 ArrayList。</p>
-<p>4、对于<strong>顺序插入和删除：由于 ArrayList 不需要移动节点，因此在效率上比 LinkedList 更好</strong>。这也是为什么在实际使用中 ArrayList 更多，因为<strong>大部分情况下我们的使用都是顺序插入。</strong></p>
-<p>5、两者都不是线程安全的。</p>
-<p>6、内存空间占用： ArrayList 的空 间浪费主要体现在在 list 列表的结尾会<strong>预留一定的容量空间</strong>，而 LinkedList 的空间花费则体现在它的每一个元素都需要消耗比 ArrayList 更多的空间（因为要存放直接后继和直接前驱以及数据）。</p>
-<h3 id="hashmap对比hashtable"><a href="#hashmap对比hashtable" class="headerlink" title="hashmap对比hashtable"></a>hashmap对比hashtable</h3><p>线程安全：hashmap不安全，hashtable安全（方法被synchronized修饰过）。</p>
-<p>效率：hashtable效率很低，被淘汰。</p>
-<p>null key value？：hashmap支持一个null key。hashtable不支持。</p>
-<p>扩容：hashtable初始：不指定的话为11，之后变为原来的2n+1。hashmap初始16，每次扩充两倍。hashmap在指定了初始容量后会扩充为2的幂次大小。</p>
-<p>底层：解决hash冲突，hashmap在链表大于8会转化成红黑树（如果数组长度小于64，会先进性扩容）。</p>
-<h3 id="List、Set、Map-三者的区别"><a href="#List、Set、Map-三者的区别" class="headerlink" title="List、Set、Map 三者的区别?"></a>List、Set、Map 三者的区别?</h3><p>List（对付<strong>顺序</strong>的好帮手）： 存储的对象是可重复的、有序的。<br>Set（注重<strong>独一无二</strong>的性质）：存储的对象是不可重复的、无序的。<br>Map（<strong>用 Key 来搜索的专业户</strong>）: 存储键值对（key-value），不能包含重复的键（key），每个键只能映射到一个值</p>
-<h3 id="map遍历方式："><a href="#map遍历方式：" class="headerlink" title="map遍历方式："></a>map遍历方式：</h3><p>HashMap 遍历从大的方向来说，可分为以下 4 类：</p>
-<p><strong>迭代器（Iterator）方式遍历；</strong></p>
-<p><strong>For Each 方式遍历；</strong></p>
-<p><strong>Lambda 表达式遍历（JDK 1.8+）;</strong></p>
-<p><strong>Streams API 遍历（JDK 1.8+）。</strong></p>
-<p>使用迭代器（Iterator）<strong>EntrySet</strong> 的方式进行遍历；</p>
-<p>使用迭代器（Iterator）<strong>KeySet</strong> 的方式进行遍历；</p>
-<p>使用 For Each <strong>EntrySet</strong> 的方式进行遍历；</p>
-<p>使用 For Each <strong>KeySet</strong> 的方式进行遍历；</p>
-<p>使用 Lambda 表达式的方式进行遍历；</p>
-<p>使用 Streams API <strong>单线程</strong>的方式进行遍历；</p>
-<p>使用 Streams API <strong>多线程</strong>的方式进行遍历</p>
-<p><img src="https://i.loli.net/2021/08/05/ZP9ot578UVrd2RN.png" alt="计算机生成了可选文字: Iterator(Map. Entry(Integer, Strlng»  (iterator.hasNext()) {  Map. Strlng) entry  ma p ． entrySet() ． iterator();  iterator ． n 巳 〔 ） ；  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
-<p><img src="https://i.loli.net/2021/08/05/jNw9YtiOlCLV2Bf.png" alt="计算机生成了可选文字: map.keyset().iterator();  Iterator(Integer) Iterator  (iterator.hasNext()) {  Integer key  iterator ． n 巳 〔 ） ；  Sysæn. out ． println(key);  Sysæn. out.println(map• get 〔 k ey ） ); "></p>
-<p><img src="https://i.loli.net/2021/08/05/7qwG2cHSj514gf3.png" alt="计算机生成了可选文字: (Map.Entry(lnteger, String) entry ： ma p ． entrySet()) {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
-<p><img src="https://i.loli.net/2021/08/05/qfBMmXg3ljFUEko.png" alt="计算机生成了可选文字: 〔 Integer key ： map.keySet()) {  Sysæn. out ． println(key);  Sysæn. out.println(map• get 〔 k ey ） ); "></p>
-<p><img src="https://i.loli.net/2021/08/05/hrf2daRyeQqODsx.png" alt="计算机生成了可选文字: map.forEach((key, value) 一 》 {  Sysæn. out ． println(key);  Sysæn. out ． println(ualue) ； "></p>
-<p><img src="https://i.loli.net/2021/08/05/oKvs6jBOxzQUZhJ.png" alt="计算机生成了可选文字: ma p ． entrySet().stream(). forEach((entry) 一 》 {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
-<p><img src="https://i.loli.net/2021/08/05/KMzILTYf1nwu8ci.png" alt="计算机生成了可选文字: ma p ． entrySet().para11e1Stream(). forEach((entry) 一 》 {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
-<p><strong>EntrySet</strong> 之所以比 <strong>KeySet</strong> 的性能高是因为，**KeySet 在循环时使用了 map.get(key)**，而 map.get(key) 相当于又遍历了一遍 Map 集合去查询 key 所对应的值。为什么要用“又”这个词？那是因为在使用迭代器或者 for 循环时，其实已经遍历了一遍 Map 集合了，因此再使用 map.get(key) 查询时，相当于遍历了两遍。</p>
-<p>而 <strong>EntrySet</strong> 只遍历了一遍 Map 集合，之后通过代码“Entry&lt;Integer, String&gt; entry &#x3D; iterator.next()”把对象的 key 和 value 值都放入到了 Entry 对象中，因此再获取 key 和 value 值时就无需再遍历 Map 集合，只需要从 Entry 对象中取值就可以了。</p>
-<p>所以，<strong>EntrySet 的性能比 KeySet 的性能高出了一倍</strong>，因为 KeySet 相当于循环了两遍 Map 集合，而 EntrySet 只循环了一遍。</p>
-<p>我们不能在<strong>遍历中使用</strong>集合 map.remove() 来删除数据，这是非安全的操作方式，但我们可以使用迭代器的 <strong>iterator.remove() 的方法来删除数据</strong>，这是安全的删除集合的方式。</p>
-<p>同样的我们也可以使用 Lambda 中的 removeIf 来提前删除数据，或者是使用 Stream 中的 filter 过滤掉要删除的数据进行循环，这样都是安全的，当然我们也可以在 for 循环前删除数据在遍历也是线程安全的。</p>
-<p>综合性能和安全性来看，我们应该尽量使用<strong>迭代器（Iterator）来遍历 EntrySet 的遍历方式来操作 Map 集合</strong>，这样就会既安全又高效。</p>
-<h3 id="Comparable-和-Comparator-比较？"><a href="#Comparable-和-Comparator-比较？" class="headerlink" title="Comparable 和 Comparator 比较？"></a>Comparable 和 Comparator 比较？</h3><p>1、Comparable 是<strong>排序接口</strong>，一个类实现了 Comparable 接口，意味着“该类支持排序”。Comparator 是<strong>比较器，我们可以实现该接口，自定义比较算法，创建一个 “该类的比较器” 来进行排序</strong>。</p>
-<p>2、Comparable 相当于“内部比较器”，而 Comparator 相当于“外部比较器”。</p>
-<p>3、Comparable 的耦合性更强，<strong>Comparator 的灵活性和扩展性更优。</strong></p>
-<p>4、Comparable 可以用作类的默认排序方法，而 Comparator 则用于默认排序不满足时，提供自定义排序</p>
-<h3 id="Collection-与-Collections-的区别"><a href="#Collection-与-Collections-的区别" class="headerlink" title="Collection 与 Collections 的区别"></a>Collection 与 Collections 的区别</h3><p>Collection：<strong>集合类的一个顶级接口</strong>，提供了对集合对象进行基本操作的通用接口方法。Collection 接口的意义是为各种具体的集合提供了最大化的统一操作方式，常见的 List 与 Set 就是直接继承 Collection 接口。</p>
-<p>Collections：<strong>集合类的一个工具类&#x2F;帮助类</strong>，提供了一系列静态方法，用于对集合中元素进行排序、搜索以及线程安全等各种操作</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="HashSet-是如何保证不重复的？"><a href="#HashSet-是如何保证不重复的？" class="headerlink" title="HashSet 是如何保证不重复的？"></a>HashSet 是如何保证不重复的？</h3><p>HashSet 底层使用 <strong>HashMap</strong> 来实现，元素放在 HashMap 的 key 里，value 为固定的 Object 对象。</p>
-<p>当 add 时调用 HashMap 的 put 方法，如果元素不存在，则返回 null 表示 add 成功，否则 add 失败。</p>
-<p>由于 HashMap 的 Key 值本身就不允许重复，HashSet 正好利用 HashMap 中 key 不重复的特性来校验重复元素。<img src="https://i.loli.net/2021/08/04/I2VuKypq5o7xWrd.png" alt="image-20210804213228204"></p>
-<h3 id="Map、List、Set-它们有的线程安全类和线程不安全的类？"><a href="#Map、List、Set-它们有的线程安全类和线程不安全的类？" class="headerlink" title="Map、List、Set 它们有的线程安全类和线程不安全的类？"></a>Map、List、Set 它们有的线程安全类和线程不安全的类？</h3><p><strong>Map</strong></p>
-<p>线程安全：<strong>CocurrentHashMap、Hashtable</strong><br>线程不安全：HashMap、LinkedHashMap、TreeMap、WeakHashMap</p>
-<p><strong>List</strong></p>
-<p>线程安全<strong>：Vector（线程安全版的 ArrayList）、Stack（继承 Vector，增加 pop、push 方法）、CopyOnWriteArrayList</strong><br>线程不安全：ArrayList、LinkedList</p>
-<p><strong>Set</strong></p>
-<p><strong>线程安全：CopyOnWriteArraySet（底层使用 CopyOnWriteArrayList，通过在插入前判断是否存在实现 Set 不重复的效果</strong></p>
-<p>线程不安全：HashSet（基于 HashMap）、LinkedHashSet（基于 LinkedHashMap）、TreeSet（基于 TreeMap）、EnumSe</p>
-]]></content>
-      <categories>
-        <category>Java基础</category>
-      </categories>
-      <tags>
-        <tag>框架</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java基础-常见问题</title>
     <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h3 id="Java对象判空？"><a href="#Java对象判空？" class="headerlink" title="Java对象判空？"></a>Java对象判空？</h3><p>null：一个对象如果有可能是null的话，首先要做的就是判断是否为null：object &#x3D;&#x3D; null，否则就有可能会出现空指针异常，这个通常是我们在进行数据库的查询操作时，查询结果首先用object !&#x3D; null，进行非空判断，然后再进行其他的业务逻辑，这样可以避免出现空指针异常。</p>
@@ -344,71 +241,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java并发-常见关键字</title>
-    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/</url>
-    <content><![CDATA[<h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p>见《线程安全的机制》</p>
-<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。</p>
-<p>CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。</p>
-<p>CAS虽然很高效的解决了原子操作问题，但是CAS仍然存在三大问题。</p>
-<p><strong>循环时间长开销很大。</strong><br><strong>只能保证一个共享变量的原子操作。</strong><br><strong>ABA问题。</strong></p>
-<p><strong>如果CAS失败，会一直进行尝试</strong>。如果CAS长时间一直不成功，可能会给CPU带来很大的开销。</p>
-<p>当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候就可以用锁来保证原子性。</p>
-<p>如果值曾经被改成了B，后来又被改回为A，那CAS操作就会误认为它从来没有被改变过。这个漏洞称为CAS操作的“ABA”问题。</p>
-<p>Java并发包为了解决这个问题，提供了一个<strong>带有标记的原子引用类“AtomicStampedReference”，</strong>它可以通过<strong>控制变量值的版本</strong>来保证CAS的正确性。因此，在使用CAS前要考虑清楚“ABA”问题是否会影响程序并发的正确性，如果需要解决ABA问题，改用传统的互斥同步可能会比原子类更高效。</p>
-<h3 id="AQS-抽象队列同步器"><a href="#AQS-抽象队列同步器" class="headerlink" title="AQS-抽象队列同步器"></a>AQS-抽象队列同步器</h3><p><img src="https://i.loli.net/2021/08/03/ovkD8F5rExbgpBq.png" alt="image-20210803192200462"></p>
-<p><strong>AQS 核心思想是，</strong>如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设置为锁定状态。<strong>如果被请求的共享资源被占用</strong>，那么就需要一套线程阻塞等待以及被唤醒时锁分配的机制，这个机制 AQS 是用 <strong>CLH 队列锁</strong>实现的，即将暂时获取不到锁的线程加入到队列中。</p>
-<p>CLH(Craig,Landin,and Hagersten)队列是一个<strong>虚拟的双向队列</strong>（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将<strong>每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点</strong>（Node）来实现锁的分配。</p>
-<p><img src="https://i.loli.net/2021/08/05/FMUxJCKm7Gkn8Hv.png" alt="image-20210805140155989"></p>
-<p>AQS 使用一个 int 成员变量来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。</p>
-<h4 id="节点状态"><a href="#节点状态" class="headerlink" title="节点状态"></a>节点状态</h4><p>nt waitStatus：</p>
-<p>1、<strong>CANCELLED</strong>，值为1 。场景：当该线程<strong>等待超时或者被中断，需要从同步队列中取消等待</strong>，则该线程被置1，即被取消（这里该线程在取消之前是等待状态）。节点进入了取消状态则不再变化；</p>
-<p>2、<strong>SIGNAL</strong>，值为-1。场景：<strong>后继的节点处于等待状态</strong>，当前节点的线程如果释放了同步状态或者被取消（当前节点状态置为-1），将会通知后继节点，使后继节点的线程得以运行；</p>
-<p>3、<strong>CONDITION</strong>，值为-2。场景：<strong>节点处于等待队列中，节点线程等待在Condition上，</strong>当其他线程对Condition调用了signal()方法后，该节点从等待队列中转移到同步队列中，加入到对同步状态的获取中；</p>
-<p>4、<strong>PROPAGATE</strong>，值为-3。场景：表示<strong>下一次的共享状态会被无条件的传播下去</strong>；</p>
-<p>5、<strong>INITIAL</strong>，值为0，初始状态。</p>
-<h4 id="AQS-对资源的共享方式"><a href="#AQS-对资源的共享方式" class="headerlink" title="AQS 对资源的共享方式"></a>AQS 对资源的共享方式</h4><p><strong>AQS 定义两种资源共享方式</strong></p>
-<h5 id="Exclusive（独占）"><a href="#Exclusive（独占）" class="headerlink" title="Exclusive（独占）"></a>Exclusive（独占）</h5><p><strong>只有一个线程能执行</strong>，如 ReentrantLock。又可分为公平锁和非公平锁，ReentrantLock 同时支持两种锁，下面以 ReentrantLock 对这两种锁的定义做介绍：</p>
-<p>公平锁 ：<strong>按照线程在队列中的排队顺序，先到者先拿到锁</strong><br>非公平锁 ：当线程要获取锁时，先通过<strong>两次 CAS 操作去抢锁</strong>，如果没抢到，当前线程再加入到队列中等待唤醒。</p>
-<p>ReentrantLock 默认采用<strong>非公平锁</strong>，<strong>因为考虑获得更好的性能</strong>，通过 boolean 来决定是否用公平锁（传入 true 用公平锁）。</p>
-<p>非公平锁在<strong>调用 lock</strong> 后，首先就会调用 CAS 进行一次抢锁，如果这个时候恰巧锁没有被占用，那么直接就获取到锁返回了。<br>非公平锁<strong>在 CAS 失败后</strong>，和公平锁一样都会进入到 <strong>tryAcquire 方法</strong>，在 tryAcquire 方法中，如果发现锁这个时候被释放了（state &#x3D;&#x3D; 0），<strong>非公平锁会直接 CAS 抢锁</strong>，<strong>但是公平锁会判断等待队列是否有线程处于等待状态，如果有则不去抢锁，乖乖排到后面。</strong></p>
-<p>公平锁和非公平锁就这两点区别，<strong>如果这两次 CAS 都不成功，那么后面非公平锁和公平锁是一样的，都要进入到阻塞队列等待唤醒。</strong></p>
-<p>相对来说，<strong>非公平锁会有更好的性能，因为它的吞吐量比较大</strong>。当然，非公平锁让获取锁的时间变得更加不确定，可能会导致在阻塞队列中的线程长期处于饥饿状态。</p>
-<h5 id="Share（共享）"><a href="#Share（共享）" class="headerlink" title="Share（共享）"></a>Share（共享）</h5><p>多个线程可同时执行，如Semaphore、CountDownLatCh、 CyclicBarrier、ReadWriteLock 。</p>
-<p>ReentrantReadWriteLock 可以看成是组合式，因为 ReentrantReadWriteLock 也就是读写锁允许多个线程同时对某一资源进行读。</p>
-<p>不同的<strong>自定义同步器</strong>争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队&#x2F;唤醒出队等），AQS 已经在上层已经帮我们实现好了。</p>
-<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><p>Java实现锁有两种语法<strong>，一种是synchronized语句，另外一种是reentrantlock关键字</strong>。</p>
-<h4 id="公平锁-x2F-非公平锁"><a href="#公平锁-x2F-非公平锁" class="headerlink" title="公平锁&#x2F;非公平锁"></a>公平锁&#x2F;非公平锁</h4><p>公平锁指<strong>多个线程按照申请锁的顺序获得锁。</strong></p>
-<p>非公平锁指多个线程获得锁的顺序不按照申请顺序。</p>
-<p>Java reentranthlock通过构造函数来指定锁是公平还是非公平，默认是非公平锁，对于synchronized而言，也是一种非公平锁。</p>
-<p><strong>非公平锁优点在于吞吐量比公平锁大。</strong></p>
-<h4 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h4><p>可重入锁又叫递归锁，是指同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。</p>
-<p>Synchronized也是一个可重入锁。</p>
-<p>可重入锁的优点是可以一定程度避免死锁。</p>
-<h4 id="独享锁-x2F-共享锁"><a href="#独享锁-x2F-共享锁" class="headerlink" title="独享锁&#x2F;共享锁"></a>独享锁&#x2F;共享锁</h4><p>独享锁是指该锁一次只能被一个线程所持有，共享锁可以被多个线程所持有。</p>
-<p>Java reentrantlock是一个独享锁，但是对于lock的另一个实现readwritelock，其读锁是一个共享锁，写锁是一个独享锁。</p>
-<p>对于synchronized是一个独享锁。</p>
-<h4 id="互斥锁-x2F-读写锁"><a href="#互斥锁-x2F-读写锁" class="headerlink" title="互斥锁&#x2F;读写锁"></a>互斥锁&#x2F;读写锁</h4><p>互斥锁在Java中具体实现就是reentrantlock。</p>
-<p>读写锁在Java中的具体实现就是readwritelock。</p>
-<h4 id="乐观锁-x2F-悲观锁"><a href="#乐观锁-x2F-悲观锁" class="headerlink" title="乐观锁&#x2F;悲观锁"></a>乐观锁&#x2F;悲观锁</h4><p>乐观锁和悲观锁不是指具体的锁类型，而是对于看待并发编程中加锁问题的角度。</p>
-<p>悲观锁认为，对于一个数据的并发操作，一定会改变数据，即使实际上数据没被改变，但是也悲观的认为被改变的可能性比较大，一定要加锁，不加锁早晚要出问题。</p>
-<p>乐观锁认为，对于一个数据的并发操作，是不会改变数据的，不加锁也不会出问题。</p>
-<p>乐观锁指java中的无所编程，适合读操作非常多的场景。</p>
-<p>悲观锁就是指java中，适合并发下写非常多的场景。</p>
-<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p>在java中，自旋锁是指尝试获取锁的线程不会立即阻塞，<strong>而是采用循环的方式去尝试获取锁</strong>，当循环条件被其他线程改变时，才能进入临界区。这样的好处是减少线程上下文切换的消耗，<strong>缺点是会消耗CPU。</strong></p>
-<p>由于自旋锁只是将当前线程不停地执行循环体，不进行线程状态的改变，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，占用CPU时间。<strong>如果线程竞争不激烈，并且保持锁的时间段。适合使用自旋锁。</strong></p>
-<h4 id="偏向锁-x2F-轻量级锁-x2F-重量级锁"><a href="#偏向锁-x2F-轻量级锁-x2F-重量级锁" class="headerlink" title="偏向锁&#x2F;轻量级锁&#x2F;重量级锁"></a>偏向锁&#x2F;轻量级锁&#x2F;重量级锁</h4><p>这三种锁，就是指锁的状态，针对synchronized。</p>
-<p>偏向锁是<strong>指一段代码一直被一个线程所访问</strong>，那么理论上，这个线程会自动获取这个锁，并一直拥有这个锁，这样就降低了获取锁的代价。</p>
-<p>轻量级锁是指当偏向锁的状态下，<strong>被另一个线程访问</strong>，偏向锁就会升级为<strong>轻量级锁</strong>，其他线程会通过自旋形式尝试获取锁，不会阻塞，提高效率。</p>
-<p>重量级锁是指在轻量级锁的状态下，<strong>另一个线程虽然自旋</strong>，但不会一直持续下去，当自旋一定次数的时候还没有获取到锁的话，<strong>就会进入阻塞</strong>，该锁就会膨胀为重量级锁，重量级锁会让其他申请的线程陷入阻塞，降低性能。</p>
-]]></content>
-      <categories>
-        <category>Java并发</category>
-      </categories>
-      <tags>
-        <tag>关键字</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java并发-线程协作机制</title>
     <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%90%8C%E6%AD%A5%E5%92%8C%E5%8D%8F%E4%BD%9C%E5%B7%A5%E5%85%B7%E7%B1%BB/</url>
     <content><![CDATA[<h2 id="wait、notify"><a href="#wait、notify" class="headerlink" title="wait、notify"></a>wait、notify</h2><p>属于Object类中。</p>
@@ -459,6 +291,59 @@
       </categories>
       <tags>
         <tag>工具类</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java并发-并发容器</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="同步容器"><a href="#同步容器" class="headerlink" title="同步容器"></a>同步容器</h2><h3 id="collections中有一些方法："><a href="#collections中有一些方法：" class="headerlink" title="collections中有一些方法："></a>collections中有一些方法：</h3><p>synchronizedlist：</p>
+<p>synchronizedmap：</p>
+<p>synchronizedcollection：</p>
+<p>在遍历时容器发生了结构性变化，会报错。</p>
+<h2 id="写时复制的的List和Set"><a href="#写时复制的的List和Set" class="headerlink" title="写时复制的的List和Set"></a>写时复制的的List和Set</h2><p>copyonwritearraylist</p>
+<p>copyonwritearrayset</p>
+<p>线程安全</p>
+<p>迭代器不支持修改</p>
+<p>每次修改时都会新建一个数组，复制进去。读都会访问原来的数组。</p>
+<p>基于reentrantlock实现</p>
+<p>不适合大数组</p>
+<p><strong>适合大部分访问都是读的情况</strong></p>
+<h2 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h2><p>jdk以前concurrenthashmap是分段的数组+链表实现。<br>实现线程安全的方式：</p>
+<p>1，在 JDK1.7 的时候， ConcurrentHashMap （分段锁）对整个桶数组进⾏了分割分段，每⼀把锁只锁容器其中⼀部分数据，<strong>多线程访问容器⾥不同数据段的数据，就不会存在锁竞争，提⾼并发访问率</strong>。<br>一个concurrenthashmap里面包含一个segment数组。一个segment包含一个hashentry数组。</p>
+<p>核心：</p>
+<p><strong>分段锁</strong></p>
+<p><strong>读不需要锁</strong></p>
+<p><img src="https://i.loli.net/2021/08/03/BJEfHT8bwkLeaMh.png" alt="image-20210803181948397"></p>
+<p> 2，JDK1.8 的时候已经摒弃了 Segment 的概念，⽽是直接⽤ <strong>Node 数组+链表&#x2F;红⿊树</strong>的数据结构来实现，并发控制使⽤ synchronized 和 CAS 来操作。<br>synchronized只会锁定当前链表或者红黑树的首节点。效率大大提高。</p>
+<h3 id="迭代器弱一致性？"><a href="#迭代器弱一致性？" class="headerlink" title="迭代器弱一致性？"></a>迭代器弱一致性？</h3><p>遍历时，内部元素变化发生在已经遍历过的部分，不会体现出来。</p>
+<p><img src="https://i.loli.net/2021/08/03/zgxDwuEOSZrRkPV.png" alt="image-20210803182140097"></p>
+<p>3，hashtable是同一把锁，全表锁。</p>
+<h2 id="基于跳表的Map和Set"><a href="#基于跳表的Map和Set" class="headerlink" title="基于跳表的Map和Set"></a>基于跳表的Map和Set</h2><p>concurrentskiplistmap&#x3D;&#x3D;treemap</p>
+<p>concurrentskiplistset&#x3D;&#x3D;treeset</p>
+<p>跳表更加容易实现高效并发</p>
+<p>没有使用锁，所有的操作都可以并发</p>
+<p>他们的size（）方法复杂度为o（n），并且结果也不一定准确</p>
+<h3 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h3><p>基于链表+多层索引</p>
+<p>类似二分查找</p>
+<h2 id="并发队列"><a href="#并发队列" class="headerlink" title="并发队列"></a>并发队列</h2><p><strong>无锁非阻塞：不用锁，所有操作都可以立即执行，主要通过循环CAS实现并发安全。</strong></p>
+<p><strong>阻塞队列：使用锁和条件。很多操作都要获得锁或者满足条件再返回。不满足或者未获得锁就会阻塞。</strong></p>
+<p>都是弱一致性的。遍历时遍历过的内容改变了不会显示。</p>
+<h4 id="无锁非阻塞并发队列："><a href="#无锁非阻塞并发队列：" class="headerlink" title="无锁非阻塞并发队列："></a>无锁非阻塞并发队列：</h4><p>concurrentlinkedqueue</p>
+<p>cocurrentlinkeddeque</p>
+<p>基于链表，没有大小限制</p>
+<p>基于循环cas</p>
+<h4 id="普通阻塞队列："><a href="#普通阻塞队列：" class="headerlink" title="普通阻塞队列："></a>普通阻塞队列：</h4><p>都实现了接口blockingqueue，在入队出队时可能会等待。</p>
+<p><img src="https://i.loli.net/2021/08/03/T1prKxLjmhqob5s.png" alt="image-20210803184553784"></p>
+<p>arrayblockingqueue循环数组</p>
+<p>linkedblockingqueue单向链表</p>
+<p>都是使用显示锁reentrantlock和显示条件condition实现的</p>
+<h4 id="优先级阻塞队列："><a href="#优先级阻塞队列：" class="headerlink" title="优先级阻塞队列："></a>优先级阻塞队列：</h4><p>按照优先级出队。</p>
+<h4 id="延时阻塞队列："><a href="#延时阻塞队列：" class="headerlink" title="延时阻塞队列："></a>延时阻塞队列：</h4><h4 id="其他："><a href="#其他：" class="headerlink" title="其他："></a>其他：</h4>]]></content>
+      <categories>
+        <category>Java并发</category>
+      </categories>
+      <tags>
+        <tag>并发容器</tag>
       </tags>
   </entry>
   <entry>
@@ -542,6 +427,71 @@
       </categories>
       <tags>
         <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java并发-常见关键字</title>
+    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/</url>
+    <content><![CDATA[<h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p>见《线程安全的机制》</p>
+<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。</p>
+<p>CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。</p>
+<p>CAS虽然很高效的解决了原子操作问题，但是CAS仍然存在三大问题。</p>
+<p><strong>循环时间长开销很大。</strong><br><strong>只能保证一个共享变量的原子操作。</strong><br><strong>ABA问题。</strong></p>
+<p><strong>如果CAS失败，会一直进行尝试</strong>。如果CAS长时间一直不成功，可能会给CPU带来很大的开销。</p>
+<p>当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候就可以用锁来保证原子性。</p>
+<p>如果值曾经被改成了B，后来又被改回为A，那CAS操作就会误认为它从来没有被改变过。这个漏洞称为CAS操作的“ABA”问题。</p>
+<p>Java并发包为了解决这个问题，提供了一个<strong>带有标记的原子引用类“AtomicStampedReference”，</strong>它可以通过<strong>控制变量值的版本</strong>来保证CAS的正确性。因此，在使用CAS前要考虑清楚“ABA”问题是否会影响程序并发的正确性，如果需要解决ABA问题，改用传统的互斥同步可能会比原子类更高效。</p>
+<h3 id="AQS-抽象队列同步器"><a href="#AQS-抽象队列同步器" class="headerlink" title="AQS-抽象队列同步器"></a>AQS-抽象队列同步器</h3><p><img src="https://i.loli.net/2021/08/03/ovkD8F5rExbgpBq.png" alt="image-20210803192200462"></p>
+<p><strong>AQS 核心思想是，</strong>如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设置为锁定状态。<strong>如果被请求的共享资源被占用</strong>，那么就需要一套线程阻塞等待以及被唤醒时锁分配的机制，这个机制 AQS 是用 <strong>CLH 队列锁</strong>实现的，即将暂时获取不到锁的线程加入到队列中。</p>
+<p>CLH(Craig,Landin,and Hagersten)队列是一个<strong>虚拟的双向队列</strong>（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将<strong>每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点</strong>（Node）来实现锁的分配。</p>
+<p><img src="https://i.loli.net/2021/08/05/FMUxJCKm7Gkn8Hv.png" alt="image-20210805140155989"></p>
+<p>AQS 使用一个 int 成员变量来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。</p>
+<h4 id="节点状态"><a href="#节点状态" class="headerlink" title="节点状态"></a>节点状态</h4><p>nt waitStatus：</p>
+<p>1、<strong>CANCELLED</strong>，值为1 。场景：当该线程<strong>等待超时或者被中断，需要从同步队列中取消等待</strong>，则该线程被置1，即被取消（这里该线程在取消之前是等待状态）。节点进入了取消状态则不再变化；</p>
+<p>2、<strong>SIGNAL</strong>，值为-1。场景：<strong>后继的节点处于等待状态</strong>，当前节点的线程如果释放了同步状态或者被取消（当前节点状态置为-1），将会通知后继节点，使后继节点的线程得以运行；</p>
+<p>3、<strong>CONDITION</strong>，值为-2。场景：<strong>节点处于等待队列中，节点线程等待在Condition上，</strong>当其他线程对Condition调用了signal()方法后，该节点从等待队列中转移到同步队列中，加入到对同步状态的获取中；</p>
+<p>4、<strong>PROPAGATE</strong>，值为-3。场景：表示<strong>下一次的共享状态会被无条件的传播下去</strong>；</p>
+<p>5、<strong>INITIAL</strong>，值为0，初始状态。</p>
+<h4 id="AQS-对资源的共享方式"><a href="#AQS-对资源的共享方式" class="headerlink" title="AQS 对资源的共享方式"></a>AQS 对资源的共享方式</h4><p><strong>AQS 定义两种资源共享方式</strong></p>
+<h5 id="Exclusive（独占）"><a href="#Exclusive（独占）" class="headerlink" title="Exclusive（独占）"></a>Exclusive（独占）</h5><p><strong>只有一个线程能执行</strong>，如 ReentrantLock。又可分为公平锁和非公平锁，ReentrantLock 同时支持两种锁，下面以 ReentrantLock 对这两种锁的定义做介绍：</p>
+<p>公平锁 ：<strong>按照线程在队列中的排队顺序，先到者先拿到锁</strong><br>非公平锁 ：当线程要获取锁时，先通过<strong>两次 CAS 操作去抢锁</strong>，如果没抢到，当前线程再加入到队列中等待唤醒。</p>
+<p>ReentrantLock 默认采用<strong>非公平锁</strong>，<strong>因为考虑获得更好的性能</strong>，通过 boolean 来决定是否用公平锁（传入 true 用公平锁）。</p>
+<p>非公平锁在<strong>调用 lock</strong> 后，首先就会调用 CAS 进行一次抢锁，如果这个时候恰巧锁没有被占用，那么直接就获取到锁返回了。<br>非公平锁<strong>在 CAS 失败后</strong>，和公平锁一样都会进入到 <strong>tryAcquire 方法</strong>，在 tryAcquire 方法中，如果发现锁这个时候被释放了（state &#x3D;&#x3D; 0），<strong>非公平锁会直接 CAS 抢锁</strong>，<strong>但是公平锁会判断等待队列是否有线程处于等待状态，如果有则不去抢锁，乖乖排到后面。</strong></p>
+<p>公平锁和非公平锁就这两点区别，<strong>如果这两次 CAS 都不成功，那么后面非公平锁和公平锁是一样的，都要进入到阻塞队列等待唤醒。</strong></p>
+<p>相对来说，<strong>非公平锁会有更好的性能，因为它的吞吐量比较大</strong>。当然，非公平锁让获取锁的时间变得更加不确定，可能会导致在阻塞队列中的线程长期处于饥饿状态。</p>
+<h5 id="Share（共享）"><a href="#Share（共享）" class="headerlink" title="Share（共享）"></a>Share（共享）</h5><p>多个线程可同时执行，如Semaphore、CountDownLatCh、 CyclicBarrier、ReadWriteLock 。</p>
+<p>ReentrantReadWriteLock 可以看成是组合式，因为 ReentrantReadWriteLock 也就是读写锁允许多个线程同时对某一资源进行读。</p>
+<p>不同的<strong>自定义同步器</strong>争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队&#x2F;唤醒出队等），AQS 已经在上层已经帮我们实现好了。</p>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><p>Java实现锁有两种语法<strong>，一种是synchronized语句，另外一种是reentrantlock关键字</strong>。</p>
+<h4 id="公平锁-x2F-非公平锁"><a href="#公平锁-x2F-非公平锁" class="headerlink" title="公平锁&#x2F;非公平锁"></a>公平锁&#x2F;非公平锁</h4><p>公平锁指<strong>多个线程按照申请锁的顺序获得锁。</strong></p>
+<p>非公平锁指多个线程获得锁的顺序不按照申请顺序。</p>
+<p>Java reentranthlock通过构造函数来指定锁是公平还是非公平，默认是非公平锁，对于synchronized而言，也是一种非公平锁。</p>
+<p><strong>非公平锁优点在于吞吐量比公平锁大。</strong></p>
+<h4 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h4><p>可重入锁又叫递归锁，是指同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。</p>
+<p>Synchronized也是一个可重入锁。</p>
+<p>可重入锁的优点是可以一定程度避免死锁。</p>
+<h4 id="独享锁-x2F-共享锁"><a href="#独享锁-x2F-共享锁" class="headerlink" title="独享锁&#x2F;共享锁"></a>独享锁&#x2F;共享锁</h4><p>独享锁是指该锁一次只能被一个线程所持有，共享锁可以被多个线程所持有。</p>
+<p>Java reentrantlock是一个独享锁，但是对于lock的另一个实现readwritelock，其读锁是一个共享锁，写锁是一个独享锁。</p>
+<p>对于synchronized是一个独享锁。</p>
+<h4 id="互斥锁-x2F-读写锁"><a href="#互斥锁-x2F-读写锁" class="headerlink" title="互斥锁&#x2F;读写锁"></a>互斥锁&#x2F;读写锁</h4><p>互斥锁在Java中具体实现就是reentrantlock。</p>
+<p>读写锁在Java中的具体实现就是readwritelock。</p>
+<h4 id="乐观锁-x2F-悲观锁"><a href="#乐观锁-x2F-悲观锁" class="headerlink" title="乐观锁&#x2F;悲观锁"></a>乐观锁&#x2F;悲观锁</h4><p>乐观锁和悲观锁不是指具体的锁类型，而是对于看待并发编程中加锁问题的角度。</p>
+<p>悲观锁认为，对于一个数据的并发操作，一定会改变数据，即使实际上数据没被改变，但是也悲观的认为被改变的可能性比较大，一定要加锁，不加锁早晚要出问题。</p>
+<p>乐观锁认为，对于一个数据的并发操作，是不会改变数据的，不加锁也不会出问题。</p>
+<p>乐观锁指java中的无所编程，适合读操作非常多的场景。</p>
+<p>悲观锁就是指java中，适合并发下写非常多的场景。</p>
+<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p>在java中，自旋锁是指尝试获取锁的线程不会立即阻塞，<strong>而是采用循环的方式去尝试获取锁</strong>，当循环条件被其他线程改变时，才能进入临界区。这样的好处是减少线程上下文切换的消耗，<strong>缺点是会消耗CPU。</strong></p>
+<p>由于自旋锁只是将当前线程不停地执行循环体，不进行线程状态的改变，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，占用CPU时间。<strong>如果线程竞争不激烈，并且保持锁的时间段。适合使用自旋锁。</strong></p>
+<h4 id="偏向锁-x2F-轻量级锁-x2F-重量级锁"><a href="#偏向锁-x2F-轻量级锁-x2F-重量级锁" class="headerlink" title="偏向锁&#x2F;轻量级锁&#x2F;重量级锁"></a>偏向锁&#x2F;轻量级锁&#x2F;重量级锁</h4><p>这三种锁，就是指锁的状态，针对synchronized。</p>
+<p>偏向锁是<strong>指一段代码一直被一个线程所访问</strong>，那么理论上，这个线程会自动获取这个锁，并一直拥有这个锁，这样就降低了获取锁的代价。</p>
+<p>轻量级锁是指当偏向锁的状态下，<strong>被另一个线程访问</strong>，偏向锁就会升级为<strong>轻量级锁</strong>，其他线程会通过自旋形式尝试获取锁，不会阻塞，提高效率。</p>
+<p>重量级锁是指在轻量级锁的状态下，<strong>另一个线程虽然自旋</strong>，但不会一直持续下去，当自旋一定次数的时候还没有获取到锁的话，<strong>就会进入阻塞</strong>，该锁就会膨胀为重量级锁，重量级锁会让其他申请的线程陷入阻塞，降低性能。</p>
+]]></content>
+      <categories>
+        <category>Java并发</category>
+      </categories>
+      <tags>
+        <tag>关键字</tag>
       </tags>
   </entry>
   <entry>
@@ -705,56 +655,34 @@
       </tags>
   </entry>
   <entry>
-    <title>Java并发-并发容器</title>
-    <url>/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="同步容器"><a href="#同步容器" class="headerlink" title="同步容器"></a>同步容器</h2><h3 id="collections中有一些方法："><a href="#collections中有一些方法：" class="headerlink" title="collections中有一些方法："></a>collections中有一些方法：</h3><p>synchronizedlist：</p>
-<p>synchronizedmap：</p>
-<p>synchronizedcollection：</p>
-<p>在遍历时容器发生了结构性变化，会报错。</p>
-<h2 id="写时复制的的List和Set"><a href="#写时复制的的List和Set" class="headerlink" title="写时复制的的List和Set"></a>写时复制的的List和Set</h2><p>copyonwritearraylist</p>
-<p>copyonwritearrayset</p>
-<p>线程安全</p>
-<p>迭代器不支持修改</p>
-<p>每次修改时都会新建一个数组，复制进去。读都会访问原来的数组。</p>
-<p>基于reentrantlock实现</p>
-<p>不适合大数组</p>
-<p><strong>适合大部分访问都是读的情况</strong></p>
-<h2 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h2><p>jdk以前concurrenthashmap是分段的数组+链表实现。<br>实现线程安全的方式：</p>
-<p>1，在 JDK1.7 的时候， ConcurrentHashMap （分段锁）对整个桶数组进⾏了分割分段，每⼀把锁只锁容器其中⼀部分数据，<strong>多线程访问容器⾥不同数据段的数据，就不会存在锁竞争，提⾼并发访问率</strong>。<br>一个concurrenthashmap里面包含一个segment数组。一个segment包含一个hashentry数组。</p>
-<p>核心：</p>
-<p><strong>分段锁</strong></p>
-<p><strong>读不需要锁</strong></p>
-<p><img src="https://i.loli.net/2021/08/03/BJEfHT8bwkLeaMh.png" alt="image-20210803181948397"></p>
-<p> 2，JDK1.8 的时候已经摒弃了 Segment 的概念，⽽是直接⽤ <strong>Node 数组+链表&#x2F;红⿊树</strong>的数据结构来实现，并发控制使⽤ synchronized 和 CAS 来操作。<br>synchronized只会锁定当前链表或者红黑树的首节点。效率大大提高。</p>
-<h3 id="迭代器弱一致性？"><a href="#迭代器弱一致性？" class="headerlink" title="迭代器弱一致性？"></a>迭代器弱一致性？</h3><p>遍历时，内部元素变化发生在已经遍历过的部分，不会体现出来。</p>
-<p><img src="https://i.loli.net/2021/08/03/zgxDwuEOSZrRkPV.png" alt="image-20210803182140097"></p>
-<p>3，hashtable是同一把锁，全表锁。</p>
-<h2 id="基于跳表的Map和Set"><a href="#基于跳表的Map和Set" class="headerlink" title="基于跳表的Map和Set"></a>基于跳表的Map和Set</h2><p>concurrentskiplistmap&#x3D;&#x3D;treemap</p>
-<p>concurrentskiplistset&#x3D;&#x3D;treeset</p>
-<p>跳表更加容易实现高效并发</p>
-<p>没有使用锁，所有的操作都可以并发</p>
-<p>他们的size（）方法复杂度为o（n），并且结果也不一定准确</p>
-<h3 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h3><p>基于链表+多层索引</p>
-<p>类似二分查找</p>
-<h2 id="并发队列"><a href="#并发队列" class="headerlink" title="并发队列"></a>并发队列</h2><p><strong>无锁非阻塞：不用锁，所有操作都可以立即执行，主要通过循环CAS实现并发安全。</strong></p>
-<p><strong>阻塞队列：使用锁和条件。很多操作都要获得锁或者满足条件再返回。不满足或者未获得锁就会阻塞。</strong></p>
-<p>都是弱一致性的。遍历时遍历过的内容改变了不会显示。</p>
-<h4 id="无锁非阻塞并发队列："><a href="#无锁非阻塞并发队列：" class="headerlink" title="无锁非阻塞并发队列："></a>无锁非阻塞并发队列：</h4><p>concurrentlinkedqueue</p>
-<p>cocurrentlinkeddeque</p>
-<p>基于链表，没有大小限制</p>
-<p>基于循环cas</p>
-<h4 id="普通阻塞队列："><a href="#普通阻塞队列：" class="headerlink" title="普通阻塞队列："></a>普通阻塞队列：</h4><p>都实现了接口blockingqueue，在入队出队时可能会等待。</p>
-<p><img src="https://i.loli.net/2021/08/03/T1prKxLjmhqob5s.png" alt="image-20210803184553784"></p>
-<p>arrayblockingqueue循环数组</p>
-<p>linkedblockingqueue单向链表</p>
-<p>都是使用显示锁reentrantlock和显示条件condition实现的</p>
-<h4 id="优先级阻塞队列："><a href="#优先级阻塞队列：" class="headerlink" title="优先级阻塞队列："></a>优先级阻塞队列：</h4><p>按照优先级出队。</p>
-<h4 id="延时阻塞队列："><a href="#延时阻塞队列：" class="headerlink" title="延时阻塞队列："></a>延时阻塞队列：</h4><h4 id="其他："><a href="#其他：" class="headerlink" title="其他："></a>其他：</h4>]]></content>
+    <title>Java虚拟机-内存结构</title>
+    <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</url>
+    <content><![CDATA[<p><img src="https://i.loli.net/2021/08/05/y2G1hPE34wWgxtm.png" alt="image-20210805143306994"></p>
+<h3 id="jvm内存分配："><a href="#jvm内存分配：" class="headerlink" title="jvm内存分配："></a>jvm内存分配：</h3><p>-Xms	初始堆大小	<strong>物理内存的1&#x2F;64</strong>(&lt;1GB)	</p>
+<p>-Xmx	最大堆大小	<strong>物理内存的1&#x2F;4(&lt;1GB)</strong>	</p>
+<p>-Xmn	年轻代大小    <strong>整个堆的3&#x2F;8</strong>    （eden+ 2 survivor space)</p>
+<p>-Xss	<strong>每个线程的堆栈大小</strong>	 	JDK5.0以后每个线程堆栈大小为**1M,**以前每个线程堆栈大小为256K<br>一般小的应用， 如果栈不是很深， 应该是128k够用的 大的应用建议使用256k。这个选项对性能影响比较大，需要严格的测试</p>
+<p>-XX:NewRatio	年轻代与年老代的比值	&#x3D;4 年轻代占整个堆栈的1&#x2F;5</p>
+<p>-XX:SurvivorRatio	Eden区与Survivor区的大小比值	设置为8,则两个Survivor区与一个Eden区的比值为2:8</p>
+<p>-XX:TLABWasteTargetPercent	TLAB占eden区的百分比	1%</p>
+<h3 id="jvm与java体系结构"><a href="#jvm与java体系结构" class="headerlink" title="jvm与java体系结构"></a>jvm与java体系结构</h3><h4 id="跨平台的语言"><a href="#跨平台的语言" class="headerlink" title="跨平台的语言"></a>跨平台的语言</h4><p><img src="https://i.loli.net/2021/08/05/i34EhPRJe9w6j1y.png" alt="image-20210805143331921"></p>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>一次编译，到处运行<br>自动内存管理<br>自动垃圾回收功能<br>JVM是运行在操作系统之上的，它与硬件没有直接的交互。</p>
+<h3 id="运行时数据区以及线程"><a href="#运行时数据区以及线程" class="headerlink" title="运行时数据区以及线程"></a>运行时数据区以及线程</h3><p><strong>线程独有：独立包括程序计数器、栈、本地方法栈</strong><br><strong>线程间共享：堆、堆外内存（永久代或元空间、代码缓存（方法区））</strong></p>
+<p><strong>Runtime类</strong><br>每个JVM只有一个Runtime实例。即为运行时环境，相当于内存结构的中间的那个框框：运行时环境。</p>
+<h4 id="线程："><a href="#线程：" class="headerlink" title="线程："></a>线程：</h4><p>1，线程是一个程序里的<strong>运行单元</strong>。JVM允许一个应用有多个线程并行的执行<br>2，在Hotspot JVM里，<strong>每个线程都与操作系统的本地线程直接映射</strong><br>当一个Java线程准备好执行以后，此时一个操作系统的本地线程也同时创建。Java线程执行终止后，本地线程也会回收<br>3，操作系统负责将线程安排调度到任何一个可用的CPU上。一旦本地线程初始化成功，它就会调用Java线程中的run()方法</p>
+<h4 id="JVM-系统线程"><a href="#JVM-系统线程" class="headerlink" title="JVM 系统线程"></a>JVM 系统线程</h4><p>如果你使用jconsole或者是任何一个调试工具（内存监控工具），都能看到在后台有许多线程在运行。这些后台线程不包括调用public static void main(String[])的main线程以及所有这个main线程自己创建的线程。</p>
+<p>这些主要的后台系统线程在Hotspot JVM里主要是以下几个：<br><strong>虚拟机线程：</strong>这种线程的操作是需要JVM达到安全点才会出现。这些操作必须在不同的线程中发生的原因是他们都需要JVM达到安全点，这样堆才不会变化。这种线程的执行类型括”stop-the-world”的垃圾收集，线程栈收集，线程挂起以及偏向锁撤销<br><strong>周期任务线程：</strong>这种线程是时间周期事件的体现（比如中断），他们一般用于周期性操作的调度执行<br><strong>GC线程：</strong>这种线程对在JVM里不同种类的垃圾收集行为提供了支持<br><strong>编译线程：</strong>这种线程在运行时会将字节码编译成到本地代码<br><strong>信号调度线程：</strong>这种线程接收信号并发送给JVM，在它内部通过调用适当的方法进行处理</p>
+<h3 id="机器慢了怎么查"><a href="#机器慢了怎么查" class="headerlink" title="机器慢了怎么查"></a>机器慢了怎么查</h3><h4 id="使用-top-命令检查-CPU-负载"><a href="#使用-top-命令检查-CPU-负载" class="headerlink" title="使用 top 命令检查 CPU 负载"></a>使用 top 命令检查 CPU 负载</h4><p>除了上述检查的情况之外，还可以使用命令 top 来检查 CPU 负载，将实时显示 process 的动态。资源使用最高的进程排在最前面。</p>
+<h4 id="机器的io读写和网络情况，sar"><a href="#机器的io读写和网络情况，sar" class="headerlink" title="机器的io读写和网络情况，sar"></a>机器的io读写和网络情况，sar</h4><h4 id="查看具体是哪个进程有占用资源高的问题，ps"><a href="#查看具体是哪个进程有占用资源高的问题，ps" class="headerlink" title="查看具体是哪个进程有占用资源高的问题，ps"></a>查看具体是哪个进程有占用资源高的问题，ps</h4><p>Ps -mp pid -o THREAD,tid,time</p>
+<p>再通过ps命令查看这个程序的线程信息,tid代码线程ID，time代表这个线程的已运行时间</p>
+<h4 id="jstack查看进程信息"><a href="#jstack查看进程信息" class="headerlink" title="jstack查看进程信息"></a>jstack查看进程信息</h4><p>有了线程ID的16进制后，再在jstack中查看进程堆栈信息(之所有拿到TID信息，主要是为了查找方便)</p>
+<p>通过jstack -pid 再grep查询。</p>
+<h4 id="本地代码问题排查"><a href="#本地代码问题排查" class="headerlink" title="本地代码问题排查"></a>本地代码问题排查</h4>]]></content>
       <categories>
-        <category>Java并发</category>
+        <category>JVM</category>
       </categories>
       <tags>
-        <tag>并发容器</tag>
+        <tag>结构</tag>
       </tags>
   </entry>
   <entry>
@@ -826,37 +754,6 @@
       </categories>
       <tags>
         <tag>底层</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java虚拟机-内存结构</title>
-    <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</url>
-    <content><![CDATA[<p><img src="https://i.loli.net/2021/08/05/y2G1hPE34wWgxtm.png" alt="image-20210805143306994"></p>
-<h3 id="jvm内存分配："><a href="#jvm内存分配：" class="headerlink" title="jvm内存分配："></a>jvm内存分配：</h3><p>-Xms	初始堆大小	<strong>物理内存的1&#x2F;64</strong>(&lt;1GB)	</p>
-<p>-Xmx	最大堆大小	<strong>物理内存的1&#x2F;4(&lt;1GB)</strong>	</p>
-<p>-Xmn	年轻代大小    <strong>整个堆的3&#x2F;8</strong>    （eden+ 2 survivor space)</p>
-<p>-Xss	<strong>每个线程的堆栈大小</strong>	 	JDK5.0以后每个线程堆栈大小为**1M,**以前每个线程堆栈大小为256K<br>一般小的应用， 如果栈不是很深， 应该是128k够用的 大的应用建议使用256k。这个选项对性能影响比较大，需要严格的测试</p>
-<p>-XX:NewRatio	年轻代与年老代的比值	&#x3D;4 年轻代占整个堆栈的1&#x2F;5</p>
-<p>-XX:SurvivorRatio	Eden区与Survivor区的大小比值	设置为8,则两个Survivor区与一个Eden区的比值为2:8</p>
-<p>-XX:TLABWasteTargetPercent	TLAB占eden区的百分比	1%</p>
-<h3 id="jvm与java体系结构"><a href="#jvm与java体系结构" class="headerlink" title="jvm与java体系结构"></a>jvm与java体系结构</h3><h4 id="跨平台的语言"><a href="#跨平台的语言" class="headerlink" title="跨平台的语言"></a>跨平台的语言</h4><p><img src="https://i.loli.net/2021/08/05/i34EhPRJe9w6j1y.png" alt="image-20210805143331921"></p>
-<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>一次编译，到处运行<br>自动内存管理<br>自动垃圾回收功能<br>JVM是运行在操作系统之上的，它与硬件没有直接的交互。</p>
-<h3 id="运行时数据区以及线程"><a href="#运行时数据区以及线程" class="headerlink" title="运行时数据区以及线程"></a>运行时数据区以及线程</h3><p><strong>线程独有：独立包括程序计数器、栈、本地方法栈</strong><br><strong>线程间共享：堆、堆外内存（永久代或元空间、代码缓存（方法区））</strong></p>
-<p><strong>Runtime类</strong><br>每个JVM只有一个Runtime实例。即为运行时环境，相当于内存结构的中间的那个框框：运行时环境。</p>
-<h4 id="线程："><a href="#线程：" class="headerlink" title="线程："></a>线程：</h4><p>1，线程是一个程序里的<strong>运行单元</strong>。JVM允许一个应用有多个线程并行的执行<br>2，在Hotspot JVM里，<strong>每个线程都与操作系统的本地线程直接映射</strong><br>当一个Java线程准备好执行以后，此时一个操作系统的本地线程也同时创建。Java线程执行终止后，本地线程也会回收<br>3，操作系统负责将线程安排调度到任何一个可用的CPU上。一旦本地线程初始化成功，它就会调用Java线程中的run()方法</p>
-<h4 id="JVM-系统线程"><a href="#JVM-系统线程" class="headerlink" title="JVM 系统线程"></a>JVM 系统线程</h4><p>如果你使用jconsole或者是任何一个调试工具（内存监控工具），都能看到在后台有许多线程在运行。这些后台线程不包括调用public static void main(String[])的main线程以及所有这个main线程自己创建的线程。</p>
-<p>这些主要的后台系统线程在Hotspot JVM里主要是以下几个：<br><strong>虚拟机线程：</strong>这种线程的操作是需要JVM达到安全点才会出现。这些操作必须在不同的线程中发生的原因是他们都需要JVM达到安全点，这样堆才不会变化。这种线程的执行类型括”stop-the-world”的垃圾收集，线程栈收集，线程挂起以及偏向锁撤销<br><strong>周期任务线程：</strong>这种线程是时间周期事件的体现（比如中断），他们一般用于周期性操作的调度执行<br><strong>GC线程：</strong>这种线程对在JVM里不同种类的垃圾收集行为提供了支持<br><strong>编译线程：</strong>这种线程在运行时会将字节码编译成到本地代码<br><strong>信号调度线程：</strong>这种线程接收信号并发送给JVM，在它内部通过调用适当的方法进行处理</p>
-<h3 id="机器慢了怎么查"><a href="#机器慢了怎么查" class="headerlink" title="机器慢了怎么查"></a>机器慢了怎么查</h3><h4 id="使用-top-命令检查-CPU-负载"><a href="#使用-top-命令检查-CPU-负载" class="headerlink" title="使用 top 命令检查 CPU 负载"></a>使用 top 命令检查 CPU 负载</h4><p>除了上述检查的情况之外，还可以使用命令 top 来检查 CPU 负载，将实时显示 process 的动态。资源使用最高的进程排在最前面。</p>
-<h4 id="机器的io读写和网络情况，sar"><a href="#机器的io读写和网络情况，sar" class="headerlink" title="机器的io读写和网络情况，sar"></a>机器的io读写和网络情况，sar</h4><h4 id="查看具体是哪个进程有占用资源高的问题，ps"><a href="#查看具体是哪个进程有占用资源高的问题，ps" class="headerlink" title="查看具体是哪个进程有占用资源高的问题，ps"></a>查看具体是哪个进程有占用资源高的问题，ps</h4><p>Ps -mp pid -o THREAD,tid,time</p>
-<p>再通过ps命令查看这个程序的线程信息,tid代码线程ID，time代表这个线程的已运行时间</p>
-<h4 id="jstack查看进程信息"><a href="#jstack查看进程信息" class="headerlink" title="jstack查看进程信息"></a>jstack查看进程信息</h4><p>有了线程ID的16进制后，再在jstack中查看进程堆栈信息(之所有拿到TID信息，主要是为了查找方便)</p>
-<p>通过jstack -pid 再grep查询。</p>
-<h4 id="本地代码问题排查"><a href="#本地代码问题排查" class="headerlink" title="本地代码问题排查"></a>本地代码问题排查</h4>]]></content>
-      <categories>
-        <category>JVM</category>
-      </categories>
-      <tags>
-        <tag>结构</tag>
       </tags>
   </entry>
   <entry>
@@ -1156,38 +1053,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java虚拟机-对象相关</title>
-    <url>/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3/</url>
-    <content><![CDATA[<h3 id="对象的实例化"><a href="#对象的实例化" class="headerlink" title="对象的实例化"></a>对象的实例化</h3><h4 id="创建对象的方式"><a href="#创建对象的方式" class="headerlink" title="创建对象的方式"></a>创建对象的方式</h4><p>new：最常见的方式、单例类中调用getInstance的静态类方法，XXXFactory的静态方法</p>
-<p>Class的newInstance()方法：在JDK9里面被标记为过时的方法，因为只能调用空参构造器，并且权限必须为 public</p>
-<p>Constructor的newInstance(Xxxx)：反射的方式，可以调用空参的，或者带参的构造器</p>
-<p>使用clone()：不调用任何的构造器，要求当前的类需要实现Cloneable接口中的clone方法</p>
-<p>使用序列化：从文件中，从网络中获取一个对象的二进制流，序列化一般用于Socket的网络传输</p>
-<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><p><strong>1、判断对象对应的类是否加载、链接、初始化</strong></p>
-<p>虚拟机遇到一条new指令，首先去检查这个指令的参数能否在<strong>Metaspace的常量池中定位到一个类的符号引用</strong>，并且检查这个符号引用代表的类是否已经被加载，解析和初始化。（即判断类元信息是否存在）。</p>
-<p>如果该类没有加载，那么在双亲委派模式下，使用当前类加载器以ClassLoader + 包名 + 类名为key进行查找对应的.class文件，如果没有找到文件，则抛出ClassNotFoundException异常，如果找到，则进行类加载，并生成对应的Class对象。</p>
-<p><strong>2、为对象分配内存</strong></p>
-<p>首先计算对象占用空间的大小，接着在堆中划分一块内存给新对象。如果实例成员变量是引用变量，仅分配引用变量空间即可，即4个字节大小</p>
-<p><strong>如果内存是规整的，那么虚拟机将采用的是指针碰撞法</strong>（Bump The Point）来为对象分配内存。<strong>意思是所有用过的内存在一边，空闲的内存放另外一边，中间放着一个指针作为分界点的指示器，分配内存就仅仅是把指针往空闲内存那边挪动一段与对象大小相等的距离罢了。</strong><br>如果垃圾收集器选择的是Serial ，ParNew这种基于压缩算法的，虚拟机采用这种分配方式。<strong>一般使用带Compact（整理）过程的收集器时，使用指针碰撞。</strong></p>
-<p>标记压缩（整理）算法会整理内存碎片，堆内存一存对象，另一边为空闲区域</p>
-<p><strong>如果内存不是规整的</strong>，已使用的内存和未使用的内存相互交错，那么虚拟机将采用的是<strong>空闲列表</strong>来为对象分配内存。<br><strong>意思是虚拟机维护了一个列表，记录上哪些内存块是可用的，再分配的时候从列表中找到一块足够大的空间划分给对象实例，并更新列表上的内容。这种分配方式成为了 “空闲列表（Free List）”</strong></p>
-<p>选择哪种分配方式由Java堆是否规整所决定，而Java堆是否规整又由所采用的垃圾收集器是否带有压缩整理功能决定</p>
-<p><strong>3、处理并发问题</strong><br>采用CAS+失败重试，区域加锁保证更新的原子性<br>每个线程预先分配TLAB - 通过设置 -XX:+UseTLAB参数来设置（区域加锁机制）<br>在Eden区给每个线程分配一块区域</p>
-<p><strong>4、初始化分配到的空间</strong><br>所有属性设置默认值，保证对象实例字段在不赋值可以直接使用<br>给对象属性赋值的顺序：<br>属性的默认值初始化<br>显示初始化&#x2F;代码块初始化（并列关系，谁先谁后看代码编写的顺序）<br>构造器初始化</p>
-<p><strong>5、设置对象的对象头</strong><br>将对象的<strong>所属类（即类的元数据信息）、对象的HashCode和对象的GC信息、锁信息</strong>等数据存储在对象的对象头中。这个过程的具体设置方式取决于JVM实现。</p>
-<p><strong>6、执行init方法进行初始化</strong><br>在Java程序的视角看来，初始化才正式开始。初始化成员变量，执行实例化代码块，调用类的构造方法，并把堆内对象的首地址赋值给引用变量<br>因此一般来说（由字节码中跟随invokespecial指令所决定），new指令之后会接着就是执行init方法，把对象按照程序员的意愿进行初始化，这样一个真正可用的对象才算完成创建出来。</p>
-<p><strong>① 加载类元信息 - ② 为对象分配内存 - ③ 处理并发问题  - ④ 属性的默认初始化（零值初始化）⑤ 设置对象头的信息 - ⑥ 属性的显式初始化、代码块中初始化、构造器中初始化</strong></p>
-<h3 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h3><h4 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h4><p>1，运行时元数据：<strong>哈希值，gc分代年龄，锁状态标志，偏向线程id</strong><br>2，<strong>类型指针：指向类元数据，确定对象的所属的类型</strong></p>
-<p>如果是数组。<strong>还要记录数组长度。</strong><br>实例数据：<strong>对象真正存储的有效信息。先加载父类。</strong><br>对齐填充<strong>：不是必须的，占位符。</strong></p>
-<h4 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h4><p><strong>1、句柄访问</strong></p>
-<p>缺点：在堆空间中开辟了一块空间作为<strong>句柄池</strong>，句柄池本身也会占用空间；通过两次指针访问才能访问到堆中的对象，效率低<br>优点：reference中存储稳定句柄地址，对象被移动（垃圾收集时移动对象很普遍）时只会改变句柄中实例数据指针即可，reference本身不需要被修改</p>
-<p><img src="https://i.loli.net/2021/08/04/EyzuL51SHXlnjsa.png" alt="image-20210804214040761"></p>
-<p><strong>2、直接指针（HotSpot采用）</strong></p>
-<p>优点：直接指针是局部变量表中的引用，直接指向堆中的实例，在对象实例中有类型指针，指向的是方法区中的对象类型数据<br>缺点：对象被移动（垃圾收集时移动对象很普遍）时需要修改 reference 的值</p>
-<p><img src="https://i.loli.net/2021/08/04/zPn2hVUtgM4miOo.png" alt="image-20210804214056219"></p>
-]]></content>
-  </entry>
-  <entry>
     <title>Java虚拟机-类加载子系统</title>
     <url>/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%AD%90%E7%B3%BB%E7%BB%9F/</url>
     <content><![CDATA[<h3 id="初始化顺序？"><a href="#初始化顺序？" class="headerlink" title="初始化顺序？"></a>初始化顺序？</h3><p>（非静态：默认初始化-显示初始化-代码块初始化-无参构造初始化or有参构造初始化）</p>
@@ -1238,6 +1103,38 @@
       <tags>
         <tag>概念</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Java虚拟机-对象相关</title>
+    <url>/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3/</url>
+    <content><![CDATA[<h3 id="对象的实例化"><a href="#对象的实例化" class="headerlink" title="对象的实例化"></a>对象的实例化</h3><h4 id="创建对象的方式"><a href="#创建对象的方式" class="headerlink" title="创建对象的方式"></a>创建对象的方式</h4><p>new：最常见的方式、单例类中调用getInstance的静态类方法，XXXFactory的静态方法</p>
+<p>Class的newInstance()方法：在JDK9里面被标记为过时的方法，因为只能调用空参构造器，并且权限必须为 public</p>
+<p>Constructor的newInstance(Xxxx)：反射的方式，可以调用空参的，或者带参的构造器</p>
+<p>使用clone()：不调用任何的构造器，要求当前的类需要实现Cloneable接口中的clone方法</p>
+<p>使用序列化：从文件中，从网络中获取一个对象的二进制流，序列化一般用于Socket的网络传输</p>
+<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><p><strong>1、判断对象对应的类是否加载、链接、初始化</strong></p>
+<p>虚拟机遇到一条new指令，首先去检查这个指令的参数能否在<strong>Metaspace的常量池中定位到一个类的符号引用</strong>，并且检查这个符号引用代表的类是否已经被加载，解析和初始化。（即判断类元信息是否存在）。</p>
+<p>如果该类没有加载，那么在双亲委派模式下，使用当前类加载器以ClassLoader + 包名 + 类名为key进行查找对应的.class文件，如果没有找到文件，则抛出ClassNotFoundException异常，如果找到，则进行类加载，并生成对应的Class对象。</p>
+<p><strong>2、为对象分配内存</strong></p>
+<p>首先计算对象占用空间的大小，接着在堆中划分一块内存给新对象。如果实例成员变量是引用变量，仅分配引用变量空间即可，即4个字节大小</p>
+<p><strong>如果内存是规整的，那么虚拟机将采用的是指针碰撞法</strong>（Bump The Point）来为对象分配内存。<strong>意思是所有用过的内存在一边，空闲的内存放另外一边，中间放着一个指针作为分界点的指示器，分配内存就仅仅是把指针往空闲内存那边挪动一段与对象大小相等的距离罢了。</strong><br>如果垃圾收集器选择的是Serial ，ParNew这种基于压缩算法的，虚拟机采用这种分配方式。<strong>一般使用带Compact（整理）过程的收集器时，使用指针碰撞。</strong></p>
+<p>标记压缩（整理）算法会整理内存碎片，堆内存一存对象，另一边为空闲区域</p>
+<p><strong>如果内存不是规整的</strong>，已使用的内存和未使用的内存相互交错，那么虚拟机将采用的是<strong>空闲列表</strong>来为对象分配内存。<br><strong>意思是虚拟机维护了一个列表，记录上哪些内存块是可用的，再分配的时候从列表中找到一块足够大的空间划分给对象实例，并更新列表上的内容。这种分配方式成为了 “空闲列表（Free List）”</strong></p>
+<p>选择哪种分配方式由Java堆是否规整所决定，而Java堆是否规整又由所采用的垃圾收集器是否带有压缩整理功能决定</p>
+<p><strong>3、处理并发问题</strong><br>采用CAS+失败重试，区域加锁保证更新的原子性<br>每个线程预先分配TLAB - 通过设置 -XX:+UseTLAB参数来设置（区域加锁机制）<br>在Eden区给每个线程分配一块区域</p>
+<p><strong>4、初始化分配到的空间</strong><br>所有属性设置默认值，保证对象实例字段在不赋值可以直接使用<br>给对象属性赋值的顺序：<br>属性的默认值初始化<br>显示初始化&#x2F;代码块初始化（并列关系，谁先谁后看代码编写的顺序）<br>构造器初始化</p>
+<p><strong>5、设置对象的对象头</strong><br>将对象的<strong>所属类（即类的元数据信息）、对象的HashCode和对象的GC信息、锁信息</strong>等数据存储在对象的对象头中。这个过程的具体设置方式取决于JVM实现。</p>
+<p><strong>6、执行init方法进行初始化</strong><br>在Java程序的视角看来，初始化才正式开始。初始化成员变量，执行实例化代码块，调用类的构造方法，并把堆内对象的首地址赋值给引用变量<br>因此一般来说（由字节码中跟随invokespecial指令所决定），new指令之后会接着就是执行init方法，把对象按照程序员的意愿进行初始化，这样一个真正可用的对象才算完成创建出来。</p>
+<p><strong>① 加载类元信息 - ② 为对象分配内存 - ③ 处理并发问题  - ④ 属性的默认初始化（零值初始化）⑤ 设置对象头的信息 - ⑥ 属性的显式初始化、代码块中初始化、构造器中初始化</strong></p>
+<h3 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h3><h4 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h4><p>1，运行时元数据：<strong>哈希值，gc分代年龄，锁状态标志，偏向线程id</strong><br>2，<strong>类型指针：指向类元数据，确定对象的所属的类型</strong></p>
+<p>如果是数组。<strong>还要记录数组长度。</strong><br>实例数据：<strong>对象真正存储的有效信息。先加载父类。</strong><br>对齐填充<strong>：不是必须的，占位符。</strong></p>
+<h4 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h4><p><strong>1、句柄访问</strong></p>
+<p>缺点：在堆空间中开辟了一块空间作为<strong>句柄池</strong>，句柄池本身也会占用空间；通过两次指针访问才能访问到堆中的对象，效率低<br>优点：reference中存储稳定句柄地址，对象被移动（垃圾收集时移动对象很普遍）时只会改变句柄中实例数据指针即可，reference本身不需要被修改</p>
+<p><img src="https://i.loli.net/2021/08/04/EyzuL51SHXlnjsa.png" alt="image-20210804214040761"></p>
+<p><strong>2、直接指针（HotSpot采用）</strong></p>
+<p>优点：直接指针是局部变量表中的引用，直接指向堆中的实例，在对象实例中有类型指针，指向的是方法区中的对象类型数据<br>缺点：对象被移动（垃圾收集时移动对象很普遍）时需要修改 reference 的值</p>
+<p><img src="https://i.loli.net/2021/08/04/zPn2hVUtgM4miOo.png" alt="image-20210804214056219"></p>
+]]></content>
   </entry>
   <entry>
     <title>Java虚拟机-虚拟机栈，堆，方法区</title>
@@ -1416,16 +1313,6 @@
       </tags>
   </entry>
   <entry>
-    <title>MySQL 进阶</title>
-    <url>/2023/07/11/MySQL-%E8%BF%9B%E9%98%B6/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>技术</tag>
-        <tag>MySql</tag>
-        <tag>数据库</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Mysql-sql常见语法与优化</title>
     <url>/2021/07/30/Mysql-sql%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95%E4%B8%8E%E4%BC%98%E5%8C%96/</url>
     <content><![CDATA[<h2 id="sql语法举例"><a href="#sql语法举例" class="headerlink" title="sql语法举例"></a>sql语法举例</h2><p>有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。</p>
@@ -1528,6 +1415,119 @@
       </categories>
       <tags>
         <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java基础-Java集合框架</title>
+    <url>/2021/07/30/Java%E5%9F%BA%E7%A1%80-Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<h2 id="集合框架"><a href="#集合框架" class="headerlink" title="集合框架"></a>集合框架</h2><p><img src="https://i.loli.net/2021/08/04/6xejDEtAQKSRpwv.png" alt="image-20210804212935827"></p>
+<p><img src="https://i.loli.net/2021/08/04/leZ9CILv4hTbsYz.png" alt="image-20210804213053882"></p>
+<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p>在 JDK 1.8，HashMap 底层是由 “数组+链表+红黑树” 组成，如下图所示，而在 JDK 1.8 之前是由 “数组+链表” 组成。</p>
+<p>使用 “数组+链表” 是为了解决 hash 冲突的问题。</p>
+<p>数组和链表有如下特点：</p>
+<p>数组：查找容易，通过 index 快速定位；插入和删除困难，需要移动插入和删除位置之后的节点；<br>链表：查找困难，需要从头结点或尾节点开始遍历，直到寻找到目标节点；插入和删除容易，只需修改目标节点前后节点的 next 或 prev 属性即可；</p>
+<p>HashMap 巧妙的将数组和链表结合在一起，发挥两者各自的优势，使用一种叫做 “拉链法” 的方式来解决哈希冲突。<br>首先通过 index 快速定位到索引位置，这边利用了数组的优点；然后遍历链表找到节点，进行节点的新增&#x2F;修改&#x2F;删除操作，这边利用了链表的优点。</p>
+<h3 id="为什么要改成“数组-链表-红黑树”？"><a href="#为什么要改成“数组-链表-红黑树”？" class="headerlink" title="为什么要改成“数组+链表+红黑树”？"></a>为什么要改成“数组+链表+红黑树”？</h3><p>“数组+链表” 在定位到索引位置后，需要先遍历链表找到节点，这个地方如果链表很长的话，也就是 hash 冲突很严重的时候，会有查找性能问题，因此在 JDK1.8 中，通过引入红黑树，来优化这个问题。<br>使用链表的查找性能是 O(n)，而使用红黑树是 O(logn)。</p>
+<h3 id="那在什么时候用链表？什么时候用红黑树？"><a href="#那在什么时候用链表？什么时候用红黑树？" class="headerlink" title="那在什么时候用链表？什么时候用红黑树？"></a>那在什么时候用链表？什么时候用红黑树？</h3><p>对于插入，默认情况下是使用链表节点。当同一个索引位置的节点在新增后超过 8 个（阈值 8）：如果此时数组长度大于等于 64，则会触发链表节点转红黑树节点（treeifyBin）；而如果数组长度小于 64，则不会触发链表转红黑树，而是会进行扩容，因为此时的数据量还比较小。</p>
+<p>对于移除，当同一个索引位置的节点在移除后<strong>达到 6 个（阈值 6）</strong>，并且该索引位置的节点为红黑树节点，会触发红黑树节点转链表节点（untreeify）。</p>
+<h3 id="为什么链表转红黑树的阈值是-8？"><a href="#为什么链表转红黑树的阈值是-8？" class="headerlink" title="为什么链表转红黑树的阈值是 8？"></a>为什么链表转红黑树的阈值是 8？</h3><p>我们平时在进行方案设计时，必须考虑的两个很重要的因素是：时间和空间。对于 HashMap 也是同样的道理，简单来说，阈值为 8 是在时间和空间上权衡的结果。</p>
+<p>红黑树节点大小约为链表节点的 2 倍，在节点太少时，红黑树的查找性能优势并不明显，付出 2 倍空间的代价不值得。</p>
+<p>理想情况下，使用随机的哈希码，节点分布在 hash 桶中的频率遵循泊松分布，按照泊松分布的公式计算，链表中<strong>节点个数为 8 时的概率</strong>为 0.00000006，这个概率足够低了，并且到 8 个节点时，红黑树的性能优势也会开始展现出来，因此 8 是一个较合理的数字。</p>
+<h3 id="那为什么转回链表节点是用的-6-而不是复用-8？"><a href="#那为什么转回链表节点是用的-6-而不是复用-8？" class="headerlink" title="那为什么转回链表节点是用的 6 而不是复用 8？"></a>那为什么转回链表节点是用的 6 而不是复用 8？</h3><p>如果我们设置节点多于 8 个转红黑树，少于 8 个就马上转链表，<strong>当节点个数在 8 徘徊时，就会频繁进行红黑树和链表的转换，造成性能的损耗。</strong></p>
+<h3 id="HashMap-有哪些重要属性？分别用于做什么的？"><a href="#HashMap-有哪些重要属性？分别用于做什么的？" class="headerlink" title="HashMap 有哪些重要属性？分别用于做什么的？"></a>HashMap 有哪些重要属性？分别用于做什么的？</h3><p>除了用来存储我们的节点 table 数组外，HashMap 还有以下几个重要属性：<br>1）size：HashMap 已经存储的节点个数；<br>2）<strong>threshold</strong>：1）扩容阈值（主要），当 HashMap 的个数达到该值，触发扩容。2）初始化时的容量，在我们新建HashMap 对象时， threshold 还会被用来存初始化时的容量。HashMap 直到我们第一次插入节点时，才会对 table进行初始化，避免不必要的空间浪费。<br>3）<strong>loadFactor</strong>：负载因子，扩容阈值 &#x3D; 容量 * 负载因子。</p>
+<h3 id="HashMap-的默认初始容量是多少？HashMap-的容量有什么限制吗？"><a href="#HashMap-的默认初始容量是多少？HashMap-的容量有什么限制吗？" class="headerlink" title="HashMap 的默认初始容量是多少？HashMap 的容量有什么限制吗？"></a>HashMap 的默认初始容量是多少？HashMap 的容量有什么限制吗？</h3><p>默认初始容量是 16。HashMap 的容量必须是 2 的 N 次方，HashMap 会根据我们传入的容量计算一个“大于等于该容量的最小的 2 的 N 次方”，例如传 16，容量为 16；传 17，容量为 32。</p>
+<h3 id="HashMap-的容量必须是-2-的-N-次方，这是为什么？"><a href="#HashMap-的容量必须是-2-的-N-次方，这是为什么？" class="headerlink" title="HashMap 的容量必须是 2 的 N 次方，这是为什么？"></a>HashMap 的容量必须是 2 的 N 次方，这是为什么？</h3><p>计算索引位置的公式为：**(n - 1) &amp; hash**</p>
+<p>当 n 为 2 的 N 次方时，n - 1 为低位全是 1 的值，此时任何值跟 n - 1 进行 &amp; 运算的结果为该值的低 N 位，达到了和取模同样的效果，实现了均匀分布。</p>
+<p>实际上，这个设计就是基于式：<br><strong>x mod 2^n &#x3D; x &amp; (2^n - 1)，因为 &amp; 运算比 mod 具有更高的效率。</strong></p>
+<h3 id="插入流程"><a href="#插入流程" class="headerlink" title="插入流程"></a>插入流程</h3><p><img src="https://i.loli.net/2021/08/04/CDL1MPFjsV5k9Tw.png" alt="image-20210804211704324"></p>
+<h3 id="ConcurrenHashMap，1-7-和-1-8-的区别"><a href="#ConcurrenHashMap，1-7-和-1-8-的区别" class="headerlink" title="ConcurrenHashMap，1.7 和 1.8 的区别"></a>ConcurrenHashMap，1.7 和 1.8 的区别</h3><p>ConcurrentHashMap 是 HashMap 的线程安全版本，和 HashMap 一样，在 JDK 1.8 中进行了较大的优化。</p>
+<p>JDK1.7：底层结构为：分段的数组+链表；实现线程安全的方式：分段锁（Segment，继承ReentrantLock），</p>
+<p><img src="https://i.loli.net/2021/08/04/FliNj7RXtm2oSv5.png" alt="image-20210804212122257"></p>
+<p>JDK1.8：底层结构为：数组+链表+红黑树；实现线程安全的方式：CAS + Synchronized，synchronized只会锁定当前链表或者红黑树的首节点。效率大大提高。</p>
+<p><img src="https://i.loli.net/2021/08/04/uMemQzWqZdTXxK1.png" alt="image-20210804212314272"></p>
+<p><strong>区别：</strong></p>
+<p>1、JDK1.8 中降低锁的粒度。JDK1.7 版本锁的粒度是基于 Segment 的，包含多个节点（HashEntry），而 JDK1.8 锁的粒度就是单节点（Node）。</p>
+<p>2、JDK1.8 版本的数据结构变得更加简单，使得操作也更加清晰流畅，因为已经使用 synchronized 来进行同步，所以不需要分段锁的概念，也就不需要 Segment 这种数据结构了，当前还保留仅为了兼容。</p>
+<p>3、JDK1.8 使用红黑树来优化链表，跟 HashMap 一样，优化了极端情况下，链表过长带来的性能问题。</p>
+<p>4、JDK1.8 使用内置锁 synchronized 来代替重入锁 ReentrantLock，synchronized 是官方一直在不断优化的，现在性能已经比较可观，也是官方推荐使用的加锁方式</p>
+<h3 id="map对比？"><a href="#map对比？" class="headerlink" title="map对比？"></a>map对比？</h3><p><img src="https://i.loli.net/2021/08/04/jIZsbOmcCagN18q.png" alt="image-20210804212504959"></p>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><h3 id="ArrayList-和-Vector-的区别"><a href="#ArrayList-和-Vector-的区别" class="headerlink" title="ArrayList 和 Vector 的区别"></a>ArrayList 和 Vector 的区别</h3><p>Vector 和 ArrayList 的实现几乎是一样的，区别在于：</p>
+<p>1）最重要的的区别：Vector 在方法上使用了 synchronized 来保证线程安全，同时由于这个原因，在性能上 ArrayList会有更好的表现。</p>
+<p>2） Vector 扩容后容量默认变为原来 2 倍，而 ArrayList 为原来的 1.5 倍。</p>
+<h3 id="ArrayList-和-LinkedList-的区别？"><a href="#ArrayList-和-LinkedList-的区别？" class="headerlink" title="ArrayList 和 LinkedList 的区别？"></a>ArrayList 和 LinkedList 的区别？</h3><h4 id="arraylist扩容"><a href="#arraylist扩容" class="headerlink" title="arraylist扩容"></a>arraylist扩容</h4><p>第一种情况，当ArrayList的容量为0时，此时添加元素的话，需要扩容，三种构造方法创建的ArrayList在扩容时略有不同：</p>
+<p>1.无参构造，创建ArrayList后容量为0，添加第一个元素后，<strong>容量变为10</strong>，此后若需要扩容，则正常扩容。</p>
+<p>2.传容量构造，当参数为0时，创建ArrayList后容量为0，添加第一个元素后，容量为1，此时ArrayList是满的，下次添加元素时需正常扩容。</p>
+<p>3.传列表构造，当列表为空时，创建ArrayList后容量为0，添加第一个元素后，容量为1，此时ArrayList是满的，下次添加元素时需正常扩容。</p>
+<p>第二种情况，当ArrayList的容量大于0，并且ArrayList是满的时，此时添加元素的话，进行正常扩容，每次扩容<strong>到原来的1.5倍。</strong></p>
+<p>1、ArrayList 底层基于<strong>动态数组</strong>实现，LinkedList 底层基于<strong>双向链表</strong>实现。</p>
+<p>2、对于<strong>随机访问（按 index 访问，get&#x2F;set 方法）</strong>：ArrayList 通过 index 直接定位到数组对应位置的节点，而 LinkedList需要从头结点或尾节点开始遍历，直到寻找到目标节点，<strong>在效率上 ArrayList 优于 LinkedList</strong>。</p>
+<p>3、对于<strong>随机插入和删除</strong>：ArrayList 需要移动目标节点后面的节点（使用 System.arraycopy 方法移动节点），而LinkedList 只需修改目标节点前后节点的 next 或 prev 属性即可，因此在效率上 LinkedList 优于 ArrayList。</p>
+<p>4、对于<strong>顺序插入和删除：由于 ArrayList 不需要移动节点，因此在效率上比 LinkedList 更好</strong>。这也是为什么在实际使用中 ArrayList 更多，因为<strong>大部分情况下我们的使用都是顺序插入。</strong></p>
+<p>5、两者都不是线程安全的。</p>
+<p>6、内存空间占用： ArrayList 的空 间浪费主要体现在在 list 列表的结尾会<strong>预留一定的容量空间</strong>，而 LinkedList 的空间花费则体现在它的每一个元素都需要消耗比 ArrayList 更多的空间（因为要存放直接后继和直接前驱以及数据）。</p>
+<h3 id="hashmap对比hashtable"><a href="#hashmap对比hashtable" class="headerlink" title="hashmap对比hashtable"></a>hashmap对比hashtable</h3><p>线程安全：hashmap不安全，hashtable安全（方法被synchronized修饰过）。</p>
+<p>效率：hashtable效率很低，被淘汰。</p>
+<p>null key value？：hashmap支持一个null key。hashtable不支持。</p>
+<p>扩容：hashtable初始：不指定的话为11，之后变为原来的2n+1。hashmap初始16，每次扩充两倍。hashmap在指定了初始容量后会扩充为2的幂次大小。</p>
+<p>底层：解决hash冲突，hashmap在链表大于8会转化成红黑树（如果数组长度小于64，会先进性扩容）。</p>
+<h3 id="List、Set、Map-三者的区别"><a href="#List、Set、Map-三者的区别" class="headerlink" title="List、Set、Map 三者的区别?"></a>List、Set、Map 三者的区别?</h3><p>List（对付<strong>顺序</strong>的好帮手）： 存储的对象是可重复的、有序的。<br>Set（注重<strong>独一无二</strong>的性质）：存储的对象是不可重复的、无序的。<br>Map（<strong>用 Key 来搜索的专业户</strong>）: 存储键值对（key-value），不能包含重复的键（key），每个键只能映射到一个值</p>
+<h3 id="map遍历方式："><a href="#map遍历方式：" class="headerlink" title="map遍历方式："></a>map遍历方式：</h3><p>HashMap 遍历从大的方向来说，可分为以下 4 类：</p>
+<p><strong>迭代器（Iterator）方式遍历；</strong></p>
+<p><strong>For Each 方式遍历；</strong></p>
+<p><strong>Lambda 表达式遍历（JDK 1.8+）;</strong></p>
+<p><strong>Streams API 遍历（JDK 1.8+）。</strong></p>
+<p>使用迭代器（Iterator）<strong>EntrySet</strong> 的方式进行遍历；</p>
+<p>使用迭代器（Iterator）<strong>KeySet</strong> 的方式进行遍历；</p>
+<p>使用 For Each <strong>EntrySet</strong> 的方式进行遍历；</p>
+<p>使用 For Each <strong>KeySet</strong> 的方式进行遍历；</p>
+<p>使用 Lambda 表达式的方式进行遍历；</p>
+<p>使用 Streams API <strong>单线程</strong>的方式进行遍历；</p>
+<p>使用 Streams API <strong>多线程</strong>的方式进行遍历</p>
+<p><img src="https://i.loli.net/2021/08/05/ZP9ot578UVrd2RN.png" alt="计算机生成了可选文字: Iterator(Map. Entry(Integer, Strlng»  (iterator.hasNext()) {  Map. Strlng) entry  ma p ． entrySet() ． iterator();  iterator ． n 巳 〔 ） ；  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/jNw9YtiOlCLV2Bf.png" alt="计算机生成了可选文字: map.keyset().iterator();  Iterator(Integer) Iterator  (iterator.hasNext()) {  Integer key  iterator ． n 巳 〔 ） ；  Sysæn. out ． println(key);  Sysæn. out.println(map• get 〔 k ey ） ); "></p>
+<p><img src="https://i.loli.net/2021/08/05/7qwG2cHSj514gf3.png" alt="计算机生成了可选文字: (Map.Entry(lnteger, String) entry ： ma p ． entrySet()) {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/qfBMmXg3ljFUEko.png" alt="计算机生成了可选文字: 〔 Integer key ： map.keySet()) {  Sysæn. out ． println(key);  Sysæn. out.println(map• get 〔 k ey ） ); "></p>
+<p><img src="https://i.loli.net/2021/08/05/hrf2daRyeQqODsx.png" alt="计算机生成了可选文字: map.forEach((key, value) 一 》 {  Sysæn. out ． println(key);  Sysæn. out ． println(ualue) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/oKvs6jBOxzQUZhJ.png" alt="计算机生成了可选文字: ma p ． entrySet().stream(). forEach((entry) 一 》 {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><img src="https://i.loli.net/2021/08/05/KMzILTYf1nwu8ci.png" alt="计算机生成了可选文字: ma p ． entrySet().para11e1Stream(). forEach((entry) 一 》 {  Sysæn. out ． println(entry ． getKey());  Sysæn. out ． println(entry ． getVa1ue()) ； "></p>
+<p><strong>EntrySet</strong> 之所以比 <strong>KeySet</strong> 的性能高是因为，**KeySet 在循环时使用了 map.get(key)**，而 map.get(key) 相当于又遍历了一遍 Map 集合去查询 key 所对应的值。为什么要用“又”这个词？那是因为在使用迭代器或者 for 循环时，其实已经遍历了一遍 Map 集合了，因此再使用 map.get(key) 查询时，相当于遍历了两遍。</p>
+<p>而 <strong>EntrySet</strong> 只遍历了一遍 Map 集合，之后通过代码“Entry&lt;Integer, String&gt; entry &#x3D; iterator.next()”把对象的 key 和 value 值都放入到了 Entry 对象中，因此再获取 key 和 value 值时就无需再遍历 Map 集合，只需要从 Entry 对象中取值就可以了。</p>
+<p>所以，<strong>EntrySet 的性能比 KeySet 的性能高出了一倍</strong>，因为 KeySet 相当于循环了两遍 Map 集合，而 EntrySet 只循环了一遍。</p>
+<p>我们不能在<strong>遍历中使用</strong>集合 map.remove() 来删除数据，这是非安全的操作方式，但我们可以使用迭代器的 <strong>iterator.remove() 的方法来删除数据</strong>，这是安全的删除集合的方式。</p>
+<p>同样的我们也可以使用 Lambda 中的 removeIf 来提前删除数据，或者是使用 Stream 中的 filter 过滤掉要删除的数据进行循环，这样都是安全的，当然我们也可以在 for 循环前删除数据在遍历也是线程安全的。</p>
+<p>综合性能和安全性来看，我们应该尽量使用<strong>迭代器（Iterator）来遍历 EntrySet 的遍历方式来操作 Map 集合</strong>，这样就会既安全又高效。</p>
+<h3 id="Comparable-和-Comparator-比较？"><a href="#Comparable-和-Comparator-比较？" class="headerlink" title="Comparable 和 Comparator 比较？"></a>Comparable 和 Comparator 比较？</h3><p>1、Comparable 是<strong>排序接口</strong>，一个类实现了 Comparable 接口，意味着“该类支持排序”。Comparator 是<strong>比较器，我们可以实现该接口，自定义比较算法，创建一个 “该类的比较器” 来进行排序</strong>。</p>
+<p>2、Comparable 相当于“内部比较器”，而 Comparator 相当于“外部比较器”。</p>
+<p>3、Comparable 的耦合性更强，<strong>Comparator 的灵活性和扩展性更优。</strong></p>
+<p>4、Comparable 可以用作类的默认排序方法，而 Comparator 则用于默认排序不满足时，提供自定义排序</p>
+<h3 id="Collection-与-Collections-的区别"><a href="#Collection-与-Collections-的区别" class="headerlink" title="Collection 与 Collections 的区别"></a>Collection 与 Collections 的区别</h3><p>Collection：<strong>集合类的一个顶级接口</strong>，提供了对集合对象进行基本操作的通用接口方法。Collection 接口的意义是为各种具体的集合提供了最大化的统一操作方式，常见的 List 与 Set 就是直接继承 Collection 接口。</p>
+<p>Collections：<strong>集合类的一个工具类&#x2F;帮助类</strong>，提供了一系列静态方法，用于对集合中元素进行排序、搜索以及线程安全等各种操作</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="HashSet-是如何保证不重复的？"><a href="#HashSet-是如何保证不重复的？" class="headerlink" title="HashSet 是如何保证不重复的？"></a>HashSet 是如何保证不重复的？</h3><p>HashSet 底层使用 <strong>HashMap</strong> 来实现，元素放在 HashMap 的 key 里，value 为固定的 Object 对象。</p>
+<p>当 add 时调用 HashMap 的 put 方法，如果元素不存在，则返回 null 表示 add 成功，否则 add 失败。</p>
+<p>由于 HashMap 的 Key 值本身就不允许重复，HashSet 正好利用 HashMap 中 key 不重复的特性来校验重复元素。<img src="https://i.loli.net/2021/08/04/I2VuKypq5o7xWrd.png" alt="image-20210804213228204"></p>
+<h3 id="Map、List、Set-它们有的线程安全类和线程不安全的类？"><a href="#Map、List、Set-它们有的线程安全类和线程不安全的类？" class="headerlink" title="Map、List、Set 它们有的线程安全类和线程不安全的类？"></a>Map、List、Set 它们有的线程安全类和线程不安全的类？</h3><p><strong>Map</strong></p>
+<p>线程安全：<strong>CocurrentHashMap、Hashtable</strong><br>线程不安全：HashMap、LinkedHashMap、TreeMap、WeakHashMap</p>
+<p><strong>List</strong></p>
+<p>线程安全<strong>：Vector（线程安全版的 ArrayList）、Stack（继承 Vector，增加 pop、push 方法）、CopyOnWriteArrayList</strong><br>线程不安全：ArrayList、LinkedList</p>
+<p><strong>Set</strong></p>
+<p><strong>线程安全：CopyOnWriteArraySet（底层使用 CopyOnWriteArrayList，通过在插入前判断是否存在实现 Set 不重复的效果</strong></p>
+<p>线程不安全：HashSet（基于 HashMap）、LinkedHashSet（基于 LinkedHashMap）、TreeSet（基于 TreeMap）、EnumSe</p>
+]]></content>
+      <categories>
+        <category>Java基础</category>
+      </categories>
+      <tags>
+        <tag>框架</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL 进阶</title>
+    <url>/2023/07/11/MySQL-%E8%BF%9B%E9%98%B6/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>技术</tag>
+        <tag>MySql</tag>
+        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -1712,6 +1712,22 @@
       </categories>
       <tags>
         <tag>结构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Netty-优点，应用场景</title>
+    <url>/2021/07/30/Netty-%E4%BC%98%E7%82%B9%EF%BC%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</url>
+    <content><![CDATA[<h3 id="netty优点"><a href="#netty优点" class="headerlink" title="netty优点"></a>netty优点</h3><p><strong>异步的</strong>（采用多线程实现了调用方法与返回结果的分离）<br><strong>基于事件驱动（本质上基于IO多路复用）</strong></p>
+<p><strong>优势：</strong></p>
+<p>基于NIO，但是改善了NIO<br>1，需要自己构建协议<br>2，需要解决TCP传输问题，粘包半包。<br>3，NIO中有epoll空轮询bug。<br>4，对API增强了。bytebuff。</p>
+<p>现在是4.0<br>5.0已经废弃，引入AIO，性能未提升。</p>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>涉及到网络通信就会用到netty<br>rpc框架-dubbo，grpc<br>聊天室？<br>spring</p>
+]]></content>
+      <categories>
+        <category>Netty</category>
+      </categories>
+      <tags>
+        <tag>应用</tag>
       </tags>
   </entry>
   <entry>
@@ -1907,22 +1923,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Netty-优点，应用场景</title>
-    <url>/2021/07/30/Netty-%E4%BC%98%E7%82%B9%EF%BC%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</url>
-    <content><![CDATA[<h3 id="netty优点"><a href="#netty优点" class="headerlink" title="netty优点"></a>netty优点</h3><p><strong>异步的</strong>（采用多线程实现了调用方法与返回结果的分离）<br><strong>基于事件驱动（本质上基于IO多路复用）</strong></p>
-<p><strong>优势：</strong></p>
-<p>基于NIO，但是改善了NIO<br>1，需要自己构建协议<br>2，需要解决TCP传输问题，粘包半包。<br>3，NIO中有epoll空轮询bug。<br>4，对API增强了。bytebuff。</p>
-<p>现在是4.0<br>5.0已经废弃，引入AIO，性能未提升。</p>
-<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>涉及到网络通信就会用到netty<br>rpc框架-dubbo，grpc<br>聊天室？<br>spring</p>
-]]></content>
-      <categories>
-        <category>Netty</category>
-      </categories>
-      <tags>
-        <tag>应用</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Netty-核心组件</title>
     <url>/2021/07/30/Netty-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6/</url>
     <content><![CDATA[<h2 id="观念理解"><a href="#观念理解" class="headerlink" title="观念理解"></a>观念理解</h2><ul>
@@ -2087,31 +2087,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Netty-零拷贝</title>
-    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
-    <content><![CDATA[<p>零拷⻉技术是指计算机执⾏操作时，CPU 不需要先将数 据从某处内存复制到另⼀个特定区域。这种技术通常⽤于通过⽹络传输⽂件时节省CPU周期和内存带宽。 </p>
-<p>在 OS 层⾯上的 Zero-copy 通常指避免在用户态和内核态之间来回 拷⻉数据。</p>
-<p>⽽在 Netty 层⾯ ，零拷⻉主要体现在对于数据操作的优化。 </p>
-<ol>
-<li>使⽤ Netty 提供的 CompositeByteBuf 类, 可以将多个 ByteBuf 合并为⼀个逻辑上的 ByteBuf , 避免了各个 ByteBuf 之间的拷⻉。 </li>
-<li>ByteBuf ⽀持 slice 操作, 因此可以将 ByteBuf 分解为多个共享同⼀个存储区域的 ByteBuf , 避免了内存的拷⻉。 </li>
-<li>通过 FileRegion 包装的 FileChannel.tranferTo 实现⽂件传输（底层是sendfile方法）, 可以直接将⽂件缓冲区的数据发送到⽬标 Channel , 避免了传统通过循环 write ⽅式导致的内存拷⻉问题 。</li>
-<li>duplicate。逻辑上的复制。</li>
-</ol>
-<h3 id="slice（si-lai-si）"><a href="#slice（si-lai-si）" class="headerlink" title="slice（si lai si）"></a>slice（si lai si）</h3><p>对原始 ByteBuf 进行切片成多个 ByteBuf，切片后的 ByteBuf 并没有发生内存复制，还是使用原始 ByteBuf 的内存，切片后的 ByteBuf 维护独立的 read，write 指针</p>
-<p><img src="https://i.loli.net/2021/08/04/XkAyOUa6xiMPqV8.png" alt="image-20210804201821413"></p>
-<h3 id="duplicate"><a href="#duplicate" class="headerlink" title="duplicate"></a>duplicate</h3><p>就好比截取了原始 ByteBuf 所有内容，并且没有 max capacity 的限制，也是与原始 ByteBuf 使用同一块底层内存，只是读写指针是独立的。</p>
-<p><img src="https://i.loli.net/2021/08/04/2sbl13NIuMo5jwZ.png" alt="image-20210804201834603"></p>
-<h3 id="CompositeByteBuf（composite）"><a href="#CompositeByteBuf（composite）" class="headerlink" title="CompositeByteBuf（composite）"></a>CompositeByteBuf（composite）</h3><p>可以将多个 ByteBuf 合并为一个逻辑上的 ByteBuf，避免拷贝。</p>
-]]></content>
-      <categories>
-        <category>Netty</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Redis-持久化</title>
     <url>/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</url>
     <content><![CDATA[<p>Redis 的持久化机制有：<strong>RDB、AOF、混合持久化（RDB+AOF，Redis 4.0 引入）。</strong></p>
@@ -2237,6 +2212,31 @@
       </tags>
   </entry>
   <entry>
+    <title>Netty-零拷贝</title>
+    <url>/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</url>
+    <content><![CDATA[<p>零拷⻉技术是指计算机执⾏操作时，CPU 不需要先将数 据从某处内存复制到另⼀个特定区域。这种技术通常⽤于通过⽹络传输⽂件时节省CPU周期和内存带宽。 </p>
+<p>在 OS 层⾯上的 Zero-copy 通常指避免在用户态和内核态之间来回 拷⻉数据。</p>
+<p>⽽在 Netty 层⾯ ，零拷⻉主要体现在对于数据操作的优化。 </p>
+<ol>
+<li>使⽤ Netty 提供的 CompositeByteBuf 类, 可以将多个 ByteBuf 合并为⼀个逻辑上的 ByteBuf , 避免了各个 ByteBuf 之间的拷⻉。 </li>
+<li>ByteBuf ⽀持 slice 操作, 因此可以将 ByteBuf 分解为多个共享同⼀个存储区域的 ByteBuf , 避免了内存的拷⻉。 </li>
+<li>通过 FileRegion 包装的 FileChannel.tranferTo 实现⽂件传输（底层是sendfile方法）, 可以直接将⽂件缓冲区的数据发送到⽬标 Channel , 避免了传统通过循环 write ⽅式导致的内存拷⻉问题 。</li>
+<li>duplicate。逻辑上的复制。</li>
+</ol>
+<h3 id="slice（si-lai-si）"><a href="#slice（si-lai-si）" class="headerlink" title="slice（si lai si）"></a>slice（si lai si）</h3><p>对原始 ByteBuf 进行切片成多个 ByteBuf，切片后的 ByteBuf 并没有发生内存复制，还是使用原始 ByteBuf 的内存，切片后的 ByteBuf 维护独立的 read，write 指针</p>
+<p><img src="https://i.loli.net/2021/08/04/XkAyOUa6xiMPqV8.png" alt="image-20210804201821413"></p>
+<h3 id="duplicate"><a href="#duplicate" class="headerlink" title="duplicate"></a>duplicate</h3><p>就好比截取了原始 ByteBuf 所有内容，并且没有 max capacity 的限制，也是与原始 ByteBuf 使用同一块底层内存，只是读写指针是独立的。</p>
+<p><img src="https://i.loli.net/2021/08/04/2sbl13NIuMo5jwZ.png" alt="image-20210804201834603"></p>
+<h3 id="CompositeByteBuf（composite）"><a href="#CompositeByteBuf（composite）" class="headerlink" title="CompositeByteBuf（composite）"></a>CompositeByteBuf（composite）</h3><p>可以将多个 ByteBuf 合并为一个逻辑上的 ByteBuf，避免拷贝。</p>
+]]></content>
+      <categories>
+        <category>Netty</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis-线程模型,事务</title>
     <url>/2021/07/30/Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/</url>
     <content><![CDATA[<h2 id="redis为什么快"><a href="#redis为什么快" class="headerlink" title="redis为什么快"></a>redis为什么快</h2><p><strong>1、基于内存的操作</strong><br><strong>2、使用了 I&#x2F;O 多路复用模型，select、epoll 等，基于 reactor 模式开发了自己的网络事件处理器</strong><br><strong>3、单线程可以避免不必要的上下文切换和竞争条件，减少了这方面的性能消耗。</strong><br><strong>4、以上这三点是 redis 性能高的主要原因，其他的还有一些小优化，例如：对数据结构进行了优化，简单动态字符串、压缩列表等</strong></p>
@@ -2279,44 +2279,6 @@
       </categories>
       <tags>
         <tag>模型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis-缓存一致性</title>
-    <url>/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/</url>
-    <content><![CDATA[<h2 id="如何保证数据库和缓存的数据一致性"><a href="#如何保证数据库和缓存的数据一致性" class="headerlink" title="如何保证数据库和缓存的数据一致性"></a>如何保证数据库和缓存的数据一致性</h2><p>一般来说，如果允许缓存可以稍微的跟数据库偶尔有不一致的情况，也就是说如果你的系统不是严格要求 “缓存+数据库” 必须保持一致性的话，最好不要做这个方案，即：<strong>读请求和写请求串行化，串到一个内存队列里去</strong>。</p>
-<p><strong>串行化</strong>可以保证<strong>一定不会出现不一致的情况</strong>，但是它也会导致系统的吞吐量大幅度降低，用比正常情况下多几倍的机器去支撑线上的一个请求。</p>
-<h2 id="Cache-Aside-Pattern旁路缓存模式"><a href="#Cache-Aside-Pattern旁路缓存模式" class="headerlink" title="Cache Aside Pattern旁路缓存模式"></a><strong>Cache Aside Pattern旁路缓存模式</strong></h2><p>最经典的缓存+数据库读写的模式，就是 <strong>Cache Aside Pattern。</strong></p>
-<blockquote>
-<p><strong>读的时候，先读缓存</strong>，缓存没有的话，就读数据库，然后取出数据后放入缓存，同时返回响应。<br><strong>更新的时候，先更新数据库，成功后，然后再删除缓存。</strong></p>
-<p>如果 cache 服务当前不可用导致缓存删除失败的话，我们就隔一段时间进行重试，重试次数可以自己定。如果多次重试还是失败的话，我们可以把当前更新失败的 key 存入队列中，等缓存服务可用之后，再将缓存中对应的 key 删除即可。</p>
-</blockquote>
-<h3 id="在写数据的过程中，可以先删除-cache-，后更新-DB-？"><a href="#在写数据的过程中，可以先删除-cache-，后更新-DB-？" class="headerlink" title="在写数据的过程中，可以先删除 cache ，后更新 DB ？"></a>在写数据的过程中，可以先删除 cache ，后更新 DB ？</h3><p>请求1先把cache中的A数据删除 -&gt; 请求2从DB中读取数据-&gt;请求1再把DB中的A数据更新。</p>
-<h3 id="在写数据的过程中，先更新DB，后删除cache就没有问题了？"><a href="#在写数据的过程中，先更新DB，后删除cache就没有问题了？" class="headerlink" title="在写数据的过程中，先更新DB，后删除cache就没有问题了？"></a>在写数据的过程中，先更新DB，后删除cache就没有问题了？</h3><p>理论上来说还是可能会出现数据不一致性的问题，不过概率非常小，因为<strong>缓存的写入速度是比数据库的写入速度快很多</strong></p>
-<p>比如请求1先读数据 A，请求2随后写数据A，并且数据A不在缓存中的话也有可能产生数据不一致性的问题。这个过程可以简单描述为：</p>
-<p>请求1从DB读数据A-&gt;请求2写更新数据 A 到数据库并把删除cache中的A数据-&gt;请求1将数据A写入cache。</p>
-<h3 id="为什么是删除缓存，而不是更新缓存？"><a href="#为什么是删除缓存，而不是更新缓存？" class="headerlink" title="为什么是删除缓存，而不是更新缓存？"></a>为什么是删除缓存，而不是更新缓存？</h3><p>原因很简单，很多时候，在复杂点的缓存场景，缓存不单单是数据库中直接取出来的值。</p>
-<p>比如可能更新了某个表的一个字段，然后其对应的缓存，是需要查询另外两个表的数据并进行运算，才能计算出缓存最新的值的。</p>
-<p>另外<strong>更新缓存的代价有时候是很高的</strong>。是不是说，每次修改数据库的时候，都一定要将其对应的缓存更新一份？也许有的场景是这样，但是对于比较复杂的缓存数据计算的场景，就不是这样了。<strong>如果你频繁修改一个缓存涉及的多个表，缓存也频繁更新。</strong>但是问题在于，这个缓存到底会不会被频繁访问到？</p>
-<p>举个栗子，一个缓存涉及的表的字段，在 1 分钟内就修改了 20 次，或者是 100 次，那么缓存更新 20 次、100 次；<strong>但是这个缓存在 1 分钟内只被读取了 1 次</strong>，有大量的冷数据。实际上，<strong>如果你只是删除缓存的话</strong>，那么在 1 分钟内，这个缓存不过就重新计算一次而已，<strong>开销大幅度降低</strong>。用到缓存才去算缓存。</p>
-<p><strong>其实删除缓存，而不是更新缓存</strong>，就是一个 <strong>lazy 计算</strong>的思想，不要每次都重新做复杂的计算，不管它会不会用到，而是让它到需要被使用的时候再重新计算。像 mybatis，hibernate，都有懒加载思想。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>一个是读操作，但是没有命中缓存，然后就到数据库中取数据，此时来了一个写操作，写完数据库后，让缓存失效，然后，之前的那个读操作再把老的数据放进去，所以，会造成脏数据。</p>
-<p>但实际上出现的概率可能非常低，因为这个条件需要发生在读缓存时缓存失效，而且并发着有一个写操作。而实际上数据库的<strong>写操作会比读操作慢得多，而且还要锁表</strong>，而读操作必需在写操作前进入数据库操作，而又要晚于写操作更新缓存，所有的这些条件都具备的概率基本并不大。</p>
-<p>所以，要么通过2PC或是Paxos协议保证一致性，要么就是拼命的降低并发时脏数据的概率，而Facebook使用了这个降低概率的玩法，因为2PC太慢，而Paxos太复杂。当然，<strong>最好还是为缓存设置上过期时间。</strong></p>
-<h2 id="Read-x2F-Write-Through-Pattern（读写穿透）"><a href="#Read-x2F-Write-Through-Pattern（读写穿透）" class="headerlink" title="Read&#x2F;Write Through Pattern（读写穿透）"></a>Read&#x2F;Write Through Pattern（读写穿透）</h2><p>Read&#x2F;Write Through套路是把更新数据库（Repository）的操作由<strong>缓存自己代理</strong>，可以理解为，应用认为后端就是一个单一的存储，而存储自己维护自己的Cache。</p>
-<p><strong>Read Through</strong><br>Read Through 套路就是在<strong>查询操作中更新缓存</strong>，也就是说，当缓存失效的时候（过期或LRU换出），Cache Aside是由调用方负责把数据加载入缓存，而Read Through则用缓存服务自己来加载，从而对应用方是透明的。</p>
-<p><strong>Write Through</strong><br>Write Through 套路和Read Through相仿，不过是在更新数据时发生。<strong>当有数据更新的时候，如果没有命中缓存，直接更新数据库，然后返回</strong>。<strong>如果命中了缓存，则更新缓存，然后再由Cache自己更新数据库（这是一个同步操作）</strong></p>
-<p><img src="https://i.loli.net/2021/08/04/UgD7uS9WeIimzxR.png" alt="image-20210804192802967"></p>
-<h2 id="Write-Behind-Caching-Pattern"><a href="#Write-Behind-Caching-Pattern" class="headerlink" title="Write Behind Caching Pattern"></a>Write Behind Caching Pattern</h2><p>Write Behind 又叫 Write Back。</p>
-<p>Write Back套路，<strong>在更新数据的时候，只更新缓存，不更新数据库，而我们的缓存会异步地批量更新数据库。</strong>这个设计的好处就是让数据的I&#x2F;O操作飞快无比，因为异步，write backg还可以合并对同一个数据的多次操作，所以性能的提高是相当可观的。</p>
-<p>但是，其带来的问题是，<strong>数据不是强一致性的</strong>，而且可能会丢失。</p>
-<p>另外，Write Back实现逻辑比较复杂，因为他需要track有哪数据是被更新了的，需要刷到持久层上。操作系统的write back会在仅当这个cache需要失效的时候，才会被真正持久起来，比如，内存不够了，或是进程退出了等情况，这又叫lazy write。</p>
-]]></content>
-      <categories>
-        <category>Redis</category>
-      </categories>
-      <tags>
-        <tag>思想</tag>
       </tags>
   </entry>
   <entry>
@@ -2369,6 +2331,79 @@
       </categories>
       <tags>
         <tag>集群</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis-缓存击穿，雪崩，穿透</title>
+    <url>/2021/07/30/Redis-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%8C%E9%9B%AA%E5%B4%A9%EF%BC%8C%E7%A9%BF%E9%80%8F/</url>
+    <content><![CDATA[<h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>访问一个缓存和数据库都不存在的 key，此时会直接打到数据库上，并且查不到数据，没法写缓存，所以下<br>一次同样会打到数据库上。此时，缓存起不到作用，请求每次都会走到数据库，流量大时数据库可能会被打挂。此时缓存就好像被“穿透”了一样，起不到任何作用。</p>
+<h3 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h3><p>1）接口校验。在正常业务流程中可能会存在少量访问不存在 key 的情况，但是一般不会出现大量的情况，所以这种场景最大的可能性是遭受了非法攻击。可以在最外层先做一层校验：用户鉴权、数据合法性校验等，例如商品查询中，商品的 ID 是正整数，则可以直接对非正整数直接过滤等等。</p>
+<p>2）缓存空值。当访问缓存和 DB 都没有查询到值时，可以将空值写进缓存，但是设置较短的过期时间，该时间需要根据产品业务特性来设置。</p>
+<p>3）布隆过滤器。使用布隆过滤器存储所有可能访问的 key，不存在的 key 直接被过滤，存在的 key 则再进一步查询缓存和数据库</p>
+<h2 id="布隆过滤器"><a href="#布隆过滤器" class="headerlink" title="布隆过滤器"></a>布隆过滤器</h2><p>布隆过滤器的特点是<strong>判断不存在的，则一定不存在</strong>；<strong>判断存在的，大概率存在</strong>，但也有小概率不存在。并且这个概率是可控的，我们可以让这个概率变小或者变高，取决于用户本身的需求。</p>
+<p>布隆过滤器<strong>由一个 bitSet 和 一组 Hash 函数（算法）组成</strong>，是一种空间效率极高的概率型算法和数据结构，主要用来判断<strong>一个元素是否在海量数据集合中存在</strong>。</p>
+<p>在初始化时，bitSet 的每一位被初始化为 0，同时会定义 Hash 函数，例如有 3 组 Hash 函数：hash1、hash2、hash3。</p>
+<h3 id="写入流程"><a href="#写入流程" class="headerlink" title="写入流程"></a>写入流程</h3><p>当我们要写入一个值时，过程如下，以“x”为例：<br>1）首先将“x”跟 3 组 Hash 函数分别计算，得到 bitSet 的下标为：1、7、10。<br>2）将 bitSet 的这 3 个下标标记为 1。</p>
+<p>假设我们还有另外两个值：java 和 q，按上面的流程跟 3 组 Hash 函数分别计算，结果如下：<br>java：Hash 函数计算 bitSet 下标为：1、7、11<br>q函数计算 bitSet 下标为：4、10、11</p>
+<h3 id="查询流程"><a href="#查询流程" class="headerlink" title="查询流程"></a>查询流程</h3><p>当我们要查询一个值时，过程如下，同样以“x”为例：：<br>1）首先将“x”跟 3 组 Hash 函数分别计算，得到 bitSet 的下标为：1、7、10。<br>2）查看 bitSet 的这 3 个下标是否都为 1，如果这 3 个下标不都为 1，则说明该值必然不存在，如果这 3 个下标都为 1，则只能说明可能存在，并不能说明一定存在。</p>
+<p><img src="https://i.loli.net/2021/08/04/nZqz2gG4hsDHpwm.png" alt="image-20210804194430890"></p>
+<p>其根本原因是，<strong>不同的值在跟 Hash 函数计算后，可能会得到相同的下标</strong>，所以某个值的标记位，可能会被其他值给标上了。<br>这也是为啥布隆过滤器只能判断某个值可能存在，无法判断必然存在的原因。但是反过来，如果该值根据 Hash 函数计算的标记位没有全部都为 1，那么则说明必然不存在，这个是肯定的。</p>
+<p>降低这种误判率的思路也比较简单：<br>一个是<strong>加大 bitSet 的长度</strong>，这样不同的值出现“冲突”的概率就降低了，从而误判率也降低。<br><strong>提升 Hash 函数的个数</strong>，Hash 函数越多，每个值对应的 bit 越多，从而误判率也降低。</p>
+<h2 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h2><p>某一个<strong>热点 key，在缓存过期的一瞬间，同时有大量的请求打进来</strong>，由于此时缓存过期了，所以请求最终都<br>会走到数据库，造成瞬时数据库请求量大、压力骤增，甚至可能打垮数据库。</p>
+<h3 id="解决方案：-1"><a href="#解决方案：-1" class="headerlink" title="解决方案："></a>解决方案：</h3><p><strong>预先准备</strong>，以电商为例，每个商家根据店铺等级，指定若干款主打商品，在购物节期间，加大此类信息key的过期时长。</p>
+<p><strong>现场调整</strong><br>监控访问量，对自然流量激增的数据延长过期时间或设置为永久性key</p>
+<p><strong>后台刷新数据</strong><br>启动定时任务，高峰期来临之前，刷新数据有效期，确保不丢失</p>
+<p><strong>二级缓存</strong><br><strong>设置不同的失效时间，保障不会被同时淘汰就行</strong></p>
+<p><strong>加锁</strong><br>分布式锁，防止被击穿，但是要注意也是性能瓶颈，慎重！</p>
+<p><strong>总结</strong><br>缓存击穿就是单个高热数据过期的瞬间，数据访问量较大，未命中redis后，发起了大量对同一数据的数据库访问，导致对数据库服务器造成压力。应对策略应该在业务数据分析与预防方面进行，配合运行监控测试与即时调整策略，毕竟单个key的过期监控难度较高，配合雪崩处理策略即可。</p>
+<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>大量的热点 key 设置了相同的过期时间，导在缓存在同一时刻全部失效，造成瞬时数据库请求量大、压力<br>骤增，引起雪崩，甚至导致数据库被打挂。<br>缓存雪崩其实有点像“升级版的缓存击穿”，缓存击穿是一个热点 key，缓存雪崩是一组热点 key。</p>
+<h3 id="解决方案：-2"><a href="#解决方案：-2" class="headerlink" title="解决方案："></a>解决方案：</h3><p><strong>过期时间打散</strong>。既然是大量缓存集中失效，那最容易想到就是让他们不集中生效。可以给缓存的过期时间时加上一个<strong>随机值时间</strong>，使得每个 key 的过期时间分布开来，不会集中在同一时刻失效。</p>
+<p><strong>热点数据不过期</strong>。该方式和缓存击穿一样，也是要着重考虑刷新的时间间隔和数据异常如何处理的情况。</p>
+<p><strong>加互斥锁</strong>。该方式和缓存击穿一样，按 key 维度加锁，对于同一个 key，只允许一个线程去计算，其他线程原<br>地阻塞等待第一个线程的计算结果，然后直接走缓存即可</p>
+]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>概念</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis-缓存一致性</title>
+    <url>/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/</url>
+    <content><![CDATA[<h2 id="如何保证数据库和缓存的数据一致性"><a href="#如何保证数据库和缓存的数据一致性" class="headerlink" title="如何保证数据库和缓存的数据一致性"></a>如何保证数据库和缓存的数据一致性</h2><p>一般来说，如果允许缓存可以稍微的跟数据库偶尔有不一致的情况，也就是说如果你的系统不是严格要求 “缓存+数据库” 必须保持一致性的话，最好不要做这个方案，即：<strong>读请求和写请求串行化，串到一个内存队列里去</strong>。</p>
+<p><strong>串行化</strong>可以保证<strong>一定不会出现不一致的情况</strong>，但是它也会导致系统的吞吐量大幅度降低，用比正常情况下多几倍的机器去支撑线上的一个请求。</p>
+<h2 id="Cache-Aside-Pattern旁路缓存模式"><a href="#Cache-Aside-Pattern旁路缓存模式" class="headerlink" title="Cache Aside Pattern旁路缓存模式"></a><strong>Cache Aside Pattern旁路缓存模式</strong></h2><p>最经典的缓存+数据库读写的模式，就是 <strong>Cache Aside Pattern。</strong></p>
+<blockquote>
+<p><strong>读的时候，先读缓存</strong>，缓存没有的话，就读数据库，然后取出数据后放入缓存，同时返回响应。<br><strong>更新的时候，先更新数据库，成功后，然后再删除缓存。</strong></p>
+<p>如果 cache 服务当前不可用导致缓存删除失败的话，我们就隔一段时间进行重试，重试次数可以自己定。如果多次重试还是失败的话，我们可以把当前更新失败的 key 存入队列中，等缓存服务可用之后，再将缓存中对应的 key 删除即可。</p>
+</blockquote>
+<h3 id="在写数据的过程中，可以先删除-cache-，后更新-DB-？"><a href="#在写数据的过程中，可以先删除-cache-，后更新-DB-？" class="headerlink" title="在写数据的过程中，可以先删除 cache ，后更新 DB ？"></a>在写数据的过程中，可以先删除 cache ，后更新 DB ？</h3><p>请求1先把cache中的A数据删除 -&gt; 请求2从DB中读取数据-&gt;请求1再把DB中的A数据更新。</p>
+<h3 id="在写数据的过程中，先更新DB，后删除cache就没有问题了？"><a href="#在写数据的过程中，先更新DB，后删除cache就没有问题了？" class="headerlink" title="在写数据的过程中，先更新DB，后删除cache就没有问题了？"></a>在写数据的过程中，先更新DB，后删除cache就没有问题了？</h3><p>理论上来说还是可能会出现数据不一致性的问题，不过概率非常小，因为<strong>缓存的写入速度是比数据库的写入速度快很多</strong></p>
+<p>比如请求1先读数据 A，请求2随后写数据A，并且数据A不在缓存中的话也有可能产生数据不一致性的问题。这个过程可以简单描述为：</p>
+<p>请求1从DB读数据A-&gt;请求2写更新数据 A 到数据库并把删除cache中的A数据-&gt;请求1将数据A写入cache。</p>
+<h3 id="为什么是删除缓存，而不是更新缓存？"><a href="#为什么是删除缓存，而不是更新缓存？" class="headerlink" title="为什么是删除缓存，而不是更新缓存？"></a>为什么是删除缓存，而不是更新缓存？</h3><p>原因很简单，很多时候，在复杂点的缓存场景，缓存不单单是数据库中直接取出来的值。</p>
+<p>比如可能更新了某个表的一个字段，然后其对应的缓存，是需要查询另外两个表的数据并进行运算，才能计算出缓存最新的值的。</p>
+<p>另外<strong>更新缓存的代价有时候是很高的</strong>。是不是说，每次修改数据库的时候，都一定要将其对应的缓存更新一份？也许有的场景是这样，但是对于比较复杂的缓存数据计算的场景，就不是这样了。<strong>如果你频繁修改一个缓存涉及的多个表，缓存也频繁更新。</strong>但是问题在于，这个缓存到底会不会被频繁访问到？</p>
+<p>举个栗子，一个缓存涉及的表的字段，在 1 分钟内就修改了 20 次，或者是 100 次，那么缓存更新 20 次、100 次；<strong>但是这个缓存在 1 分钟内只被读取了 1 次</strong>，有大量的冷数据。实际上，<strong>如果你只是删除缓存的话</strong>，那么在 1 分钟内，这个缓存不过就重新计算一次而已，<strong>开销大幅度降低</strong>。用到缓存才去算缓存。</p>
+<p><strong>其实删除缓存，而不是更新缓存</strong>，就是一个 <strong>lazy 计算</strong>的思想，不要每次都重新做复杂的计算，不管它会不会用到，而是让它到需要被使用的时候再重新计算。像 mybatis，hibernate，都有懒加载思想。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>一个是读操作，但是没有命中缓存，然后就到数据库中取数据，此时来了一个写操作，写完数据库后，让缓存失效，然后，之前的那个读操作再把老的数据放进去，所以，会造成脏数据。</p>
+<p>但实际上出现的概率可能非常低，因为这个条件需要发生在读缓存时缓存失效，而且并发着有一个写操作。而实际上数据库的<strong>写操作会比读操作慢得多，而且还要锁表</strong>，而读操作必需在写操作前进入数据库操作，而又要晚于写操作更新缓存，所有的这些条件都具备的概率基本并不大。</p>
+<p>所以，要么通过2PC或是Paxos协议保证一致性，要么就是拼命的降低并发时脏数据的概率，而Facebook使用了这个降低概率的玩法，因为2PC太慢，而Paxos太复杂。当然，<strong>最好还是为缓存设置上过期时间。</strong></p>
+<h2 id="Read-x2F-Write-Through-Pattern（读写穿透）"><a href="#Read-x2F-Write-Through-Pattern（读写穿透）" class="headerlink" title="Read&#x2F;Write Through Pattern（读写穿透）"></a>Read&#x2F;Write Through Pattern（读写穿透）</h2><p>Read&#x2F;Write Through套路是把更新数据库（Repository）的操作由<strong>缓存自己代理</strong>，可以理解为，应用认为后端就是一个单一的存储，而存储自己维护自己的Cache。</p>
+<p><strong>Read Through</strong><br>Read Through 套路就是在<strong>查询操作中更新缓存</strong>，也就是说，当缓存失效的时候（过期或LRU换出），Cache Aside是由调用方负责把数据加载入缓存，而Read Through则用缓存服务自己来加载，从而对应用方是透明的。</p>
+<p><strong>Write Through</strong><br>Write Through 套路和Read Through相仿，不过是在更新数据时发生。<strong>当有数据更新的时候，如果没有命中缓存，直接更新数据库，然后返回</strong>。<strong>如果命中了缓存，则更新缓存，然后再由Cache自己更新数据库（这是一个同步操作）</strong></p>
+<p><img src="https://i.loli.net/2021/08/04/UgD7uS9WeIimzxR.png" alt="image-20210804192802967"></p>
+<h2 id="Write-Behind-Caching-Pattern"><a href="#Write-Behind-Caching-Pattern" class="headerlink" title="Write Behind Caching Pattern"></a>Write Behind Caching Pattern</h2><p>Write Behind 又叫 Write Back。</p>
+<p>Write Back套路，<strong>在更新数据的时候，只更新缓存，不更新数据库，而我们的缓存会异步地批量更新数据库。</strong>这个设计的好处就是让数据的I&#x2F;O操作飞快无比，因为异步，write backg还可以合并对同一个数据的多次操作，所以性能的提高是相当可观的。</p>
+<p>但是，其带来的问题是，<strong>数据不是强一致性的</strong>，而且可能会丢失。</p>
+<p>另外，Write Back实现逻辑比较复杂，因为他需要track有哪数据是被更新了的，需要刷到持久层上。操作系统的write back会在仅当这个cache需要失效的时候，才会被真正持久起来，比如，内存不够了，或是进程退出了等情况，这又叫lazy write。</p>
+]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>思想</tag>
       </tags>
   </entry>
   <entry>
@@ -2531,39 +2566,159 @@
       </tags>
   </entry>
   <entry>
-    <title>Redis-缓存击穿，雪崩，穿透</title>
-    <url>/2021/07/30/Redis-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%8C%E9%9B%AA%E5%B4%A9%EF%BC%8C%E7%A9%BF%E9%80%8F/</url>
-    <content><![CDATA[<h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>访问一个缓存和数据库都不存在的 key，此时会直接打到数据库上，并且查不到数据，没法写缓存，所以下<br>一次同样会打到数据库上。此时，缓存起不到作用，请求每次都会走到数据库，流量大时数据库可能会被打挂。此时缓存就好像被“穿透”了一样，起不到任何作用。</p>
-<h3 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h3><p>1）接口校验。在正常业务流程中可能会存在少量访问不存在 key 的情况，但是一般不会出现大量的情况，所以这种场景最大的可能性是遭受了非法攻击。可以在最外层先做一层校验：用户鉴权、数据合法性校验等，例如商品查询中，商品的 ID 是正整数，则可以直接对非正整数直接过滤等等。</p>
-<p>2）缓存空值。当访问缓存和 DB 都没有查询到值时，可以将空值写进缓存，但是设置较短的过期时间，该时间需要根据产品业务特性来设置。</p>
-<p>3）布隆过滤器。使用布隆过滤器存储所有可能访问的 key，不存在的 key 直接被过滤，存在的 key 则再进一步查询缓存和数据库</p>
-<h2 id="布隆过滤器"><a href="#布隆过滤器" class="headerlink" title="布隆过滤器"></a>布隆过滤器</h2><p>布隆过滤器的特点是<strong>判断不存在的，则一定不存在</strong>；<strong>判断存在的，大概率存在</strong>，但也有小概率不存在。并且这个概率是可控的，我们可以让这个概率变小或者变高，取决于用户本身的需求。</p>
-<p>布隆过滤器<strong>由一个 bitSet 和 一组 Hash 函数（算法）组成</strong>，是一种空间效率极高的概率型算法和数据结构，主要用来判断<strong>一个元素是否在海量数据集合中存在</strong>。</p>
-<p>在初始化时，bitSet 的每一位被初始化为 0，同时会定义 Hash 函数，例如有 3 组 Hash 函数：hash1、hash2、hash3。</p>
-<h3 id="写入流程"><a href="#写入流程" class="headerlink" title="写入流程"></a>写入流程</h3><p>当我们要写入一个值时，过程如下，以“x”为例：<br>1）首先将“x”跟 3 组 Hash 函数分别计算，得到 bitSet 的下标为：1、7、10。<br>2）将 bitSet 的这 3 个下标标记为 1。</p>
-<p>假设我们还有另外两个值：java 和 q，按上面的流程跟 3 组 Hash 函数分别计算，结果如下：<br>java：Hash 函数计算 bitSet 下标为：1、7、11<br>q函数计算 bitSet 下标为：4、10、11</p>
-<h3 id="查询流程"><a href="#查询流程" class="headerlink" title="查询流程"></a>查询流程</h3><p>当我们要查询一个值时，过程如下，同样以“x”为例：：<br>1）首先将“x”跟 3 组 Hash 函数分别计算，得到 bitSet 的下标为：1、7、10。<br>2）查看 bitSet 的这 3 个下标是否都为 1，如果这 3 个下标不都为 1，则说明该值必然不存在，如果这 3 个下标都为 1，则只能说明可能存在，并不能说明一定存在。</p>
-<p><img src="https://i.loli.net/2021/08/04/nZqz2gG4hsDHpwm.png" alt="image-20210804194430890"></p>
-<p>其根本原因是，<strong>不同的值在跟 Hash 函数计算后，可能会得到相同的下标</strong>，所以某个值的标记位，可能会被其他值给标上了。<br>这也是为啥布隆过滤器只能判断某个值可能存在，无法判断必然存在的原因。但是反过来，如果该值根据 Hash 函数计算的标记位没有全部都为 1，那么则说明必然不存在，这个是肯定的。</p>
-<p>降低这种误判率的思路也比较简单：<br>一个是<strong>加大 bitSet 的长度</strong>，这样不同的值出现“冲突”的概率就降低了，从而误判率也降低。<br><strong>提升 Hash 函数的个数</strong>，Hash 函数越多，每个值对应的 bit 越多，从而误判率也降低。</p>
-<h2 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h2><p>某一个<strong>热点 key，在缓存过期的一瞬间，同时有大量的请求打进来</strong>，由于此时缓存过期了，所以请求最终都<br>会走到数据库，造成瞬时数据库请求量大、压力骤增，甚至可能打垮数据库。</p>
-<h3 id="解决方案：-1"><a href="#解决方案：-1" class="headerlink" title="解决方案："></a>解决方案：</h3><p><strong>预先准备</strong>，以电商为例，每个商家根据店铺等级，指定若干款主打商品，在购物节期间，加大此类信息key的过期时长。</p>
-<p><strong>现场调整</strong><br>监控访问量，对自然流量激增的数据延长过期时间或设置为永久性key</p>
-<p><strong>后台刷新数据</strong><br>启动定时任务，高峰期来临之前，刷新数据有效期，确保不丢失</p>
-<p><strong>二级缓存</strong><br><strong>设置不同的失效时间，保障不会被同时淘汰就行</strong></p>
-<p><strong>加锁</strong><br>分布式锁，防止被击穿，但是要注意也是性能瓶颈，慎重！</p>
-<p><strong>总结</strong><br>缓存击穿就是单个高热数据过期的瞬间，数据访问量较大，未命中redis后，发起了大量对同一数据的数据库访问，导致对数据库服务器造成压力。应对策略应该在业务数据分析与预防方面进行，配合运行监控测试与即时调整策略，毕竟单个key的过期监控难度较高，配合雪崩处理策略即可。</p>
-<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>大量的热点 key 设置了相同的过期时间，导在缓存在同一时刻全部失效，造成瞬时数据库请求量大、压力<br>骤增，引起雪崩，甚至导致数据库被打挂。<br>缓存雪崩其实有点像“升级版的缓存击穿”，缓存击穿是一个热点 key，缓存雪崩是一组热点 key。</p>
-<h3 id="解决方案：-2"><a href="#解决方案：-2" class="headerlink" title="解决方案："></a>解决方案：</h3><p><strong>过期时间打散</strong>。既然是大量缓存集中失效，那最容易想到就是让他们不集中生效。可以给缓存的过期时间时加上一个<strong>随机值时间</strong>，使得每个 key 的过期时间分布开来，不会集中在同一时刻失效。</p>
-<p><strong>热点数据不过期</strong>。该方式和缓存击穿一样，也是要着重考虑刷新的时间间隔和数据异常如何处理的情况。</p>
-<p><strong>加互斥锁</strong>。该方式和缓存击穿一样，按 key 维度加锁，对于同一个 key，只允许一个线程去计算，其他线程原<br>地阻塞等待第一个线程的计算结果，然后直接走缓存即可</p>
+    <title>golang 基础</title>
+    <url>/2023/07/11/golang-%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[]]></content>
+      <tags>
+        <tag>技术</tag>
+        <tag>golang</tag>
+        <tag>语言</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>a设计模式</title>
+    <url>/2021/08/05/a%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="设计模式类型"><a href="#设计模式类型" class="headerlink" title="设计模式类型"></a>设计模式类型</h2><h3 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h3><p>这些设计模式提供了一种在<strong>创建对象的同时隐藏创建逻辑的方式</strong>，而不是使用 new 运算符直接实例化对象。这使得程序在判断针对某个给定实例需要创建哪些对象时更加灵活。</p>
+<p><strong>工厂模式（Factory Pattern）</strong><br><strong>抽象工厂模式（Abstract Factory Pattern）</strong><br><strong>单例模式（Singleton Pattern）</strong><br>建造者模式（Builder Pattern）<br>原型模式（Prototype Pattern）</p>
+<h3 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h3><p>这些设计模式关注<strong>类和对象的组合</strong>。继承的概念被用来组合接口和定义组合对象获得新功能的方式。</p>
+<p><strong>适配器模式（Adapter Pattern）</strong><br>桥接模式（Bridge Pattern）<br>过滤器模式（Filter、Criteria Pattern）<br>组合模式（Composite Pattern）<br><strong>装饰器模式（Decorator Pattern）</strong><br>外观模式（Facade Pattern）<br>享元模式（Flyweight Pattern）<br><strong>代理模式（Proxy Pattern）</strong></p>
+<h3 id="行为型模式"><a href="#行为型模式" class="headerlink" title="行为型模式"></a>行为型模式</h3><p>这些设计模式特别关注<strong>对象之间的通信。</strong>	</p>
+<p>责任链模式（Chain of Responsibility Pattern）<br>命令模式（Command Pattern）<br>解释器模式（Interpreter Pattern）<br>迭代器模式（Iterator Pattern）<br>中介者模式（Mediator Pattern）<br>备忘录模式（Memento Pattern）<br>观察者模式（Observer Pattern）<br>状态模式（State Pattern）<br>空对象模式（Null Object Pattern）<br>策略模式（Strategy Pattern）<br>模板模式（Template Pattern）<br>访问者模式（Visitor Pattern）</p>
+<h3 id="J2EE-模式"><a href="#J2EE-模式" class="headerlink" title="J2EE 模式"></a>J2EE 模式</h3><p>这些设计模式特别关注<strong>表示层</strong>。这些模式是由 Sun Java Center 鉴定的。	</p>
+<p>MVC 模式（MVC Pattern）<br>业务代表模式（Business Delegate Pattern）<br>组合实体模式（Composite Entity Pattern）<br>数据访问对象模式（Data Access Object Pattern）<br>前端控制器模式（Front Controller Pattern）<br>拦截过滤器模式（Intercepting Filter Pattern）<br>服务定位器模式（Service Locator Pattern）<br>传输对象模式（Transfer Object Pattern）</p>
+<h2 id="设计模式的六大原则"><a href="#设计模式的六大原则" class="headerlink" title="设计模式的六大原则"></a>设计模式的六大原则</h2><p>0、<strong>单一职责原则</strong>(Single Responsibility Principle)</p>
+<p>单一职责原则表示一个模块的组成元素之间的功能相关性。从软件变化的角度来看，就一个类而言，应该仅有一个让它变化的原因；通俗地说，<strong>即一个类只负责一项职责。</strong></p>
+<p>假设某个类 P 负责两个不同的职责，职责 P1 和 职责 P2，那么当职责 P1 需求发生改变而需要修改类 P，有可能会导致原来运行正常的职责 P2 功能发生故障。</p>
+<p>1、<strong>开闭原则</strong>（Open Close Principle）</p>
+<p>开闭原则的意思是：<strong>对扩展开放，对修改关闭</strong>。在程序需要进行拓展的时候，不能去修改原有的代码，实现一个热插拔的效果。简言之，<strong>是为了使程序的扩展性好，易于维护和升级</strong>。想要达到这样的效果，我们需要使用接口和抽象类，后面的具体设计中我们会提到这点。</p>
+<p>2、<strong>里氏代换原则</strong>（Liskov Substitution Principle）</p>
+<p>里氏代换原则是<strong>面向对象设计</strong>的基本原则之一。 里氏代换原则中说，<strong>任何基类可以出现的地方，子类一定可以出现</strong>。LSP 是继承复用的基石，只有当派生类可以替换掉基类，且软件单位的功能不受到影响时，基类才能真正被复用，而派生类也能够在基类的基础上增加新的行为。</p>
+<p>里氏代换原则是对开闭原则的补充。实现开闭原则的关键步骤就是<strong>抽象化</strong>，而基类与子类的继承关系就是抽象化的具体实现，所以里氏代换原则是对实现抽象化的具体步骤的规范。</p>
+<p>3、<strong>依赖倒转原则</strong>（Dependence Inversion Principle）</p>
+<p>这个原则是开闭原则的基础，具体内容：针对接口编程，依赖于抽象而不依赖于具体。</p>
+<p>4、<strong>接口隔离原则</strong>（Interface Segregation Principle）</p>
+<p>这个原则的意思是：使用多个隔离的接口，比使用单个接口要好。它还有另外一个意思是：<strong>降低类之间的耦合度。</strong></p>
+<p>5、<strong>迪米特法则，又称最少知道原则</strong>（Demeter Principle）</p>
+<p>最少知道原则是指：一个<strong>实体应当尽量少地与其他实体之间发生相互作用</strong>，使得系统功能模块相对独立。</p>
+<p>6、<strong>合成复用原则（</strong>Composite Reuse Principle）</p>
+<p>合成复用原则是指：<strong>尽量使用合成&#x2F;聚合的方式，而不是使用继承</strong>。</p>
+<h2 id="常见设计模式"><a href="#常见设计模式" class="headerlink" title="常见设计模式"></a>常见设计模式</h2><h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><p>单例模式（Singleton）的目的是为了保证在一个进程中，某个类有且仅有一个实例。</p>
+<p>因为这个类只有一个实例，因此，自然不能让调用方使用new Xyz()来创建实例了。所以，单例的构造方法必须是private，这样就防止了调用方自己创建实例。</p>
+<p>只有private构造方法，确保外部无法实例化；</p>
+<p>通过private static变量持有唯一实例，<strong>保证全局唯一性；</strong></p>
+<p>通过public static方法返回此唯一实例，<strong>使外部调用方能获取到实例。</strong></p>
+<h4 id="懒汉式，线程不安全"><a href="#懒汉式，线程不安全" class="headerlink" title="懒汉式，线程不安全"></a>懒汉式，线程不安全</h4><p>是否 Lazy 初始化：是</p>
+<p>是否多线程安全：否</p>
+<p>这种写法起到了Lazy Loading的效果，但是只能在单线程下使用。</p>
+<p>如果在多线程下，一个线程进入了if (singleton &#x3D;&#x3D; null)判断语句块，还未来得及往下执行，另一个线程也通过了这个判断语句，这时便会产生多个实例。所以在多线程环境下不可使用这种方式。</p>
+<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton instance;  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br><br><span class="hljs-keyword">	public</span><span class="hljs-keyword"> static</span> Singleton getInstance() &#123;  <br><span class="hljs-built_in">	if </span>(instance == null) &#123;  <br>   <span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>	&#125;  <br><span class="hljs-built_in">	return </span>instance;  <br>	&#125;  <br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="懒汉式，线程安全"><a href="#懒汉式，线程安全" class="headerlink" title="懒汉式，线程安全"></a>懒汉式，线程安全</h4><p>是否 Lazy 初始化：是</p>
+<p>是否多线程安全：是</p>
+<p>描述：这种方式具备很好的 lazy loading，能够在多线程中很好的工作，但是，效率很低，99% 情况下不需要同步。<br>优点：<strong>第一次调用才初始化，避免内存浪费。</strong><br>缺点：<strong>必须加锁 synchronized 才能保证单例，但加锁会影响效率</strong>。<br>getInstance() 的性能对应用程序不是很关键（该方法使用不太频繁）。</p>
+<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton instance;  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br>   <span class="hljs-keyword"> public</span><span class="hljs-keyword"> static</span> synchronized Singleton getInstance() &#123;  <br>   <span class="hljs-built_in"> if </span>(instance == null) &#123;  <br>       <span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>    &#125;  <br>   <span class="hljs-built_in"> return </span>instance;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h4><p>是否 Lazy 初始化：否</p>
+<p>是否多线程安全：是</p>
+<p>优点：这种写法比较简单，<strong>就是在类装载的时候就完成实例化</strong>。避免了线程同步问题。</p>
+<p>缺点：在类装载的时候就完成实例化，<strong>没有达到Lazy Loading的效果</strong>。<strong>如果从始至终从未使用过这个实例，则会造成内存的浪费。</strong></p>
+<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton<span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br>   <span class="hljs-keyword"> public</span><span class="hljs-keyword"> static</span> Singleton getInstance() &#123;  <br>   <span class="hljs-built_in"> return </span>instance;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="双检锁-x2F-双重校验锁（DCL，即-double-checked-locking）"><a href="#双检锁-x2F-双重校验锁（DCL，即-double-checked-locking）" class="headerlink" title="双检锁&#x2F;双重校验锁（DCL，即 double-checked locking）"></a>双检锁&#x2F;双重校验锁（DCL，即 double-checked locking）</h4><p><strong>是否 Lazy 初始化：</strong>是</p>
+<p><strong>是否多线程安全：</strong>是</p>
+<p><strong>描述：</strong>我们进行了两次if (singleton &#x3D;&#x3D; null)检查，这样就可以保证线程安全了。这样，实例化代码只用执行一次，后面再次访问时，判断if (singleton &#x3D;&#x3D; null)，直接return实例化对象。</p>
+<p>优点：线程安全；延迟加载；效率较高。</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">static</span> Singleton uniqueInstance;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span>()</span>&#123;<br>        <br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getUniqueInstance</span>()</span>&#123;<br>        <span class="hljs-keyword">if</span> (uniqueInstance==<span class="hljs-literal">null</span>)&#123;<br>            synchronized (Singleton.<span class="hljs-keyword">class</span>)&#123;<br>                <span class="hljs-keyword">if</span> (uniqueInstance==<span class="hljs-literal">null</span>)&#123;<br>                    uniqueInstance=<span class="hljs-keyword">new</span> Singleton();<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> uniqueInstance;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>volatile修饰uniqueinstance的必要性：</p>
+<p>uniqueinstance&#x3D;new singleton()；实际上分为3步。</p>
+<ul>
+<li>1，为uniqueinstance分配内存。</li>
+<li>2，初始化uniqueinstance。</li>
+<li>3，将uniqueinstance指向分配的内存地址。</li>
+</ul>
+<p>因此：</p>
+<ul>
+<li>代码读取到instance不为null时，instance引用的对象可能还没有完成初始化。</li>
+<li><strong>防止指令重排。</strong></li>
+</ul>
+<h4 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4><figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> &#123;<br><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span>()</span> &#123;&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title">SingletonInstance</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final Singleton INSTANCE = <span class="hljs-keyword">new</span> Singleton();<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getInstance</span>()</span> &#123;<br>    <span class="hljs-keyword">return</span> SingletonInstance.INSTANCE;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了<strong>类装载的机制</strong>来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式<strong>在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</strong></p>
+<p>复制代码<br>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了类装载的机制来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</p>
+<p><strong>类的静态属性只会在第一次加载类的时候初始化，所以在这里，JVM帮助我们保证了线程的安全性</strong>，在类进行初始化时，别的线程是无法进入的。</p>
+<p>优点：避免了线程不安全，延迟加载，效率高。</p>
+<h4 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h4><figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-built_in">enum</span> Singleton &#123;<br>    INSTANCE;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">whateverMethod</span>()</span> &#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>借助JDK1.5中添加的枚举来实现单例模式。不仅能避免多线程同步问题，而且还能防止反序列化重新创建新的对象。可能是因为枚举在JDK1.5中才添加，所以在实际项目开发中，很少见人这么写过。</p>
+<p>优点<br>系统内存中该类只存在一个对象，节省了系统资源，对于一些需要频繁创建销毁的对象，使用单例模式可以提高系统性能。</p>
+<p>缺点<br>当想实例化一个单例类的时候，必须要记住使用相应的获取对象的方法，而不是使用new，可能会给其他开发人员造成困扰，特别是看不到源码的时候。</p>
+<p>适用场合<br>需要频繁的进行创建和销毁的对象；<br>创建对象时耗时过多或耗费资源过多，但又经常用到的对象；<br>工具类对象；<br>频繁访问数据库或文件的对象。</p>
+<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p>工厂方法是指定义<strong>工厂接口和产品接口</strong>，但如何创建实际工厂和实际产品被推迟到子类实现，从而使调用方只和抽象工厂与抽象产品打交道。</p>
+<p>实际更常用的是更简单的<strong>静态工厂方法</strong>，它允许工厂内部对创建产品进行优化。</p>
+<p>调用方尽量持有接口或抽象类，避免持有具体类型的子类，以便工厂方法能随时切换不同的子类返回，却不影响调用方代码。</p>
+<p><strong>Integer n &#x3D; Integer.valueOf(100);</strong></p>
+<p>Integer既是产品又是静态工厂。它提供了静态方法valueOf()来创建Integer。那么这种方式和直接写new Integer(100)有何区别呢？我们观察valueOf()方法：</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Integer</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> Integer <span class="hljs-title">valueOf</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)<br>            <span class="hljs-keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Integer</span>(i);<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>它的好处在于，valueOf()内部可能会使用new创建一个新的Integer实例，<strong>但也可能直接返回一个缓存的Integer实例。对于调用方来说，没必要知道Integer创建的细节。</strong></p>
+<h3 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h3><p>策略模式：Strategy，是指，定义一组算法，并把其封装到一个对象中。然后在运行时，<strong>可以灵活的使用其中的一个算法。</strong></p>
+<p>策略模式在Java标准库中应用非常广泛，Arrays.sort()：</p>
+<p>我们观察Arrays.sort(T[] a, Comparator&lt;? super T&gt; c)，这个排序方法，它在内部实现了TimSort排序，但是，排序算法在比较两个元素大小的时候，需要借助我们<strong>传入的Comparator对象</strong>，才能完成比较。因此，这里的策略是指比较两个元素大小的策略，可以是忽略大小写比较，可以是倒序比较，也可以根据字符串长度比较。</p>
+<p>因此，上述排序使用到了策略模式，它实际上指，在一个方法中，流程是确定的，但是，<strong>某些关键步骤的算法依赖调用方传入的策略，这样，传入不同的策略，即可获得不同的结果，大大增强了系统的灵活性。</strong></p>
+<h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p>将一个类的接口转换成客户希望的另外一个接口，使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。</p>
+<p>适配器模式在Java标准库中有广泛应用。比如我们持有数据类型是String[]，但是需要List接口时，可以用一个Adapter：</p>
+<figure class="highlight dart"><table><tr><td class="code"><pre><code class="hljs dart"><span class="hljs-built_in">String</span>[] exist = <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>[] &#123;<span class="hljs-string">&quot;Good&quot;</span>, <span class="hljs-string">&quot;morning&quot;</span>, <span class="hljs-string">&quot;Bob&quot;</span>, <span class="hljs-string">&quot;and&quot;</span>, <span class="hljs-string">&quot;Alice&quot;</span>&#125;;<br><span class="hljs-built_in">Set</span>&lt;<span class="hljs-built_in">String</span>&gt; <span class="hljs-keyword">set</span> = <span class="hljs-keyword">new</span> HashSet&lt;&gt;(Arrays.asList(exist));<br></code></pre></td></tr></table></figure>
+
+
+<p>注意到List<T> Arrays.asList(T[])就相当于一个转换器，它可以把数组转换为List。</p>
+<h3 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h3><p>动态地给一个对象添加一些额外的职责。就增加功能来说，相比生成子类更为灵活。</p>
+<p><img src="https://i.loli.net/2021/08/05/MAzhEK9sGqicf3T.png" alt="image-20210805184859592"></p>
+<p>最顶层的Component是接口，对应到IO的就是InputStream这个抽象类。ComponentA、ComponentB是实际的子类，对应到IO的就是FileInputStream、ServletInputStream这些数据源。Decorator是用于实现各个附加功能的抽象装饰器，对应到IO的就是FilterInputStream。而从Decorator派生的就是一个一个的装饰器，它们每个都有独立的功能，对应到IO的就是BufferedInputStream、GZIPInputStream等。</p>
+<p>Decorator模式有什么好处？它实际上把核心功能和附加功能给分开了。核心功能指FileInputStream这些真正读数据的源头，附加功能指加缓冲、压缩、解密这些功能。如果我们要新增核心功能，就增加Component的子类，例如ByteInputStream。如果我们要增加附加功能，就增加Decorator的子类，例如CipherInputStream。两部分都可以独立地扩展，而具体如何附加功能，由调用方自由组合，从而极大地增强了灵活性。</p>
 ]]></content>
       <categories>
-        <category>Redis</category>
+        <category>top</category>
+      </categories>
+      <tags>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>操作系统-fork</title>
+    <url>/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-fork/</url>
+    <content><![CDATA[<h3 id="简单概念介绍"><a href="#简单概念介绍" class="headerlink" title="简单概念介绍"></a>简单概念介绍</h3><h4 id="逻辑地址"><a href="#逻辑地址" class="headerlink" title="逻辑地址"></a>逻辑地址</h4><p>CPU所生成的地址。CPU产生的<strong>逻辑地址</strong>被分为 :p （页号） 它包含每个页在物理内存中的基址，用来作为页表的索引；d （页偏移），同基址相结合，用来确定送入内存设备的物理内存地址。</p>
+<h4 id="物理地址"><a href="#物理地址" class="headerlink" title="物理地址"></a>物理地址</h4><p>内存单元所看到的地址。用户程序看不见真正的物理地址。<strong>用户只生成逻辑地址，且认为进程的地址空间为0到max。</strong>物理地址范围从R+0到R+max，R为基地址,地址映射－将程序地址空间中使用的逻辑地址变换成内存中的物理地址的过程。由<strong>内存管理单元（MMU）</strong>来完成。</p>
+<p>可执行程序在存储（没有调入内存）时分为<strong>代码区，数据区，未初始化数据区</strong>三部分。</p>
+<p>（1）代码区存放CPU执行的<strong>机器指令</strong>。通常代码区是共享的，即其它执行程序可调用它。代码段（code segment&#x2F;text segment）通常是只读的，有些构架也允许自行修改。<br>（2）数据区存放<strong>已初始化的全局变量，静态变量（包括全局和局部的），常量</strong>。static全局变量和static函数只能在当前文件中被调用。<br>（3）未初始化数据区（Block Started by Symbol,BSS)<strong>存放全局未初始化的变量</strong>。BSS的数据在程序开始执行之前被初始化为0或NULL。</p>
+<p> 可执行程序在运行时又多出了两个区域：<strong>栈区和堆区。</strong><br>    （4）<strong>栈区</strong>。由编译器自动释放，存放函数的<strong>参数值，局部变量</strong>等。每当一个函数被调用时，该函数的返回类型和一些调用的信息被存储到栈中。然后这个被调用的函数再为它的自动变量和临时变量在栈上分配空间。<strong>每调用一个函数一个新的栈就会被使用</strong>。栈区是从高地址位向低地址位增长的，<strong>是一块连续的内在区域</strong>，最大容量是由系统预先定义好的，申请的栈空间超过这个界限时会提示溢出，用户能从栈中获取的空间较小。<br>    （5）<strong>堆区</strong>。用于<strong>动态内存分配</strong>，位于BSS和栈中间的地址位。由程序员<strong>申请分配（malloc)和释放（free）</strong>。堆是从低地址位向高地址位增长，<strong>采用链式存储结构</strong>。频繁地malloc&#x2F;free造成内存空间的不连续，<strong>产生碎片。</strong>当申请堆空间时库函数按照一定的算法搜索可用的足够大的空间。<strong>因此堆的效率比栈要低的多。</strong></p>
+<h3 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h3><p>fork（）会<strong>产生一个和父进程完全相同的子进程</strong>，但子进程在此后多会exec<strong>系统调用</strong>，出于效率考虑，linux中引入了“<strong>写时复制</strong>“技术，也就是<strong>只有进程空间的各段的内容要发生变化时，才会将父进程的内容复制一份给子进程</strong>。在fork之后exec之前两个进程用的是<strong>相同的物理空间（内存区）</strong>，子进程的代码段、数据段、堆栈都是指向父进程的物理空间，也就是说，两者的虚拟空间不同，但其对应的物理空间是同一个。</p>
+<p><strong>当父子进程中有更改相应段的行为发生时</strong>，再为子进程相应的段分配物理空间。</p>
+<p>如果<strong>不是因为exec</strong>，内核会给子进程的数据段、堆栈段分配相应的物理空间（至此两者有各自的进程空间，互不影响），而<strong>代码段继续共享父进程的物理空间</strong>（两者的代码完全相同）。</p>
+<p>如果<strong>是因为exec</strong>，由于两者<strong>执行的代码不同</strong>，子进程的代码段也会分配单独的物理空间。</p>
+<p>fork时子进程获得父进程<strong>数据空间、堆和栈的复制，所以变量的地址是一样的。</strong></p>
+<p>fork子进程完全复制父进程的栈空间，也复制了页表，<strong>但没有复制物理页面</strong>，所以这时<strong>虚拟地址相同，物理地址也相同</strong>，但是会把父子共享的页面标记为“<strong>只读</strong>”（类似mmap的private的方式），如果父子进程一直对这个页面是同一个页面，知道其中<strong>任何一个进程要对共享的页面“写操作”</strong>，这时<strong>内核会复制一个物理页面给这个进程使用，同时修改页表。而把原来的只读页面标记为“可写”，留给另外一个进程使用</strong>。</p>
+<p>这就是所谓的“<strong>写时复制</strong>”。正因为fork采用了这种写时复制的机制，所以fork出来子进程之后，父子进程哪个先调度呢？内核一般会先调度子进程，因为很多情况下子进程是要马上执行exec，会清空栈、堆。这些和父进程共享的空间，加载新的代码段，这就避免了“写时复制”拷贝共享页面的机会。<strong>如果父进程先调度很可能写共享页面，会产生“写时复制”的无用功。</strong></p>
+<p>在理解时，你可以认为fork后，这两个相同的虚拟地址指向的是不同的物理地址，这样方便理解父子进程之间的独立性</p>
+<h4 id="写时复制"><a href="#写时复制" class="headerlink" title="写时复制"></a>写时复制</h4><p>但实际上，linux为了提高 fork 的效率，采用了 <strong>copy-on-write</strong> 技术，fork后，这两个虚拟地址实际上指向相同的物理地址（内存页），只有任何一个进程试图修改这个虚拟地址里的内容前，两个虚拟地址才会指向不同的物理地址（新的物理地址的内容从原物理地址中复制得到）。</p>
+]]></content>
+      <categories>
+        <category>操作系统</category>
       </categories>
       <tags>
         <tag>概念</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>下划线转驼峰</title>
+    <url>/2021/08/09/%E4%B8%8B%E5%88%92%E7%BA%BF%E8%BD%AC%E9%A9%BC%E5%B3%B0/</url>
+    <content><![CDATA[<p>举例：Hello_woRLD&#x3D;&#x3D;helloWorld</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">public static String camel<span class="hljs-constructor">Name(String <span class="hljs-params">name</span>)</span> &#123;<br>       StringBuilder result = <span class="hljs-keyword">new</span> <span class="hljs-constructor">StringBuilder()</span>;<br>       <span class="hljs-keyword">if</span> (name<span class="hljs-operator"> == </span>null<span class="hljs-operator"> || </span>name.is<span class="hljs-constructor">Empty()</span>) &#123;<br>           return <span class="hljs-string">&quot;&quot;</span>;<br>       &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!name.contains(<span class="hljs-string">&quot;_&quot;</span>)) &#123;<br>           <span class="hljs-comment">// 不含下划线，仅将首字母小写</span><br>           return name.substring(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>).<span class="hljs-keyword">to</span><span class="hljs-constructor">LowerCase()</span> + name.substring(<span class="hljs-number">1</span>);<br>       &#125;<br>       <span class="hljs-comment">// 用下划线将原始字符串分割</span><br>       String camels<span class="hljs-literal">[]</span> = name.split(<span class="hljs-string">&quot;_&quot;</span>);<br>       <span class="hljs-keyword">for</span> (String camel : camels) &#123;<br>           <span class="hljs-comment">// 跳过原始字符串中开头、结尾的下换线或双重下划线</span><br>           <span class="hljs-keyword">if</span> (camel.is<span class="hljs-constructor">Empty()</span>) &#123;<br>               continue;<br>           &#125;<br>           <span class="hljs-comment">// 处理真正的驼峰片段</span><br>           <span class="hljs-keyword">if</span> (result.length<span class="hljs-literal">()</span><span class="hljs-operator"> == </span><span class="hljs-number">0</span>) &#123;<br>               <span class="hljs-comment">// 第一个驼峰片段，全部字母都小写</span><br>               result.append(camel.<span class="hljs-keyword">to</span><span class="hljs-constructor">LowerCase()</span>);<br>           &#125; <span class="hljs-keyword">else</span> &#123;<br>               <span class="hljs-comment">// 其他的驼峰片段，首字母大写</span><br>               result.append(camel.substring(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>).<span class="hljs-keyword">to</span><span class="hljs-constructor">UpperCase()</span>);<br>               result.append(camel.substring(<span class="hljs-number">1</span>).<span class="hljs-keyword">to</span><span class="hljs-constructor">LowerCase()</span>);<br>           &#125;<br>       &#125;<br>       return result.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>;<br>   &#125;<br></code></pre></td></tr></table></figure>
+
+]]></content>
   </entry>
   <entry>
     <title>常见数据结构和算法</title>
@@ -3505,161 +3660,6 @@ return new InetSocketAddress(host, port);
       </tags>
   </entry>
   <entry>
-    <title>a设计模式</title>
-    <url>/2021/08/05/a%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<h2 id="设计模式类型"><a href="#设计模式类型" class="headerlink" title="设计模式类型"></a>设计模式类型</h2><h3 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h3><p>这些设计模式提供了一种在<strong>创建对象的同时隐藏创建逻辑的方式</strong>，而不是使用 new 运算符直接实例化对象。这使得程序在判断针对某个给定实例需要创建哪些对象时更加灵活。</p>
-<p><strong>工厂模式（Factory Pattern）</strong><br><strong>抽象工厂模式（Abstract Factory Pattern）</strong><br><strong>单例模式（Singleton Pattern）</strong><br>建造者模式（Builder Pattern）<br>原型模式（Prototype Pattern）</p>
-<h3 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h3><p>这些设计模式关注<strong>类和对象的组合</strong>。继承的概念被用来组合接口和定义组合对象获得新功能的方式。</p>
-<p><strong>适配器模式（Adapter Pattern）</strong><br>桥接模式（Bridge Pattern）<br>过滤器模式（Filter、Criteria Pattern）<br>组合模式（Composite Pattern）<br><strong>装饰器模式（Decorator Pattern）</strong><br>外观模式（Facade Pattern）<br>享元模式（Flyweight Pattern）<br><strong>代理模式（Proxy Pattern）</strong></p>
-<h3 id="行为型模式"><a href="#行为型模式" class="headerlink" title="行为型模式"></a>行为型模式</h3><p>这些设计模式特别关注<strong>对象之间的通信。</strong>	</p>
-<p>责任链模式（Chain of Responsibility Pattern）<br>命令模式（Command Pattern）<br>解释器模式（Interpreter Pattern）<br>迭代器模式（Iterator Pattern）<br>中介者模式（Mediator Pattern）<br>备忘录模式（Memento Pattern）<br>观察者模式（Observer Pattern）<br>状态模式（State Pattern）<br>空对象模式（Null Object Pattern）<br>策略模式（Strategy Pattern）<br>模板模式（Template Pattern）<br>访问者模式（Visitor Pattern）</p>
-<h3 id="J2EE-模式"><a href="#J2EE-模式" class="headerlink" title="J2EE 模式"></a>J2EE 模式</h3><p>这些设计模式特别关注<strong>表示层</strong>。这些模式是由 Sun Java Center 鉴定的。	</p>
-<p>MVC 模式（MVC Pattern）<br>业务代表模式（Business Delegate Pattern）<br>组合实体模式（Composite Entity Pattern）<br>数据访问对象模式（Data Access Object Pattern）<br>前端控制器模式（Front Controller Pattern）<br>拦截过滤器模式（Intercepting Filter Pattern）<br>服务定位器模式（Service Locator Pattern）<br>传输对象模式（Transfer Object Pattern）</p>
-<h2 id="设计模式的六大原则"><a href="#设计模式的六大原则" class="headerlink" title="设计模式的六大原则"></a>设计模式的六大原则</h2><p>0、<strong>单一职责原则</strong>(Single Responsibility Principle)</p>
-<p>单一职责原则表示一个模块的组成元素之间的功能相关性。从软件变化的角度来看，就一个类而言，应该仅有一个让它变化的原因；通俗地说，<strong>即一个类只负责一项职责。</strong></p>
-<p>假设某个类 P 负责两个不同的职责，职责 P1 和 职责 P2，那么当职责 P1 需求发生改变而需要修改类 P，有可能会导致原来运行正常的职责 P2 功能发生故障。</p>
-<p>1、<strong>开闭原则</strong>（Open Close Principle）</p>
-<p>开闭原则的意思是：<strong>对扩展开放，对修改关闭</strong>。在程序需要进行拓展的时候，不能去修改原有的代码，实现一个热插拔的效果。简言之，<strong>是为了使程序的扩展性好，易于维护和升级</strong>。想要达到这样的效果，我们需要使用接口和抽象类，后面的具体设计中我们会提到这点。</p>
-<p>2、<strong>里氏代换原则</strong>（Liskov Substitution Principle）</p>
-<p>里氏代换原则是<strong>面向对象设计</strong>的基本原则之一。 里氏代换原则中说，<strong>任何基类可以出现的地方，子类一定可以出现</strong>。LSP 是继承复用的基石，只有当派生类可以替换掉基类，且软件单位的功能不受到影响时，基类才能真正被复用，而派生类也能够在基类的基础上增加新的行为。</p>
-<p>里氏代换原则是对开闭原则的补充。实现开闭原则的关键步骤就是<strong>抽象化</strong>，而基类与子类的继承关系就是抽象化的具体实现，所以里氏代换原则是对实现抽象化的具体步骤的规范。</p>
-<p>3、<strong>依赖倒转原则</strong>（Dependence Inversion Principle）</p>
-<p>这个原则是开闭原则的基础，具体内容：针对接口编程，依赖于抽象而不依赖于具体。</p>
-<p>4、<strong>接口隔离原则</strong>（Interface Segregation Principle）</p>
-<p>这个原则的意思是：使用多个隔离的接口，比使用单个接口要好。它还有另外一个意思是：<strong>降低类之间的耦合度。</strong></p>
-<p>5、<strong>迪米特法则，又称最少知道原则</strong>（Demeter Principle）</p>
-<p>最少知道原则是指：一个<strong>实体应当尽量少地与其他实体之间发生相互作用</strong>，使得系统功能模块相对独立。</p>
-<p>6、<strong>合成复用原则（</strong>Composite Reuse Principle）</p>
-<p>合成复用原则是指：<strong>尽量使用合成&#x2F;聚合的方式，而不是使用继承</strong>。</p>
-<h2 id="常见设计模式"><a href="#常见设计模式" class="headerlink" title="常见设计模式"></a>常见设计模式</h2><h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><p>单例模式（Singleton）的目的是为了保证在一个进程中，某个类有且仅有一个实例。</p>
-<p>因为这个类只有一个实例，因此，自然不能让调用方使用new Xyz()来创建实例了。所以，单例的构造方法必须是private，这样就防止了调用方自己创建实例。</p>
-<p>只有private构造方法，确保外部无法实例化；</p>
-<p>通过private static变量持有唯一实例，<strong>保证全局唯一性；</strong></p>
-<p>通过public static方法返回此唯一实例，<strong>使外部调用方能获取到实例。</strong></p>
-<h4 id="懒汉式，线程不安全"><a href="#懒汉式，线程不安全" class="headerlink" title="懒汉式，线程不安全"></a>懒汉式，线程不安全</h4><p>是否 Lazy 初始化：是</p>
-<p>是否多线程安全：否</p>
-<p>这种写法起到了Lazy Loading的效果，但是只能在单线程下使用。</p>
-<p>如果在多线程下，一个线程进入了if (singleton &#x3D;&#x3D; null)判断语句块，还未来得及往下执行，另一个线程也通过了这个判断语句，这时便会产生多个实例。所以在多线程环境下不可使用这种方式。</p>
-<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton instance;  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br><br><span class="hljs-keyword">	public</span><span class="hljs-keyword"> static</span> Singleton getInstance() &#123;  <br><span class="hljs-built_in">	if </span>(instance == null) &#123;  <br>   <span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>	&#125;  <br><span class="hljs-built_in">	return </span>instance;  <br>	&#125;  <br>	&#125;<br></code></pre></td></tr></table></figure>
-
-<h4 id="懒汉式，线程安全"><a href="#懒汉式，线程安全" class="headerlink" title="懒汉式，线程安全"></a>懒汉式，线程安全</h4><p>是否 Lazy 初始化：是</p>
-<p>是否多线程安全：是</p>
-<p>描述：这种方式具备很好的 lazy loading，能够在多线程中很好的工作，但是，效率很低，99% 情况下不需要同步。<br>优点：<strong>第一次调用才初始化，避免内存浪费。</strong><br>缺点：<strong>必须加锁 synchronized 才能保证单例，但加锁会影响效率</strong>。<br>getInstance() 的性能对应用程序不是很关键（该方法使用不太频繁）。</p>
-<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton instance;  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br>   <span class="hljs-keyword"> public</span><span class="hljs-keyword"> static</span> synchronized Singleton getInstance() &#123;  <br>   <span class="hljs-built_in"> if </span>(instance == null) &#123;  <br>       <span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>    &#125;  <br>   <span class="hljs-built_in"> return </span>instance;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h4 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h4><p>是否 Lazy 初始化：否</p>
-<p>是否多线程安全：是</p>
-<p>优点：这种写法比较简单，<strong>就是在类装载的时候就完成实例化</strong>。避免了线程同步问题。</p>
-<p>缺点：在类装载的时候就完成实例化，<strong>没有达到Lazy Loading的效果</strong>。<strong>如果从始至终从未使用过这个实例，则会造成内存的浪费。</strong></p>
-<figure class="highlight smali"><table><tr><td class="code"><pre><code class="hljs smali">public class Singleton &#123;  <br>   <span class="hljs-keyword"> private</span><span class="hljs-keyword"> static</span> Singleton<span class="hljs-built_in"> instance </span>=<span class="hljs-built_in"> new </span>Singleton();  <br>   <span class="hljs-keyword"> private</span> Singleton ()&#123;&#125;  <br>   <span class="hljs-keyword"> public</span><span class="hljs-keyword"> static</span> Singleton getInstance() &#123;  <br>   <span class="hljs-built_in"> return </span>instance;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="双检锁-x2F-双重校验锁（DCL，即-double-checked-locking）"><a href="#双检锁-x2F-双重校验锁（DCL，即-double-checked-locking）" class="headerlink" title="双检锁&#x2F;双重校验锁（DCL，即 double-checked locking）"></a>双检锁&#x2F;双重校验锁（DCL，即 double-checked locking）</h4><p><strong>是否 Lazy 初始化：</strong>是</p>
-<p><strong>是否多线程安全：</strong>是</p>
-<p><strong>描述：</strong>我们进行了两次if (singleton &#x3D;&#x3D; null)检查，这样就可以保证线程安全了。这样，实例化代码只用执行一次，后面再次访问时，判断if (singleton &#x3D;&#x3D; null)，直接return实例化对象。</p>
-<p>优点：线程安全；延迟加载；效率较高。</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">static</span> Singleton uniqueInstance;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span>()</span>&#123;<br>        <br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getUniqueInstance</span>()</span>&#123;<br>        <span class="hljs-keyword">if</span> (uniqueInstance==<span class="hljs-literal">null</span>)&#123;<br>            synchronized (Singleton.<span class="hljs-keyword">class</span>)&#123;<br>                <span class="hljs-keyword">if</span> (uniqueInstance==<span class="hljs-literal">null</span>)&#123;<br>                    uniqueInstance=<span class="hljs-keyword">new</span> Singleton();<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> uniqueInstance;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>volatile修饰uniqueinstance的必要性：</p>
-<p>uniqueinstance&#x3D;new singleton()；实际上分为3步。</p>
-<ul>
-<li>1，为uniqueinstance分配内存。</li>
-<li>2，初始化uniqueinstance。</li>
-<li>3，将uniqueinstance指向分配的内存地址。</li>
-</ul>
-<p>因此：</p>
-<ul>
-<li>代码读取到instance不为null时，instance引用的对象可能还没有完成初始化。</li>
-<li><strong>防止指令重排。</strong></li>
-</ul>
-<h4 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4><figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> &#123;<br><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span>()</span> &#123;&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title">SingletonInstance</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final Singleton INSTANCE = <span class="hljs-keyword">new</span> Singleton();<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getInstance</span>()</span> &#123;<br>    <span class="hljs-keyword">return</span> SingletonInstance.INSTANCE;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了<strong>类装载的机制</strong>来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式<strong>在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</strong></p>
-<p>复制代码<br>这种方式跟饿汉式方式采用的机制类似，但又有不同。两者都是采用了类装载的机制来保证初始化实例时只有一个线程。不同的地方在饿汉式方式是只要Singleton类被装载就会实例化，没有Lazy-Loading的作用，而静态内部类方式在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。</p>
-<p><strong>类的静态属性只会在第一次加载类的时候初始化，所以在这里，JVM帮助我们保证了线程的安全性</strong>，在类进行初始化时，别的线程是无法进入的。</p>
-<p>优点：避免了线程不安全，延迟加载，效率高。</p>
-<h4 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h4><figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-built_in">enum</span> Singleton &#123;<br>    INSTANCE;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">whateverMethod</span>()</span> &#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>借助JDK1.5中添加的枚举来实现单例模式。不仅能避免多线程同步问题，而且还能防止反序列化重新创建新的对象。可能是因为枚举在JDK1.5中才添加，所以在实际项目开发中，很少见人这么写过。</p>
-<p>优点<br>系统内存中该类只存在一个对象，节省了系统资源，对于一些需要频繁创建销毁的对象，使用单例模式可以提高系统性能。</p>
-<p>缺点<br>当想实例化一个单例类的时候，必须要记住使用相应的获取对象的方法，而不是使用new，可能会给其他开发人员造成困扰，特别是看不到源码的时候。</p>
-<p>适用场合<br>需要频繁的进行创建和销毁的对象；<br>创建对象时耗时过多或耗费资源过多，但又经常用到的对象；<br>工具类对象；<br>频繁访问数据库或文件的对象。</p>
-<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p>工厂方法是指定义<strong>工厂接口和产品接口</strong>，但如何创建实际工厂和实际产品被推迟到子类实现，从而使调用方只和抽象工厂与抽象产品打交道。</p>
-<p>实际更常用的是更简单的<strong>静态工厂方法</strong>，它允许工厂内部对创建产品进行优化。</p>
-<p>调用方尽量持有接口或抽象类，避免持有具体类型的子类，以便工厂方法能随时切换不同的子类返回，却不影响调用方代码。</p>
-<p><strong>Integer n &#x3D; Integer.valueOf(100);</strong></p>
-<p>Integer既是产品又是静态工厂。它提供了静态方法valueOf()来创建Integer。那么这种方式和直接写new Integer(100)有何区别呢？我们观察valueOf()方法：</p>
-<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Integer</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> Integer <span class="hljs-title">valueOf</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)<br>            <span class="hljs-keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Integer</span>(i);<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-<p>它的好处在于，valueOf()内部可能会使用new创建一个新的Integer实例，<strong>但也可能直接返回一个缓存的Integer实例。对于调用方来说，没必要知道Integer创建的细节。</strong></p>
-<h3 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h3><p>策略模式：Strategy，是指，定义一组算法，并把其封装到一个对象中。然后在运行时，<strong>可以灵活的使用其中的一个算法。</strong></p>
-<p>策略模式在Java标准库中应用非常广泛，Arrays.sort()：</p>
-<p>我们观察Arrays.sort(T[] a, Comparator&lt;? super T&gt; c)，这个排序方法，它在内部实现了TimSort排序，但是，排序算法在比较两个元素大小的时候，需要借助我们<strong>传入的Comparator对象</strong>，才能完成比较。因此，这里的策略是指比较两个元素大小的策略，可以是忽略大小写比较，可以是倒序比较，也可以根据字符串长度比较。</p>
-<p>因此，上述排序使用到了策略模式，它实际上指，在一个方法中，流程是确定的，但是，<strong>某些关键步骤的算法依赖调用方传入的策略，这样，传入不同的策略，即可获得不同的结果，大大增强了系统的灵活性。</strong></p>
-<h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p>将一个类的接口转换成客户希望的另外一个接口，使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。</p>
-<p>适配器模式在Java标准库中有广泛应用。比如我们持有数据类型是String[]，但是需要List接口时，可以用一个Adapter：</p>
-<figure class="highlight dart"><table><tr><td class="code"><pre><code class="hljs dart"><span class="hljs-built_in">String</span>[] exist = <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>[] &#123;<span class="hljs-string">&quot;Good&quot;</span>, <span class="hljs-string">&quot;morning&quot;</span>, <span class="hljs-string">&quot;Bob&quot;</span>, <span class="hljs-string">&quot;and&quot;</span>, <span class="hljs-string">&quot;Alice&quot;</span>&#125;;<br><span class="hljs-built_in">Set</span>&lt;<span class="hljs-built_in">String</span>&gt; <span class="hljs-keyword">set</span> = <span class="hljs-keyword">new</span> HashSet&lt;&gt;(Arrays.asList(exist));<br></code></pre></td></tr></table></figure>
-
-
-<p>注意到List<T> Arrays.asList(T[])就相当于一个转换器，它可以把数组转换为List。</p>
-<h3 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h3><p>动态地给一个对象添加一些额外的职责。就增加功能来说，相比生成子类更为灵活。</p>
-<p><img src="https://i.loli.net/2021/08/05/MAzhEK9sGqicf3T.png" alt="image-20210805184859592"></p>
-<p>最顶层的Component是接口，对应到IO的就是InputStream这个抽象类。ComponentA、ComponentB是实际的子类，对应到IO的就是FileInputStream、ServletInputStream这些数据源。Decorator是用于实现各个附加功能的抽象装饰器，对应到IO的就是FilterInputStream。而从Decorator派生的就是一个一个的装饰器，它们每个都有独立的功能，对应到IO的就是BufferedInputStream、GZIPInputStream等。</p>
-<p>Decorator模式有什么好处？它实际上把核心功能和附加功能给分开了。核心功能指FileInputStream这些真正读数据的源头，附加功能指加缓冲、压缩、解密这些功能。如果我们要新增核心功能，就增加Component的子类，例如ByteInputStream。如果我们要增加附加功能，就增加Decorator的子类，例如CipherInputStream。两部分都可以独立地扩展，而具体如何附加功能，由调用方自由组合，从而极大地增强了灵活性。</p>
-]]></content>
-      <categories>
-        <category>top</category>
-      </categories>
-      <tags>
-        <tag>basic</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>下划线转驼峰</title>
-    <url>/2021/08/09/%E4%B8%8B%E5%88%92%E7%BA%BF%E8%BD%AC%E9%A9%BC%E5%B3%B0/</url>
-    <content><![CDATA[<p>举例：Hello_woRLD&#x3D;&#x3D;helloWorld</p>
-<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">public static String camel<span class="hljs-constructor">Name(String <span class="hljs-params">name</span>)</span> &#123;<br>       StringBuilder result = <span class="hljs-keyword">new</span> <span class="hljs-constructor">StringBuilder()</span>;<br>       <span class="hljs-keyword">if</span> (name<span class="hljs-operator"> == </span>null<span class="hljs-operator"> || </span>name.is<span class="hljs-constructor">Empty()</span>) &#123;<br>           return <span class="hljs-string">&quot;&quot;</span>;<br>       &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!name.contains(<span class="hljs-string">&quot;_&quot;</span>)) &#123;<br>           <span class="hljs-comment">// 不含下划线，仅将首字母小写</span><br>           return name.substring(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>).<span class="hljs-keyword">to</span><span class="hljs-constructor">LowerCase()</span> + name.substring(<span class="hljs-number">1</span>);<br>       &#125;<br>       <span class="hljs-comment">// 用下划线将原始字符串分割</span><br>       String camels<span class="hljs-literal">[]</span> = name.split(<span class="hljs-string">&quot;_&quot;</span>);<br>       <span class="hljs-keyword">for</span> (String camel : camels) &#123;<br>           <span class="hljs-comment">// 跳过原始字符串中开头、结尾的下换线或双重下划线</span><br>           <span class="hljs-keyword">if</span> (camel.is<span class="hljs-constructor">Empty()</span>) &#123;<br>               continue;<br>           &#125;<br>           <span class="hljs-comment">// 处理真正的驼峰片段</span><br>           <span class="hljs-keyword">if</span> (result.length<span class="hljs-literal">()</span><span class="hljs-operator"> == </span><span class="hljs-number">0</span>) &#123;<br>               <span class="hljs-comment">// 第一个驼峰片段，全部字母都小写</span><br>               result.append(camel.<span class="hljs-keyword">to</span><span class="hljs-constructor">LowerCase()</span>);<br>           &#125; <span class="hljs-keyword">else</span> &#123;<br>               <span class="hljs-comment">// 其他的驼峰片段，首字母大写</span><br>               result.append(camel.substring(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>).<span class="hljs-keyword">to</span><span class="hljs-constructor">UpperCase()</span>);<br>               result.append(camel.substring(<span class="hljs-number">1</span>).<span class="hljs-keyword">to</span><span class="hljs-constructor">LowerCase()</span>);<br>           &#125;<br>       &#125;<br>       return result.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>;<br>   &#125;<br></code></pre></td></tr></table></figure>
-
-]]></content>
-  </entry>
-  <entry>
-    <title>golang 基础</title>
-    <url>/2023/07/11/golang-%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[]]></content>
-      <tags>
-        <tag>技术</tag>
-        <tag>golang</tag>
-        <tag>语言</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>操作系统-fork</title>
-    <url>/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-fork/</url>
-    <content><![CDATA[<h3 id="简单概念介绍"><a href="#简单概念介绍" class="headerlink" title="简单概念介绍"></a>简单概念介绍</h3><h4 id="逻辑地址"><a href="#逻辑地址" class="headerlink" title="逻辑地址"></a>逻辑地址</h4><p>CPU所生成的地址。CPU产生的<strong>逻辑地址</strong>被分为 :p （页号） 它包含每个页在物理内存中的基址，用来作为页表的索引；d （页偏移），同基址相结合，用来确定送入内存设备的物理内存地址。</p>
-<h4 id="物理地址"><a href="#物理地址" class="headerlink" title="物理地址"></a>物理地址</h4><p>内存单元所看到的地址。用户程序看不见真正的物理地址。<strong>用户只生成逻辑地址，且认为进程的地址空间为0到max。</strong>物理地址范围从R+0到R+max，R为基地址,地址映射－将程序地址空间中使用的逻辑地址变换成内存中的物理地址的过程。由<strong>内存管理单元（MMU）</strong>来完成。</p>
-<p>可执行程序在存储（没有调入内存）时分为<strong>代码区，数据区，未初始化数据区</strong>三部分。</p>
-<p>（1）代码区存放CPU执行的<strong>机器指令</strong>。通常代码区是共享的，即其它执行程序可调用它。代码段（code segment&#x2F;text segment）通常是只读的，有些构架也允许自行修改。<br>（2）数据区存放<strong>已初始化的全局变量，静态变量（包括全局和局部的），常量</strong>。static全局变量和static函数只能在当前文件中被调用。<br>（3）未初始化数据区（Block Started by Symbol,BSS)<strong>存放全局未初始化的变量</strong>。BSS的数据在程序开始执行之前被初始化为0或NULL。</p>
-<p> 可执行程序在运行时又多出了两个区域：<strong>栈区和堆区。</strong><br>    （4）<strong>栈区</strong>。由编译器自动释放，存放函数的<strong>参数值，局部变量</strong>等。每当一个函数被调用时，该函数的返回类型和一些调用的信息被存储到栈中。然后这个被调用的函数再为它的自动变量和临时变量在栈上分配空间。<strong>每调用一个函数一个新的栈就会被使用</strong>。栈区是从高地址位向低地址位增长的，<strong>是一块连续的内在区域</strong>，最大容量是由系统预先定义好的，申请的栈空间超过这个界限时会提示溢出，用户能从栈中获取的空间较小。<br>    （5）<strong>堆区</strong>。用于<strong>动态内存分配</strong>，位于BSS和栈中间的地址位。由程序员<strong>申请分配（malloc)和释放（free）</strong>。堆是从低地址位向高地址位增长，<strong>采用链式存储结构</strong>。频繁地malloc&#x2F;free造成内存空间的不连续，<strong>产生碎片。</strong>当申请堆空间时库函数按照一定的算法搜索可用的足够大的空间。<strong>因此堆的效率比栈要低的多。</strong></p>
-<h3 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h3><p>fork（）会<strong>产生一个和父进程完全相同的子进程</strong>，但子进程在此后多会exec<strong>系统调用</strong>，出于效率考虑，linux中引入了“<strong>写时复制</strong>“技术，也就是<strong>只有进程空间的各段的内容要发生变化时，才会将父进程的内容复制一份给子进程</strong>。在fork之后exec之前两个进程用的是<strong>相同的物理空间（内存区）</strong>，子进程的代码段、数据段、堆栈都是指向父进程的物理空间，也就是说，两者的虚拟空间不同，但其对应的物理空间是同一个。</p>
-<p><strong>当父子进程中有更改相应段的行为发生时</strong>，再为子进程相应的段分配物理空间。</p>
-<p>如果<strong>不是因为exec</strong>，内核会给子进程的数据段、堆栈段分配相应的物理空间（至此两者有各自的进程空间，互不影响），而<strong>代码段继续共享父进程的物理空间</strong>（两者的代码完全相同）。</p>
-<p>如果<strong>是因为exec</strong>，由于两者<strong>执行的代码不同</strong>，子进程的代码段也会分配单独的物理空间。</p>
-<p>fork时子进程获得父进程<strong>数据空间、堆和栈的复制，所以变量的地址是一样的。</strong></p>
-<p>fork子进程完全复制父进程的栈空间，也复制了页表，<strong>但没有复制物理页面</strong>，所以这时<strong>虚拟地址相同，物理地址也相同</strong>，但是会把父子共享的页面标记为“<strong>只读</strong>”（类似mmap的private的方式），如果父子进程一直对这个页面是同一个页面，知道其中<strong>任何一个进程要对共享的页面“写操作”</strong>，这时<strong>内核会复制一个物理页面给这个进程使用，同时修改页表。而把原来的只读页面标记为“可写”，留给另外一个进程使用</strong>。</p>
-<p>这就是所谓的“<strong>写时复制</strong>”。正因为fork采用了这种写时复制的机制，所以fork出来子进程之后，父子进程哪个先调度呢？内核一般会先调度子进程，因为很多情况下子进程是要马上执行exec，会清空栈、堆。这些和父进程共享的空间，加载新的代码段，这就避免了“写时复制”拷贝共享页面的机会。<strong>如果父进程先调度很可能写共享页面，会产生“写时复制”的无用功。</strong></p>
-<p>在理解时，你可以认为fork后，这两个相同的虚拟地址指向的是不同的物理地址，这样方便理解父子进程之间的独立性</p>
-<h4 id="写时复制"><a href="#写时复制" class="headerlink" title="写时复制"></a>写时复制</h4><p>但实际上，linux为了提高 fork 的效率，采用了 <strong>copy-on-write</strong> 技术，fork后，这两个虚拟地址实际上指向相同的物理地址（内存页），只有任何一个进程试图修改这个虚拟地址里的内容前，两个虚拟地址才会指向不同的物理地址（新的物理地址的内容从原物理地址中复制得到）。</p>
-]]></content>
-      <categories>
-        <category>操作系统</category>
-      </categories>
-      <tags>
-        <tag>概念</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>操作系统-内存管理</title>
     <url>/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<h3 id="分段管理"><a href="#分段管理" class="headerlink" title="分段管理"></a>分段管理</h3><p><img src="https://i.loli.net/2021/08/06/gY7BE1UoqzbDnLO.png" alt="image-20210801212559233"></p>
@@ -3950,6 +3950,24 @@ return new InetSocketAddress(host, port);
       </tags>
   </entry>
   <entry>
+    <title>笔试总结1</title>
+    <url>/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/</url>
+    <content><![CDATA[<h3 id="有序数组，交换两数，找出这两个数的下标"><a href="#有序数组，交换两数，找出这两个数的下标" class="headerlink" title="有序数组，交换两数，找出这两个数的下标"></a>有序数组，交换两数，找出这两个数的下标</h3><h4 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h4><p>用两个标志位去找乱序的那两个数字。</p>
+<figure class="highlight processing"><table><tr><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span>[] <span class="hljs-title function_">change</span>(<span class="hljs-type">int</span>[] nums) &#123;<br>        <span class="hljs-type">int</span> first = <span class="hljs-number">-1</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-built_in">second</span> = <span class="hljs-number">-1</span>;<br>        <span class="hljs-type">int</span>[] res = <span class="hljs-keyword">new </span><span class="hljs-class title_">int</span>[<span class="hljs-number">2</span>];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; nums.<span class="hljs-property">length</span>; i++) &#123;<br>            <span class="hljs-keyword">if</span> (first == <span class="hljs-number">-1</span> &amp;&amp; nums[i - <span class="hljs-number">1</span>] &gt; nums[i]) first = i - <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">if</span> (first != <span class="hljs-number">-1</span> &amp;&amp; nums[i - <span class="hljs-number">1</span>] &gt; nums[i]) <span class="hljs-built_in">second</span> = i;<br>        &#125;<br>        res[<span class="hljs-number">0</span>] = first + <span class="hljs-number">1</span>;<br>        res[<span class="hljs-number">1</span>] = <span class="hljs-built_in">second</span> + <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="括号的个数"><a href="#括号的个数" class="headerlink" title="括号的个数"></a>括号的个数</h3><p>【】【】【【】3】2</p>
+<p>表示1+1+2（3）&#x3D;8个括号</p>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getBox</span><span class="hljs-params">(String s)</span> &#123;<br>       Stack&lt;Integer&gt; stack = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Stack</span>&lt;&gt;();<br>       <span class="hljs-type">int</span> <span class="hljs-variable">res</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>       <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; s.length(); i++) &#123;<br>           <span class="hljs-keyword">if</span> (s.charAt(i) == <span class="hljs-string">&#x27;[&#x27;</span>) &#123;<br>               stack.push(<span class="hljs-number">1</span>);<span class="hljs-comment">//保底一个</span><br>           &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s.charAt(i) == <span class="hljs-string">&#x27;]&#x27;</span>) &#123;<br>               <span class="hljs-type">int</span> <span class="hljs-variable">temp</span> <span class="hljs-operator">=</span> stack.pop();<br>               <span class="hljs-keyword">if</span> (i + <span class="hljs-number">1</span> &lt; s.length() &amp;&amp; s.charAt(i + <span class="hljs-number">1</span>) &lt;= <span class="hljs-string">&#x27;9&#x27;</span> &amp;&amp; s.charAt(i + <span class="hljs-number">1</span>) &gt; <span class="hljs-string">&#x27;0&#x27;</span>) &#123;<span class="hljs-comment">//后面为数字，要结算</span><br>                   temp *= (s.charAt(i + <span class="hljs-number">1</span>) - <span class="hljs-string">&#x27;0&#x27;</span>);<br>                   i++;<span class="hljs-comment">//结算完跳过这个数字</span><br>               &#125;<br>               <span class="hljs-keyword">if</span> (stack.isEmpty()) &#123;<span class="hljs-comment">//空的，表示一个分段算完了</span><br>                   res += temp;<br>               &#125; <span class="hljs-keyword">else</span> &#123;<br>                   <span class="hljs-type">int</span> <span class="hljs-variable">top</span> <span class="hljs-operator">=</span> stack.pop() + temp;<br>                   stack.push(top);<br>               &#125;<br>           &#125;<br>       &#125;<br>       <span class="hljs-keyword">return</span> res;<br>   &#125;<br></code></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>笔试</category>
+      </categories>
+      <tags>
+        <tag>code</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>最长回文子串（子序列）</title>
     <url>/2021/07/30/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2%EF%BC%88%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%89/</url>
     <content><![CDATA[<h4 id="1，最长回文子串"><a href="#1，最长回文子串" class="headerlink" title="1，最长回文子串"></a>1，最长回文子串</h4><h5 id="动态规划：o（n-2）空间复杂度。"><a href="#动态规划：o（n-2）空间复杂度。" class="headerlink" title="动态规划：o（n^2）空间复杂度。"></a>动态规划：o（n^2）空间复杂度。</h5><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> String <span class="hljs-title function_">longestPalindrome</span><span class="hljs-params">(String s)</span> &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> s.length();<br>    <span class="hljs-keyword">if</span> (len &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> s;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">maxLen</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">begin</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-comment">// dp[i][j] 表示 s[i, j] 是否是回文串</span><br>    <span class="hljs-type">boolean</span>[][] dp = <span class="hljs-keyword">new</span> <span class="hljs-title class_">boolean</span>[len][len];<br>    <span class="hljs-type">char</span>[] charArray = s.toCharArray();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; len; i++) &#123;<br>        dp[i][i] = <span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; j &lt; len; j++) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; j; i++) &#123;<br>            <span class="hljs-keyword">if</span> (charArray[i] != charArray[j]) &#123;<br>                dp[i][j] = <span class="hljs-literal">false</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">if</span> (j - i &lt;= <span class="hljs-number">2</span>) &#123;<br>                    dp[i][j] = <span class="hljs-literal">true</span>;<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    dp[i][j] = dp[i + <span class="hljs-number">1</span>][j - <span class="hljs-number">1</span>];<br>                &#125;<br>            &#125;<br>            <span class="hljs-comment">// 只要 dp[i][j] == true 成立，就表示子串 s[i..j] 是回文，此时记录回文长度和起始位置</span><br>            <span class="hljs-keyword">if</span> (dp[i][j] &amp;&amp; j - i + <span class="hljs-number">1</span> &gt; maxLen) &#123;<br>                maxLen = j - i + <span class="hljs-number">1</span>;<br>                begin = i;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> s.substring(begin, begin + maxLen);<br>&#125;<br><br></code></pre></td></tr></table></figure>
@@ -3972,6 +3990,78 @@ return new InetSocketAddress(host, port);
       </tags>
   </entry>
   <entry>
+    <title>计算机网络-IO多路复用</title>
+    <url>/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/</url>
+    <content><![CDATA[<h3 id="解释名词"><a href="#解释名词" class="headerlink" title="解释名词"></a>解释名词</h3><h4 id="用户空间内核空间"><a href="#用户空间内核空间" class="headerlink" title="用户空间内核空间"></a>用户空间内核空间</h4><p>现在操作系统都是采用虚拟存储技术，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。为了保证用户进程不能直接操作内核（kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G字节，供内核使用，称为内核空间，而将较低的3G字节（从虚拟地址0x00000000到0xBFFFFFFF），供各个进程使用，称为用户空间。</p>
+<p>每个进程可以通过<strong>系统调用</strong>进入内核，因此，Linux内核由系统内的所有进程共享。于是，从具体进程的角度来看，每个进程可以拥有4G字节的虚拟空间。</p>
+<h4 id="系统调用："><a href="#系统调用：" class="headerlink" title="系统调用："></a>系统调用：</h4><ul>
+<li>设备管理</li>
+<li>文件管理</li>
+<li>进程控制</li>
+<li>进程通信</li>
+<li>内存管理</li>
+</ul>
+<h4 id="进程上下文切换"><a href="#进程上下文切换" class="headerlink" title="进程上下文切换"></a>进程上下文切换</h4><p>为控制进程的执行，操作系统内核挂起正在CPU上运行的进程，并恢复以前挂起的某个进程的执行，这种行为称为上下文切换（context switch）。通过上下文切换技术，即使在单处理器系统上也能够并发执行多个任务。</p>
+<p>进程切换的原因：</p>
+<ol>
+<li>在CPU上运行进程的<strong>时间片耗尽</strong>，便会被操作系统挂起，调度器选择其他进程执行。</li>
+<li>在CPU上运行进程被<strong>更高优先级的进程抢占</strong>。</li>
+<li>在CPU上运行进程需要<strong>等待某种设备资源时</strong>，进程会被挂起，从运行状态（TASK_RUNNING）改为就绪状态（TASK_INTERRUPTIBLE）。</li>
+<li>在CPU上运行进程的时间片尚未耗尽时，<strong>发生硬件中断</strong>，CPU中断当前执行的进程，转而去调用对应的中断处理程序处理中断。</li>
+</ol>
+<p>进程切换细节：</p>
+<ul>
+<li>保存处理机上下文，包括程序计数器和其他寄存器。</li>
+<li>更新PCB信息。</li>
+<li>把进程的PCB移入相应的队列，如就绪、在某事件阻塞等队列。</li>
+<li>选择另一个进程执行，并更新其PCB。</li>
+<li>更新内存管理的数据结构。</li>
+<li>恢复处理机上下文。</li>
+</ul>
+<p>进程的阻塞是进程自身的一种<strong>主动行为</strong>，也因此只有处于运行态的进程（获得CPU），才可能将其转为阻塞状态。当进程进入阻塞状态，是<strong>不占用CPU资源的</strong>。</p>
+<h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>文件描述符形式上是一个非负整数。它是一个<strong>索引值</strong>，指向内核为每一个进程所维护的该进程打开文件的记录表。</p>
+<p>当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。在程序设计中，一些涉及底层的程序编写往往会围绕着文件描述符展开。但是文件描述符这一概念往往只适用于UNIX、Linux这样的操作系统。</p>
+<h4 id="缓存IO"><a href="#缓存IO" class="headerlink" title="缓存IO"></a>缓存IO</h4><p>缓存 I&#x2F;O 又被称作标准 I&#x2F;O，大多数文件系统的默认 I&#x2F;O 操作都是缓存 I&#x2F;O。在 Linux 的缓存 I&#x2F;O 机制中，操作系统会将 I&#x2F;O 的数据缓存在文件系统的页缓存（ page cache ）中，也就是说，<strong>数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间。</strong></p>
+<p>缺点：<br>数据在传输过程中需要<strong>在应用程序地址空间和内核进行多次数据拷贝操作</strong>，这些数据拷贝操作所带来的 CPU 以及内存开销是非常大的。</p>
+<h4 id="阻塞IO"><a href="#阻塞IO" class="headerlink" title="阻塞IO"></a>阻塞IO</h4><p>当用户进程调用了recvfrom这个系统调用，内核就开始了IO的第一个阶段：<strong>准备数据</strong>（对于网络IO来说，很多时候数据在一开始还没有到达。比如，还没有收到一个完整的UDP包。这个时候内核就要等待足够的数据到来）。这个过程需要等待，也就是说数据被拷贝到操作系统内核的缓冲区中是需要一个过程的。而在用户进程这边，整个进程会被阻塞（当然，是进程自己选择的阻塞）。当内核一直等到数据准备好了，它就会<strong>将数据从kernel中拷贝到用户内存</strong>，然后kernel返回结果，用户进程才解除block的状态，重新运行起来。</p>
+<p><strong>两个阶段都被阻塞。</strong></p>
+<h4 id="非阻塞IO"><a href="#非阻塞IO" class="headerlink" title="非阻塞IO"></a>非阻塞IO</h4><p>当用户进程发出read操作时，如果内核中的数据还没有准备好，那么它并不会block用户进程，而是立刻返回一个error。从用户进程角度讲 ，它发起一个read操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个error时，它就知道数据还没有准备好，于是它可以再次发送read操作。一旦内核中的数据准备好了，并且又再次收到了用户进程的system call，那么它马上就将数据拷贝到了用户内存，然后返回。</p>
+<p>所以，nonblocking IO的特点是<strong>用户进程需要不断的主动询问内核</strong></p>
+<p>NIO在一些<strong>短业务线，访问量高</strong>的程序中使用，会提高系统的吞吐量，但是对于业务线长，且访问量低的程序来说，就未必是件好事，使用BIO可能会更好一些，<strong>不然线程就会空转，浪费CPU。</strong></p>
+<h4 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h4><p>优点：<strong>一个进程可以同时处理多个连接。</strong></p>
+<p>I&#x2F;O 多路复用的特点是通过一种机制<strong>一个进程能同时等待多个文件描述符</strong>，而这些文件描述符（套接字描述符）其中的任意一个进入读就绪状态，select()函数就可以返回。</p>
+<h4 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h4><p>异步（线程自己不去获得结果，而是由其他的线程送来结果）</p>
+<p><img src="https://i.loli.net/2021/08/06/UxFNmyufwlKnLhE.png" alt="image-20210731094812802">异步情况下一定是非阻塞的。</p>
+<p>异步意味着：在进行读写操作时，线程不必等待结果，而是通过回调的方式由另外的线程来获取。linux在2.6底层通过多路复用模拟了异步IO。windows通过IOCP真正实现了异步IO。</p>
+<p>select，poll，epoll本质上都是<strong>同步I&#x2F;O</strong>，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步I&#x2F;O则无需自己负责进行读写，异步I&#x2F;O的实现会由其他线程负责把数据从内核拷贝到用户空间。</p>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>select 实现多路复⽤的⽅式：</p>
+<p>将已连接的 Socket 都放到⼀个<strong>⽂件描述符集合</strong>，然后调⽤ select 函数<strong>将⽂件描述符集合拷⻉到内核</strong>⾥，让内核来检查是否有⽹络事件产⽣，检查的⽅式很粗暴，就是通过遍历⽂件描述符集合的⽅式，当检查到有事件产⽣后，将此 Socket 标记为可读或可写。</p>
+<p>接着<strong>再把整个⽂件描述符集合拷⻉回⽤户态</strong>⾥，然后⽤户态还需要再通过遍历的⽅法找到可读或可写的 Socket，然后再对其处理。</p>
+<p>对于 select 这种⽅式，需要进⾏ 2 次「遍历」⽂件描述符集合，⼀次是在内核态⾥，⼀个次是在⽤户态⾥ ，⽽且还会发⽣ 2 次「拷⻉」⽂件描述符集合，先从⽤户空间传⼊内核空间，由内核修改后，再传出到⽤户空间中。</p>
+<p>select 使⽤3个固定⻓度的 BitsMap（表示可读，可写，except），表示⽂件描述符集合，⽽且所⽀持的⽂件描述符的个数是有限制的，在Linux 系统中，由内核中的 FD_SETSIZE 限制， 默认最⼤值为 <strong>1024</strong> ，只能监听 0~1023 的⽂件描述符。</p>
+<p>select<strong>目前几乎在所有的平台上支持，</strong>其良好跨平台支持也是它的一个优点。select的一 个缺点在于单个进程能够监视的文件描述符的数量存在最大限制，<strong>在Linux上一般为1024，</strong>可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但 是这样也会造成效率的降低。</p>
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><p>poll 不再⽤ BitsMap 来存储所关注的⽂件描述符，取⽽代之⽤<strong>动态数组，以链表形式来组织</strong>，（pollfd的指针）突破了select 的⽂件描述符个数限制，当然还会受到系统⽂件描述符限制。</p>
+<p><img src="https://i.loli.net/2021/08/06/2kPGI6thcdoiLUe.png" alt="image-20210731095816033"></p>
+<p>但是 poll 和 select 并没有太⼤的本质区别，都是使⽤「线性结构」存储进程关注的 Socket 集合，因此都需要遍历⽂件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，⽽且也需要在⽤户态与内核态之间拷⻉⽂件描述符集合，这种⽅式随着并发数上来，性能的损耗会呈指数级增⻓。</p>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>第⼀点，epoll 在内核⾥使⽤<strong>红⿊树</strong>来跟踪进程所有待检测的⽂件描述字，把需要监控的 socket 通过epoll_ctl() 函数加⼊内核中的红⿊树⾥，红⿊树是个⾼效的数据结构，增删查⼀般时间复杂度是O(logn) ，通过对这棵⿊红树进⾏操作，这样就不需要像 select&#x2F;poll 每次操作时都传⼊整个 socket 集合，只需要传⼊⼀个待检测的 socket，减少了内核和⽤户空间⼤量的数据拷⻉和内存分配。</p>
+<p>第⼆点， epoll 使⽤<strong>事件驱动的机制</strong>，内核⾥维护了⼀个链表来记录就绪事件，当某个 socket 有事件发⽣时，通过回调函数内核会将其加⼊到这个就绪事件列表中，<strong>当⽤户调⽤ epoll_wait() 函数时</strong>，只会返回有事件发⽣的⽂件描述符，不需要像 select&#x2F;poll 那样轮询扫描整个 socket 集合，⼤⼤提⾼了检测的效率。</p>
+<p><img src="https://i.loli.net/2021/08/11/fHIJbCpiOan5ymZ.png" alt="image-20210811133207962"></p>
+<p>epoll对文件描述符的操作有两种模式<strong>：LT（level trigger）和ET（edge trigger）</strong>。LT模式是默认模式，LT模式与ET模式的区别如下：</p>
+<p><strong>LT模式</strong>：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。<strong>下次调用epoll_wait时，会再次响应应用程序并通知此事件。</strong></p>
+<p><strong>ET模式</strong>：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，<strong>下次调用epoll_wait时，不会再次响应应用程序并通知此事件。</strong></p>
+<p>LT(level triggered)是缺省的工作方式，并且同时支持block和no-block socket.在这种做法中，内核告诉你一个文件描述符是否就绪了，然后你可以对这个就绪的fd进行IO操作。如果你不作任何操作，内核还是会继续通知你的。</p>
+<p>ET(edge-triggered)是<strong>高速工作方式，</strong>只支持<strong>no-block socket</strong>。在这种模式下，当描述符从未就绪变为就绪时，内核通过epoll告诉你。然后<strong>它会假设你知道文件描述符已经就绪，</strong>并且不会再为那个文件描述符发送更多的就绪通知，直到你做了某些操作导致那个文件描述符不再为就绪状态了。但是请注意，如果一直不对这个fd作IO操作(从而导致它再次变成未就绪)，<strong>内核不会发送更多的通知(only once)</strong></p>
+<p>ET模式在很大程度上<strong>减少了epoll事件被重复触发的次数</strong>，因此效率要比LT模式高。</p>
+<p>（会循环从⽂件描述符读写数据，那么<strong>如果⽂件描述符是阻塞的，没有数据可读写时，进程会阻塞在读写函数那⾥</strong>，程序就没办法继续往下执⾏。所以，<strong>边缘触发模式⼀般和⾮阻塞 I&#x2F;O 搭配使⽤</strong>，程序会⼀直执⾏ I&#x2F;O 操作，直到系统调⽤（如 read 和write ）返回错误。）</p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>概念</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>消息队列 基础</title>
     <url>/2023/07/11/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97-%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[]]></content>
@@ -3979,24 +4069,6 @@ return new InetSocketAddress(host, port);
         <tag>技术</tag>
         <tag>MQ</tag>
         <tag>中间件</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>笔试总结1</title>
-    <url>/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/</url>
-    <content><![CDATA[<h3 id="有序数组，交换两数，找出这两个数的下标"><a href="#有序数组，交换两数，找出这两个数的下标" class="headerlink" title="有序数组，交换两数，找出这两个数的下标"></a>有序数组，交换两数，找出这两个数的下标</h3><h4 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h4><p>用两个标志位去找乱序的那两个数字。</p>
-<figure class="highlight processing"><table><tr><td class="code"><pre><code class="hljs processing"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span>[] <span class="hljs-title function_">change</span>(<span class="hljs-type">int</span>[] nums) &#123;<br>        <span class="hljs-type">int</span> first = <span class="hljs-number">-1</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-built_in">second</span> = <span class="hljs-number">-1</span>;<br>        <span class="hljs-type">int</span>[] res = <span class="hljs-keyword">new </span><span class="hljs-class title_">int</span>[<span class="hljs-number">2</span>];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; nums.<span class="hljs-property">length</span>; i++) &#123;<br>            <span class="hljs-keyword">if</span> (first == <span class="hljs-number">-1</span> &amp;&amp; nums[i - <span class="hljs-number">1</span>] &gt; nums[i]) first = i - <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">if</span> (first != <span class="hljs-number">-1</span> &amp;&amp; nums[i - <span class="hljs-number">1</span>] &gt; nums[i]) <span class="hljs-built_in">second</span> = i;<br>        &#125;<br>        res[<span class="hljs-number">0</span>] = first + <span class="hljs-number">1</span>;<br>        res[<span class="hljs-number">1</span>] = <span class="hljs-built_in">second</span> + <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br></code></pre></td></tr></table></figure>
-
-<h3 id="括号的个数"><a href="#括号的个数" class="headerlink" title="括号的个数"></a>括号的个数</h3><p>【】【】【【】3】2</p>
-<p>表示1+1+2（3）&#x3D;8个括号</p>
-<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getBox</span><span class="hljs-params">(String s)</span> &#123;<br>       Stack&lt;Integer&gt; stack = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Stack</span>&lt;&gt;();<br>       <span class="hljs-type">int</span> <span class="hljs-variable">res</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>       <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; s.length(); i++) &#123;<br>           <span class="hljs-keyword">if</span> (s.charAt(i) == <span class="hljs-string">&#x27;[&#x27;</span>) &#123;<br>               stack.push(<span class="hljs-number">1</span>);<span class="hljs-comment">//保底一个</span><br>           &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s.charAt(i) == <span class="hljs-string">&#x27;]&#x27;</span>) &#123;<br>               <span class="hljs-type">int</span> <span class="hljs-variable">temp</span> <span class="hljs-operator">=</span> stack.pop();<br>               <span class="hljs-keyword">if</span> (i + <span class="hljs-number">1</span> &lt; s.length() &amp;&amp; s.charAt(i + <span class="hljs-number">1</span>) &lt;= <span class="hljs-string">&#x27;9&#x27;</span> &amp;&amp; s.charAt(i + <span class="hljs-number">1</span>) &gt; <span class="hljs-string">&#x27;0&#x27;</span>) &#123;<span class="hljs-comment">//后面为数字，要结算</span><br>                   temp *= (s.charAt(i + <span class="hljs-number">1</span>) - <span class="hljs-string">&#x27;0&#x27;</span>);<br>                   i++;<span class="hljs-comment">//结算完跳过这个数字</span><br>               &#125;<br>               <span class="hljs-keyword">if</span> (stack.isEmpty()) &#123;<span class="hljs-comment">//空的，表示一个分段算完了</span><br>                   res += temp;<br>               &#125; <span class="hljs-keyword">else</span> &#123;<br>                   <span class="hljs-type">int</span> <span class="hljs-variable">top</span> <span class="hljs-operator">=</span> stack.pop() + temp;<br>                   stack.push(top);<br>               &#125;<br>           &#125;<br>       &#125;<br>       <span class="hljs-keyword">return</span> res;<br>   &#125;<br></code></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>笔试</category>
-      </categories>
-      <tags>
-        <tag>code</tag>
       </tags>
   </entry>
   <entry>
@@ -4129,6 +4201,18 @@ return new InetSocketAddress(host, port);
       </categories>
       <tags>
         <tag>协议</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>随便记-1</title>
+    <url>/2023/07/11/%E9%9A%8F%E4%BE%BF%E8%AE%B0-1/</url>
+    <content><![CDATA[<p>正文的一部分作为摘要<br>asdas<br>asas<br>余下的正文<br>asa</p>
+]]></content>
+      <tags>
+        <tag>周记</tag>
+        <tag>思考</tag>
+        <tag>生活</tag>
+        <tag>潇洒</tag>
       </tags>
   </entry>
   <entry>
@@ -4331,90 +4415,6 @@ return new InetSocketAddress(host, port);
       </categories>
       <tags>
         <tag>模型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>计算机网络-IO多路复用</title>
-    <url>/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/</url>
-    <content><![CDATA[<h3 id="解释名词"><a href="#解释名词" class="headerlink" title="解释名词"></a>解释名词</h3><h4 id="用户空间内核空间"><a href="#用户空间内核空间" class="headerlink" title="用户空间内核空间"></a>用户空间内核空间</h4><p>现在操作系统都是采用虚拟存储技术，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。为了保证用户进程不能直接操作内核（kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G字节，供内核使用，称为内核空间，而将较低的3G字节（从虚拟地址0x00000000到0xBFFFFFFF），供各个进程使用，称为用户空间。</p>
-<p>每个进程可以通过<strong>系统调用</strong>进入内核，因此，Linux内核由系统内的所有进程共享。于是，从具体进程的角度来看，每个进程可以拥有4G字节的虚拟空间。</p>
-<h4 id="系统调用："><a href="#系统调用：" class="headerlink" title="系统调用："></a>系统调用：</h4><ul>
-<li>设备管理</li>
-<li>文件管理</li>
-<li>进程控制</li>
-<li>进程通信</li>
-<li>内存管理</li>
-</ul>
-<h4 id="进程上下文切换"><a href="#进程上下文切换" class="headerlink" title="进程上下文切换"></a>进程上下文切换</h4><p>为控制进程的执行，操作系统内核挂起正在CPU上运行的进程，并恢复以前挂起的某个进程的执行，这种行为称为上下文切换（context switch）。通过上下文切换技术，即使在单处理器系统上也能够并发执行多个任务。</p>
-<p>进程切换的原因：</p>
-<ol>
-<li>在CPU上运行进程的<strong>时间片耗尽</strong>，便会被操作系统挂起，调度器选择其他进程执行。</li>
-<li>在CPU上运行进程被<strong>更高优先级的进程抢占</strong>。</li>
-<li>在CPU上运行进程需要<strong>等待某种设备资源时</strong>，进程会被挂起，从运行状态（TASK_RUNNING）改为就绪状态（TASK_INTERRUPTIBLE）。</li>
-<li>在CPU上运行进程的时间片尚未耗尽时，<strong>发生硬件中断</strong>，CPU中断当前执行的进程，转而去调用对应的中断处理程序处理中断。</li>
-</ol>
-<p>进程切换细节：</p>
-<ul>
-<li>保存处理机上下文，包括程序计数器和其他寄存器。</li>
-<li>更新PCB信息。</li>
-<li>把进程的PCB移入相应的队列，如就绪、在某事件阻塞等队列。</li>
-<li>选择另一个进程执行，并更新其PCB。</li>
-<li>更新内存管理的数据结构。</li>
-<li>恢复处理机上下文。</li>
-</ul>
-<p>进程的阻塞是进程自身的一种<strong>主动行为</strong>，也因此只有处于运行态的进程（获得CPU），才可能将其转为阻塞状态。当进程进入阻塞状态，是<strong>不占用CPU资源的</strong>。</p>
-<h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>文件描述符形式上是一个非负整数。它是一个<strong>索引值</strong>，指向内核为每一个进程所维护的该进程打开文件的记录表。</p>
-<p>当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。在程序设计中，一些涉及底层的程序编写往往会围绕着文件描述符展开。但是文件描述符这一概念往往只适用于UNIX、Linux这样的操作系统。</p>
-<h4 id="缓存IO"><a href="#缓存IO" class="headerlink" title="缓存IO"></a>缓存IO</h4><p>缓存 I&#x2F;O 又被称作标准 I&#x2F;O，大多数文件系统的默认 I&#x2F;O 操作都是缓存 I&#x2F;O。在 Linux 的缓存 I&#x2F;O 机制中，操作系统会将 I&#x2F;O 的数据缓存在文件系统的页缓存（ page cache ）中，也就是说，<strong>数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间。</strong></p>
-<p>缺点：<br>数据在传输过程中需要<strong>在应用程序地址空间和内核进行多次数据拷贝操作</strong>，这些数据拷贝操作所带来的 CPU 以及内存开销是非常大的。</p>
-<h4 id="阻塞IO"><a href="#阻塞IO" class="headerlink" title="阻塞IO"></a>阻塞IO</h4><p>当用户进程调用了recvfrom这个系统调用，内核就开始了IO的第一个阶段：<strong>准备数据</strong>（对于网络IO来说，很多时候数据在一开始还没有到达。比如，还没有收到一个完整的UDP包。这个时候内核就要等待足够的数据到来）。这个过程需要等待，也就是说数据被拷贝到操作系统内核的缓冲区中是需要一个过程的。而在用户进程这边，整个进程会被阻塞（当然，是进程自己选择的阻塞）。当内核一直等到数据准备好了，它就会<strong>将数据从kernel中拷贝到用户内存</strong>，然后kernel返回结果，用户进程才解除block的状态，重新运行起来。</p>
-<p><strong>两个阶段都被阻塞。</strong></p>
-<h4 id="非阻塞IO"><a href="#非阻塞IO" class="headerlink" title="非阻塞IO"></a>非阻塞IO</h4><p>当用户进程发出read操作时，如果内核中的数据还没有准备好，那么它并不会block用户进程，而是立刻返回一个error。从用户进程角度讲 ，它发起一个read操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个error时，它就知道数据还没有准备好，于是它可以再次发送read操作。一旦内核中的数据准备好了，并且又再次收到了用户进程的system call，那么它马上就将数据拷贝到了用户内存，然后返回。</p>
-<p>所以，nonblocking IO的特点是<strong>用户进程需要不断的主动询问内核</strong></p>
-<p>NIO在一些<strong>短业务线，访问量高</strong>的程序中使用，会提高系统的吞吐量，但是对于业务线长，且访问量低的程序来说，就未必是件好事，使用BIO可能会更好一些，<strong>不然线程就会空转，浪费CPU。</strong></p>
-<h4 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h4><p>优点：<strong>一个进程可以同时处理多个连接。</strong></p>
-<p>I&#x2F;O 多路复用的特点是通过一种机制<strong>一个进程能同时等待多个文件描述符</strong>，而这些文件描述符（套接字描述符）其中的任意一个进入读就绪状态，select()函数就可以返回。</p>
-<h4 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h4><p>异步（线程自己不去获得结果，而是由其他的线程送来结果）</p>
-<p><img src="https://i.loli.net/2021/08/06/UxFNmyufwlKnLhE.png" alt="image-20210731094812802">异步情况下一定是非阻塞的。</p>
-<p>异步意味着：在进行读写操作时，线程不必等待结果，而是通过回调的方式由另外的线程来获取。linux在2.6底层通过多路复用模拟了异步IO。windows通过IOCP真正实现了异步IO。</p>
-<p>select，poll，epoll本质上都是<strong>同步I&#x2F;O</strong>，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步I&#x2F;O则无需自己负责进行读写，异步I&#x2F;O的实现会由其他线程负责把数据从内核拷贝到用户空间。</p>
-<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>select 实现多路复⽤的⽅式：</p>
-<p>将已连接的 Socket 都放到⼀个<strong>⽂件描述符集合</strong>，然后调⽤ select 函数<strong>将⽂件描述符集合拷⻉到内核</strong>⾥，让内核来检查是否有⽹络事件产⽣，检查的⽅式很粗暴，就是通过遍历⽂件描述符集合的⽅式，当检查到有事件产⽣后，将此 Socket 标记为可读或可写。</p>
-<p>接着<strong>再把整个⽂件描述符集合拷⻉回⽤户态</strong>⾥，然后⽤户态还需要再通过遍历的⽅法找到可读或可写的 Socket，然后再对其处理。</p>
-<p>对于 select 这种⽅式，需要进⾏ 2 次「遍历」⽂件描述符集合，⼀次是在内核态⾥，⼀个次是在⽤户态⾥ ，⽽且还会发⽣ 2 次「拷⻉」⽂件描述符集合，先从⽤户空间传⼊内核空间，由内核修改后，再传出到⽤户空间中。</p>
-<p>select 使⽤3个固定⻓度的 BitsMap（表示可读，可写，except），表示⽂件描述符集合，⽽且所⽀持的⽂件描述符的个数是有限制的，在Linux 系统中，由内核中的 FD_SETSIZE 限制， 默认最⼤值为 <strong>1024</strong> ，只能监听 0~1023 的⽂件描述符。</p>
-<p>select<strong>目前几乎在所有的平台上支持，</strong>其良好跨平台支持也是它的一个优点。select的一 个缺点在于单个进程能够监视的文件描述符的数量存在最大限制，<strong>在Linux上一般为1024，</strong>可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但 是这样也会造成效率的降低。</p>
-<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><p>poll 不再⽤ BitsMap 来存储所关注的⽂件描述符，取⽽代之⽤<strong>动态数组，以链表形式来组织</strong>，（pollfd的指针）突破了select 的⽂件描述符个数限制，当然还会受到系统⽂件描述符限制。</p>
-<p><img src="https://i.loli.net/2021/08/06/2kPGI6thcdoiLUe.png" alt="image-20210731095816033"></p>
-<p>但是 poll 和 select 并没有太⼤的本质区别，都是使⽤「线性结构」存储进程关注的 Socket 集合，因此都需要遍历⽂件描述符集合来找到可读或可写的 Socket，时间复杂度为 O(n)，⽽且也需要在⽤户态与内核态之间拷⻉⽂件描述符集合，这种⽅式随着并发数上来，性能的损耗会呈指数级增⻓。</p>
-<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>第⼀点，epoll 在内核⾥使⽤<strong>红⿊树</strong>来跟踪进程所有待检测的⽂件描述字，把需要监控的 socket 通过epoll_ctl() 函数加⼊内核中的红⿊树⾥，红⿊树是个⾼效的数据结构，增删查⼀般时间复杂度是O(logn) ，通过对这棵⿊红树进⾏操作，这样就不需要像 select&#x2F;poll 每次操作时都传⼊整个 socket 集合，只需要传⼊⼀个待检测的 socket，减少了内核和⽤户空间⼤量的数据拷⻉和内存分配。</p>
-<p>第⼆点， epoll 使⽤<strong>事件驱动的机制</strong>，内核⾥维护了⼀个链表来记录就绪事件，当某个 socket 有事件发⽣时，通过回调函数内核会将其加⼊到这个就绪事件列表中，<strong>当⽤户调⽤ epoll_wait() 函数时</strong>，只会返回有事件发⽣的⽂件描述符，不需要像 select&#x2F;poll 那样轮询扫描整个 socket 集合，⼤⼤提⾼了检测的效率。</p>
-<p><img src="https://i.loli.net/2021/08/11/fHIJbCpiOan5ymZ.png" alt="image-20210811133207962"></p>
-<p>epoll对文件描述符的操作有两种模式<strong>：LT（level trigger）和ET（edge trigger）</strong>。LT模式是默认模式，LT模式与ET模式的区别如下：</p>
-<p><strong>LT模式</strong>：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。<strong>下次调用epoll_wait时，会再次响应应用程序并通知此事件。</strong></p>
-<p><strong>ET模式</strong>：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，<strong>下次调用epoll_wait时，不会再次响应应用程序并通知此事件。</strong></p>
-<p>LT(level triggered)是缺省的工作方式，并且同时支持block和no-block socket.在这种做法中，内核告诉你一个文件描述符是否就绪了，然后你可以对这个就绪的fd进行IO操作。如果你不作任何操作，内核还是会继续通知你的。</p>
-<p>ET(edge-triggered)是<strong>高速工作方式，</strong>只支持<strong>no-block socket</strong>。在这种模式下，当描述符从未就绪变为就绪时，内核通过epoll告诉你。然后<strong>它会假设你知道文件描述符已经就绪，</strong>并且不会再为那个文件描述符发送更多的就绪通知，直到你做了某些操作导致那个文件描述符不再为就绪状态了。但是请注意，如果一直不对这个fd作IO操作(从而导致它再次变成未就绪)，<strong>内核不会发送更多的通知(only once)</strong></p>
-<p>ET模式在很大程度上<strong>减少了epoll事件被重复触发的次数</strong>，因此效率要比LT模式高。</p>
-<p>（会循环从⽂件描述符读写数据，那么<strong>如果⽂件描述符是阻塞的，没有数据可读写时，进程会阻塞在读写函数那⾥</strong>，程序就没办法继续往下执⾏。所以，<strong>边缘触发模式⼀般和⾮阻塞 I&#x2F;O 搭配使⽤</strong>，程序会⼀直执⾏ I&#x2F;O 操作，直到系统调⽤（如 read 和write ）返回错误。）</p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>概念</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>随便记-1</title>
-    <url>/2023/07/11/%E9%9A%8F%E4%BE%BF%E8%AE%B0-1/</url>
-    <content><![CDATA[<p>正文的一部分作为摘要<br>asdas<br>asas<br>余下的正文<br>asa</p>
-]]></content>
-      <tags>
-        <tag>周记</tag>
-        <tag>思考</tag>
-        <tag>生活</tag>
-        <tag>潇洒</tag>
       </tags>
   </entry>
 </search>
