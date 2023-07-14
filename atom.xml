@@ -6,7 +6,7 @@
   <link href="https://xieyi123456.github.io/atom.xml" rel="self"/>
   
   <link href="https://xieyi123456.github.io/"/>
-  <updated>2023-07-14T00:53:54.389Z</updated>
+  <updated>2023-07-14T17:30:27.714Z</updated>
   <id>https://xieyi123456.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://xieyi123456.github.io/2023/07/13/%E6%B5%8B%E8%AF%95%E5%93%88%E5%93%88%E5%93%88/"/>
     <id>https://xieyi123456.github.io/2023/07/13/%E6%B5%8B%E8%AF%95%E5%93%88%E5%93%88%E5%93%88/</id>
     <published>2023-07-13T15:34:50.000Z</published>
-    <updated>2023-07-14T00:53:54.389Z</updated>
+    <updated>2023-07-14T17:30:27.714Z</updated>
     
     
     
@@ -136,25 +136,23 @@
   </entry>
   
   <entry>
-    <title>随便记-1</title>
-    <link href="https://xieyi123456.github.io/2023/07/11/%E9%9A%8F%E4%BE%BF%E8%AE%B0-1/"/>
-    <id>https://xieyi123456.github.io/2023/07/11/%E9%9A%8F%E4%BE%BF%E8%AE%B0-1/</id>
+    <title>先想想写啥、咋写</title>
+    <link href="https://xieyi123456.github.io/2023/07/11/a%E7%AC%AC%E4%B8%80%E7%AF%87/"/>
+    <id>https://xieyi123456.github.io/2023/07/11/a%E7%AC%AC%E4%B8%80%E7%AF%87/</id>
     <published>2023-07-10T17:49:30.000Z</published>
-    <updated>2023-07-14T00:52:38.508Z</updated>
+    <updated>2023-07-14T17:35:30.452Z</updated>
     
     
-    <summary type="html">这是摘要asasadasdaasdasdasdadsdasdasdd是摘要asasadasdaasdasdasdadsdasdasdd是摘要asasadasdaasdasdasdadsdasdasdd是摘要asasadasdaasdasdasdadsdasdasdd是摘要asasadasdaasdasdasdadsdasdasdd是摘要asasadasdaasdasdasdadsdasdasdd是摘要asasadasdaasd</summary>
+    <summary type="html">多思考下、多记录些确实能让人平静。一时兴起搞了个博客来记录下自己的工作、生活、感悟。先勾勒下蓝图吧！后面怎么写？写哪些内容？</summary>
     
     
     
+    <category term="生活随笔" scheme="https://xieyi123456.github.io/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94/"/>
     
-    <category term="周记" scheme="https://xieyi123456.github.io/tags/%E5%91%A8%E8%AE%B0/"/>
     
     <category term="思考" scheme="https://xieyi123456.github.io/tags/%E6%80%9D%E8%80%83/"/>
     
     <category term="生活" scheme="https://xieyi123456.github.io/tags/%E7%94%9F%E6%B4%BB/"/>
-    
-    <category term="潇洒" scheme="https://xieyi123456.github.io/tags/%E6%BD%87%E6%B4%92/"/>
     
   </entry>
   
