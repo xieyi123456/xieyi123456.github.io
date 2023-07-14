@@ -1529,8 +1529,8 @@ post-custom {
 }
 .page-content img,
 .post-content img {
-  object-fit: cover;
-  max-width: 100%;
+  object-fit: contain;
+  max-width: 61%;
 }
 @media (max-width: 767px) {
   .page-content,
