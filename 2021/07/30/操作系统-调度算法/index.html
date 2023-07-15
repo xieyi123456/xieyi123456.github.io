@@ -16,17 +16,18 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="进程调度算法先来先服务不利于短作业 短作业优先不利于长作业 高响应比优先权衡：优先权&#x3D;（等待时间+要求服务时间）&#x2F;要求服务时间 时间片轮转 如果时间⽚设得太短会导致过多的进程上下⽂切换，降低了 CPU 效率；  如果设得太⻓⼜可能引起对短作业进程的响应时间变⻓。  ⼀般来说，时间⽚设为 20ms~50ms 通常是⼀个⽐较合理的折中值。   最高优先级 静态优先级：创建进程时候，">
+    <meta name="description" content="操作系统的调度算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统-调度算法">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="进程调度算法先来先服务不利于短作业 短作业优先不利于长作业 高响应比优先权衡：优先权&#x3D;（等待时间+要求服务时间）&#x2F;要求服务时间 时间片轮转 如果时间⽚设得太短会导致过多的进程上下⽂切换，降低了 CPU 效率；  如果设得太⻓⼜可能引起对短作业进程的响应时间变⻓。  ⼀般来说，时间⽚设为 20ms~50ms 通常是⼀个⽐较合理的折中值。   最高优先级 静态优先级：创建进程时候，">
+<meta property="og:description" content="操作系统的调度算法">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/06/6ziUqckShIRCQFN.png">
 <meta property="article:published_time" content="2021-07-30T07:05:56.000Z">
-<meta property="article:modified_time" content="2023-07-11T15:32:56.734Z">
+<meta property="article:modified_time" content="2023-07-15T14:08:16.130Z">
 <meta property="article:author" content="XieYi">
+<meta property="article:tag" content="操作系统">
 <meta property="article:tag" content="调度算法">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://i.loli.net/2021/08/06/6ziUqckShIRCQFN.png">
@@ -344,7 +345,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="category-chain-item">操作系统</a>
+  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" class="category-chain-item">计算机基础</a>
   
   
 
@@ -358,6 +359,8 @@
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="print-no-link">#操作系统</a>
       
         <a href="/tags/%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95/" class="print-no-link">#调度算法</a>
       
