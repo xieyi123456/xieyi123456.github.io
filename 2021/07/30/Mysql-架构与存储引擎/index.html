@@ -16,16 +16,16 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="架构 Mysql逻辑架构图主要分三层：（1）第一层负责连接处理，授权认证，安全等等（2）第二层负责编译并优化SQL（3）第三层是存储引擎。 sql语句执行流程 查询语句的执行流程如下：权限校验（如果命中缓存）—&gt;查询缓存—&gt;分析器—&gt;优化器—&gt;权限校验—&gt;执行器—&gt;引擎  更新语句执行流程如下：分析器—-&gt;权限校验—-&gt;执行器—&gt;引擎—redo">
+    <meta name="description" content="架构 Mysql 逻辑架构图主要分三层（1）第一层负责连接处理，授权认证，安全等等（2）第二层负责编译并优化 SQL（3）第三层是存储引擎。 sql 语句执行流程 查询语句的执行流程如下：权限校验（如果命中缓存）—&gt;查询缓存—&gt;分析器—&gt;优化器—&gt;权限校验—&gt;执行器—&gt;引擎  更新语句执行流程如下：分析器—-&gt;权限校验—-&gt;执行器—&gt;引擎—re">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mysql-架构与存储引擎">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Mysql-%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="架构 Mysql逻辑架构图主要分三层：（1）第一层负责连接处理，授权认证，安全等等（2）第二层负责编译并优化SQL（3）第三层是存储引擎。 sql语句执行流程 查询语句的执行流程如下：权限校验（如果命中缓存）—&gt;查询缓存—&gt;分析器—&gt;优化器—&gt;权限校验—&gt;执行器—&gt;引擎  更新语句执行流程如下：分析器—-&gt;权限校验—-&gt;执行器—&gt;引擎—redo">
+<meta property="og:description" content="架构 Mysql 逻辑架构图主要分三层（1）第一层负责连接处理，授权认证，安全等等（2）第二层负责编译并优化 SQL（3）第三层是存储引擎。 sql 语句执行流程 查询语句的执行流程如下：权限校验（如果命中缓存）—&gt;查询缓存—&gt;分析器—&gt;优化器—&gt;权限校验—&gt;执行器—&gt;引擎  更新语句执行流程如下：分析器—-&gt;权限校验—-&gt;执行器—&gt;引擎—re">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/AotCLWx597J4FnN.png">
 <meta property="article:published_time" content="2021-07-30T07:11:06.000Z">
-<meta property="article:modified_time" content="2023-07-11T15:32:57.503Z">
+<meta property="article:modified_time" content="2023-07-17T04:35:35.972Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="结构">
 <meta name="twitter:card" content="summary_large_image">
@@ -281,14 +281,14 @@
               <div class="markdown-body">
                 
                 <h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="https://i.loli.net/2021/08/04/AotCLWx597J4FnN.png" srcset="/img/loading.gif" lazyload alt="image-20210804135513993"></p>
-<h3 id="Mysql逻辑架构图主要分三层："><a href="#Mysql逻辑架构图主要分三层：" class="headerlink" title="Mysql逻辑架构图主要分三层："></a><strong>Mysql逻辑架构图主要分三层：</strong></h3><p>（1）第一层负责连接处理，授权认证，安全等等<br>（2）第二层负责编译并优化SQL<br>（3）第三层是存储引擎。</p>
-<h3 id="sql语句执行流程"><a href="#sql语句执行流程" class="headerlink" title="sql语句执行流程"></a>sql语句执行流程</h3><ul>
+<h3 id="Mysql-逻辑架构图主要分三层"><a href="#Mysql-逻辑架构图主要分三层" class="headerlink" title="Mysql 逻辑架构图主要分三层"></a><strong>Mysql 逻辑架构图主要分三层</strong></h3><p>（1）第一层负责连接处理，授权认证，安全等等<br>（2）第二层负责编译并优化 SQL<br>（3）第三层是存储引擎。</p>
+<h3 id="sql-语句执行流程"><a href="#sql-语句执行流程" class="headerlink" title="sql 语句执行流程"></a>sql 语句执行流程</h3><ul>
 <li><p>查询语句的执行流程如下：权限校验（如果命中缓存）—&gt;查询缓存—&gt;分析器—&gt;优化器—&gt;权限校验—&gt;执行器—&gt;引擎</p>
 </li>
-<li><p>更新语句执行流程如下：分析器—-&gt;权限校验—-&gt;执行器—&gt;引擎—redo log(prepare 状态)—&gt;binlog—&gt;redo log(commit状态)</p>
+<li><p>更新语句执行流程如下：分析器—-&gt;权限校验—-&gt;执行器—&gt;引擎—redo log(prepare 状态)—&gt;binlog—&gt;redo log(commit 状态)</p>
 </li>
 <li><p>MySQL 自带的日志模块是 <strong>binlog（归档日志）</strong> ，所有的存储引擎都可以使用，我们常用的 InnoDB 引擎还自带了一个日志模块 <strong>redo log（重做日志）</strong>，我们就以 InnoDB 模式下来探讨这个语句的执行流程。流程如下：</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">update tb_student A <span class="hljs-built_in">set</span> A.<span class="hljs-attribute">age</span>=<span class="hljs-string">&#x27;19&#x27;</span> where A.<span class="hljs-attribute">name</span>=<span class="hljs-string">&#x27; 张三 &#x27;</span>;<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">update tb_student A set A.age=&#x27;19&#x27; where A.name=&#x27; 张三 &#x27;;<br></code></pre></td></tr></table></figure>
 
 <p>然后拿到查询的语句，把 age 改为 19，然后调用引擎 API 接口，写入这一行数据，InnoDB 引擎把数据保存在内存中，同时记录 redo log，<strong>此时 redo log 进入 prepare 状态</strong>，然后告诉执行器，执行完成了，随时可以提交。<br><strong>执行器收到通知后记录 binlog，然后调用引擎接口</strong>，提交 redo log 为提交状态。<br>更新完成。</p>
 </li>

@@ -16,17 +16,17 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="概念HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。 是什么报文   方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与get类似，不返回内容主体。 URI 协议版本    可选的首部字段     内容实体        协议版本 状态码 状态码原因短语    可选的响应首部字段     主体">
+    <meta name="description" content="概念HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。 是什么报文   方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与 get 类似，不返回内容主体。 URI 协议版本    可选的首部字段     内容实体        协议版本 状态码 状态码原因短语    可选的响应首部字段     主体">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机网络-http">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-http/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="概念HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。 是什么报文   方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与get类似，不返回内容主体。 URI 协议版本    可选的首部字段     内容实体        协议版本 状态码 状态码原因短语    可选的响应首部字段     主体">
+<meta property="og:description" content="概念HTTP 是⼀个在计算机世界⾥专⻔在「两点」之间「传输」⽂字、图⽚、⾳频、视频等「超⽂本」数据的「约定和 规范」。 是什么报文   方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与 get 类似，不返回内容主体。 URI 协议版本    可选的首部字段     内容实体        协议版本 状态码 状态码原因短语    可选的响应首部字段     主体">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/06/PvL5K2BYp18URHu.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/08/YsWAFXOp5Mbx1vy.png">
 <meta property="article:published_time" content="2021-07-30T07:04:12.000Z">
-<meta property="article:modified_time" content="2023-07-11T15:32:56.604Z">
+<meta property="article:modified_time" content="2023-07-17T04:35:35.944Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="协议">
 <meta name="twitter:card" content="summary_large_image">
@@ -285,7 +285,7 @@
 <h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><h3 id="报文"><a href="#报文" class="headerlink" title="报文"></a>报文</h3><table>
 <thead>
 <tr>
-<th align="left">方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与get类似，不返回内容主体。</th>
+<th align="left">方法 get：获取资源。 post：传输内容实体。 put：传输文件。 head：与 get 类似，不返回内容主体。</th>
 <th>URI</th>
 <th>协议版本</th>
 </tr>
@@ -366,23 +366,23 @@
 <p>Cookie 一般用来保存用户信息 比如 ① 我们在 Cookie 中保存已经登录过得用户信息，下次访问网站的时候页面可以自动帮你登录的一些基本信息给填了；② 一般的网站都会有保持登录也就是说下次你再访问网站的时候就不需要重新登录了，这是因为用户登录的时候我们可以存放了一个 Token 在 Cookie 中，下次登录的时候只需要根据 Token 值来查找用户即可(为了安全考虑，重新登录一般要将 Token 重写)；③ 登录一次网站后访问网站其他页面不需要重新登录。Session 的主要作用就是通过服务端记录用户的状态。 典型的场景是购物车，当你要添加商品到购物车的时候，系统不知道是哪个用户操作的，因为 HTTP 协议是无状态的。服务端给特定的用户创建特定的 Session 之后就可以标识这个用户并且跟踪这个用户了。</p>
 <p>Cookie 数据保存在客户端(浏览器端)，Session 数据保存在服务器端。</p>
 <p>Cookie 存储在客户端中，而 Session 存储在服务器上，相对来说 Session 安全性更高。如果要在 Cookie 中存储一些敏感信息，不要直接写入 Cookie 中，最好能将 Cookie 信息加密然后使用到的时候再去服务器端解密。</p>
-<p>单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。</p>
+<p>单个 cookie 保存的数据不能超过 4K，很多浏览器都限制一个站点最多保存 20 个 cookie。</p>
 <h2 id="https"><a href="#https" class="headerlink" title="https"></a>https</h2><table>
 <thead>
 <tr>
 <th>http</th>
 <th>不安全</th>
 <th>三次握手</th>
-<th>80端口</th>
+<th>80 端口</th>
 <th></th>
 </tr>
 </thead>
 <tbody><tr>
 <td>https</td>
 <td>安全（SSL&#x2F;TSL）</td>
-<td>三次握手+SSL握手</td>
-<td>443端口</td>
-<td>需要向CA申请数字证书</td>
+<td>三次握手+SSL 握手</td>
+<td>443 端口</td>
+<td>需要向 CA 申请数字证书</td>
 </tr>
 </tbody></table>
 <h3 id="解决了啥？"><a href="#解决了啥？" class="headerlink" title="解决了啥？"></a>解决了啥？</h3><blockquote>
@@ -395,13 +395,13 @@
 <p>摘要算法实现完整性：每份数据都生成独一无二的指纹。</p>
 <p>服务器公钥放到数字证书中</p>
 <p><img src="https://i.loli.net/2021/08/08/YsWAFXOp5Mbx1vy.png" srcset="/img/loading.gif" lazyload alt="image-20210808135009407"></p>
-<h2 id="http演变"><a href="#http演变" class="headerlink" title="http演变"></a>http演变</h2><h3 id="什么是HTTP-2-0"><a href="#什么是HTTP-2-0" class="headerlink" title="什么是HTTP 2.0"></a>什么是HTTP 2.0</h3><p>HTTP&#x2F;2（超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP&#x2F;2是HTTP协议自1999年HTTP 1.1发布后的首个更新，主要基于SPDY协议（是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。</p>
-<h3 id="与HTTP-1-1相比，主要区别包括"><a href="#与HTTP-1-1相比，主要区别包括" class="headerlink" title="与HTTP 1.1相比，主要区别包括"></a>与HTTP 1.1相比，主要区别包括</h3><p>HTTP&#x2F;2<strong>采用二进制格式而非文本格式</strong><br>HTTP&#x2F;2是<strong>完全多路复用的</strong>，而非有序并阻塞的——只需一个连接即可实现并行<br>使用<strong>报头压缩</strong>，HTTP&#x2F;2降低了开销<br>HTTP&#x2F;2让服务器可以将响应主动“推送”到客户端缓存中</p>
-<h3 id="HTTP-x2F-2为什么是二进制？"><a href="#HTTP-x2F-2为什么是二进制？" class="headerlink" title="HTTP&#x2F;2为什么是二进制？"></a>HTTP&#x2F;2为什么是二进制？</h3><p>比起像HTTP&#x2F;1.x这样的文本协议，二进制协议解析起来更高效、“线上”更紧凑，更重要的是错误更少。</p>
+<h2 id="http-演变"><a href="#http-演变" class="headerlink" title="http 演变"></a>http 演变</h2><h3 id="什么是-HTTP-2-0"><a href="#什么是-HTTP-2-0" class="headerlink" title="什么是 HTTP 2.0"></a>什么是 HTTP 2.0</h3><p>HTTP&#x2F;2（超文本传输协议第 2 版，最初命名为 HTTP 2.0），是 HTTP 协议的的第二个主要版本，使用于万维网。HTTP&#x2F;2 是 HTTP 协议自 1999 年 HTTP 1.1 发布后的首个更新，主要基于 SPDY 协议（是 Google 开发的基于 TCP 的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。</p>
+<h3 id="与-HTTP-1-1-相比，主要区别包括"><a href="#与-HTTP-1-1-相比，主要区别包括" class="headerlink" title="与 HTTP 1.1 相比，主要区别包括"></a>与 HTTP 1.1 相比，主要区别包括</h3><p>HTTP&#x2F;2<strong>采用二进制格式而非文本格式</strong><br>HTTP&#x2F;2 是<strong>完全多路复用的</strong>，而非有序并阻塞的——只需一个连接即可实现并行<br>使用<strong>报头压缩</strong>，HTTP&#x2F;2 降低了开销<br>HTTP&#x2F;2 让服务器可以将响应主动“推送”到客户端缓存中</p>
+<h3 id="HTTP-x2F-2-为什么是二进制？"><a href="#HTTP-x2F-2-为什么是二进制？" class="headerlink" title="HTTP&#x2F;2 为什么是二进制？"></a>HTTP&#x2F;2 为什么是二进制？</h3><p>比起像 HTTP&#x2F;1.x 这样的文本协议，二进制协议解析起来更高效、“线上”更紧凑，更重要的是错误更少。</p>
 <h3 id="为什么-HTTP-x2F-2-需要多路传输"><a href="#为什么-HTTP-x2F-2-需要多路传输" class="headerlink" title="为什么 HTTP&#x2F;2 需要多路传输?"></a>为什么 HTTP&#x2F;2 需要多路传输?</h3><p>HTTP&#x2F;1.x 有个问题叫<strong>线端阻塞</strong>(head-of-line blocking), 它是指一个连接(connection)一次只提交一个请求的效率比较高, 多了就会变慢。 HTTP&#x2F;1.1 试过用流水线(pipelining)来解决这个问题, 但是效果并不理想(数据量较大或者速度较慢的响应, 会阻碍排在他后面的请求). 此外, 由于网络媒介(intermediary )和服务器不能很好的支持流水线, 导致部署起来困难重重。</p>
 <p>而多路传输(Multiplexing)能很好的解决这些问题, 因为它能同时处理多个消息的请求和响应; 甚至可以在传输过程中将一个消息跟另外一个掺杂在一起。所以客户端只需要一个连接就能加载一个页面。</p>
-<h3 id="消息头为什么需要压缩"><a href="#消息头为什么需要压缩" class="headerlink" title="消息头为什么需要压缩?"></a>消息头为什么需要压缩?</h3><p>假定一个页面有80个资源需要加载（这个数量对于今天的Web而言还是挺保守的）, 而每一次请求都有1400字节的消息头（着同样也并不少见，因为Cookie和引用等东西的存在）, 至少要7到8个来回去“在线”获得这些消息头。这还不包括响应时间——那只是从客户端那里获取到它们所花的时间而已。这全都由于TCP的慢启动机制，它会基于对已知有多少个包，来确定还要来回去获取哪些包 – 这很明显的限制了最初的几个来回可以发送的数据包的数量。相比之下，即使是头部轻微的压缩也可以是让那些请求只需一个来回就能搞定——有时候甚至一个包就可以了。这种开销是可以被节省下来的，特别是当你考虑移动客户端应用的时候，即使是良好条件下，一般也会看到几百毫秒的来回延迟。</p>
-<h3 id="服务器推送的好处是什么？"><a href="#服务器推送的好处是什么？" class="headerlink" title="服务器推送的好处是什么？"></a>服务器推送的好处是什么？</h3><p>当浏览器请求一个网页时，服务器将会发回HTML，在服务器开始发送JavaScript、图片和CSS前，服务器需要等待浏览器解析HTML和发送所有内嵌资源的请求。<strong>服务器推送服务通过“推送”那些它认为客户端将会需要的内容到客户端的缓存中，以此来避免往返的延迟。</strong></p>
+<h3 id="消息头为什么需要压缩"><a href="#消息头为什么需要压缩" class="headerlink" title="消息头为什么需要压缩?"></a>消息头为什么需要压缩?</h3><p>假定一个页面有 80 个资源需要加载（这个数量对于今天的 Web 而言还是挺保守的）, 而每一次请求都有 1400 字节的消息头（着同样也并不少见，因为 Cookie 和引用等东西的存在）, 至少要 7 到 8 个来回去“在线”获得这些消息头。这还不包括响应时间——那只是从客户端那里获取到它们所花的时间而已。这全都由于 TCP 的慢启动机制，它会基于对已知有多少个包，来确定还要来回去获取哪些包 – 这很明显的限制了最初的几个来回可以发送的数据包的数量。相比之下，即使是头部轻微的压缩也可以是让那些请求只需一个来回就能搞定——有时候甚至一个包就可以了。这种开销是可以被节省下来的，特别是当你考虑移动客户端应用的时候，即使是良好条件下，一般也会看到几百毫秒的来回延迟。</p>
+<h3 id="服务器推送的好处是什么？"><a href="#服务器推送的好处是什么？" class="headerlink" title="服务器推送的好处是什么？"></a>服务器推送的好处是什么？</h3><p>当浏览器请求一个网页时，服务器将会发回 HTML，在服务器开始发送 JavaScript、图片和 CSS 前，服务器需要等待浏览器解析 HTML 和发送所有内嵌资源的请求。<strong>服务器推送服务通过“推送”那些它认为客户端将会需要的内容到客户端的缓存中，以此来避免往返的延迟。</strong></p>
 
                 
               </div>

@@ -16,16 +16,16 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="redis为什么快1、基于内存的操作2、使用了 I&#x2F;O 多路复用模型，select、epoll 等，基于 reactor 模式开发了自己的网络事件处理器3、单线程可以避免不必要的上下文切换和竞争条件，减少了这方面的性能消耗。4、以上这三点是 redis 性能高的主要原因，其他的还有一些小优化，例如：对数据结构进行了优化，简单动态字符串、压缩列表等 完全基于内存Redis完全基于内存，大部">
+    <meta name="description" content="redis 为什么快1、基于内存的操作2、使用了 I&#x2F;O 多路复用模型，select、epoll 等，基于 reactor 模式开发了自己的网络事件处理器3、单线程可以避免不必要的上下文切换和竞争条件，减少了这方面的性能消耗。4、以上这三点是 redis 性能高的主要原因，其他的还有一些小优化，例如：对数据结构进行了优化，简单动态字符串、压缩列表等 完全基于内存Redis完全基于内存，大">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-线程模型,事务">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="redis为什么快1、基于内存的操作2、使用了 I&#x2F;O 多路复用模型，select、epoll 等，基于 reactor 模式开发了自己的网络事件处理器3、单线程可以避免不必要的上下文切换和竞争条件，减少了这方面的性能消耗。4、以上这三点是 redis 性能高的主要原因，其他的还有一些小优化，例如：对数据结构进行了优化，简单动态字符串、压缩列表等 完全基于内存Redis完全基于内存，大部">
+<meta property="og:description" content="redis 为什么快1、基于内存的操作2、使用了 I&#x2F;O 多路复用模型，select、epoll 等，基于 reactor 模式开发了自己的网络事件处理器3、单线程可以避免不必要的上下文切换和竞争条件，减少了这方面的性能消耗。4、以上这三点是 redis 性能高的主要原因，其他的还有一些小优化，例如：对数据结构进行了优化，简单动态字符串、压缩列表等 完全基于内存Redis完全基于内存，大">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/fG5ONWZAVCUr69X.png">
 <meta property="article:published_time" content="2021-07-30T07:12:19.000Z">
-<meta property="article:modified_time" content="2023-07-11T15:32:56.851Z">
+<meta property="article:modified_time" content="2023-07-17T04:35:35.963Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="模型">
 <meta name="twitter:card" content="summary_large_image">
@@ -280,28 +280,28 @@
             
               <div class="markdown-body">
                 
-                <h2 id="redis为什么快"><a href="#redis为什么快" class="headerlink" title="redis为什么快"></a>redis为什么快</h2><p><strong>1、基于内存的操作</strong><br><strong>2、使用了 I&#x2F;O 多路复用模型，select、epoll 等，基于 reactor 模式开发了自己的网络事件处理器</strong><br><strong>3、单线程可以避免不必要的上下文切换和竞争条件，减少了这方面的性能消耗。</strong><br><strong>4、以上这三点是 redis 性能高的主要原因，其他的还有一些小优化，例如：对数据结构进行了优化，简单动态字符串、压缩列表等</strong></p>
-<h3 id="完全基于内存"><a href="#完全基于内存" class="headerlink" title="完全基于内存"></a>完全基于内存</h3><p>Redis<strong>完全基于内存</strong>，大部分都是简单的存取操作，大量的时间花费在IO上。Redis绝大部分操作时间复杂度为O(1)，所以速度十分快。</p>
-<h3 id="非阻塞IO、多路IO复用模型"><a href="#非阻塞IO、多路IO复用模型" class="headerlink" title="非阻塞IO、多路IO复用模型"></a>非阻塞IO、多路IO复用模型</h3><p>Redis采用<strong>多路IO复用</strong>模型，在内部采用<strong>epoll代理</strong>。多路是指多个网络连接，IO复用是指复用同一个线程。<strong>epoll会同时监察多个流的IO事件，</strong>在空闲时，当前线程进入阻塞，如果有IO事件时，线程会被唤醒，并且epoll会通知线程是哪个流发生了IO事件，然后按照顺序处理，减少了网络IO的时间消耗，避免了大量的无用操作。</p>
-<h3 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h3><p>对于单线程来讲，<strong>不存在上下文切换问题，也不用考虑锁的问题，不存在加锁释放锁的操作，没有因为可能出现死锁而导致的性能消耗</strong>。虽然单线程无法发挥出多个CPU的性能，但是可以<strong>在单机开启多个Redis实例解决这个问题。</strong>reids的单线程是指<strong>处理网络请求只有一个线程</strong>。</p>
-<p>每次上下文切换都需要花费几十纳秒到数微秒的CPU时间，也就是说如果<strong>频繁的进行上下文切换会导致CPU大部分时间被浪费。</strong></p>
-<p>在关系型数据库中，会通过加锁来保证数据的一致性，这种锁被称为悲观锁。Redis为了近可能的减少客户端等待，使用WATCH命令对数据加锁，<strong>只会在数据被其他客户端修改时，才会通知执行WATCH的客户端</strong>，之后的事务不会执行。这种加锁方式被称为乐观锁，极大的提升了Redis的性能。</p>
-<h3 id="数据结构简单"><a href="#数据结构简单" class="headerlink" title="数据结构简单"></a>数据结构简单</h3><p>数据结构设计简单，对数据的操作也简单，Redis中的数据结构是专门进行设计的。Redis的数据结构有<strong>简单动态字符串、链表、字典、跳跃表、整数集合、压缩字典。</strong></p>
-<p>简单动态字符串<br>Redis并没有使用C语言的字符串，而是使用了简单动态字符串(SDS)。相对于C语言的字符串来讲，SDS记录了自身使用和未使用的长度，时间复杂度为O(1),而C语言则要遍历整个空间，时间复杂度为O(N)。<br>SDS可以通过自身长度来判断字符串是否结束，这样可以实现二进制数据的存储。</p>
-<p>链表<br>Redis的链表为双端链表，链表节点带有perv和next指针，链表还带有head和tail指针，使得获取链表某节点前后置节点的时间复杂度都是O(1)。并且Redis链表无环，prev和next指针指向null，对链表的访问以null作为截至的判断条件。<br>链表中有记录自身长度的属性len，并且链表使用void*指针来保存节点值，可以通过list 结构的dup、free、match三个属性为节点值设置类型特定函数，所以链表可以用来保存各种不同类型的值。</p>
+                <h2 id="redis-为什么快"><a href="#redis-为什么快" class="headerlink" title="redis 为什么快"></a>redis 为什么快</h2><p><strong>1、基于内存的操作</strong><br><strong>2、使用了 I&#x2F;O 多路复用模型，select、epoll 等，基于 reactor 模式开发了自己的网络事件处理器</strong><br><strong>3、单线程可以避免不必要的上下文切换和竞争条件，减少了这方面的性能消耗。</strong><br><strong>4、以上这三点是 redis 性能高的主要原因，其他的还有一些小优化，例如：对数据结构进行了优化，简单动态字符串、压缩列表等</strong></p>
+<h3 id="完全基于内存"><a href="#完全基于内存" class="headerlink" title="完全基于内存"></a>完全基于内存</h3><p>Redis<strong>完全基于内存</strong>，大部分都是简单的存取操作，大量的时间花费在 IO 上。Redis 绝大部分操作时间复杂度为 O(1)，所以速度十分快。</p>
+<h3 id="非阻塞-IO、多路-IO-复用模型"><a href="#非阻塞-IO、多路-IO-复用模型" class="headerlink" title="非阻塞 IO、多路 IO 复用模型"></a>非阻塞 IO、多路 IO 复用模型</h3><p>Redis 采用<strong>多路 IO 复用</strong>模型，在内部采用<strong>epoll 代理</strong>。多路是指多个网络连接，IO 复用是指复用同一个线程。<strong>epoll 会同时监察多个流的 IO 事件，</strong>在空闲时，当前线程进入阻塞，如果有 IO 事件时，线程会被唤醒，并且 epoll 会通知线程是哪个流发生了 IO 事件，然后按照顺序处理，减少了网络 IO 的时间消耗，避免了大量的无用操作。</p>
+<h3 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h3><p>对于单线程来讲，<strong>不存在上下文切换问题，也不用考虑锁的问题，不存在加锁释放锁的操作，没有因为可能出现死锁而导致的性能消耗</strong>。虽然单线程无法发挥出多个 CPU 的性能，但是可以<strong>在单机开启多个 Redis 实例解决这个问题。</strong>reids 的单线程是指<strong>处理网络请求只有一个线程</strong>。</p>
+<p>每次上下文切换都需要花费几十纳秒到数微秒的 CPU 时间，也就是说如果<strong>频繁的进行上下文切换会导致 CPU 大部分时间被浪费。</strong></p>
+<p>在关系型数据库中，会通过加锁来保证数据的一致性，这种锁被称为悲观锁。Redis 为了近可能的减少客户端等待，使用 WATCH 命令对数据加锁，<strong>只会在数据被其他客户端修改时，才会通知执行 WATCH 的客户端</strong>，之后的事务不会执行。这种加锁方式被称为乐观锁，极大的提升了 Redis 的性能。</p>
+<h3 id="数据结构简单"><a href="#数据结构简单" class="headerlink" title="数据结构简单"></a>数据结构简单</h3><p>数据结构设计简单，对数据的操作也简单，Redis 中的数据结构是专门进行设计的。Redis 的数据结构有<strong>简单动态字符串、链表、字典、跳跃表、整数集合、压缩字典。</strong></p>
+<p>简单动态字符串<br>Redis 并没有使用 C 语言的字符串，而是使用了简单动态字符串(SDS)。相对于 C 语言的字符串来讲，SDS 记录了自身使用和未使用的长度，时间复杂度为 O(1),而 C 语言则要遍历整个空间，时间复杂度为 O(N)。<br>SDS 可以通过自身长度来判断字符串是否结束，这样可以实现二进制数据的存储。</p>
+<p>链表<br>Redis 的链表为双端链表，链表节点带有 perv 和 next 指针，链表还带有 head 和 tail 指针，使得获取链表某节点前后置节点的时间复杂度都是 O(1)。并且 Redis 链表无环，prev 和 next 指针指向 null，对链表的访问以 null 作为截至的判断条件。<br>链表中有记录自身长度的属性 len，并且链表使用 void*指针来保存节点值，可以通过 list 结构的 dup、free、match 三个属性为节点值设置类型特定函数，所以链表可以用来保存各种不同类型的值。</p>
 <p>字典<br>字典由哈希表组成，而哈希表又由哈希结点组成。</p>
-<p>跳跃表<br>跳跃表是一种有序数据结构，通过在每个结点中维持多个指向其它结点的指针，从而达到快速访问结点的目的。Redis中在有序集合键和集群结点中的内部数据结构都用到了跳跃表。</p>
-<p>整数集合<br>Redis用于保存整数值的集合抽象数据结构，它可以保存类型为 int16_t、int32_t 或者int64_t的整数值，并且保证集合中不会出现重复元素。</p>
-<p>压缩列表<br>压缩列表是Redis为了节约内存而开发的，是由一系列特殊编码的连续内存块组成的<strong>顺序型数据结构</strong>。一个压缩列表可以包含任意个结点，每个结点可以保存一个字节数或者一个整数值。</p>
-<h3 id="Redis优秀的过期策略和内存淘汰机制"><a href="#Redis优秀的过期策略和内存淘汰机制" class="headerlink" title="Redis优秀的过期策略和内存淘汰机制"></a>Redis优秀的过期策略和内存淘汰机制</h3><p><strong>定时删除</strong>：在设置键的过期时间的同时，创建一个定时器，让定时器在键的过期时间来临时，立即执行对键的删除操作。对内存最友好，<strong>对 CPU 时间最不友好。</strong></p>
+<p>跳跃表<br>跳跃表是一种有序数据结构，通过在每个结点中维持多个指向其它结点的指针，从而达到快速访问结点的目的。Redis 中在有序集合键和集群结点中的内部数据结构都用到了跳跃表。</p>
+<p>整数集合<br>Redis 用于保存整数值的集合抽象数据结构，它可以保存类型为 int16_t、int32_t 或者 int64_t 的整数值，并且保证集合中不会出现重复元素。</p>
+<p>压缩列表<br>压缩列表是 Redis 为了节约内存而开发的，是由一系列特殊编码的连续内存块组成的<strong>顺序型数据结构</strong>。一个压缩列表可以包含任意个结点，每个结点可以保存一个字节数或者一个整数值。</p>
+<h3 id="Redis-优秀的过期策略和内存淘汰机制"><a href="#Redis-优秀的过期策略和内存淘汰机制" class="headerlink" title="Redis 优秀的过期策略和内存淘汰机制"></a>Redis 优秀的过期策略和内存淘汰机制</h3><p><strong>定时删除</strong>：在设置键的过期时间的同时，创建一个定时器，让定时器在键的过期时间来临时，立即执行对键的删除操作。对内存最友好，<strong>对 CPU 时间最不友好。</strong></p>
 <p><strong>惰性删除</strong>：<strong>放任键过期不管，但是每次获取键时，都检査键是否过期，如果过期的话，就删除该键</strong>；如果没有过期，就返回该键。对 CPU 时间最优化，对内存最不友好。</p>
 <p><strong>定期删除</strong>：<strong>每隔一段时间，默认 100ms，程序就对数据库进行一次检査，删除里面的过期键</strong>。至 于要删除多少过期键，以及要检査多少个数据库，则由算法决定。前两种策略的折中，对 CPU 时间和内存的友好程度较平衡。</p>
 <p>Redis 使用<strong>惰性删除和定期删除</strong></p>
-<h4 id="内存淘汰机制"><a href="#内存淘汰机制" class="headerlink" title="内存淘汰机制"></a>内存淘汰机制</h4><p>Redis的内存淘汰机制有六种：</p>
-<p>volatile-lru：内存不足时，删除<strong>设置了过期时间的键空间</strong>中最近最少使用的key<br>allkeys-lru：内存不足时，在<strong>键空间</strong>中删除最少使用的key<br>volatile-random：内存不足时，随机删除在<strong>设置了过期时间</strong>的键空间中的key<br>allkeys-random：内存不足时，随即删除在<strong>键空间</strong>中的key<br>volatile-ttl：内存不足时，在设<strong>置了过期时间</strong>的键空间中，优先移除<strong>更早过期时间的key</strong><br>noeviction：永不过期，返回错误</p>
-<p><strong>还有两种4.0新增的：基于LFU.</strong></p>
-<p>在以上的淘汰策略中，使用allkeys-lru较好。</p>
-<h3 id="在-redis-6-0-之前，redis-的核心操作是单线程的。"><a href="#在-redis-6-0-之前，redis-的核心操作是单线程的。" class="headerlink" title="在 redis 6.0 之前，redis 的核心操作是单线程的。"></a>在 redis 6.0 之前，redis 的核心操作是单线程的。</h3><p>因为 redis 是完全基于内存操作的，通常情况下 CPU 不会是 redis 的瓶颈，redis 的瓶颈最有可能是机器内存的大小或者网络带宽。<br>既然 CPU 不会成为瓶颈，那就顺理成章地采用单线程的方案了，因为如果使用多线程的话会更复杂，同时需要引入上下文切换、加锁等等，会带来额外的性能消耗。<br>而随着近些年互联网的不断发展，大家对于缓存的性能要求也越来越高了，因此 redis 也开始在逐渐往多线程方向发展。</p>
+<h4 id="内存淘汰机制"><a href="#内存淘汰机制" class="headerlink" title="内存淘汰机制"></a>内存淘汰机制</h4><p>Redis 的内存淘汰机制有六种：</p>
+<p>volatile-lru：内存不足时，删除<strong>设置了过期时间的键空间</strong>中最近最少使用的 key<br>allkeys-lru：内存不足时，在<strong>键空间</strong>中删除最少使用的 key<br>volatile-random：内存不足时，随机删除在<strong>设置了过期时间</strong>的键空间中的 key<br>allkeys-random：内存不足时，随即删除在<strong>键空间</strong>中的 key<br>volatile-ttl：内存不足时，在设<strong>置了过期时间</strong>的键空间中，优先移除<strong>更早过期时间的 key</strong><br>noeviction：永不过期，返回错误</p>
+<p><strong>还有两种 4.0 新增的：基于 LFU.</strong></p>
+<p>在以上的淘汰策略中，使用 allkeys-lru 较好。</p>
+<h3 id="在-redis-6-0-之前，redis-的核心操作是单线程的"><a href="#在-redis-6-0-之前，redis-的核心操作是单线程的" class="headerlink" title="在 redis 6.0 之前，redis 的核心操作是单线程的"></a>在 redis 6.0 之前，redis 的核心操作是单线程的</h3><p>因为 redis 是完全基于内存操作的，通常情况下 CPU 不会是 redis 的瓶颈，redis 的瓶颈最有可能是机器内存的大小或者网络带宽。<br>既然 CPU 不会成为瓶颈，那就顺理成章地采用单线程的方案了，因为如果使用多线程的话会更复杂，同时需要引入上下文切换、加锁等等，会带来额外的性能消耗。<br>而随着近些年互联网的不断发展，大家对于缓存的性能要求也越来越高了，因此 redis 也开始在逐渐往多线程方向发展。</p>
 <p>最近的 <strong>6.0 版本</strong>就对核心流程引入了多线程，主要用于解决 redis 在<strong>网络 I&#x2F;O 上的性能瓶颈。而对于核心的命令</strong><br><strong>执行阶段，目前还是单线程的。</strong></p>
 <h2 id="Redis-的网络事件处理器（Reactor-模式）"><a href="#Redis-的网络事件处理器（Reactor-模式）" class="headerlink" title="Redis 的网络事件处理器（Reactor 模式）"></a>Redis 的网络事件处理器（Reactor 模式）</h2><p>redis 基于 reactor 模式开发了自己的网络事件处理器，由 4 个部分组成：<strong>套接字、I&#x2F;O 多路复用程序、文件事件分 派器（dispatcher）、以及事件处理器。</strong></p>
 <p><img src="https://i.loli.net/2021/08/04/fG5ONWZAVCUr69X.png" srcset="/img/loading.gif" lazyload alt="image-20210804153454233"></p>
@@ -311,8 +311,8 @@
 <p><strong>事件处理器：</strong>事件处理器就是一个个函数， 定义了某个事件发生时， 服务器应该执行的动作。例如：建立连接、命令查询、命令写入、连接关闭等等</p>
 <h2 id="Redis-事务的实现"><a href="#Redis-事务的实现" class="headerlink" title="Redis 事务的实现"></a>Redis 事务的实现</h2><p>一个事务从开始到结束通常会经历以下 3 个阶段：</p>
 <p>1）事务开始：<strong>multi</strong> 命令将执行该命令的客户端从非事务状态切换至事务状态，底层通过 flags 属性标识。<br>2）命令入队：当客户端处于事务状态时，服务器会根据客户端发来的命令执行不同的操作：<br>exec、discard、watch、multi 命令会被立即执行<br>其他命令不会立即执行，而是将命令放入到一个事务队列，然后向客户端返回 QUEUED 回复。<br>3）事务执行：当一个处于事务状态的客户端向服务器发送 <strong>exec</strong> 命令时，服务器会遍历事务队列，执行队列中的所有命令，最后将结果全部返回给客户端。</p>
-<p><strong>WATCH命令可以监控一个或多个键</strong>，一旦其中有一个键被修改（或删除），<strong>之后的事务就不会执行。</strong></p>
-<p>监控一直持续到<strong>EXEC命令（</strong>事务中的命令是在EXEC之后才执行的，所以在MULTI命令后<strong>可以修改WATCH监控的键值</strong>）</p>
+<p><strong>WATCH 命令可以监控一个或多个键</strong>，一旦其中有一个键被修改（或删除），<strong>之后的事务就不会执行。</strong></p>
+<p>监控一直持续到<strong>EXEC 命令（</strong>事务中的命令是在 EXEC 之后才执行的，所以在 MULTI 命令后<strong>可以修改 WATCH 监控的键值</strong>）</p>
 <p>不过 redis 的事务<strong>并不推荐在实际中使用</strong>，如果要使用事务，推荐使用 Lua 脚本，redis 会保证一个 Lua 脚本里的所有命令的原子性。</p>
 
                 

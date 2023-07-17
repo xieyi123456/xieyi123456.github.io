@@ -16,15 +16,15 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="简单概念介绍逻辑地址CPU所生成的地址。CPU产生的逻辑地址被分为 :p （页号） 它包含每个页在物理内存中的基址，用来作为页表的索引；d （页偏移），同基址相结合，用来确定送入内存设备的物理内存地址。 物理地址内存单元所看到的地址。用户程序看不见真正的物理地址。用户只生成逻辑地址，且认为进程的地址空间为0到max。物理地址范围从R+0到R+max，R为基地址,地址映射－将程序地址空间中使用的逻辑">
+    <meta name="description" content="简单概念介绍逻辑地址CPU 所生成的地址。CPU 产生的逻辑地址被分为 :p （页号） 它包含每个页在物理内存中的基址，用来作为页表的索引；d （页偏移），同基址相结合，用来确定送入内存设备的物理内存地址。 物理地址内存单元所看到的地址。用户程序看不见真正的物理地址。用户只生成逻辑地址，且认为进程的地址空间为 0 到 max。物理地址范围从 R+0 到 R+max，R 为基地址,地址映射－将程序地">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统-fork">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-fork/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="简单概念介绍逻辑地址CPU所生成的地址。CPU产生的逻辑地址被分为 :p （页号） 它包含每个页在物理内存中的基址，用来作为页表的索引；d （页偏移），同基址相结合，用来确定送入内存设备的物理内存地址。 物理地址内存单元所看到的地址。用户程序看不见真正的物理地址。用户只生成逻辑地址，且认为进程的地址空间为0到max。物理地址范围从R+0到R+max，R为基地址,地址映射－将程序地址空间中使用的逻辑">
+<meta property="og:description" content="简单概念介绍逻辑地址CPU 所生成的地址。CPU 产生的逻辑地址被分为 :p （页号） 它包含每个页在物理内存中的基址，用来作为页表的索引；d （页偏移），同基址相结合，用来确定送入内存设备的物理内存地址。 物理地址内存单元所看到的地址。用户程序看不见真正的物理地址。用户只生成逻辑地址，且认为进程的地址空间为 0 到 max。物理地址范围从 R+0 到 R+max，R 为基地址,地址映射－将程序地">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-07-30T07:05:47.000Z">
-<meta property="article:modified_time" content="2023-07-13T14:33:20.140Z">
+<meta property="article:modified_time" content="2023-07-17T04:35:35.972Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="概念">
 <meta name="twitter:card" content="summary_large_image">
@@ -278,20 +278,20 @@
             
               <div class="markdown-body">
                 
-                <h3 id="简单概念介绍"><a href="#简单概念介绍" class="headerlink" title="简单概念介绍"></a>简单概念介绍</h3><h4 id="逻辑地址"><a href="#逻辑地址" class="headerlink" title="逻辑地址"></a>逻辑地址</h4><p>CPU所生成的地址。CPU产生的<strong>逻辑地址</strong>被分为 :p （页号） 它包含每个页在物理内存中的基址，用来作为页表的索引；d （页偏移），同基址相结合，用来确定送入内存设备的物理内存地址。</p>
-<h4 id="物理地址"><a href="#物理地址" class="headerlink" title="物理地址"></a>物理地址</h4><p>内存单元所看到的地址。用户程序看不见真正的物理地址。<strong>用户只生成逻辑地址，且认为进程的地址空间为0到max。</strong>物理地址范围从R+0到R+max，R为基地址,地址映射－将程序地址空间中使用的逻辑地址变换成内存中的物理地址的过程。由<strong>内存管理单元（MMU）</strong>来完成。</p>
+                <h3 id="简单概念介绍"><a href="#简单概念介绍" class="headerlink" title="简单概念介绍"></a>简单概念介绍</h3><h4 id="逻辑地址"><a href="#逻辑地址" class="headerlink" title="逻辑地址"></a>逻辑地址</h4><p>CPU 所生成的地址。CPU 产生的<strong>逻辑地址</strong>被分为 :p （页号） 它包含每个页在物理内存中的基址，用来作为页表的索引；d （页偏移），同基址相结合，用来确定送入内存设备的物理内存地址。</p>
+<h4 id="物理地址"><a href="#物理地址" class="headerlink" title="物理地址"></a>物理地址</h4><p>内存单元所看到的地址。用户程序看不见真正的物理地址。<strong>用户只生成逻辑地址，且认为进程的地址空间为 0 到 max。</strong>物理地址范围从 R+0 到 R+max，R 为基地址,地址映射－将程序地址空间中使用的逻辑地址变换成内存中的物理地址的过程。由<strong>内存管理单元（MMU）</strong>来完成。</p>
 <p>可执行程序在存储（没有调入内存）时分为<strong>代码区，数据区，未初始化数据区</strong>三部分。</p>
-<p>（1）代码区存放CPU执行的<strong>机器指令</strong>。通常代码区是共享的，即其它执行程序可调用它。代码段（code segment&#x2F;text segment）通常是只读的，有些构架也允许自行修改。<br>（2）数据区存放<strong>已初始化的全局变量，静态变量（包括全局和局部的），常量</strong>。static全局变量和static函数只能在当前文件中被调用。<br>（3）未初始化数据区（Block Started by Symbol,BSS)<strong>存放全局未初始化的变量</strong>。BSS的数据在程序开始执行之前被初始化为0或NULL。</p>
-<p> 可执行程序在运行时又多出了两个区域：<strong>栈区和堆区。</strong><br>    （4）<strong>栈区</strong>。由编译器自动释放，存放函数的<strong>参数值，局部变量</strong>等。每当一个函数被调用时，该函数的返回类型和一些调用的信息被存储到栈中。然后这个被调用的函数再为它的自动变量和临时变量在栈上分配空间。<strong>每调用一个函数一个新的栈就会被使用</strong>。栈区是从高地址位向低地址位增长的，<strong>是一块连续的内在区域</strong>，最大容量是由系统预先定义好的，申请的栈空间超过这个界限时会提示溢出，用户能从栈中获取的空间较小。<br>    （5）<strong>堆区</strong>。用于<strong>动态内存分配</strong>，位于BSS和栈中间的地址位。由程序员<strong>申请分配（malloc)和释放（free）</strong>。堆是从低地址位向高地址位增长，<strong>采用链式存储结构</strong>。频繁地malloc&#x2F;free造成内存空间的不连续，<strong>产生碎片。</strong>当申请堆空间时库函数按照一定的算法搜索可用的足够大的空间。<strong>因此堆的效率比栈要低的多。</strong></p>
-<h3 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h3><p>fork（）会<strong>产生一个和父进程完全相同的子进程</strong>，但子进程在此后多会exec<strong>系统调用</strong>，出于效率考虑，linux中引入了“<strong>写时复制</strong>“技术，也就是<strong>只有进程空间的各段的内容要发生变化时，才会将父进程的内容复制一份给子进程</strong>。在fork之后exec之前两个进程用的是<strong>相同的物理空间（内存区）</strong>，子进程的代码段、数据段、堆栈都是指向父进程的物理空间，也就是说，两者的虚拟空间不同，但其对应的物理空间是同一个。</p>
+<p>（1）代码区存放 CPU 执行的<strong>机器指令</strong>。通常代码区是共享的，即其它执行程序可调用它。代码段（code segment&#x2F;text segment）通常是只读的，有些构架也允许自行修改。<br>（2）数据区存放<strong>已初始化的全局变量，静态变量（包括全局和局部的），常量</strong>。static 全局变量和 static 函数只能在当前文件中被调用。<br>（3）未初始化数据区（Block Started by Symbol,BSS)<strong>存放全局未初始化的变量</strong>。BSS 的数据在程序开始执行之前被初始化为 0 或 NULL。</p>
+<p> 可执行程序在运行时又多出了两个区域：<strong>栈区和堆区。</strong><br>    （4）<strong>栈区</strong>。由编译器自动释放，存放函数的<strong>参数值，局部变量</strong>等。每当一个函数被调用时，该函数的返回类型和一些调用的信息被存储到栈中。然后这个被调用的函数再为它的自动变量和临时变量在栈上分配空间。<strong>每调用一个函数一个新的栈就会被使用</strong>。栈区是从高地址位向低地址位增长的，<strong>是一块连续的内在区域</strong>，最大容量是由系统预先定义好的，申请的栈空间超过这个界限时会提示溢出，用户能从栈中获取的空间较小。<br>    （5）<strong>堆区</strong>。用于<strong>动态内存分配</strong>，位于 BSS 和栈中间的地址位。由程序员<strong>申请分配（malloc)和释放（free）</strong>。堆是从低地址位向高地址位增长，<strong>采用链式存储结构</strong>。频繁地 malloc&#x2F;free 造成内存空间的不连续，<strong>产生碎片。</strong>当申请堆空间时库函数按照一定的算法搜索可用的足够大的空间。<strong>因此堆的效率比栈要低的多。</strong></p>
+<h3 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h3><p>fork（）会<strong>产生一个和父进程完全相同的子进程</strong>，但子进程在此后多会 exec<strong>系统调用</strong>，出于效率考虑，linux 中引入了“<strong>写时复制</strong>“技术，也就是<strong>只有进程空间的各段的内容要发生变化时，才会将父进程的内容复制一份给子进程</strong>。在 fork 之后 exec 之前两个进程用的是<strong>相同的物理空间（内存区）</strong>，子进程的代码段、数据段、堆栈都是指向父进程的物理空间，也就是说，两者的虚拟空间不同，但其对应的物理空间是同一个。</p>
 <p><strong>当父子进程中有更改相应段的行为发生时</strong>，再为子进程相应的段分配物理空间。</p>
-<p>如果<strong>不是因为exec</strong>，内核会给子进程的数据段、堆栈段分配相应的物理空间（至此两者有各自的进程空间，互不影响），而<strong>代码段继续共享父进程的物理空间</strong>（两者的代码完全相同）。</p>
-<p>如果<strong>是因为exec</strong>，由于两者<strong>执行的代码不同</strong>，子进程的代码段也会分配单独的物理空间。</p>
-<p>fork时子进程获得父进程<strong>数据空间、堆和栈的复制，所以变量的地址是一样的。</strong></p>
-<p>fork子进程完全复制父进程的栈空间，也复制了页表，<strong>但没有复制物理页面</strong>，所以这时<strong>虚拟地址相同，物理地址也相同</strong>，但是会把父子共享的页面标记为“<strong>只读</strong>”（类似mmap的private的方式），如果父子进程一直对这个页面是同一个页面，知道其中<strong>任何一个进程要对共享的页面“写操作”</strong>，这时<strong>内核会复制一个物理页面给这个进程使用，同时修改页表。而把原来的只读页面标记为“可写”，留给另外一个进程使用</strong>。</p>
-<p>这就是所谓的“<strong>写时复制</strong>”。正因为fork采用了这种写时复制的机制，所以fork出来子进程之后，父子进程哪个先调度呢？内核一般会先调度子进程，因为很多情况下子进程是要马上执行exec，会清空栈、堆。这些和父进程共享的空间，加载新的代码段，这就避免了“写时复制”拷贝共享页面的机会。<strong>如果父进程先调度很可能写共享页面，会产生“写时复制”的无用功。</strong></p>
-<p>在理解时，你可以认为fork后，这两个相同的虚拟地址指向的是不同的物理地址，这样方便理解父子进程之间的独立性</p>
-<h4 id="写时复制"><a href="#写时复制" class="headerlink" title="写时复制"></a>写时复制</h4><p>但实际上，linux为了提高 fork 的效率，采用了 <strong>copy-on-write</strong> 技术，fork后，这两个虚拟地址实际上指向相同的物理地址（内存页），只有任何一个进程试图修改这个虚拟地址里的内容前，两个虚拟地址才会指向不同的物理地址（新的物理地址的内容从原物理地址中复制得到）。</p>
+<p>如果<strong>不是因为 exec</strong>，内核会给子进程的数据段、堆栈段分配相应的物理空间（至此两者有各自的进程空间，互不影响），而<strong>代码段继续共享父进程的物理空间</strong>（两者的代码完全相同）。</p>
+<p>如果<strong>是因为 exec</strong>，由于两者<strong>执行的代码不同</strong>，子进程的代码段也会分配单独的物理空间。</p>
+<p>fork 时子进程获得父进程<strong>数据空间、堆和栈的复制，所以变量的地址是一样的。</strong></p>
+<p>fork 子进程完全复制父进程的栈空间，也复制了页表，<strong>但没有复制物理页面</strong>，所以这时<strong>虚拟地址相同，物理地址也相同</strong>，但是会把父子共享的页面标记为“<strong>只读</strong>”（类似 mmap 的 private 的方式），如果父子进程一直对这个页面是同一个页面，知道其中<strong>任何一个进程要对共享的页面“写操作”</strong>，这时<strong>内核会复制一个物理页面给这个进程使用，同时修改页表。而把原来的只读页面标记为“可写”，留给另外一个进程使用</strong>。</p>
+<p>这就是所谓的“<strong>写时复制</strong>”。正因为 fork 采用了这种写时复制的机制，所以 fork 出来子进程之后，父子进程哪个先调度呢？内核一般会先调度子进程，因为很多情况下子进程是要马上执行 exec，会清空栈、堆。这些和父进程共享的空间，加载新的代码段，这就避免了“写时复制”拷贝共享页面的机会。<strong>如果父进程先调度很可能写共享页面，会产生“写时复制”的无用功。</strong></p>
+<p>在理解时，你可以认为 fork 后，这两个相同的虚拟地址指向的是不同的物理地址，这样方便理解父子进程之间的独立性</p>
+<h4 id="写时复制"><a href="#写时复制" class="headerlink" title="写时复制"></a>写时复制</h4><p>但实际上，linux 为了提高 fork 的效率，采用了 <strong>copy-on-write</strong> 技术，fork 后，这两个虚拟地址实际上指向相同的物理地址（内存页），只有任何一个进程试图修改这个虚拟地址里的内容前，两个虚拟地址才会指向不同的物理地址（新的物理地址的内容从原物理地址中复制得到）。</p>
 
                 
               </div>

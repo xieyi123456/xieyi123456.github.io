@@ -16,17 +16,17 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="synchronized见《线程安全的机制》 CASCAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。 CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。 CAS虽然很高效的解决了原子操作问题，但是CAS仍然存在三">
+    <meta name="description" content="synchronized见《线程安全的机制》 CASCAS 是英文单词 CompareAndSwap 的缩写，中文意思是：比较并替换。CAS 需要有 3 个操作数：内存地址 V，旧的预期值 A，即将要更新的目标值 B。 CAS 指令执行时，当且仅当内存地址 V 的值与预期值 A 相等时，将内存地址 V 的值修改为 B，否则就什么都不做。整个比较并替换的操作是一个原子操作。 CAS 虽然很高效的解决">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java并发-常见关键字">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="synchronized见《线程安全的机制》 CASCAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。 CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。 CAS虽然很高效的解决了原子操作问题，但是CAS仍然存在三">
+<meta property="og:description" content="synchronized见《线程安全的机制》 CASCAS 是英文单词 CompareAndSwap 的缩写，中文意思是：比较并替换。CAS 需要有 3 个操作数：内存地址 V，旧的预期值 A，即将要更新的目标值 B。 CAS 指令执行时，当且仅当内存地址 V 的值与预期值 A 相等时，将内存地址 V 的值修改为 B，否则就什么都不做。整个比较并替换的操作是一个原子操作。 CAS 虽然很高效的解决">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/03/ovkD8F5rExbgpBq.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/05/FMUxJCKm7Gkn8Hv.png">
 <meta property="article:published_time" content="2021-07-30T07:08:44.000Z">
-<meta property="article:modified_time" content="2023-07-11T15:32:58.087Z">
+<meta property="article:modified_time" content="2023-07-17T04:35:35.962Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="关键字">
 <meta name="twitter:card" content="summary_large_image">
@@ -282,25 +282,25 @@
               <div class="markdown-body">
                 
                 <h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p>见《线程安全的机制》</p>
-<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。</p>
-<p>CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。</p>
-<p>CAS虽然很高效的解决了原子操作问题，但是CAS仍然存在三大问题。</p>
-<p><strong>循环时间长开销很大。</strong><br><strong>只能保证一个共享变量的原子操作。</strong><br><strong>ABA问题。</strong></p>
-<p><strong>如果CAS失败，会一直进行尝试</strong>。如果CAS长时间一直不成功，可能会给CPU带来很大的开销。</p>
-<p>当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候就可以用锁来保证原子性。</p>
-<p>如果值曾经被改成了B，后来又被改回为A，那CAS操作就会误认为它从来没有被改变过。这个漏洞称为CAS操作的“ABA”问题。</p>
-<p>Java并发包为了解决这个问题，提供了一个<strong>带有标记的原子引用类“AtomicStampedReference”，</strong>它可以通过<strong>控制变量值的版本</strong>来保证CAS的正确性。因此，在使用CAS前要考虑清楚“ABA”问题是否会影响程序并发的正确性，如果需要解决ABA问题，改用传统的互斥同步可能会比原子类更高效。</p>
+<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS 是英文单词 CompareAndSwap 的缩写，中文意思是：比较并替换。CAS 需要有 3 个操作数：内存地址 V，旧的预期值 A，即将要更新的目标值 B。</p>
+<p>CAS 指令执行时，当且仅当内存地址 V 的值与预期值 A 相等时，将内存地址 V 的值修改为 B，否则就什么都不做。整个比较并替换的操作是一个原子操作。</p>
+<p>CAS 虽然很高效的解决了原子操作问题，但是 CAS 仍然存在三大问题。</p>
+<p><strong>循环时间长开销很大。</strong><br><strong>只能保证一个共享变量的原子操作。</strong><br><strong>ABA 问题。</strong></p>
+<p><strong>如果 CAS 失败，会一直进行尝试</strong>。如果 CAS 长时间一直不成功，可能会给 CPU 带来很大的开销。</p>
+<p>当对一个共享变量执行操作时，我们可以使用循环 CAS 的方式来保证原子操作，但是对多个共享变量操作时，循环 CAS 就无法保证操作的原子性，这个时候就可以用锁来保证原子性。</p>
+<p>如果值曾经被改成了 B，后来又被改回为 A，那 CAS 操作就会误认为它从来没有被改变过。这个漏洞称为 CAS 操作的“ABA”问题。</p>
+<p>Java 并发包为了解决这个问题，提供了一个<strong>带有标记的原子引用类“AtomicStampedReference”，</strong>它可以通过<strong>控制变量值的版本</strong>来保证 CAS 的正确性。因此，在使用 CAS 前要考虑清楚“ABA”问题是否会影响程序并发的正确性，如果需要解决 ABA 问题，改用传统的互斥同步可能会比原子类更高效。</p>
 <h3 id="AQS-抽象队列同步器"><a href="#AQS-抽象队列同步器" class="headerlink" title="AQS-抽象队列同步器"></a>AQS-抽象队列同步器</h3><p><img src="https://i.loli.net/2021/08/03/ovkD8F5rExbgpBq.png" srcset="/img/loading.gif" lazyload alt="image-20210803192200462"></p>
 <p><strong>AQS 核心思想是，</strong>如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设置为锁定状态。<strong>如果被请求的共享资源被占用</strong>，那么就需要一套线程阻塞等待以及被唤醒时锁分配的机制，这个机制 AQS 是用 <strong>CLH 队列锁</strong>实现的，即将暂时获取不到锁的线程加入到队列中。</p>
 <p>CLH(Craig,Landin,and Hagersten)队列是一个<strong>虚拟的双向队列</strong>（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将<strong>每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点</strong>（Node）来实现锁的分配。</p>
 <p><img src="https://i.loli.net/2021/08/05/FMUxJCKm7Gkn8Hv.png" srcset="/img/loading.gif" lazyload alt="image-20210805140155989"></p>
 <p>AQS 使用一个 int 成员变量来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。</p>
 <h4 id="节点状态"><a href="#节点状态" class="headerlink" title="节点状态"></a>节点状态</h4><p>nt waitStatus：</p>
-<p>1、<strong>CANCELLED</strong>，值为1 。场景：当该线程<strong>等待超时或者被中断，需要从同步队列中取消等待</strong>，则该线程被置1，即被取消（这里该线程在取消之前是等待状态）。节点进入了取消状态则不再变化；</p>
+<p>1、<strong>CANCELLED</strong>，值为 1 。场景：当该线程<strong>等待超时或者被中断，需要从同步队列中取消等待</strong>，则该线程被置 1，即被取消（这里该线程在取消之前是等待状态）。节点进入了取消状态则不再变化；</p>
 <p>2、<strong>SIGNAL</strong>，值为-1。场景：<strong>后继的节点处于等待状态</strong>，当前节点的线程如果释放了同步状态或者被取消（当前节点状态置为-1），将会通知后继节点，使后继节点的线程得以运行；</p>
-<p>3、<strong>CONDITION</strong>，值为-2。场景：<strong>节点处于等待队列中，节点线程等待在Condition上，</strong>当其他线程对Condition调用了signal()方法后，该节点从等待队列中转移到同步队列中，加入到对同步状态的获取中；</p>
+<p>3、<strong>CONDITION</strong>，值为-2。场景：<strong>节点处于等待队列中，节点线程等待在 Condition 上，</strong>当其他线程对 Condition 调用了 signal()方法后，该节点从等待队列中转移到同步队列中，加入到对同步状态的获取中；</p>
 <p>4、<strong>PROPAGATE</strong>，值为-3。场景：表示<strong>下一次的共享状态会被无条件的传播下去</strong>；</p>
-<p>5、<strong>INITIAL</strong>，值为0，初始状态。</p>
+<p>5、<strong>INITIAL</strong>，值为 0，初始状态。</p>
 <h4 id="AQS-对资源的共享方式"><a href="#AQS-对资源的共享方式" class="headerlink" title="AQS 对资源的共享方式"></a>AQS 对资源的共享方式</h4><p><strong>AQS 定义两种资源共享方式</strong></p>
 <h5 id="Exclusive（独占）"><a href="#Exclusive（独占）" class="headerlink" title="Exclusive（独占）"></a>Exclusive（独占）</h5><p><strong>只有一个线程能执行</strong>，如 ReentrantLock。又可分为公平锁和非公平锁，ReentrantLock 同时支持两种锁，下面以 ReentrantLock 对这两种锁的定义做介绍：</p>
 <p>公平锁 ：<strong>按照线程在队列中的排队顺序，先到者先拿到锁</strong><br>非公平锁 ：当线程要获取锁时，先通过<strong>两次 CAS 操作去抢锁</strong>，如果没抢到，当前线程再加入到队列中等待唤醒。</p>
@@ -308,30 +308,30 @@
 <p>非公平锁在<strong>调用 lock</strong> 后，首先就会调用 CAS 进行一次抢锁，如果这个时候恰巧锁没有被占用，那么直接就获取到锁返回了。<br>非公平锁<strong>在 CAS 失败后</strong>，和公平锁一样都会进入到 <strong>tryAcquire 方法</strong>，在 tryAcquire 方法中，如果发现锁这个时候被释放了（state &#x3D;&#x3D; 0），<strong>非公平锁会直接 CAS 抢锁</strong>，<strong>但是公平锁会判断等待队列是否有线程处于等待状态，如果有则不去抢锁，乖乖排到后面。</strong></p>
 <p>公平锁和非公平锁就这两点区别，<strong>如果这两次 CAS 都不成功，那么后面非公平锁和公平锁是一样的，都要进入到阻塞队列等待唤醒。</strong></p>
 <p>相对来说，<strong>非公平锁会有更好的性能，因为它的吞吐量比较大</strong>。当然，非公平锁让获取锁的时间变得更加不确定，可能会导致在阻塞队列中的线程长期处于饥饿状态。</p>
-<h5 id="Share（共享）"><a href="#Share（共享）" class="headerlink" title="Share（共享）"></a>Share（共享）</h5><p>多个线程可同时执行，如Semaphore、CountDownLatCh、 CyclicBarrier、ReadWriteLock 。</p>
+<h5 id="Share（共享）"><a href="#Share（共享）" class="headerlink" title="Share（共享）"></a>Share（共享）</h5><p>多个线程可同时执行，如 Semaphore、CountDownLatCh、 CyclicBarrier、ReadWriteLock 。</p>
 <p>ReentrantReadWriteLock 可以看成是组合式，因为 ReentrantReadWriteLock 也就是读写锁允许多个线程同时对某一资源进行读。</p>
 <p>不同的<strong>自定义同步器</strong>争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队&#x2F;唤醒出队等），AQS 已经在上层已经帮我们实现好了。</p>
-<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><p>Java实现锁有两种语法<strong>，一种是synchronized语句，另外一种是reentrantlock关键字</strong>。</p>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><p>Java 实现锁有两种语法<strong>，一种是 synchronized 语句，另外一种是 reentrantlock 关键字</strong>。</p>
 <h4 id="公平锁-x2F-非公平锁"><a href="#公平锁-x2F-非公平锁" class="headerlink" title="公平锁&#x2F;非公平锁"></a>公平锁&#x2F;非公平锁</h4><p>公平锁指<strong>多个线程按照申请锁的顺序获得锁。</strong></p>
 <p>非公平锁指多个线程获得锁的顺序不按照申请顺序。</p>
-<p>Java reentranthlock通过构造函数来指定锁是公平还是非公平，默认是非公平锁，对于synchronized而言，也是一种非公平锁。</p>
+<p>Java reentranthlock 通过构造函数来指定锁是公平还是非公平，默认是非公平锁，对于 synchronized 而言，也是一种非公平锁。</p>
 <p><strong>非公平锁优点在于吞吐量比公平锁大。</strong></p>
 <h4 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h4><p>可重入锁又叫递归锁，是指同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。</p>
-<p>Synchronized也是一个可重入锁。</p>
+<p>Synchronized 也是一个可重入锁。</p>
 <p>可重入锁的优点是可以一定程度避免死锁。</p>
 <h4 id="独享锁-x2F-共享锁"><a href="#独享锁-x2F-共享锁" class="headerlink" title="独享锁&#x2F;共享锁"></a>独享锁&#x2F;共享锁</h4><p>独享锁是指该锁一次只能被一个线程所持有，共享锁可以被多个线程所持有。</p>
-<p>Java reentrantlock是一个独享锁，但是对于lock的另一个实现readwritelock，其读锁是一个共享锁，写锁是一个独享锁。</p>
-<p>对于synchronized是一个独享锁。</p>
-<h4 id="互斥锁-x2F-读写锁"><a href="#互斥锁-x2F-读写锁" class="headerlink" title="互斥锁&#x2F;读写锁"></a>互斥锁&#x2F;读写锁</h4><p>互斥锁在Java中具体实现就是reentrantlock。</p>
-<p>读写锁在Java中的具体实现就是readwritelock。</p>
+<p>Java reentrantlock 是一个独享锁，但是对于 lock 的另一个实现 readwritelock，其读锁是一个共享锁，写锁是一个独享锁。</p>
+<p>对于 synchronized 是一个独享锁。</p>
+<h4 id="互斥锁-x2F-读写锁"><a href="#互斥锁-x2F-读写锁" class="headerlink" title="互斥锁&#x2F;读写锁"></a>互斥锁&#x2F;读写锁</h4><p>互斥锁在 Java 中具体实现就是 reentrantlock。</p>
+<p>读写锁在 Java 中的具体实现就是 readwritelock。</p>
 <h4 id="乐观锁-x2F-悲观锁"><a href="#乐观锁-x2F-悲观锁" class="headerlink" title="乐观锁&#x2F;悲观锁"></a>乐观锁&#x2F;悲观锁</h4><p>乐观锁和悲观锁不是指具体的锁类型，而是对于看待并发编程中加锁问题的角度。</p>
 <p>悲观锁认为，对于一个数据的并发操作，一定会改变数据，即使实际上数据没被改变，但是也悲观的认为被改变的可能性比较大，一定要加锁，不加锁早晚要出问题。</p>
 <p>乐观锁认为，对于一个数据的并发操作，是不会改变数据的，不加锁也不会出问题。</p>
-<p>乐观锁指java中的无所编程，适合读操作非常多的场景。</p>
-<p>悲观锁就是指java中，适合并发下写非常多的场景。</p>
-<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p>在java中，自旋锁是指尝试获取锁的线程不会立即阻塞，<strong>而是采用循环的方式去尝试获取锁</strong>，当循环条件被其他线程改变时，才能进入临界区。这样的好处是减少线程上下文切换的消耗，<strong>缺点是会消耗CPU。</strong></p>
-<p>由于自旋锁只是将当前线程不停地执行循环体，不进行线程状态的改变，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，占用CPU时间。<strong>如果线程竞争不激烈，并且保持锁的时间段。适合使用自旋锁。</strong></p>
-<h4 id="偏向锁-x2F-轻量级锁-x2F-重量级锁"><a href="#偏向锁-x2F-轻量级锁-x2F-重量级锁" class="headerlink" title="偏向锁&#x2F;轻量级锁&#x2F;重量级锁"></a>偏向锁&#x2F;轻量级锁&#x2F;重量级锁</h4><p>这三种锁，就是指锁的状态，针对synchronized。</p>
+<p>乐观锁指 java 中的无所编程，适合读操作非常多的场景。</p>
+<p>悲观锁就是指 java 中，适合并发下写非常多的场景。</p>
+<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p>在 java 中，自旋锁是指尝试获取锁的线程不会立即阻塞，<strong>而是采用循环的方式去尝试获取锁</strong>，当循环条件被其他线程改变时，才能进入临界区。这样的好处是减少线程上下文切换的消耗，<strong>缺点是会消耗 CPU。</strong></p>
+<p>由于自旋锁只是将当前线程不停地执行循环体，不进行线程状态的改变，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，占用 CPU 时间。<strong>如果线程竞争不激烈，并且保持锁的时间段。适合使用自旋锁。</strong></p>
+<h4 id="偏向锁-x2F-轻量级锁-x2F-重量级锁"><a href="#偏向锁-x2F-轻量级锁-x2F-重量级锁" class="headerlink" title="偏向锁&#x2F;轻量级锁&#x2F;重量级锁"></a>偏向锁&#x2F;轻量级锁&#x2F;重量级锁</h4><p>这三种锁，就是指锁的状态，针对 synchronized。</p>
 <p>偏向锁是<strong>指一段代码一直被一个线程所访问</strong>，那么理论上，这个线程会自动获取这个锁，并一直拥有这个锁，这样就降低了获取锁的代价。</p>
 <p>轻量级锁是指当偏向锁的状态下，<strong>被另一个线程访问</strong>，偏向锁就会升级为<strong>轻量级锁</strong>，其他线程会通过自旋形式尝试获取锁，不会阻塞，提高效率。</p>
 <p>重量级锁是指在轻量级锁的状态下，<strong>另一个线程虽然自旋</strong>，但不会一直持续下去，当自旋一定次数的时候还没有获取到锁的话，<strong>就会进入阻塞</strong>，该锁就会膨胀为重量级锁，重量级锁会让其他申请的线程陷入阻塞，降低性能。</p>

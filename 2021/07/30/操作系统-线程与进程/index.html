@@ -16,16 +16,16 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="进程与线程进程更好的描述和控制程序的并发执行。PCB进程控制块-进程存在的唯一标志。程序的一次执行过程。拥有资源的基本单位。状态：运行，就绪，阻塞，创建，结束 线程一个基本的CPU执行单元。是系统独立调度派的基本单位。一个进程中可以有多个线程。线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。 进程调度 ⼀旦操作系统把进程切换到运⾏状态，也就意味着该进程占⽤着 CPU 在执⾏">
+    <meta name="description" content="进程与线程进程更好的描述和控制程序的并发执行。PCB 进程控制块-进程存在的唯一标志。程序的一次执行过程。拥有资源的基本单位。状态：运行，就绪，阻塞，创建，结束 线程一个基本的 CPU 执行单元。是系统独立调度派的基本单位。一个进程中可以有多个线程。线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。 进程调度 ⼀旦操作系统把进程切换到运⾏状态，也就意味着该进程占⽤着 CPU">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统-线程与进程">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="进程与线程进程更好的描述和控制程序的并发执行。PCB进程控制块-进程存在的唯一标志。程序的一次执行过程。拥有资源的基本单位。状态：运行，就绪，阻塞，创建，结束 线程一个基本的CPU执行单元。是系统独立调度派的基本单位。一个进程中可以有多个线程。线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。 进程调度 ⼀旦操作系统把进程切换到运⾏状态，也就意味着该进程占⽤着 CPU 在执⾏">
+<meta property="og:description" content="进程与线程进程更好的描述和控制程序的并发执行。PCB 进程控制块-进程存在的唯一标志。程序的一次执行过程。拥有资源的基本单位。状态：运行，就绪，阻塞，创建，结束 线程一个基本的 CPU 执行单元。是系统独立调度派的基本单位。一个进程中可以有多个线程。线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。 进程调度 ⼀旦操作系统把进程切换到运⾏状态，也就意味着该进程占⽤着 CPU">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/06/puJzalWFGyTfjmt.png">
 <meta property="article:published_time" content="2021-07-30T07:05:47.000Z">
-<meta property="article:modified_time" content="2023-07-11T15:32:56.502Z">
+<meta property="article:modified_time" content="2023-07-17T04:35:35.960Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="概念">
 <meta name="twitter:card" content="summary_large_image">
@@ -280,15 +280,15 @@
             
               <div class="markdown-body">
                 
-                <h3 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h3><h4 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h4><p>更好的描述和控制程序的并发执行。<br>PCB进程控制块-进程存在的唯一标志。<br>程序的一次执行过程。<br>拥有资源的基本单位。<br>状态：运行，就绪，阻塞，创建，结束</p>
-<h4 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h4><p>一个基本的CPU执行单元。<br>是系统独立调度派的基本单位。<br>一个进程中可以有多个线程。<br>线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。</p>
+                <h3 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h3><h4 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h4><p>更好的描述和控制程序的并发执行。<br>PCB 进程控制块-进程存在的唯一标志。<br>程序的一次执行过程。<br>拥有资源的基本单位。<br>状态：运行，就绪，阻塞，创建，结束</p>
+<h4 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h4><p>一个基本的 CPU 执行单元。<br>是系统独立调度派的基本单位。<br>一个进程中可以有多个线程。<br>线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。</p>
 <h3 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h3><ul>
 <li>⼀旦操作系统把进程切换到运⾏状态，也就意味着该进程占⽤着 CPU 在执⾏，但是当操作系统把进程切换到其他状态时，那就不能在 CPU 中执⾏了，于是操作系统会选择下⼀个要运⾏的进程。</li>
 <li><strong>选择⼀个进程运⾏这⼀功能是在操作系统中完成的，通常称为调度程序（scheduler）</strong></li>
 <li>在进程的⽣命周期中，当<strong>进程从⼀个运⾏状态到另外⼀状态变化的时候</strong>，其实会触发⼀次调度。 </li>
 <li>⾮抢占式调度算法挑选⼀个进程，然后让<strong>该进程运⾏直到被阻塞，或者直到该进程退出</strong>，才会调⽤另外⼀个进程，也就是说不会理时钟中断这个事情。 </li>
 <li>抢占式调度算法挑选⼀个进程，然后让该进程只运⾏某段时间，如果在该时段结束时，该进程仍然在运⾏时，则会<strong>把它挂起</strong>，接着调度程序从就绪队列挑选另外⼀个进程。</li>
-<li>这种抢占式调度处理，需要在时间间隔的末端发⽣时钟中断，以便把CPU控制返回给调度程序进⾏调度，也就是常说的<strong>时间⽚机制 。</strong></li>
+<li>这种抢占式调度处理，需要在时间间隔的末端发⽣时钟中断，以便把 CPU 控制返回给调度程序进⾏调度，也就是常说的<strong>时间⽚机制 。</strong></li>
 </ul>
 <p><strong>调度的算法评价：</strong></p>
 <ol>
@@ -352,9 +352,9 @@
 <ul>
 <li><strong>实现 TCP 字节流通信</strong>： socket 类型是 AF_INET 和 SOCK_STREAM；</li>
 <li><strong>实现 UDP 数据报通信</strong>： socket 类型是 AF_INET 和 SOCK_DGRAM；</li>
-<li><strong>实现本地进程间通信：</strong> 「本地字节流 socket 」类型是 AF_LOCAL 和 SOCK_STREAM，「本地数据报 socket 」类型是 AF_LOCAL 和 SOCK_DGRAM。另外，AF_UNIX 和 AF_LOCAL 是等价的，所以AF_UNIX 也属于本地 socket。</li>
+<li><strong>实现本地进程间通信：</strong> 「本地字节流 socket 」类型是 AF_LOCAL 和 SOCK_STREAM，「本地数据报 socket 」类型是 AF_LOCAL 和 SOCK_DGRAM。另外，AF_UNIX 和 AF_LOCAL 是等价的，所以 AF_UNIX 也属于本地 socket。</li>
 </ul>
-<h5 id="TCP"><a href="#TCP" class="headerlink" title="TCP:"></a>TCP:</h5><ul>
+<h5 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h5><ul>
 <li>服务端和客户端初始化 socket ，得到⽂件描述符；</li>
 <li><strong>服务端调⽤ bind</strong> ，将绑定在 IP 地址和端⼝;</li>
 <li><strong>服务端调⽤ listen</strong> ，进⾏监听；</li>
@@ -364,7 +364,7 @@
 <li>客户端调⽤ write 写⼊数据；服务端调⽤ read 读取数据；</li>
 <li>客户端断开连接时，会调⽤ close ，那么服务端 read 读取数据的时候，就会读取到了 EOF ，待处理完数据后，服务端调⽤ close ，表示连接关闭。</li>
 </ul>
-<h5 id="UDP"><a href="#UDP" class="headerlink" title="UDP:"></a>UDP:</h5><ul>
+<h5 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h5><ul>
 <li>每⼀个 UDP 的 socket 都需要 bind 。</li>
 </ul>
 <h3 id="进程同步"><a href="#进程同步" class="headerlink" title="进程同步"></a>进程同步</h3><h4 id="哲学家就餐"><a href="#哲学家就餐" class="headerlink" title="哲学家就餐"></a>哲学家就餐</h4><p>⽤⼀个数组 state 来记录每⼀位哲学家在<strong>进程、思考还是饥饿状态</strong>（正在试图拿叉⼦）。那么，⼀个哲学家只有在两个邻居都没有进餐时，才可以进⼊进餐状态。</p>

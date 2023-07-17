@@ -147,13 +147,13 @@
     <link href="https://xieyi123456.github.io/2021/08/09/%E4%B8%8B%E5%88%92%E7%BA%BF%E8%BD%AC%E9%A9%BC%E5%B3%B0/"/>
     <id>https://xieyi123456.github.io/2021/08/09/%E4%B8%8B%E5%88%92%E7%BA%BF%E8%BD%AC%E9%A9%BC%E5%B3%B0/</id>
     <published>2021-08-09T05:21:33.000Z</published>
-    <updated>2023-07-11T15:32:56.364Z</updated>
+    <updated>2023-07-17T04:35:35.978Z</updated>
     
     
       
       
     <summary type="html">&lt;p&gt;举例：Hello_woRLD&amp;#x3D;&amp;#x3D;helloWorld&lt;/p&gt;
-&lt;figure class=&quot;highlight reasonml&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span</summary>
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/spa</summary>
       
     
     
@@ -166,7 +166,7 @@
     <link href="https://xieyi123456.github.io/2021/08/05/a-Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
     <id>https://xieyi123456.github.io/2021/08/05/a-Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</id>
     <published>2021-08-05T07:22:53.000Z</published>
-    <updated>2023-07-15T12:34:56.026Z</updated>
+    <updated>2023-07-17T04:35:35.966Z</updated>
     
     
     <summary type="html">Linux 常用命令，有空了再补充</summary>
@@ -187,7 +187,7 @@
     <link href="https://xieyi123456.github.io/2021/08/05/a%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     <id>https://xieyi123456.github.io/2021/08/05/a%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</id>
     <published>2021-08-05T06:50:04.000Z</published>
-    <updated>2023-07-11T15:32:58.214Z</updated>
+    <updated>2023-07-17T04:35:35.944Z</updated>
     
     
       
@@ -209,7 +209,7 @@
     <link href="https://xieyi123456.github.io/2021/08/05/a-%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/"/>
     <id>https://xieyi123456.github.io/2021/08/05/a-%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/</id>
     <published>2021-08-05T06:39:32.000Z</published>
-    <updated>2023-07-11T15:32:58.316Z</updated>
+    <updated>2023-07-17T04:35:35.934Z</updated>
     
     
       
@@ -232,7 +232,7 @@
     <link href="https://xieyi123456.github.io/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/"/>
     <id>https://xieyi123456.github.io/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/</id>
     <published>2021-08-04T09:22:25.000Z</published>
-    <updated>2023-07-11T15:32:56.959Z</updated>
+    <updated>2023-07-17T04:35:35.969Z</updated>
     
     
       
@@ -254,7 +254,7 @@
     <link href="https://xieyi123456.github.io/2021/08/03/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%9C%BA%E5%88%B6/"/>
     <id>https://xieyi123456.github.io/2021/08/03/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%9C%BA%E5%88%B6/</id>
     <published>2021-08-03T07:20:24.000Z</published>
-    <updated>2023-07-11T15:32:57.972Z</updated>
+    <updated>2023-07-17T04:35:35.955Z</updated>
     
     
       
@@ -276,12 +276,12 @@
     <link href="https://xieyi123456.github.io/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-String-table/"/>
     <id>https://xieyi123456.github.io/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-String-table/</id>
     <published>2021-08-02T05:53:10.000Z</published>
-    <updated>2023-07-11T15:32:57.836Z</updated>
+    <updated>2023-07-17T04:35:35.955Z</updated>
     
     
       
       
-    <summary type="html">&lt;h3 id=&quot;String的基本特性&quot;&gt;&lt;a href=&quot;#String的基本特性&quot; class=&quot;headerlink&quot; title=&quot;String的基本特性&quot;&gt;&lt;/a&gt;String的基本特性&lt;/h3&gt;&lt;p&gt;String：字符串，使用一对 “” 引起来表示&lt;br&gt;String</summary>
+    <summary type="html">&lt;h3 id=&quot;String-的基本特性&quot;&gt;&lt;a href=&quot;#String-的基本特性&quot; class=&quot;headerlink&quot; title=&quot;String 的基本特性&quot;&gt;&lt;/a&gt;String 的基本特性&lt;/h3&gt;&lt;p&gt;String：字符串，使用一对 “” 引起来表示&lt;br&gt;St</summary>
       
     
     
@@ -298,7 +298,7 @@
     <link href="https://xieyi123456.github.io/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3/"/>
     <id>https://xieyi123456.github.io/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3/</id>
     <published>2021-08-02T03:57:24.000Z</published>
-    <updated>2023-07-11T15:32:57.757Z</updated>
+    <updated>2023-07-17T04:35:35.969Z</updated>
     
     
       
@@ -316,7 +316,7 @@
     <link href="https://xieyi123456.github.io/2021/08/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%AE%80%E5%8D%95%E6%A6%82%E5%BF%B5/"/>
     <id>https://xieyi123456.github.io/2021/08/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%AE%80%E5%8D%95%E6%A6%82%E5%BF%B5/</id>
     <published>2021-08-01T13:13:55.000Z</published>
-    <updated>2023-07-11T15:32:56.620Z</updated>
+    <updated>2023-07-17T04:35:35.974Z</updated>
     
     
       
@@ -338,7 +338,7 @@
     <link href="https://xieyi123456.github.io/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/"/>
     <id>https://xieyi123456.github.io/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/</id>
     <published>2021-07-31T13:28:34.000Z</published>
-    <updated>2023-07-15T14:07:24.931Z</updated>
+    <updated>2023-07-17T04:35:35.977Z</updated>
     
     
     <summary type="html">随便记的算法题</summary>
@@ -357,7 +357,7 @@
     <link href="https://xieyi123456.github.io/2021/07/30/Spring-%E5%B8%B8%E8%A7%81%E6%A6%82%E5%BF%B5/"/>
     <id>https://xieyi123456.github.io/2021/07/30/Spring-%E5%B8%B8%E8%A7%81%E6%A6%82%E5%BF%B5/</id>
     <published>2021-07-30T07:15:42.000Z</published>
-    <updated>2023-07-14T00:54:46.145Z</updated>
+    <updated>2023-07-17T04:35:35.944Z</updated>
     
     
       
@@ -379,14 +379,14 @@
     <link href="https://xieyi123456.github.io/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/"/>
     <id>https://xieyi123456.github.io/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</id>
     <published>2021-07-30T07:15:17.000Z</published>
-    <updated>2023-07-11T15:32:57.263Z</updated>
+    <updated>2023-07-17T04:35:35.979Z</updated>
     
     
       
       
-    <summary type="html">&lt;p&gt;零拷⻉技术是指计算机执⾏操作时，CPU 不需要先将数 据从某处内存复制到另⼀个特定区域。这种技术通常⽤于通过⽹络传输⽂件时节省CPU周期和内存带宽。 &lt;/p&gt;
+    <summary type="html">&lt;p&gt;零拷⻉技术是指计算机执⾏操作时，CPU 不需要先将数 据从某处内存复制到另⼀个特定区域。这种技术通常⽤于通过⽹络传输⽂件时节省 CPU 周期和内存带宽。 &lt;/p&gt;
 &lt;p&gt;在 OS 层⾯上的 Zero-copy 通常指避免在用户态和内核态之间来回 拷⻉数据。&lt;/p&gt;
-&lt;p&gt;⽽在 </summary>
+&lt;p&gt;⽽</summary>
       
     
     
@@ -403,13 +403,13 @@
     <link href="https://xieyi123456.github.io/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/"/>
     <id>https://xieyi123456.github.io/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/</id>
     <published>2021-07-30T07:15:05.000Z</published>
-    <updated>2023-07-11T15:32:57.160Z</updated>
+    <updated>2023-07-17T04:35:35.978Z</updated>
     
     
       
       
-    <summary type="html">&lt;h3 id=&quot;tcp粘包？netty解决办法？&quot;&gt;&lt;a href=&quot;#tcp粘包？netty解决办法？&quot; class=&quot;headerlink&quot; title=&quot;tcp粘包？netty解决办法？&quot;&gt;&lt;/a&gt;tcp粘包？netty解决办法？&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;使⽤ Netty</summary>
+    <summary type="html">&lt;h3 id=&quot;tcp-粘包？netty-解决办法？&quot;&gt;&lt;a href=&quot;#tcp-粘包？netty-解决办法？&quot; class=&quot;headerlink&quot; title=&quot;tcp 粘包？netty 解决办法？&quot;&gt;&lt;/a&gt;tcp 粘包？netty 解决办法？&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;</summary>
       
     
     
@@ -426,7 +426,7 @@
     <link href="https://xieyi123456.github.io/2021/07/30/Netty-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/"/>
     <id>https://xieyi123456.github.io/2021/07/30/Netty-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/</id>
     <published>2021-07-30T07:14:46.000Z</published>
-    <updated>2023-07-11T15:32:57.316Z</updated>
+    <updated>2023-07-17T04:35:35.980Z</updated>
     
     
       

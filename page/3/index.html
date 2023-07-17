@@ -235,7 +235,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Netty-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6/" target="_self">
         <div>
-          观念理解 channel：数据的传输通道。 msg：流动的数据。 pipeline：流水线，上面有多道工序。 handler：数据处理的工序。分为inbound，outbound。 eventloop：处理数据的工人。 工人可以管理多个channel的io操作（一个工人内部有selector和thread）。一旦工人负责了某个channel，就要负责到底。（线程安全）。 工人既可以执行io操作，还
+          观念理解 channel：数据的传输通道。 msg：流动的数据。 pipeline：流水线，上面有多道工序。 handler：数据处理的工序。分为 inbound，outbound。 eventloop：处理数据的工人。 工人可以管理多个 channel 的 io 操作（一个工人内部有 selector 和 thread）。一旦工人负责了某个 channel，就要负责到底。（线程安全）。 工人既可
         </div>
       </a>
 
@@ -296,7 +296,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Netty-%E4%BC%98%E7%82%B9%EF%BC%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/" target="_self">
         <div>
-          netty优点异步的（采用多线程实现了调用方法与返回结果的分离）基于事件驱动（本质上基于IO多路复用） 优势： 基于NIO，但是改善了NIO1，需要自己构建协议2，需要解决TCP传输问题，粘包半包。3，NIO中有epoll空轮询bug。4，对API增强了。bytebuff。 现在是4.05.0已经废弃，引入AIO，性能未提升。 应用场景涉及到网络通信就会用到nettyrpc框架-dubbo，grp
+          netty 优点异步的（采用多线程实现了调用方法与返回结果的分离）基于事件驱动（本质上基于 IO 多路复用） 优势： 基于 NIO，但是改善了 NIO1，需要自己构建协议2，需要解决 TCP 传输问题，粘包半包。3，NIO 中有 epoll 空轮询 bug。4，对 API 增强了。bytebuff。 现在是 4.05.0 已经废弃，引入 AIO，性能未提升。 应用场景涉及到网络通信就会用到 net
         </div>
       </a>
 
@@ -357,7 +357,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Netty-NIO%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6/" target="_self">
         <div>
-          channel：双向数据传输通道filechannel：文件 datagramchannel： socketchannel： serversocketchannel： buffer：内存缓冲区bytebuffer： selector：选择器？ 服务器端早期–多个客户端连接&#x3D;&#x3D;多线程： 缺点： 内存占用高。 线程上下文切换成本高。 只适合连接数较少。 线程池版本设计： 缺点： 线
+          channel：双向数据传输通道filechannel：文件 datagramchannel： socketchannel： serversocketchannel： buffer：内存缓冲区bytebuffer： selector选择器？ 服务器端早期–多个客户端连接&#x3D;&#x3D;多线程： 缺点： 内存占用高。 线程上下文切换成本高。 只适合连接数较少。 线程池版本设计： 缺点： 线程
         </div>
       </a>
 
@@ -418,7 +418,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Redis-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%8C%E9%9B%AA%E5%B4%A9%EF%BC%8C%E7%A9%BF%E9%80%8F/" target="_self">
         <div>
-          缓存穿透访问一个缓存和数据库都不存在的 key，此时会直接打到数据库上，并且查不到数据，没法写缓存，所以下一次同样会打到数据库上。此时，缓存起不到作用，请求每次都会走到数据库，流量大时数据库可能会被打挂。此时缓存就好像被“穿透”了一样，起不到任何作用。 解决方案：1）接口校验。在正常业务流程中可能会存在少量访问不存在 key 的情况，但是一般不会出现大量的情况，所以这种场景最大的可能性是遭受了非法
+          缓存穿透访问一个缓存和数据库都不存在的 key，此时会直接打到数据库上，并且查不到数据，没法写缓存，所以下一次同样会打到数据库上。此时，缓存起不到作用，请求每次都会走到数据库，流量大时数据库可能会被打挂。此时缓存就好像被“穿透”了一样，起不到任何作用。 解决方案1）接口校验。在正常业务流程中可能会存在少量访问不存在 key 的情况，但是一般不会出现大量的情况，所以这种场景最大的可能性是遭受了非法攻
         </div>
       </a>
 
@@ -479,7 +479,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Redis-%E9%9B%86%E7%BE%A4/" target="_self">
         <div>
-          主从复制主从复制，是指将一台Redis服务器的数据，复制到其他的Redis服务器。前者称为主节点(master)，后者称为从节点(slave)；数据的复制是单向的，只能由主节点到从节点。 slaveof命令 部分复制：偏移量，积压缓冲区，服务器运行id 主从复制的作用 数据冗余：主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。 故障恢复：当主节点出现问题时，可以由从节点提供服务，实现快
+          主从复制主从复制，是指将一台 Redis 服务器的数据，复制到其他的 Redis 服务器。前者称为主节点(master)，后者称为从节点(slave)；数据的复制是单向的，只能由主节点到从节点。 slaveof 命令 部分复制：偏移量，积压缓冲区，服务器运行 id 主从复制的作用 数据冗余：主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。 故障恢复：当主节点出现问题时，可以由从节点提供
         </div>
       </a>
 
@@ -601,7 +601,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" target="_self">
         <div>
-          redis为什么快1、基于内存的操作2、使用了 I&#x2F;O 多路复用模型，select、epoll 等，基于 reactor 模式开发了自己的网络事件处理器3、单线程可以避免不必要的上下文切换和竞争条件，减少了这方面的性能消耗。4、以上这三点是 redis 性能高的主要原因，其他的还有一些小优化，例如：对数据结构进行了优化，简单动态字符串、压缩列表等 完全基于内存Redis完全基于内存，大部
+          redis 为什么快1、基于内存的操作2、使用了 I&#x2F;O 多路复用模型，select、epoll 等，基于 reactor 模式开发了自己的网络事件处理器3、单线程可以避免不必要的上下文切换和竞争条件，减少了这方面的性能消耗。4、以上这三点是 redis 性能高的主要原因，其他的还有一些小优化，例如：对数据结构进行了优化，简单动态字符串、压缩列表等 完全基于内存Redis完全基于内存，大
         </div>
       </a>
 
@@ -662,7 +662,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" target="_self">
         <div>
-          redis总是键值对存储。 key总是string。 value有五种类型。 stringstring 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据还可以
+          redis 总是键值对存储。 key 总是 string。 value 有五种类型。 stringstring 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数
         </div>
       </a>
 
@@ -723,7 +723,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Mysql-%E7%B4%A2%E5%BC%95/" target="_self">
         <div>
-          索引索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:B+树和 Hash。Hash 索引不支持顺序和范围查询。 主键索引vs唯一索引主键是一种约束，唯一索引是一种索引，两者在本质上是不同的。 主键创建后一定包含一个唯一性索引，唯一性索引并不一定就是主键。 唯一性索引列允许空值，而主键列不允许为空值。 主键列在创建时，已经默认为空值 + 唯一索引了。 主键可以被其他表引用为外键，而唯一索
+          索引索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:B+树和 Hash。Hash 索引不支持顺序和范围查询。 主键索引 vs 唯一索引主键是一种约束，唯一索引是一种索引，两者在本质上是不同的。 主键创建后一定包含一个唯一性索引，唯一性索引并不一定就是主键。 唯一性索引列允许空值，而主键列不允许为空值。 主键列在创建时，已经默认为空值 + 唯一索引了。 主键可以被其他表引用为外键，而唯
         </div>
       </a>
 

@@ -16,12 +16,12 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Java对象判空？null：一个对象如果有可能是null的话，首先要做的就是判断是否为null：object &#x3D;&#x3D; null，否则就有可能会出现空指针异常，这个通常是我们在进行数据库的查询操作时，查询结果首先用object !&#x3D; null，进行非空判断，然后再进行其他的业务逻辑，这样可以避免出现空指针异常。 isempty：此方法可以使用于字符串，数组，集合都可以用。">
+    <meta name="description" content="Java 对象判空？null：一个对象如果有可能是 null 的话，首先要做的就是判断是否为 null：object &#x3D;&#x3D; null，否则就有可能会出现空指针异常，这个通常是我们在进行数据库的查询操作时，查询结果首先用 object !&#x3D; null，进行非空判断，然后再进行其他的业务逻辑，这样可以避免出现空指针异常。 isempty：此方法可以使用于字符串，数组，集合">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java基础-常见问题">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Java%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="Java对象判空？null：一个对象如果有可能是null的话，首先要做的就是判断是否为null：object &#x3D;&#x3D; null，否则就有可能会出现空指针异常，这个通常是我们在进行数据库的查询操作时，查询结果首先用object !&#x3D; null，进行非空判断，然后再进行其他的业务逻辑，这样可以避免出现空指针异常。 isempty：此方法可以使用于字符串，数组，集合都可以用。">
+<meta property="og:description" content="Java 对象判空？null：一个对象如果有可能是 null 的话，首先要做的就是判断是否为 null：object &#x3D;&#x3D; null，否则就有可能会出现空指针异常，这个通常是我们在进行数据库的查询操作时，查询结果首先用 object !&#x3D; null，进行非空判断，然后再进行其他的业务逻辑，这样可以避免出现空指针异常。 isempty：此方法可以使用于字符串，数组，集合">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/05/Dg8pvr4FJswPIGn.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/05/thjlgoUynpEJR4P.png">
@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/08/05/pbTIZtNPr8Q5v63.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/05/PkHUFX6xJNeTbt2.png">
 <meta property="article:published_time" content="2021-07-30T07:03:04.000Z">
-<meta property="article:modified_time" content="2023-07-11T15:32:57.881Z">
+<meta property="article:modified_time" content="2023-07-17T04:35:35.942Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="basic">
 <meta name="twitter:card" content="summary_large_image">
@@ -285,29 +285,25 @@
             
               <div class="markdown-body">
                 
-                <h3 id="Java对象判空？"><a href="#Java对象判空？" class="headerlink" title="Java对象判空？"></a>Java对象判空？</h3><p>null：一个对象如果有可能是null的话，首先要做的就是判断是否为null：object &#x3D;&#x3D; null，否则就有可能会出现空指针异常，这个通常是我们在进行数据库的查询操作时，查询结果首先用object !&#x3D; null，进行非空判断，然后再进行其他的业务逻辑，这样可以避免出现空指针异常。</p>
+                <h3 id="Java-对象判空？"><a href="#Java-对象判空？" class="headerlink" title="Java 对象判空？"></a>Java 对象判空？</h3><p>null：一个对象如果有可能是 null 的话，首先要做的就是判断是否为 null：object &#x3D;&#x3D; null，否则就有可能会出现空指针异常，这个通常是我们在进行数据库的查询操作时，查询结果首先用 object !&#x3D; null，进行非空判断，然后再进行其他的业务逻辑，这样可以避免出现空指针异常。</p>
 <p>isempty：此方法可以使用于字符串，数组，集合都可以用。</p>
-<pre><code class="hljs">public boolean isEmpty() &#123;
-    return value.length == 0;
-&#125;
-</code></pre>
-<p>这里是一个对象的长度，使用这个方法，首先要排除对象不为null，否则当对象为null时，调用isEmpty方法就会报空指针了。</p>
-<p>要想返回true，也就是一个对象的长度为0，也就是说首先这个对象肯定不为null了，内容为空时，才能返回true。</p>
-<p>当创建一个新的对象时，栈里面有一个对象，堆里面有一个对象，栈里的对象指向堆里面的对象。对象包含引用对象和实际对象，也就是栈和值的关系，比如String a &#x3D; new String();，这句代码就在堆内存中产生了一个String对象””，和栈内存中一个引用对象a，也就是a指向了一个为空的字符串。当没有再次给引用对象a进行赋值时，操作a也即是操作这个空字符串。</p>
-<h3 id="后端和前端交互接口"><a href="#后端和前端交互接口" class="headerlink" title="后端和前端交互接口"></a>后端和前端交互接口</h3><h3 id="Obiect类有哪些方法"><a href="#Obiect类有哪些方法" class="headerlink" title="Obiect类有哪些方法"></a>Obiect类有哪些方法</h3><p>1、 getClass()：获取类的class对象。<br>2、 hashCode:获取对象的hashCode值<br>3、 equals():比较对象是否相等，比较的是值和地址，子类可重写以自定义。<br>4、 clone()：克隆方法。<br>5、 toString():如果没有重写，应用对象将打印的是地址值。<br>6、 notify():随机选择一个在该对象上调用wait方法的线程，解除其阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>7、 notifyall():解除所有那些在该对象上调用wait方法的线程的阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>8、 wait():导致线程进入等待状态，直到它被其他线程通过notify()或者notifyAll唤醒。该方法只能在同步方法中调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。<br>9、 finalize()：对象回收时调用</p>
-<h3 id="Java数据类型"><a href="#Java数据类型" class="headerlink" title="Java数据类型"></a>Java数据类型</h3><p>Java 中有 8 种基本数据类型，分别为：</p>
-<p>6 种数字类型 ：byte-1、short-2、int-4、long-8、float-4、double-8<br>1 种字符类型：char-2<br>1 种布尔型：boolean-1位</p>
+<p>   plain public boolean isEmpty() {<br>        return value.length &#x3D;&#x3D; 0;<br>    }<br>这里是一个对象的长度，使用这个方法，首先要排除对象不为 null，否则当对象为 null 时，调用 isEmpty 方法就会报空指针了。</p>
+<p>要想返回 true，也就是一个对象的长度为 0，也就是说首先这个对象肯定不为 null 了，内容为空时，才能返回 true。</p>
+<p>当创建一个新的对象时，栈里面有一个对象，堆里面有一个对象，栈里的对象指向堆里面的对象。对象包含引用对象和实际对象，也就是栈和值的关系，比如 String a &#x3D; new String();，这句代码就在堆内存中产生了一个 String 对象””，和栈内存中一个引用对象 a，也就是 a 指向了一个为空的字符串。当没有再次给引用对象 a 进行赋值时，操作 a 也即是操作这个空字符串。</p>
+<h3 id="后端和前端交互接口"><a href="#后端和前端交互接口" class="headerlink" title="后端和前端交互接口"></a>后端和前端交互接口</h3><h3 id="Obiect-类有哪些方法"><a href="#Obiect-类有哪些方法" class="headerlink" title="Obiect 类有哪些方法"></a>Obiect 类有哪些方法</h3><p>1、 getClass()：获取类的 class 对象。<br>2、 hashCode:获取对象的 hashCode 值<br>3、 equals():比较对象是否相等，比较的是值和地址，子类可重写以自定义。<br>4、 clone()：克隆方法。<br>5、 toString():如果没有重写，应用对象将打印的是地址值。<br>6、 notify():随机选择一个在该对象上调用 wait 方法的线程，解除其阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个 IllegalMonitorStateException 异常。<br>7、 notifyall():解除所有那些在该对象上调用 wait 方法的线程的阻塞状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个 IllegalMonitorStateException 异常。<br>8、 wait():导致线程进入等待状态，直到它被其他线程通过 notify()或者 notifyAll 唤醒。该方法只能在同步方法中调用。如果当前线程不是锁的持有者，该方法抛出一个 IllegalMonitorStateException 异常。<br>9、 finalize()：对象回收时调用</p>
+<h3 id="Java-数据类型"><a href="#Java-数据类型" class="headerlink" title="Java 数据类型"></a>Java 数据类型</h3><p>Java 中有 8 种基本数据类型，分别为：</p>
+<p>6 种数字类型 ：byte-1、short-2、int-4、long-8、float-4、double-8<br>1 种字符类型：char-2<br>1 种布尔型：boolean-1 位</p>
 <p>这八种基本类型都有对应的包装类分别为：Byte、Short、Integer、Long、Float、Double、Character、Boolean 。</p>
 <p>包装类型不赋值就是 Null ，而基本类型有默认值且不是 Null。</p>
 <p>基本数据类型直接存放在 <strong>Java 虚拟机栈中的局部变量表</strong>中，而包装类型属于<strong>对象类型</strong>，我们知道对象实例都存在于堆中。相比于对象类型， 基本数据类型占用的空间非常小。</p>
 <p><strong>自动装箱与拆箱</strong></p>
 <p>装箱：将基本类型用它们对应的引用类型包装起来；<br>拆箱：将包装类型转换为基本数据类型；</p>
-<p>从字节码中，我们发现装箱其实就是调用了 <strong>包装类的valueOf()方法，拆箱其实就是调用了 xxxValue()方法</strong>。</p>
+<p>从字节码中，我们发现装箱其实就是调用了 <strong>包装类的 valueOf()方法，拆箱其实就是调用了 xxxValue()方法</strong>。</p>
 <p>因此，</p>
 <p>Integer i &#x3D; 10 等价于 Integer i &#x3D; Integer.valueOf(10)<br>int n &#x3D; i 等价于 int n &#x3D; i.intValue();</p>
-<h4 id="为什么存在这两种类型呢？"><a href="#为什么存在这两种类型呢？" class="headerlink" title="为什么存在这两种类型呢？"></a>为什么存在这两种类型呢？</h4><p>我们都知道在Java语言中，new一个对象存储在堆里，我们通过栈中的引用来使用这些对象；但是对于经常用到的一系列类型如int，如果我们用new将其存储在堆里就不是很有效——特别是简单的小的变量。所以就出现了基本类型，同C++一样，Java采用了相似的做法，对于这些类型不是用new关键字来创建，而是直接将变量的值存储在栈中，因此更加高效。</p>
-<h4 id="有了基本类型为什么还要有包装类型呢？"><a href="#有了基本类型为什么还要有包装类型呢？" class="headerlink" title="有了基本类型为什么还要有包装类型呢？"></a>有了基本类型为什么还要有包装类型呢？</h4><p>我们知道Java是一个面相对象的编程语言，基本类型并不具有对象的性质，为了让基本类型也具有对象的特征，就出现了包装类型（如我们在使用集合类型Collection时就一定要使用包装类型而非基本类型），它相当于将基本类型“包装起来”，使得它具有了对象的性质，并且为其添加了属性和方法，丰富了基本类型的操作。</p>
-<p>另外，当需要往ArrayList，HashMap中放东西时，像int，double这种基本类型是放不进去的，因为容器都是装object的，这是就需要这些基本类型的包装器类了。</p>
+<h4 id="为什么存在这两种类型呢？"><a href="#为什么存在这两种类型呢？" class="headerlink" title="为什么存在这两种类型呢？"></a>为什么存在这两种类型呢？</h4><p>我们都知道在 Java 语言中，new 一个对象存储在堆里，我们通过栈中的引用来使用这些对象；但是对于经常用到的一系列类型如 int，如果我们用 new 将其存储在堆里就不是很有效——特别是简单的小的变量。所以就出现了基本类型，同 C++一样，Java 采用了相似的做法，对于这些类型不是用 new 关键字来创建，而是直接将变量的值存储在栈中，因此更加高效。</p>
+<h4 id="有了基本类型为什么还要有包装类型呢？"><a href="#有了基本类型为什么还要有包装类型呢？" class="headerlink" title="有了基本类型为什么还要有包装类型呢？"></a>有了基本类型为什么还要有包装类型呢？</h4><p>我们知道 Java 是一个面相对象的编程语言，基本类型并不具有对象的性质，为了让基本类型也具有对象的特征，就出现了包装类型（如我们在使用集合类型 Collection 时就一定要使用包装类型而非基本类型），它相当于将基本类型“包装起来”，使得它具有了对象的性质，并且为其添加了属性和方法，丰富了基本类型的操作。</p>
+<p>另外，当需要往 ArrayList，HashMap 中放东西时，像 int，double 这种基本类型是放不进去的，因为容器都是装 object 的，这是就需要这些基本类型的包装器类了。</p>
 <h3 id="关键字总结"><a href="#关键字总结" class="headerlink" title="关键字总结"></a>关键字总结</h3><h4 id="final-关键字"><a href="#final-关键字" class="headerlink" title="final 关键字"></a>final 关键字</h4><p>final 关键字，意思是<strong>最终的、不可修改的</strong>，用来修饰类、方法和变量，具有以下特点：</p>
 <p>final 修饰的类<strong>不能被继承</strong>，final 类中的所有成员方法都会被隐式的指定为 final 方法；</p>
 <p>final 修饰的方法<strong>不能被重写</strong>；</p>
@@ -335,16 +331,16 @@
 <p>泛型一般有三种使用方式:泛型类、泛型接口、泛型方法。</p>
 <p>假定我们有这样一个需求：写一个排序方法，能够对整型数组、字符串数组甚至其他任何类型的数组进行排序，该如何实现？</p>
 <p>使用 Java 泛型的概念，我们可以写一个泛型方法来对一个对象数组排序。然后，调用该泛型方法来对整型数组、浮点数数组、字符串数组等进行排序。</p>
-<h3 id="x3D-x3D-与equals"><a href="#x3D-x3D-与equals" class="headerlink" title="&#x3D;&#x3D;与equals()?"></a>&#x3D;&#x3D;与equals()?</h3><p>&#x3D;&#x3D;判断两个对象的<strong>地址</strong>是不是相等，<strong>对于基本数据类型：值。引用数据类型：内存地址。</strong><br>equals()没有被覆盖重写，与&#x3D;&#x3D;一样。</p>
-<p><strong>可以覆盖重写比较引用对象值的大小。</strong><br>举例：String中的equals方法是被重写过的。</p>
-<h4 id="hashcode（）与equal（）？hashset去重？"><a href="#hashcode（）与equal（）？hashset去重？" class="headerlink" title="hashcode（）与equal（）？hashset去重？"></a>hashcode（）与equal（）？hashset去重？</h4><p><strong>为什么要有hashcode？</strong></p>
-<p>当你把对象加⼊ HashSet 时， <strong>HashSet 会先计算对象的 hashcode 值来判断对象加⼊的位置</strong>，同时也会与其他已经加⼊的对象的 hashcode 值比较，如果没有相符的 hashcode， HashSet会假设对象没有重复出现。</p>
+<h3 id="x3D-x3D-与-equals"><a href="#x3D-x3D-与-equals" class="headerlink" title="&#x3D;&#x3D;与 equals()?"></a>&#x3D;&#x3D;与 equals()?</h3><p>&#x3D;&#x3D;判断两个对象的<strong>地址</strong>是不是相等，<strong>对于基本数据类型：值。引用数据类型：内存地址。</strong><br>equals()没有被覆盖重写，与&#x3D;&#x3D;一样。</p>
+<p><strong>可以覆盖重写比较引用对象值的大小。</strong><br>举例：String 中的 equals 方法是被重写过的。</p>
+<h4 id="hashcode（）与-equal（）？hashset-去重？"><a href="#hashcode（）与-equal（）？hashset-去重？" class="headerlink" title="hashcode（）与 equal（）？hashset 去重？"></a>hashcode（）与 equal（）？hashset 去重？</h4><p><strong>为什么要有 hashcode？</strong></p>
+<p>当你把对象加⼊ HashSet 时， <strong>HashSet 会先计算对象的 hashcode 值来判断对象加⼊的位置</strong>，同时也会与其他已经加⼊的对象的 hashcode 值比较，如果没有相符的 hashcode， HashSet 会假设对象没有重复出现。</p>
 <p>但是如果发现有相同 hashcode 值的对象，这时会调⽤ equals() ⽅法来检查 hashcode 相等的对象是否真的相同。如果两者相同， HashSet 就不会让其加⼊操作成功。如果不同的话，就会重新散列到其他位置。</p>
-<p><strong>这样我们就⼤⼤减少了 equals 的次数，相应就⼤⼤提⾼了执⾏速度。</strong><br><strong>hash优越的查询性能。</strong></p>
-<h4 id="为什么重写equals必须重写hashcode-？"><a href="#为什么重写equals必须重写hashcode-？" class="headerlink" title="为什么重写equals必须重写hashcode()？"></a>为什么重写equals必须重写hashcode()？</h4><p>对象相等，hashcode一定相等，反之不一定（hash碰撞）。<br>hashcode()默认对堆上面的对象产生独特值，hashcode不同，对象一定不同。</p>
+<p><strong>这样我们就⼤⼤减少了 equals 的次数，相应就⼤⼤提⾼了执⾏速度。</strong><br><strong>hash 优越的查询性能。</strong></p>
+<h4 id="为什么重写-equals-必须重写-hashcode-？"><a href="#为什么重写-equals-必须重写-hashcode-？" class="headerlink" title="为什么重写 equals 必须重写 hashcode()？"></a>为什么重写 equals 必须重写 hashcode()？</h4><p>对象相等，hashcode 一定相等，反之不一定（hash 碰撞）。<br>hashcode()默认对堆上面的对象产生独特值，hashcode 不同，对象一定不同。</p>
 <p>举例：student s1&#x3D;new student(name&#x3D;”11”);<br>student s2&#x3D;new student(name&#x3D;”11”);</p>
-<p>假如只重写equals而不重写hashcode，那么默认的hashcode方法是根据对象的内存地址经哈希算法得来的，显然此时s1!&#x3D;s2。然而重写了equals，且s1.equals(s2)返回true。</p>
-<p>根据hashcode的规则，<strong>两个对象相等其哈希值一定相等</strong>，所以矛盾就产生了，因此重写equals一定要重写hashcode。</p>
+<p>假如只重写 equals 而不重写 hashcode，那么默认的 hashcode 方法是根据对象的内存地址经哈希算法得来的，显然此时 s1!&#x3D;s2。然而重写了 equals，且 s1.equals(s2)返回 true。</p>
+<p>根据 hashcode 的规则，<strong>两个对象相等其哈希值一定相等</strong>，所以矛盾就产生了，因此重写 equals 一定要重写 hashcode。</p>
 <h3 id="重载与重写"><a href="#重载与重写" class="headerlink" title="重载与重写"></a>重载与重写</h3><ol>
 <li><p>重载(overloading) 是在一个类里面，<strong>方法名字相同，而参数不同。返回类型可以相同也可以不同。</strong></p>
 <p>每个重载的方法（或者构造函数）都必须<strong>有一个独一无二的参数类型列表</strong>。</p>
@@ -355,32 +351,32 @@
 </ol>
 <p>  方法名，参数列表必须一样。</p>
 <p>  抛出异常范围小于父类。<br>  访问修饰符可以降低限制。</p>
-<p>  <strong>父类方法由private，final，static修饰时不能被重写。</strong></p>
+<p>  <strong>父类方法由 private，final，static 修饰时不能被重写。</strong></p>
 <h3 id="抽象类与接口"><a href="#抽象类与接口" class="headerlink" title="抽象类与接口"></a>抽象类与接口</h3><p><strong>抽象类和接口的区别</strong></p>
 <p>接口(interface)和抽象类(abstract class)是<strong>支持抽象类定义的两种机制。</strong></p>
-<p><strong>接口是公开的</strong>，不能有私有的方法或变量，<strong>接口中的所有方法都没有方法体</strong>，通过关键字interface实现。</p>
-<p><strong>抽象类</strong>是可以有私有方法或私有变量的，通过把类或者类中的方法声明为abstract来表示一个类是抽象类，<strong>被声明为抽象的方法不能包含方法体</strong>。子类实现方法必须含有相同的或者更低的访问级别(public-&gt;protected-&gt;private)。抽象类的子类为父类中所有抽象方法的具体实现，否则也是抽象类。</p>
-<p><strong>接口可以被看作是抽象类的变体</strong>，接口中所有的方法都是抽象的，<strong>可以通过接口来间接的实现多重继承</strong>。接口中的成员变量都是static final类型，<strong>由于抽象类可以包含部分方法的实现</strong>，所以，在一些场合下抽象类比接口更有优势。</p>
+<p><strong>接口是公开的</strong>，不能有私有的方法或变量，<strong>接口中的所有方法都没有方法体</strong>，通过关键字 interface 实现。</p>
+<p><strong>抽象类</strong>是可以有私有方法或私有变量的，通过把类或者类中的方法声明为 abstract 来表示一个类是抽象类，<strong>被声明为抽象的方法不能包含方法体</strong>。子类实现方法必须含有相同的或者更低的访问级别(public-&gt;protected-&gt;private)。抽象类的子类为父类中所有抽象方法的具体实现，否则也是抽象类。</p>
+<p><strong>接口可以被看作是抽象类的变体</strong>，接口中所有的方法都是抽象的，<strong>可以通过接口来间接的实现多重继承</strong>。接口中的成员变量都是 static final 类型，<strong>由于抽象类可以包含部分方法的实现</strong>，所以，在一些场合下抽象类比接口更有优势。</p>
 <p><strong>相同点</strong></p>
 <p><strong>接口的实现类</strong>或<strong>抽象类的子类</strong>都只有实现了接口或抽象类中的方法后才能实例化。</p>
 <p><strong>不同点</strong></p>
 <p><img src="https://i.loli.net/2021/08/05/thjlgoUynpEJR4P.png" srcset="/img/loading.gif" lazyload alt="image-20210805171623086"></p>
-<p>抽象类就是为了继承而存在的，如果你定义了一个抽象类，却不去继承它，那么等于白白创建了这个抽象类，因为你不能用它来做任何事情。对于一个父类，如果它的某个方法在父类中实现出来没有任何意义，必须根据子类的实际需求来进行不同的实现，那么就可以将这个方法声明为abstract方法，此时这个类也就成为abstract类了。</p>
+<p>抽象类就是为了继承而存在的，如果你定义了一个抽象类，却不去继承它，那么等于白白创建了这个抽象类，因为你不能用它来做任何事情。对于一个父类，如果它的某个方法在父类中实现出来没有任何意义，必须根据子类的实际需求来进行不同的实现，那么就可以将这个方法声明为 abstract 方法，此时这个类也就成为 abstract 类了。</p>
 <p>在抽象类中，抽象方法本质上是定义接口规范：即规定高层类的接口，从而保证所有子类都有相同的接口实现，这样，多态就能发挥出威力。</p>
 <p>如果一个抽象类没有字段，所有方法全部都是抽象方法：就可以把该抽象类改写为接口：interface。</p>
 <p><strong>那么接口的作用是什么呢？</strong></p>
-<p>1、Java单继承的原因所以需要曲线救国 作为继承关系的一个补充。</p>
+<p>1、Java 单继承的原因所以需要曲线救国 作为继承关系的一个补充。</p>
 <p>2、把程序模块进行固化的契约,降低偶合。把若干功能拆分出来，按照契约来进行实现和依赖。（依赖倒置原则）</p>
 <p>3、定义接口有利于代码的规范。（接口分离原则）</p>
-<p><strong>abstract class 表示的是is a关系</strong>，<strong>interface表示的是like a关系。</strong></p>
+<p><strong>abstract class 表示的是 is a 关系</strong>，<strong>interface 表示的是 like a 关系。</strong></p>
 <p><strong>抽象类强调的是从属关系，接口强调的是功能。</strong></p>
 <p>抽象类作为很多子类的父类，它是一种<strong>模板式</strong>设计。</p>
 <p>而接口是一种<strong>行为规范</strong>，它是一种辐射式设计。</p>
 <p>对于抽象类，如果需要添加新的方法，可以直接在抽象类中添加具体的实现，子类可以不进行变更；</p>
 <p>而对于接口则不行，如果接口进行了变更，则所有实现这个接口的类都必须进行相应的改动。</p>
-<h3 id="成员变量与局部变量？"><a href="#成员变量与局部变量？" class="headerlink" title="成员变量与局部变量？"></a>成员变量与局部变量？</h3><p>根据定义变量位置的不同，可以将变量分为成员变量和局部变量<br>     成员变量是在<strong>类范围</strong>内定义的变量<br>     局部变量是在<strong>一个方法内</strong>定义的变量<br>1，成员变量可以分为：<br>     实例属性 （不用static修饰）<br>            随着实例属性的存在而存在<br>     类属性 （static修饰）<br>            随着类的存在而存在<br>成员变量无需显式初始化，系统会自动对其进行默认初始化</p>
+<h3 id="成员变量与局部变量？"><a href="#成员变量与局部变量？" class="headerlink" title="成员变量与局部变量？"></a>成员变量与局部变量？</h3><p>根据定义变量位置的不同，可以将变量分为成员变量和局部变量<br>     成员变量是在<strong>类范围</strong>内定义的变量<br>     局部变量是在<strong>一个方法内</strong>定义的变量<br>1，成员变量可以分为：<br>实例属性 （不用 static 修饰）<br>随着实例属性的存在而存在<br>类属性 （static 修饰）<br>随着类的存在而存在<br>成员变量无需显式初始化，系统会自动对其进行默认初始化</p>
 <p>2，局部变量可分为：<br>     形参（形式参数）<br>            在整个方法内有效<br>     方法局部变量 （方法内定义）<br>            从定义这个变量开始到方法结束这一段时间内有效<br>     代码块局部变量 （代码块内定义）<br>            从定义这个变量开始到代码块结束这一段时间内有效</p>
-<p><strong>局部变量除了形参外</strong>，<strong>都必须显示初始化</strong>，也就是要指定一个初始值，否则不能访问。<br>java允许局部变量和成员变量重名，<strong>局部变量会覆盖成员变量的值</strong></p>
+<p><strong>局部变量除了形参外</strong>，<strong>都必须显示初始化</strong>，也就是要指定一个初始值，否则不能访问。<br>java 允许局部变量和成员变量重名，<strong>局部变量会覆盖成员变量的值</strong></p>
 <h3 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h3><h4 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h4><ol>
 <li>单一职责原则（Single Responsibility Principle）</li>
 </ol>
@@ -417,7 +413,7 @@
 <p>程序模块化，结构化。</p>
 <p>易于扩展，维护。</p>
 <p>性能相对于面向过程低。</p>
-<p>java性能相对低的原因主要在于其是半编译语言。</p>
+<p>java 性能相对低的原因主要在于其是半编译语言。</p>
 <p><strong>封装</strong></p>
 <p>封装是指把一个对象的状态信息（也就是属性）隐藏在对象内部，不允许外部对象直接访问对象的内部信息。但是可以<strong>提供一些可以被外界访问的方法来操作属性</strong>。</p>
 <p>就好像我们看不到挂在墙上的空调的内部的零件信息（也就是属性），但是可以通过遥控器（方法）来控制空调。</p>
@@ -431,12 +427,12 @@
 <p>多态，顾名思义，表示<strong>一个对象具有多种的状态</strong>。一种类型的变量可以引用多种实际类型的对象。实现方式：	  继承（多个子类重写同一方法）<br>      接口（实现接口并覆盖同一方法）</p>
 <p><strong>多态的特点:</strong></p>
 <p>对象类型和引用类型之间具有<strong>继承（类）&#x2F;实现（接口）的</strong>关系；<br>引用类型变量发出的方法调用的到底是哪个类中的方法，<strong>必须在程序运行期间才能确定；</strong><br>多态不能调用“只在子类存在但在父类不存在”的方法；<br>如果子类重写了父类的方法，真正执行的是子类覆盖的方法，如果子类没有覆盖父类的方法，执行的是父类的方法。</p>
-<h3 id="hash冲突解决"><a href="#hash冲突解决" class="headerlink" title="hash冲突解决"></a>hash冲突解决</h3><p><strong>开放地址法</strong></p>
-<p>​	线性探测法：冲突之后，在紧跟着的地方安放数据。（大部分的数据都会聚集）。<br>​	二次探测法：往后找1,4,9,16,25,…位置有没有空位。<br>​	再哈希法：多个散列函数。</p>
+<h3 id="hash-冲突解决"><a href="#hash-冲突解决" class="headerlink" title="hash 冲突解决"></a>hash 冲突解决</h3><p><strong>开放地址法</strong></p>
+<p>​	线性探测法：冲突之后，在紧跟着的地方安放数据。（大部分的数据都会聚集）。<br>​	二次探测法：往后找 1,4,9,16,25,…位置有没有空位。<br>​	再哈希法：多个散列函数。</p>
 <p>链地址法：</p>
-<h3 id="String，StringBuffer，StringBuilder"><a href="#String，StringBuffer，StringBuilder" class="headerlink" title="String，StringBuffer，StringBuilder"></a>String，StringBuffer，StringBuilder</h3><p>String 类中使用 final 关键字修饰字符数组来保存字符串，private final char value[]，所以String 对象是不可变的。</p>
+<h3 id="String，StringBuffer，StringBuilder"><a href="#String，StringBuffer，StringBuilder" class="headerlink" title="String，StringBuffer，StringBuilder"></a>String，StringBuffer，StringBuilder</h3><p>String 类中使用 final 关键字修饰字符数组来保存字符串，private final char value[]，所以 String 对象是不可变的。</p>
 <p><strong>在 Java 9 之后，String 、StringBuilder 与 StringBuffer 的实现改用 byte 数组存储字符串 private final byte[] value</strong></p>
-<p>而 StringBuilder 与 StringBuffer 都继承自 AbstractStringBuilder 类，在 AbstractStringBuilder 中也是使用字符数组保存字符串char[] value 但是没有用 final 关键字修饰，所以这两种对象都是可变的。</p>
+<p>而 StringBuilder 与 StringBuffer 都继承自 AbstractStringBuilder 类，在 AbstractStringBuilder 中也是使用字符数组保存字符串 char[] value 但是没有用 final 关键字修饰，所以这两种对象都是可变的。</p>
 <p><strong>线程安全性</strong></p>
 <p>String 中的对象是不可变的，也就可以理解为常量<strong>，线程安全。</strong></p>
 <p>AbstractStringBuilder 是 StringBuilder 与 StringBuffer 的公共父类，定义了一些字符串的基本操作，如 expandCapacity、append、insert、indexOf 等公共方法。</p>
@@ -449,46 +445,46 @@
 <p>对于三者使用的总结：</p>
 <p>操作少量的数据: 适用 String<br>单线程操作字符串缓冲区下操作大量数据: 适用 StringBuilder<br>多线程操作字符串缓冲区下操作大量数据: 适用 StringBuffer</p>
 <h3 id="异常体系"><a href="#异常体系" class="headerlink" title="异常体系"></a>异常体系</h3><p><img src="https://i.loli.net/2021/08/05/Hb642mCQlxy3M5o.png" srcset="/img/loading.gif" lazyload alt="image-20210805134232290"></p>
-<p>自定义异常：继承Exception类。</p>
+<p>自定义异常：继承 Exception 类。</p>
 <p><strong>异常的处理：</strong></p>
 <ol>
-<li><p>使用try  catch捕获异常。可以有多个catch，总会根据异常的类型优先找到第一个匹配的。因此，基类exception放在前面会导致后面的catch无法执行。</p>
+<li><p>使用 try  catch 捕获异常。可以有多个 catch，总会根据异常的类型优先找到第一个匹配的。因此，基类 exception 放在前面会导致后面的 catch 无法执行。</p>
 </li>
-<li><p>重新抛出异常。在catch中可以throw 新的或者原来的异常，表示当前代码不能完全处理。可以通过getCause()获取原始异常。</p>
+<li><p>重新抛出异常。在 catch 中可以 throw 新的或者原来的异常，表示当前代码不能完全处理。可以通过 getCause()获取原始异常。</p>
 </li>
-<li><p>try catch finally。finally中语句始终会执行。适合释放资源，比如数据库连接，文件流释放等等。<br> 如果try  catch中有return，会在finally之后执行，但是finally不能改变其返回值。<br> finally中有return，try catch中的return会丢失，实际上会返回finally中的值。还会掩盖try catch中的异常。</p>
+<li><p>try catch finally。finally 中语句始终会执行。适合释放资源，比如数据库连接，文件流释放等等。<br>如果 try  catch 中有 return，会在 finally 之后执行，但是 finally 不能改变其返回值。<br>finally 中有 return，try catch 中的 return 会丢失，实际上会返回 finally 中的值。还会掩盖 try catch 中的异常。</p>
 </li>
-<li><p>try with resourses，用于资源的释放，无需写finally，会自动执行close（）。</p>
+<li><p>try with resourses，用于资源的释放，无需写 finally，会自动执行 close（）。</p>
 </li>
 <li><p>throws，声明一个方法可能抛出的异常。</p>
 </li>
 </ol>
 <p>  异常体系可以：<strong>对异常集中处理，还可以向上传递，不需要每层都处理，也可以向上传递，也不会被自动忽略。处理异常情况的代码可以大大减少。</strong></p>
-<h3 id="IO流"><a href="#IO流" class="headerlink" title="IO流"></a>IO流</h3><p><img src="https://i.loli.net/2021/08/05/gXcmZMILa2EnuiW.png" srcset="/img/loading.gif" lazyload alt="image-20210805134331023"></p>
+<h3 id="IO-流"><a href="#IO-流" class="headerlink" title="IO 流"></a>IO 流</h3><p><img src="https://i.loli.net/2021/08/05/gXcmZMILa2EnuiW.png" srcset="/img/loading.gif" lazyload alt="image-20210805134331023"></p>
 <p>为何有了字节流，还要有字符流？</p>
-<p><strong>字符流是由java虚拟机将字节流转化而成。这个过程耗时，也容易出错。</strong></p>
+<p><strong>字符流是由 java 虚拟机将字节流转化而成。这个过程耗时，也容易出错。</strong></p>
 <p>所以提供了字符流，对于字符进行流操作。<br>而对于音频，图片等等推荐字节流。</p>
-<h4 id="编码转换"><a href="#编码转换" class="headerlink" title="编码转换"></a>编码转换</h4><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-comment">// 以GBK格式,读取文件</span><br>FileInputStream fis = <span class="hljs-keyword">new</span> <span class="hljs-type">FileInputStream</span>(file);<br>InputStreamReader isr = <span class="hljs-keyword">new</span> <span class="hljs-type">InputStreamReader</span>(fis, <span class="hljs-string">&quot;GBK&quot;</span>);<br>BufferedReader br = <span class="hljs-keyword">new</span> <span class="hljs-type">BufferedReader</span>(isr);<br><span class="hljs-keyword">String</span> str = <span class="hljs-literal">null</span>;<br><span class="hljs-comment">// 创建StringBuffer字符串缓存区</span><br>StringBuffer sb = <span class="hljs-keyword">new</span> <span class="hljs-type">StringBuffer</span>();<br><span class="hljs-comment">// 通过readLine()方法遍历读取文件</span><br><span class="hljs-keyword">while</span> ((str = br.readLine()) != <span class="hljs-literal">null</span>) &#123;<br><span class="hljs-comment">// 使用readLine()方法无法进行换行,需要手动在原本输出的字符串后面加&quot;\n&quot;或&quot;\r&quot;</span><br>	str += <span class="hljs-string">&quot;\n&quot;</span>;<br>	sb.append(str);<br>&#125;<br><span class="hljs-keyword">String</span> str2 = sb.toString();<br><span class="hljs-comment">// 以UTF-8格式写入文件,file.getAbsolutePath()即该文件的绝对路径,false代表不追加直接覆盖,true代表追加文件</span><br>FileOutputStream fos = <span class="hljs-keyword">new</span> <span class="hljs-type">FileOutputStream</span>(file.getAbsolutePath(), <span class="hljs-literal">false</span>);<br>OutputStreamWriter osw = <span class="hljs-keyword">new</span> <span class="hljs-type">OutputStreamWriter</span>(fos, <span class="hljs-string">&quot;UTF-8&quot;</span>);<br>osw.write(str2);<br>osw.flush();<br>osw.close();<br>fos.close();<br>br.close();<br>isr.close();<br>fis.close();<br></code></pre></td></tr></table></figure>
+<h4 id="编码转换"><a href="#编码转换" class="headerlink" title="编码转换"></a>编码转换</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs plain">// 以GBK格式,读取文件<br>FileInputStream fis = new FileInputStream(file);<br>InputStreamReader isr = new InputStreamReader(fis, &quot;GBK&quot;);<br>BufferedReader br = new BufferedReader(isr);<br>String str = null;<br>// 创建StringBuffer字符串缓存区<br>StringBuffer sb = new StringBuffer();<br>// 通过readLine()方法遍历读取文件<br>while ((str = br.readLine()) != null) &#123;<br>// 使用readLine()方法无法进行换行,需要手动在原本输出的字符串后面加&quot;\n&quot;或&quot;\r&quot;<br>	str += &quot;\n&quot;;<br>	sb.append(str);<br>&#125;<br>String str2 = sb.toString();<br>// 以UTF-8格式写入文件,file.getAbsolutePath()即该文件的绝对路径,false代表不追加直接覆盖,true代表追加文件<br>FileOutputStream fos = new FileOutputStream(file.getAbsolutePath(), false);<br>OutputStreamWriter osw = new OutputStreamWriter(fos, &quot;UTF-8&quot;);<br>osw.write(str2);<br>osw.flush();<br>osw.close();<br>fos.close();<br>br.close();<br>isr.close();<br>fis.close();<br></code></pre></td></tr></table></figure>
 
 
 
-<h3 id="java-8新特性"><a href="#java-8新特性" class="headerlink" title="java 8新特性"></a>java 8新特性</h3><h4 id="Lambda-表达式"><a href="#Lambda-表达式" class="headerlink" title="Lambda 表达式"></a>Lambda 表达式</h4><p>首先看看在老版本的Java中是如何排列字符串的：</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">String</span>&gt; names = <span class="hljs-title class_">Arrays</span>.<span class="hljs-title function_">asList</span>(<span class="hljs-string">&quot;peter&quot;</span>, <span class="hljs-string">&quot;anna&quot;</span>, <span class="hljs-string">&quot;mike&quot;</span>, <span class="hljs-string">&quot;xenia&quot;</span>);<br><br><span class="hljs-title class_">Collections</span>.<span class="hljs-title function_">sort</span>(names, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Comparator</span>&lt;<span class="hljs-title class_">String</span>&gt;() &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> int <span class="hljs-title function_">compare</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> a, <span class="hljs-built_in">String</span> b</span>) &#123;<br>        <span class="hljs-keyword">return</span> b.<span class="hljs-title function_">compareTo</span>(a);<br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+<h3 id="java-8-新特性"><a href="#java-8-新特性" class="headerlink" title="java 8 新特性"></a>java 8 新特性</h3><h4 id="Lambda-表达式"><a href="#Lambda-表达式" class="headerlink" title="Lambda 表达式"></a>Lambda 表达式</h4><p>首先看看在老版本的 Java 中是如何排列字符串的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs plain">List&lt;String&gt; names = Arrays.asList(&quot;peter&quot;, &quot;anna&quot;, &quot;mike&quot;, &quot;xenia&quot;);<br><br>Collections.sort(names, new Comparator&lt;String&gt;() &#123;<br>    @Override<br>    public int compare(String a, String b) &#123;<br>        return b.compareTo(a);<br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
 
 
-<p>只需要给静态方法 Collections.sort 传入一个List对象以及一个比较器来按指定顺序排列。通常做法都是创建一个匿名的比较器对象然后将其传递给sort方法。</p>
-<p>在Java 8 中你就没必要使用这种传统的匿名对象的方式了，Java 8提供了更简洁的语法，lambda表达式：</p>
-<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs livescript">Collections.sort<span class="hljs-function"><span class="hljs-params">(names, (<span class="hljs-built_in">String</span> a, <span class="hljs-built_in">String</span> b) -&gt; &#123;</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-keyword">return</span> b.compareTo(a);</span></span><br><span class="hljs-params"><span class="hljs-function">&#125;)</span>;</span><br></code></pre></td></tr></table></figure>
+<p>只需要给静态方法 Collections.sort 传入一个 List 对象以及一个比较器来按指定顺序排列。通常做法都是创建一个匿名的比较器对象然后将其传递给 sort 方法。</p>
+<p>在 Java 8 中你就没必要使用这种传统的匿名对象的方式了，Java 8 提供了更简洁的语法，lambda 表达式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">Collections.sort(names, (String a, String b) -&gt; &#123;<br>    return b.compareTo(a);<br>&#125;);<br></code></pre></td></tr></table></figure>
 
 
 <p>看到了吧，代码变得更段且更具有可读性，但是实际上还可以写得更短：</p>
-<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livescript">Collections.sort<span class="hljs-function"><span class="hljs-params">(names, (<span class="hljs-built_in">String</span> a, <span class="hljs-built_in">String</span> b) -&gt; b.compareTo(a))</span>;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">Collections.sort(names, (String a, String b) -&gt; b.compareTo(a));<br></code></pre></td></tr></table></figure>
 
 
-<p>对于函数体只有一行代码的，你可以去掉大括号{}以及return关键字，但是你还可以写得更短点：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">Collections<span class="hljs-selector-class">.sort</span>(names, (<span class="hljs-selector-tag">a</span>, <span class="hljs-selector-tag">b</span>) -&gt; <span class="hljs-selector-tag">b</span><span class="hljs-selector-class">.compareTo</span>(<span class="hljs-selector-tag">a</span>));<br></code></pre></td></tr></table></figure>
+<p>对于函数体只有一行代码的，你可以去掉大括号{}以及 return 关键字，但是你还可以写得更短点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">Collections.sort(names, (a, b) -&gt; b.compareTo(a));<br></code></pre></td></tr></table></figure>
 
-<p>Java编译器可以自动推导出参数类型，所以你可以不用再写一次类型。</p>
+<p>Java 编译器可以自动推导出参数类型，所以你可以不用再写一次类型。</p>
 <h4 id="函数式接口"><a href="#函数式接口" class="headerlink" title="函数式接口"></a>函数式接口</h4><p>什么叫函数式编程？</p>
 <p>就可以理解成用什么参数执行了一件什么事情，这就是函数式编程，它是匿名内部类进一步的简化，可以让代码更加的简洁。</p>
 <p>但它有一个使用的前提，接口得是函数式接口。</p>
@@ -497,21 +493,21 @@
 <p>它省略了接口中的方法名，为什么可以省略？</p>
 <p>因为就只有一个方法，那就算省略了方法名字，也知道是用的那个方法。</p>
 <p><strong>函数式接口：</strong> <strong>只有一个方法的接口。</strong></p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-meta">@FunctionalInterface</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Runnable</span> </span>&#123;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span></span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">@FunctionalInterface<br><br>public interface Runnable &#123;<br><br>public abstract void run();<br><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>&#x2F;&#x2F; <strong>简化编程模型</strong>，在新版本的框架底层大量应用！</p>
 <p><img src="https://i.loli.net/2021/08/05/pbTIZtNPr8Q5v63.png" srcset="/img/loading.gif" lazyload alt="image-20210805191320866"></p>
 <p>　</p>
-<p><strong>浏览器在接收到html文件后，会分几个步骤html文件转化成界面，这个过程就是渲染。</strong></p>
-<p>　　1、解析html</p>
-<p>　　2、构建dom树</p>
-<p>　　3、dom树结合css文件，构建呈现树</p>
+<p><strong>浏览器在接收到 html 文件后，会分几个步骤 html 文件转化成界面，这个过程就是渲染。</strong></p>
+<p>　　1、解析 html</p>
+<p>　　2、构建 dom 树</p>
+<p>　　3、dom 树结合 css 文件，构建呈现树</p>
 <p>　　4、布局</p>
 <p>　　5、绘制</p>
-<p>1、解析html和构建dom树是同步进行的，这个过程就是逐行解析代码，包括html标签和js动态生成的标签，最终生成dom树。</p>
-<p>2、构建呈现树，就是把css文件和style标签的中的内容，结合dom树的模型，构建一个呈现树，写到内存，等待进一步生成界面。呈现树一定依赖dom树，呈现节点一定会有对应的dom节点，但是dom节点不一定会有对应的呈现节点，比如，被隐藏的一个div。</p>
-<p>3、布局，这一步就是结合呈现树，把dom节点的大小、位置计算出来。虽然呈现节点已经附着在都没节点上，会有对元素大小、位置的定义，但是浏览器还需要根据实际窗口大小进行计算，比如对auto的处理。</p>
-<p>4、绘制，把css中有关颜色的设置，背景、字体颜色等呈现出来。</p>
+<p>1、解析 html 和构建 dom 树是同步进行的，这个过程就是逐行解析代码，包括 html 标签和 js 动态生成的标签，最终生成 dom 树。</p>
+<p>2、构建呈现树，就是把 css 文件和 style 标签的中的内容，结合 dom 树的模型，构建一个呈现树，写到内存，等待进一步生成界面。呈现树一定依赖 dom 树，呈现节点一定会有对应的 dom 节点，但是 dom 节点不一定会有对应的呈现节点，比如，被隐藏的一个 div。</p>
+<p>3、布局，这一步就是结合呈现树，把 dom 节点的大小、位置计算出来。虽然呈现节点已经附着在都没节点上，会有对元素大小、位置的定义，但是浏览器还需要根据实际窗口大小进行计算，比如对 auto 的处理。</p>
+<p>4、绘制，把 css 中有关颜色的设置，背景、字体颜色等呈现出来。</p>
 <h3 id="深拷贝浅拷贝"><a href="#深拷贝浅拷贝" class="headerlink" title="深拷贝浅拷贝"></a>深拷贝浅拷贝</h3><p>浅拷贝：对基本数据类型进行值传递，对引用数据类型进行引用传递般的拷贝，此为浅拷贝。<br>深拷贝：对基本数据类型进行值传递，对引用数据类型，创建一个新的对象，并复制其内容，此为深拷贝。</p>
 <p><img src="https://i.loli.net/2021/08/05/PkHUFX6xJNeTbt2.png" srcset="/img/loading.gif" lazyload alt="image-20210805200519957"></p>
 

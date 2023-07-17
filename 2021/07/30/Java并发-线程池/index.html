@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/08/03/md8cqo3w9B1KaLM.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/03/3zusmt1HMqZ24D5.png">
 <meta property="article:published_time" content="2021-07-30T07:08:57.000Z">
-<meta property="article:modified_time" content="2023-07-11T15:32:57.960Z">
+<meta property="article:modified_time" content="2023-07-17T04:35:35.961Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="线程池">
 <meta name="twitter:card" content="summary_large_image">
@@ -294,12 +294,12 @@
 <li>execute() ⽅法⽤于<strong>提交不需要返回值的任务</strong>，所以⽆法判断任务是否被线程池执⾏成功与否；</li>
 <li>submit() ⽅法⽤于<strong>提交需要返回值的任务</strong>。线程池会<strong>返回⼀个 Future 类型的对象</strong>，通过这个 Future 对象可以判断任务是否执⾏成功，并且可以通过 Future 的 <strong>get() ⽅法来获取返回值</strong>， <strong>get() ⽅法会阻塞当前线程直到任务完成</strong>，⽽使⽤ get（long timeout，TimeUnitunit）⽅法则会阻塞当前线程⼀段时间后⽴即返回，这时候有可能任务没有执⾏完。</li>
 </ol>
-<p>《阿⾥巴巴 Java 开发⼿册》中强制线程池<strong>不允许使⽤ Executors 去创建，⽽是通ThreadPoolExecutor 的⽅式，</strong>这样的处理⽅式让写的同学更加明确线程池的运⾏规则，规避资源耗尽的⻛险。</p>
+<p>《阿⾥巴巴 Java 开发⼿册》中强制线程池<strong>不允许使⽤ Executors 去创建，⽽是通 ThreadPoolExecutor 的⽅式，</strong>这样的处理⽅式让写的同学更加明确线程池的运⾏规则，规避资源耗尽的⻛险。</p>
 <p><strong>Executors 返回线程池对象的弊端如下：</strong></p>
-<p>FixedThreadPool 和 SingleThreadExecutor ： 允许请求的<strong>队列⻓度为Integer.MAX_VALUE</strong> ，可能堆积⼤量的请求，从⽽导致 OOM。<br>CachedThreadPool 和 ScheduledThreadPool ： 允许<strong>创建的线程数量为Integer.MAX_VALUE</strong> ，可能会创建⼤量线程，从⽽导致 OOM。</p>
-<h3 id="创建线程池的方式："><a href="#创建线程池的方式：" class="headerlink" title="创建线程池的方式："></a>创建线程池的方式：</h3><ol>
+<p>FixedThreadPool 和 SingleThreadExecutor ： 允许请求的<strong>队列⻓度为 Integer.MAX_VALUE</strong> ，可能堆积⼤量的请求，从⽽导致 OOM。<br>CachedThreadPool 和 ScheduledThreadPool ： 允许<strong>创建的线程数量为 Integer.MAX_VALUE</strong> ，可能会创建⼤量线程，从⽽导致 OOM。</p>
+<h3 id="创建线程池的方式"><a href="#创建线程池的方式" class="headerlink" title="创建线程池的方式"></a>创建线程池的方式</h3><ol>
 <li>构造方法：new Threadpoolexecutor(七大参数)。</li>
-<li>工具类：executors.new ….</li>
+<li>工具类：executors.new ……</li>
 </ol>
 <ul>
 <li><strong>FixedThreadPool</strong> ： 该⽅法返回⼀个<strong>固定线程数量</strong>的线程池。该线程池中的线程数量始终不变。当有⼀个新的任务提交时，线程池中若有空闲线程，则⽴即执⾏。若没有，则新的任务会被暂存在⼀个任务队列中，待有线程空闲时，便处理在任务队列中的任务。</li>
@@ -313,12 +313,12 @@
 <li><strong>corePoolSize</strong> : 当线程池运行的线程少于 corePoolSize 时，将创建一个新线程来处理请求，即使其<br>他工作线程处于空闲状态，核⼼线程数线程数定义了最⼩可以同时运⾏的线程数量。</li>
 <li><strong>maximumPoolSize</strong> : 当队列中存放的任务达到队列容量的时候，当前可以同时运⾏的线程数量变为最⼤线程数。</li>
 <li><strong>workQueue</strong> : 当新任务来的时候会先判断当前运⾏的线程数量是否达到核⼼线程数，如果达到的话，新任务就会被存放在队列中。<br>其他常⻅参数:</li>
-<li><strong>keepAliveTime</strong> :当线程池中的线程数量⼤于 corePoolSize 的时候，如果这时没有新的任务提交，核⼼线程外的线程不会⽴即销毁，⽽是会等待，直到等待的时间超过了keepAliveTime 才会被回收销毁；</li>
+<li><strong>keepAliveTime</strong> :当线程池中的线程数量⼤于 corePoolSize 的时候，如果这时没有新的任务提交，核⼼线程外的线程不会⽴即销毁，⽽是会等待，直到等待的时间超过了 keepAliveTime 才会被回收销毁；</li>
 <li><strong>unit</strong> : keepAliveTime 参数的时间单位。</li>
 <li><strong>threadFactory</strong> :executor 创建新线程的时候会⽤到。</li>
 <li><strong>handler</strong> :饱和策略。</li>
 </ul>
-<h3 id="ThreadPoolExecutor-饱和策略定义"><a href="#ThreadPoolExecutor-饱和策略定义" class="headerlink" title="ThreadPoolExecutor 饱和策略定义:"></a>ThreadPoolExecutor 饱和策略定义:</h3><p> 如果当前<strong>同时运⾏的线程数量达到最⼤线程数量并且队列也已经被放满了任务时</strong>，   ThreadPoolTaskExecutor 定义⼀些策略:</p>
+<h3 id="ThreadPoolExecutor-饱和策略定义"><a href="#ThreadPoolExecutor-饱和策略定义" class="headerlink" title="ThreadPoolExecutor 饱和策略定义"></a>ThreadPoolExecutor 饱和策略定义</h3><p> 如果当前<strong>同时运⾏的线程数量达到最⼤线程数量并且队列也已经被放满了任务时</strong>，   ThreadPoolTaskExecutor 定义⼀些策略:</p>
 <ul>
 <li><p>ThreadPoolExecutor.AbortPolicy ：抛出 RejectedExecutionException 来拒绝新任务的处理。</p>
 </li>
@@ -333,7 +333,7 @@
 <h3 id="线程池状态"><a href="#线程池状态" class="headerlink" title="线程池状态"></a>线程池状态</h3><p><img src="https://i.loli.net/2021/08/03/3zusmt1HMqZ24D5.png" srcset="/img/loading.gif" lazyload alt="image-20210803223448446"></p>
 <h3 id="ctl"><a href="#ctl" class="headerlink" title="ctl"></a>ctl</h3><p>ctl 是一个<strong>打包两个概念字段的原子整数。</strong><br>1）workerCount：指示<strong>线程的有效数量</strong>；<br>2）runState：指示<strong>线程池的运行状态</strong>，有 RUNNING、SHUTDOWN、STOP、TIDYING、TERMINATED 等状态。<br>int 类型有 32 位，其中 ctl 的低 29 为用于表示 workerCount，高 3 位用于表示 runState，如下图所示。</p>
 <p>这么设计的主要好处是将对 runState 和 workerCount 的操作<strong>封装成了一个原子操作</strong>。</p>
-<p>runState 和 workerCount 是线程池正常运转中的 2 个最重要属性，线程池在某一时刻该做什么操作，取决于这 2个属性的值。</p>
+<p>runState 和 workerCount 是线程池正常运转中的 2 个最重要属性，线程池在某一时刻该做什么操作，取决于这 2 个属性的值。</p>
 <p>因此无论是查询还是修改，我们必须保证对这 2 个属性的操作是属于“同一时刻”的，也就是原子操作，否则就会出现错乱的情况。如果我们使用 2 个变量来分别存储，要保证原子性则需要额外进行加锁操作，这显然会带来额外的开销，而将这 2 个变量封装成 1 个 AtomicInteger 则不会带来额外的加锁开销，而且<strong>只需使用简单的位操作</strong>就能分别得到 runState 和 workerCount。</p>
 <p>由于这个设计，workerCount 的上限 CAPACITY &#x3D; (1 &lt;&lt; 29) - 1，对应的二进制原码为：0001 1111 1111 1111 1111 1111 1111 1111（不用数了，29 个 1）。<br>通过 ctl 得到 runState，只需通过位操作：ctl &amp; <del>CAPACITY。<br>~（按位取反），于是“</del>CAPACITY”的值为：1110 0000 0000 0000 0000 0000 0000 0000，只有高 3 位为 1，与 ctl 进行 &amp; 操作，结果为 ctl 高 3 位的值，也就是 runState。</p>
 <p>通过 ctl 得到 workerCount 则更简单了，只需通过位操作：c &amp; CAPACITY</p>

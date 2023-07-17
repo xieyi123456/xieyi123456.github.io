@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/03/BhDXCyWdjGSMvuR.png">
 <meta property="article:published_time" content="2021-07-30T07:08:27.000Z">
-<meta property="article:modified_time" content="2023-07-11T15:32:57.983Z">
+<meta property="article:modified_time" content="2023-07-17T04:35:35.959Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="basic">
 <meta name="twitter:card" content="summary_large_image">
@@ -284,43 +284,43 @@
 <p>线程是更小的运行单位。线程是调度执行的基本单位。线程间极有可能相互影响。</p>
 <p>多个线程可以共享同一块内存空间与系统资源（<strong>堆，方法区（元空间）</strong>），也有自己独立的<strong>程序计数器与虚拟机栈，本地方法栈</strong>。</p>
 <p>线程的切换负担要小很多。也被称为轻量级的进程。</p>
-<p>程序计数器：为了线程切换后可以恢复到正确的执行位置。<br>虚拟机栈：方法调用对应着栈帧，存储着局部变量表，操作数栈，常量池。方法调用执行完成对应着栈帧的入栈与出栈。–<strong>保证局部变量私有</strong>。<br>堆：最大的一块，存放对象。<br>方法区：已被<strong>加载的类信息，常量，静态变量</strong>等等。<br>上下文切换：cpu时间片切换。</p>
-<p>一个java应用程序实际上至少有三个线程，<strong>main主线程，gc()垃圾回收机制的运行线程，异常处理线程。</strong></p>
-<p><strong>线程分为两类：用户线程和守护线程</strong>。守护线程适用于服务用户线程的。<strong>用户线程结束，守护线程也就结束</strong>，所以守护线程是依赖于用户线程的。举个例子：java程序中，main是用户线程，垃圾回收就是守护线程。可以利用thread.setDaemon(true)将用户线程变成守护线程。</p>
-<h4 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h4><p>操作系统在线程等待IO的时候，会阻塞当前线程，切换到其它线程，这样在当前线程等待IO的过程中，其它线程可以继续执行。当系统线程较少的时候没有什么问题，但是当线程数量非常多的时候，却产生了问题。<strong>一是系统线程会占用非常多的内存空间，二是过多的线程切换会占用大量的系统时间。</strong></p>
+<p>程序计数器：为了线程切换后可以恢复到正确的执行位置。<br>虚拟机栈：方法调用对应着栈帧，存储着局部变量表，操作数栈，常量池。方法调用执行完成对应着栈帧的入栈与出栈。–<strong>保证局部变量私有</strong>。<br>堆：最大的一块，存放对象。<br>方法区：已被<strong>加载的类信息，常量，静态变量</strong>等等。<br>上下文切换：cpu 时间片切换。</p>
+<p>一个 java 应用程序实际上至少有三个线程，<strong>main 主线程，gc()垃圾回收机制的运行线程，异常处理线程。</strong></p>
+<p><strong>线程分为两类：用户线程和守护线程</strong>。守护线程适用于服务用户线程的。<strong>用户线程结束，守护线程也就结束</strong>，所以守护线程是依赖于用户线程的。举个例子：java 程序中，main 是用户线程，垃圾回收就是守护线程。可以利用 thread.setDaemon(true)将用户线程变成守护线程。</p>
+<h4 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h4><p>操作系统在线程等待 IO 的时候，会阻塞当前线程，切换到其它线程，这样在当前线程等待 IO 的过程中，其它线程可以继续执行。当系统线程较少的时候没有什么问题，但是当线程数量非常多的时候，却产生了问题。<strong>一是系统线程会占用非常多的内存空间，二是过多的线程切换会占用大量的系统时间。</strong></p>
 <p>协程运行在线程之上，当一个协程执行完成后，可以选择主动让出，让另一个协程运行在当前线程之上。协程并没有增加线程数量，<strong>只是在线程的基础之上通过分时复用的方式运行多个协程</strong>，而且协程的切换在用户态完成，切换的代价比线程从用户态到内核态的代价小很多。</p>
-<p>假设协程运行在线程之上，并且协程调用了一个阻塞IO操作，这时候会发生什么？</p>
-<p>实际上操作系统并不知道协程的存在，它只知道线程，因此在协程调用阻塞IO操作的时候，操作系统会让线程进入阻塞状态，当前的协程和其它绑定在该线程之上的协程都会陷入阻塞而得不到调度，这往往是不能接受的。</p>
-<p><strong>在有大量IO操作业务的情况下，</strong>我们采用协程替换线程，可以到达很好的效果，一是降低了系统内存，二是减少了系统切换开销，因此系统的性能也会提升。</p>
-<p>在协程中尽量不要调用阻塞IO的方法，比如打印，读取文件，Socket接口等，除非改为<strong>异步调用</strong>的方式，并且协程只有在IO密集型的任务中才会发挥作用。</p>
-<p>协程只有和异步IO结合起来才能发挥出最大的威力。</p>
+<p>假设协程运行在线程之上，并且协程调用了一个阻塞 IO 操作，这时候会发生什么？</p>
+<p>实际上操作系统并不知道协程的存在，它只知道线程，因此在协程调用阻塞 IO 操作的时候，操作系统会让线程进入阻塞状态，当前的协程和其它绑定在该线程之上的协程都会陷入阻塞而得不到调度，这往往是不能接受的。</p>
+<p><strong>在有大量 IO 操作业务的情况下，</strong>我们采用协程替换线程，可以到达很好的效果，一是降低了系统内存，二是减少了系统切换开销，因此系统的性能也会提升。</p>
+<p>在协程中尽量不要调用阻塞 IO 的方法，比如打印，读取文件，Socket 接口等，除非改为<strong>异步调用</strong>的方式，并且协程只有在 IO 密集型的任务中才会发挥作用。</p>
+<p>协程只有和异步 IO 结合起来才能发挥出最大的威力。</p>
 <p><strong>线程的相关方法：</strong></p>
 <p>sleep-</p>
-<p>yield-让出cpu，当然实际情况得看调度器</p>
-<p>join-调用join的线程会让其他线程等待他结束后再结束。</p>
-<h4 id="sleep-与wait-方法的区别"><a href="#sleep-与wait-方法的区别" class="headerlink" title="sleep()与wait()方法的区别"></a>sleep()与wait()方法的区别</h4><ol>
-<li>sleep方法不会释放锁，wait方法会释放。</li>
+<p>yield-让出 cpu，当然实际情况得看调度器</p>
+<p>join-调用 join 的线程会让其他线程等待他结束后再结束。</p>
+<h4 id="sleep-与-wait-方法的区别"><a href="#sleep-与-wait-方法的区别" class="headerlink" title="sleep()与 wait()方法的区别"></a>sleep()与 wait()方法的区别</h4><ol>
+<li>sleep 方法不会释放锁，wait 方法会释放。</li>
 <li>都可以暂停线程。</li>
-<li>wait用于线程交互，sleep用于暂停。</li>
-<li>wait被调用后，线程不会自动苏醒（无超时等待），需要notify()。</li>
+<li>wait 用于线程交互，sleep 用于暂停。</li>
+<li>wait 被调用后，线程不会自动苏醒（无超时等待），需要 notify()。</li>
 </ol>
-<h4 id="java线程的状态"><a href="#java线程的状态" class="headerlink" title="java线程的状态"></a><strong>java线程的状态</strong></h4><ul>
-<li><strong>new</strong>：线程创建，还没调用start方法。</li>
-<li><strong>runnable</strong>：（操作系统中的就绪，运行）new–调用start–ready-<strong>-获得cpu时间片</strong>–running</li>
+<h4 id="java-线程的状态"><a href="#java-线程的状态" class="headerlink" title="java 线程的状态"></a><strong>java 线程的状态</strong></h4><ul>
+<li><strong>new</strong>：线程创建，还没调用 start 方法。</li>
+<li><strong>runnable</strong>：（操作系统中的就绪，运行）new–调用 start–ready-<strong>-获得 cpu 时间片</strong>–running</li>
 <li><strong>blocked</strong>：阻塞。调用同步方法，在没获取到锁的情况下会阻塞。</li>
 <li><strong>waitting</strong>：等待其他线程做一些操作。wait</li>
-<li><strong>time_waiting</strong>：超时等待。-wait，sleep，超时时间到后，进入runnable。</li>
+<li><strong>time_waiting</strong>：超时等待。-wait，sleep，超时时间到后，进入 runnable。</li>
 <li><strong>terminated</strong>：线程执行完毕。</li>
 </ul>
-<p><strong>wait&#x2F;notify属于Object类。</strong></p>
+<p><strong>wait&#x2F;notify 属于 Object 类。</strong></p>
 <p><img src="https://i.loli.net/2021/08/03/BhDXCyWdjGSMvuR.png" srcset="/img/loading.gif" lazyload alt="image-20210803151242958"></p>
-<h3 id="创建线程的方式"><a href="#创建线程的方式" class="headerlink" title="创建线程的方式"></a>创建线程的方式</h3><p><strong>继承thread类</strong>，重写run（）方法，调用子类的start（）。</p>
-<p>为什么调用的是start，执行的确是run?</p>
-<p>start表示启动该线程，进入就绪状态，成为单独的执行流。操作系统会分配相关资源。</p>
-<p>直接执行run就相当于执行main中的普通方法了，就不是多线程了。</p>
-<p><strong>实现runnable接口</strong>，重写run，启动start。</p>
-<p>java只支持单继承，因此引入runnable接口。</p>
-<p><strong>通过 Callable 和 Future 创建线程。</strong>覆盖call（）方法。</p>
+<h3 id="创建线程的方式"><a href="#创建线程的方式" class="headerlink" title="创建线程的方式"></a>创建线程的方式</h3><p><strong>继承 thread 类</strong>，重写 run（）方法，调用子类的 start（）。</p>
+<p>为什么调用的是 start，执行的确是 run?</p>
+<p>start 表示启动该线程，进入就绪状态，成为单独的执行流。操作系统会分配相关资源。</p>
+<p>直接执行 run 就相当于执行 main 中的普通方法了，就不是多线程了。</p>
+<p><strong>实现 runnable 接口</strong>，重写 run，启动 start。</p>
+<p>java 只支持单继承，因此引入 runnable 接口。</p>
+<p><strong>通过 Callable 和 Future 创建线程。</strong>覆盖 call（）方法。</p>
 <p>可以获得任务执行返回值；</p>
 <ol>
 <li><strong>创建 Callable 接口的实现类</strong>，并实现 call() 方法，该 call() 方法将作为线程执行体，并且有返回值。</li>
@@ -328,30 +328,30 @@
 <li>使用 <strong>FutureTask 对象作为 Thread 对象的 target</strong> 创建并启动新线程。</li>
 <li>调用 <strong>FutureTask 对象的 get() 方法来获得子线程执行结束后的返回值</strong>。</li>
 </ol>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> <span class="hljs-keyword">class</span> CallableThreadTest implements Callable&lt;<span class="hljs-type">Integer</span>&gt; &#123;<br>    <span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> main(String[] args)&#123;  <br>        CallableThreadTest ctt = <span class="hljs-built_in">new</span> CallableThreadTest();  <br>        FutureTask&lt;<span class="hljs-type">Integer</span>&gt; ft = <span class="hljs-built_in">new</span> FutureTask&lt;&gt;(ctt);  <br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;i &lt; <span class="hljs-number">100</span>;i++)&#123;  <br>            <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(Thread.currentThread().getName()+&quot; 的循环变量i的值&quot;+i);  <br>            <span class="hljs-keyword">if</span>(i==<span class="hljs-number">20</span>)&#123;  <br>                <span class="hljs-built_in">new</span> Thread(ft,&quot;有返回值的线程&quot;).<span class="hljs-keyword">start</span>();  <br>            &#125;  <br>        &#125;try&#123;  <br>            <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(&quot;子线程的返回值：&quot;+ft.<span class="hljs-keyword">get</span>());  <br>        &#125; catch (InterruptedException e)&#123;  <br>            e.printStackTrace();  <br>        &#125; catch (ExecutionException e)&#123;  <br>            e.printStackTrace();  <br>        &#125;  <br>    &#125;<br>    @Override  <br>    <span class="hljs-built_in">public</span> <span class="hljs-type">Integer</span> <span class="hljs-keyword">call</span>() throws <span class="hljs-keyword">Exception</span>&#123;  <br>        <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;  <br>        <span class="hljs-keyword">for</span>(;i&lt;<span class="hljs-number">100</span>;i++)&#123;  <br>            <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(Thread.currentThread().getName()+&quot; &quot;+i);  <br>        &#125;  <br>        <span class="hljs-keyword">return</span> i;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs plain">public class CallableThreadTest implements Callable&lt;Integer&gt; &#123;<br>    public static void main(String[] args)&#123;  <br>        CallableThreadTest ctt = new CallableThreadTest();  <br>        FutureTask&lt;Integer&gt; ft = new FutureTask&lt;&gt;(ctt);  <br>        for(int i = 0;i &lt; 100;i++)&#123;  <br>            System.out.println(Thread.currentThread().getName()+&quot; 的循环变量i的值&quot;+i);  <br>            if(i==20)&#123;  <br>                new Thread(ft,&quot;有返回值的线程&quot;).start();  <br>            &#125;  <br>        &#125;try&#123;  <br>            System.out.println(&quot;子线程的返回值：&quot;+ft.get());  <br>        &#125; catch (InterruptedException e)&#123;  <br>            e.printStackTrace();  <br>        &#125; catch (ExecutionException e)&#123;  <br>            e.printStackTrace();  <br>        &#125;  <br>    &#125;<br>    @Override  <br>    public Integer call() throws Exception&#123;  <br>        int i = 0;  <br>        for(;i&lt;100;i++)&#123;  <br>            System.out.println(Thread.currentThread().getName()+&quot; &quot;+i);  <br>        &#125;  <br>        return i;  <br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>通过与Future的结合，可以实现利用Future来跟踪异步计算的结果。</p>
-<p>JDK5.0新特性。需要借助Future接口的唯一实现类<strong>FutureTask</strong>辅助线程的对象创建和返回值获取（FutureTask还实现了Runnable接口），再创建Thread对象，将FutureTask类的对象作为构造器参数传入，完成线程的创建，最后调用start()方法完成线程启动。</p>
-<p><strong>Runnable和Callable的区别：</strong></p>
-<p>1、Callable规定的方法是call(),  Runnable规定的方法是run()<br>2、Callable的任务执行后可返回值，而Runnable的任务是不能返回值<br>3、call方法可以抛出异常，run方法不可以<br>4、运行Callable任务可以拿到一个Future对象，<strong>表示异步计算的结果。</strong>它提供了检查计算是否完成的方法，以等待计算的完成，并检索计算的结果。通过Future对象可以了解任务执行情况，可取消任务的执行，还可获取执行结果</p>
+<p>通过与 Future 的结合，可以实现利用 Future 来跟踪异步计算的结果。</p>
+<p>JDK5.0 新特性。需要借助 Future 接口的唯一实现类<strong>FutureTask</strong>辅助线程的对象创建和返回值获取（FutureTask 还实现了 Runnable 接口），再创建 Thread 对象，将 FutureTask 类的对象作为构造器参数传入，完成线程的创建，最后调用 start()方法完成线程启动。</p>
+<p><strong>Runnable 和 Callable 的区别：</strong></p>
+<p>1、Callable 规定的方法是 call(),  Runnable 规定的方法是 run()<br>2、Callable 的任务执行后可返回值，而 Runnable 的任务是不能返回值<br>3、call 方法可以抛出异常，run 方法不可以<br>4、运行 Callable 任务可以拿到一个 Future 对象，<strong>表示异步计算的结果。</strong>它提供了检查计算是否完成的方法，以等待计算的完成，并检索计算的结果。通过 Future 对象可以了解任务执行情况，可取消任务的执行，还可获取执行结果</p>
 <p><strong>使用线程池。</strong></p>
-<p>使用线程池，提前创建好多个线程放入线程池中，使用时直接获取，使用完放回线程池中。可以做到提高响应速度（减少线程创建的时间）和降低资源消耗（可重复利用线程）。利用Executors工具类创建线程池，然后提供Runnable(excute())或Callable(submit())接口的实现类的对象，执行指定线程的操作。最后，关闭线程池shutdown()。</p>
-<h3 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h3><h4 id="为什么会有内存屏障"><a href="#为什么会有内存屏障" class="headerlink" title="为什么会有内存屏障"></a>为什么会有内存屏障</h4><p>每个CPU都会有自己的缓存（有的甚至L1,L2,L3），缓存的目的就是为了提高性能，避免每次都要向内存取。但是这样的弊端也很明显<strong>：不能实时的和内存发生信息交换</strong>，分在不同CPU执行的不同线程对同一个变量的缓存值不同。</p>
-<p>用volatile关键字修饰变量可以解决上述问题，那么volatile是如何做到这一点的呢？那就是<strong>内存屏障</strong>，内存屏障是硬件层的概念，不同的硬件平台实现内存屏障的手段并不是一样，java通过屏蔽这些差异，统一由jvm来生成内存屏障的指令。</p>
-<h4 id="内存屏障是什么"><a href="#内存屏障是什么" class="headerlink" title="内存屏障是什么"></a>内存屏障是什么</h4><p>硬件层的内存屏障分为两种：Load Barrier 和 Store Barrier即<strong>读屏障和写屏障。</strong></p>
+<p>使用线程池，提前创建好多个线程放入线程池中，使用时直接获取，使用完放回线程池中。可以做到提高响应速度（减少线程创建的时间）和降低资源消耗（可重复利用线程）。利用 Executors 工具类创建线程池，然后提供 Runnable(excute())或 Callable(submit())接口的实现类的对象，执行指定线程的操作。最后，关闭线程池 shutdown()。</p>
+<h3 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h3><h4 id="为什么会有内存屏障"><a href="#为什么会有内存屏障" class="headerlink" title="为什么会有内存屏障"></a>为什么会有内存屏障</h4><p>每个 CPU 都会有自己的缓存（有的甚至 L1,L2,L3），缓存的目的就是为了提高性能，避免每次都要向内存取。但是这样的弊端也很明显<strong>：不能实时的和内存发生信息交换</strong>，分在不同 CPU 执行的不同线程对同一个变量的缓存值不同。</p>
+<p>用 volatile 关键字修饰变量可以解决上述问题，那么 volatile 是如何做到这一点的呢？那就是<strong>内存屏障</strong>，内存屏障是硬件层的概念，不同的硬件平台实现内存屏障的手段并不是一样，java 通过屏蔽这些差异，统一由 jvm 来生成内存屏障的指令。</p>
+<h4 id="内存屏障是什么"><a href="#内存屏障是什么" class="headerlink" title="内存屏障是什么"></a>内存屏障是什么</h4><p>硬件层的内存屏障分为两种：Load Barrier 和 Store Barrier 即<strong>读屏障和写屏障。</strong></p>
 <p><strong>内存屏障有两个作用：</strong></p>
 <p>阻止屏障两侧的指令重排序；<br>强制把写缓冲区&#x2F;高速缓存中的脏数据等写回主内存，让缓存中相应的数据失效。</p>
-<p>对于Load Barrier来说，在指令前插入Load Barrier，可以让高速缓存中的数据失效，强制从新从主内存加载数据；<br>对于Store Barrier来说，在指令后插入Store Barrier，能让写入缓存中的最新数据更新写入主内存，让其他线程可见。</p>
-<h4 id="java内存屏障"><a href="#java内存屏障" class="headerlink" title="java内存屏障"></a>java内存屏障</h4><p>java的内存屏障通常所谓的四种即LoadLoad,StoreStore,LoadStore,StoreLoad实际上也是上述两种的组合，完成一系列的屏障和数据同步功能。</p>
-<p><strong>volatile语义中的内存屏障</strong></p>
-<p>volatile的内存屏障策略非常严格保守，<strong>非常悲观</strong>：<br>在每个volatile写操作前插入StoreStore屏障，在写操作后插入StoreLoad屏障；<br>在每个volatile读操作前插入LoadLoad屏障，在读操作后插入LoadStore屏障；</p>
-<p><strong>由于内存屏障的作用，避免了volatile变量和其它指令重排序、线程之间实现了通信，使得volatile表现出了锁的特性</strong>。</p>
-<h4 id="final语义中的内存屏障"><a href="#final语义中的内存屏障" class="headerlink" title="final语义中的内存屏障"></a>final语义中的内存屏障</h4><p>对于final域，编译器和CPU会遵循两个排序规则：</p>
-<p>新建对象过程中，构造体中对final域的初始化写入和这个对象赋值给其他引用变量，这两个操作不能重排序；</p>
-<p>初次读包含final域的对象引用和读取这个final域，这两个操作不能重排序；（晦涩，意思就是先赋值引用，再调用final值）</p>
-<p>​	必需保证一个对象的所有final域被写入完毕后才能引用和读取。这也是内存屏障的起的作用：</p>
-<p>​	写final域：在编译器写final域完毕，构造体结束之前，会插入一个StoreStore屏障，保证前面的对final写入对其他线程&#x2F;CPU可见，并阻止重排序。</p>
-<p>​	读final域：读final域前插入了LoadLoad屏障。</p>
+<p>对于 Load Barrier 来说，在指令前插入 Load Barrier，可以让高速缓存中的数据失效，强制从新从主内存加载数据；<br>对于 Store Barrier 来说，在指令后插入 Store Barrier，能让写入缓存中的最新数据更新写入主内存，让其他线程可见。</p>
+<h4 id="java-内存屏障"><a href="#java-内存屏障" class="headerlink" title="java 内存屏障"></a>java 内存屏障</h4><p>java 的内存屏障通常所谓的四种即 LoadLoad,StoreStore,LoadStore,StoreLoad 实际上也是上述两种的组合，完成一系列的屏障和数据同步功能。</p>
+<p><strong>volatile 语义中的内存屏障</strong></p>
+<p>volatile 的内存屏障策略非常严格保守，<strong>非常悲观</strong>：<br>在每个 volatile 写操作前插入 StoreStore 屏障，在写操作后插入 StoreLoad 屏障；<br>在每个 volatile 读操作前插入 LoadLoad 屏障，在读操作后插入 LoadStore 屏障；</p>
+<p><strong>由于内存屏障的作用，避免了 volatile 变量和其它指令重排序、线程之间实现了通信，使得 volatile 表现出了锁的特性</strong>。</p>
+<h4 id="final-语义中的内存屏障"><a href="#final-语义中的内存屏障" class="headerlink" title="final 语义中的内存屏障"></a>final 语义中的内存屏障</h4><p>对于 final 域，编译器和 CPU 会遵循两个排序规则：</p>
+<p>新建对象过程中，构造体中对 final 域的初始化写入和这个对象赋值给其他引用变量，这两个操作不能重排序；</p>
+<p>初次读包含 final 域的对象引用和读取这个 final 域，这两个操作不能重排序；（晦涩，意思就是先赋值引用，再调用 final 值）</p>
+<p>​	必需保证一个对象的所有 final 域被写入完毕后才能引用和读取。这也是内存屏障的起的作用：</p>
+<p>​	写 final 域：在编译器写 final 域完毕，构造体结束之前，会插入一个 StoreStore 屏障，保证前面的对 final 写入对其他线程&#x2F;CPU 可见，并阻止重排序。</p>
+<p>​	读 final 域：读 final 域前插入了 LoadLoad 屏障。</p>
 
                 
               </div>

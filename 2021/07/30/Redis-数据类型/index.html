@@ -16,16 +16,16 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="redis总是键值对存储。 key总是string。 value有五种类型。 stringstring 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据还可以">
+    <meta name="description" content="redis 总是键值对存储。 key 总是 string。 value 有五种类型。 stringstring 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-数据类型">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="redis总是键值对存储。 key总是string。 value有五种类型。 stringstring 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据还可以">
+<meta property="og:description" content="redis 总是键值对存储。 key 总是 string。 value 有五种类型。 stringstring 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/zkHrifPgLS46UeR.png">
 <meta property="article:published_time" content="2021-07-30T07:12:00.000Z">
-<meta property="article:modified_time" content="2023-07-11T15:32:56.955Z">
+<meta property="article:modified_time" content="2023-07-17T04:35:35.953Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="basic">
 <meta name="twitter:card" content="summary_large_image">
@@ -280,10 +280,10 @@
             
               <div class="markdown-body">
                 
-                <p><strong>redis总是键值对存储。</strong></p>
-<p><strong>key总是string。</strong></p>
-<p><strong>value有五种类型。</strong></p>
-<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>string 数据结构是简单的 <strong>key-value</strong> 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 <strong>简单动态字符串（simple dynamic string，SDS）</strong>。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据<strong>还可以保存二进制数据</strong>，并且**获取字符串长度复杂度为 O(1)**（C 字符串为O(N)）,除此之外，Redis 的 SDS API 是安全的，不会造成缓冲区溢出。</p>
+                <p><strong>redis 总是键值对存储。</strong></p>
+<p><strong>key 总是 string。</strong></p>
+<p><strong>value 有五种类型。</strong></p>
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>string 数据结构是简单的 <strong>key-value</strong> 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 <strong>简单动态字符串（simple dynamic string，SDS）</strong>。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据<strong>还可以保存二进制数据</strong>，并且**获取字符串长度复杂度为 O(1)**（C 字符串为 O(N)）,除此之外，Redis 的 SDS API 是安全的，不会造成缓冲区溢出。</p>
 <p><img src="https://i.loli.net/2021/08/04/zkHrifPgLS46UeR.png" srcset="/img/loading.gif" lazyload alt="image-20210804150655994"></p>
 <p>常用命令： <strong>set,get,strlen,exists,decr,incr,setex</strong> 等等。</p>
 <p>应用场景： <strong>一般常用在需要计数的场景，比如用户的访问次数、热点文章的点赞转发数量等等。</strong></p>
@@ -294,16 +294,16 @@
 <h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p>list 即是 <strong>链表</strong>。链表是一种非常常见的数据结构，特点是易于数据元素的插入和删除并且可以灵活调整链表长度，但是链表的随机访问困难。Redis 的 list 的实现为一个 <strong>双向链表</strong>，即可以支持反向查找和遍历，更方便操作，不过带来了部分额外的内存开销。</p>
 <p>常用命令**: rpush,lpop,lpush,rpop,lrange,llen** 等。</p>
 <p>应用场景: <strong>发布与订阅或者说消息队列、慢查询。</strong></p>
-<p>通过 rpush&#x2F;lpop 实现队列：<br>127.0.0.1:6379&gt; rpush myList value1 # 向 list 的头部（右边）添加元素<br>127.0.0.1:6379&gt; rpush myList value2 value3 # 向list的头部（最右边）添加多个元素<br>127.0.0.1:6379&gt; lpop myList # 将 list的尾部(最左边)元素取出<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的list列表， 0 为 start,1为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1表示倒数第一</p>
-<p>通过 rpush&#x2F;rpop 实现栈：<br>127.0.0.1:6379&gt; rpush myList2 value1 value2 value3<br>127.0.0.1:6379&gt; rpop myList2 # 将 list的头部(最右边)元素取出</p>
-<p>通过 lrange 查看对应下标范围的列表元素：<br>127.0.0.1:6379&gt; rpush myList value1 value2 value3<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的list列表， 0 为 start,1为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1表示倒数第一<br>通过 lrange 命令，你可以基于 list 实现分页查询，性能非常高！</p>
+<p>通过 rpush&#x2F;lpop 实现队列：<br>127.0.0.1:6379&gt; rpush myList value1 # 向 list 的头部（右边）添加元素<br>127.0.0.1:6379&gt; rpush myList value2 value3 # 向 list 的头部（最右边）添加多个元素<br>127.0.0.1:6379&gt; lpop myList # 将 list 的尾部(最左边)元素取出<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的 list 列表， 0 为 start,1 为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1 表示倒数第一</p>
+<p>通过 rpush&#x2F;rpop 实现栈：<br>127.0.0.1:6379&gt; rpush myList2 value1 value2 value3<br>127.0.0.1:6379&gt; rpop myList2 # 将 list 的头部(最右边)元素取出</p>
+<p>通过 lrange 查看对应下标范围的列表元素：<br>127.0.0.1:6379&gt; rpush myList value1 value2 value3<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的 list 列表， 0 为 start,1 为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1 表示倒数第一<br>通过 lrange 命令，你可以基于 list 实现分页查询，性能非常高！</p>
 <p>通过 llen 查看链表长度：<br>127.0.0.1:6379&gt; llen myList</p>
 <h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p>hash 类似于 JDK1.8 前的 HashMap，**内部实现也差不多(数组 + 链表)**。不过，Redis 的 hash 做了更多优化。另外，hash 是一个 string 类型的 field 和 value 的映射表，特别适合用于存储对象，后续操作的时候，你可以直接仅仅修改这个对象中的某个字段的值。</p>
-<h4 id="渐进式rehash（）；"><a href="#渐进式rehash（）；" class="headerlink" title="渐进式rehash（）；"></a><strong>渐进式rehash（）；</strong></h4><p>hash 对象在扩容时使用了一种叫“<strong>渐进式 rehash</strong>”的方式，步骤如下：</p>
-<p>1）计算新表 size（*2且为2的幂次）、掩码，为新表 ht[1] 分配空间，让字典同时持有 ht[0] 和 ht[1] 两个哈希表。<br>2）将 rehash <strong>索引计数器变量 rehashidx</strong> 的值设置为 0，表示 rehash 正式开始。<br>3）在 rehash 进行期间，每次对字典执行添加、删除、査找、更新操作时，程序除了执行指定的操作以外，还会触发额外的 rehash 操作，在源码中的 _dictRehashStep 方法。</p>
+<h4 id="渐进式-rehash（）"><a href="#渐进式-rehash（）" class="headerlink" title="渐进式 rehash（）"></a><strong>渐进式 rehash（）</strong></h4><p>hash 对象在扩容时使用了一种叫“<strong>渐进式 rehash</strong>”的方式，步骤如下：</p>
+<p>1）计算新表 size（*2 且为 2 的幂次）、掩码，为新表 ht[1] 分配空间，让字典同时持有 ht[0] 和 ht[1] 两个哈希表。<br>2）将 rehash <strong>索引计数器变量 rehashidx</strong> 的值设置为 0，表示 rehash 正式开始。<br>3）在 rehash 进行期间，每次对字典执行添加、删除、査找、更新操作时，程序除了执行指定的操作以外，还会触发额外的 rehash 操作，在源码中的 _dictRehashStep 方法。</p>
 <p>_dictRehashStep：从名字也可以看出来，大意是 rehash 一步，也就是 rehash 一个索引位置。</p>
-<p>该方法会从 <strong>ht[0] 表的 rehashidx 索引位置上开始向后查找，找到第一个不为空的索引位置，将该索引位置的所有节点 rehash 到 ht[1]，当本次 rehash 工作完成之后，将 ht[0] 索引位置为 rehashidx 的节点清空，同时将 rehashidx属性的值加一。</strong></p>
-<p>4）将 rehash 分摊到每个操作上确实是非常妙的方式，但是万一此时服务器比较空闲，一直没有什么操作，难道 redis要一直持有两个哈希表吗？<br>答案当然不是的。我们知道，redis 除了文件事件外，还有时间事件，<strong>redis 会定期触发时间事件，这些时间事件用于执行一些后台操作，其中就包含 rehash 操作</strong>：当 redis 发现有字典正在进行 rehash 操作时，会花费 1 毫秒的时间，一起帮忙进行 rehash。</p>
+<p>该方法会从 <strong>ht[0] 表的 rehashidx 索引位置上开始向后查找，找到第一个不为空的索引位置，将该索引位置的所有节点 rehash 到 ht[1]，当本次 rehash 工作完成之后，将 ht[0] 索引位置为 rehashidx 的节点清空，同时将 rehashidx 属性的值加一。</strong></p>
+<p>4）将 rehash 分摊到每个操作上确实是非常妙的方式，但是万一此时服务器比较空闲，一直没有什么操作，难道 redis 要一直持有两个哈希表吗？<br>答案当然不是的。我们知道，redis 除了文件事件外，还有时间事件，<strong>redis 会定期触发时间事件，这些时间事件用于执行一些后台操作，其中就包含 rehash 操作</strong>：当 redis 发现有字典正在进行 rehash 操作时，会花费 1 毫秒的时间，一起帮忙进行 rehash。</p>
 <p>5）随着操作的不断执行，最终在某个时间点上，<strong>ht[0] 的所有键值对都会被 rehash 至 ht[1]<strong>，此时 rehash 流程完成，会执行最后的清理工作：</strong>释放 ht[0] 的空间、将 ht[0] 指向 ht[1]、重置 ht[1]、重置 rehashidx</strong></p>
 <h4 id="渐进式-rehash-的优点"><a href="#渐进式-rehash-的优点" class="headerlink" title="渐进式 rehash 的优点"></a>渐进式 rehash 的优点</h4><p>渐进式 rehash 的好处在于它采取<strong>分而治之</strong>的方式，将 rehash 键值对所需的计算工作<strong>均摊到对字典的每个添加、删除、查找和更新操作上</strong>，从而避免了<strong>集中式 rehash 而带来的庞大计算量</strong>。</p>
 <p>在进行渐进式 rehash 的过程中，字典会同时使用 ht[0] 和 ht[1] 两个哈希表， 所以在渐进式 rehash 进行期间，字典的删除、査找、更新等操作会在两个哈希表上进行。例如，要在字典里面査找一个键的话，程序会先在 ht[0] 里面进行査找，如果没找到的话，就会继续到 ht[1] 里面进行査找，诸如此类。</p>
@@ -313,7 +313,7 @@
 <h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p>set 类似于 Java 中的 HashSet 。Redis 中的 set 类型是一种<strong>无序集合</strong>，集合中的元素没有先后顺序。<strong>当你需要存储一个列表数据，又不希望出现重复数据时，set 是一个很好的选择</strong>，并且 set 提供了判断某个成员是否在一个 set 集合内的重要接口，这个也是 list 所不能提供的。</p>
 <p><strong>可以基于 set 轻易实现交集、并集、差集的操作。</strong></p>
 <p>常用命令： <strong>sadd,spop,smembers,sismember,scard,sinterstore,sunion</strong> 等。</p>
-<p>应用场景: 需要存放的数据不能重复以及需要获取多个数据源交集和并集等场景。比如：你可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。Redis 可以非常方便的实现如<strong>共同关注、共同粉丝、共同喜好等功能。</strong><br>127.0.0.1:6379&gt; smembers mySet # 查看 set 中所有的元素<br>127.0.0.1:6379&gt; scard mySet # 查看 set 的长度<br>127.0.0.1:6379&gt; sismember mySet value1 # 检查某个元素是否存在set 中，只能接收单个元素<br>127.0.0.1:6379&gt; sadd mySet2 value2 value3<br>127.0.0.1:6379&gt; sinterstore mySet3 mySet mySet2 # 获取 mySet 和 mySet2 的交集并存放在 mySet3 中</p>
+<p>应用场景: 需要存放的数据不能重复以及需要获取多个数据源交集和并集等场景。比如：你可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。Redis 可以非常方便的实现如<strong>共同关注、共同粉丝、共同喜好等功能。</strong><br>127.0.0.1:6379&gt; smembers mySet # 查看 set 中所有的元素<br>127.0.0.1:6379&gt; scard mySet # 查看 set 的长度<br>127.0.0.1:6379&gt; sismember mySet value1 # 检查某个元素是否存在 set 中，只能接收单个元素<br>127.0.0.1:6379&gt; sadd mySet2 value2 value3<br>127.0.0.1:6379&gt; sinterstore mySet3 mySet mySet2 # 获取 mySet 和 mySet2 的交集并存放在 mySet3 中</p>
 <h3 id="sorted-set"><a href="#sorted-set" class="headerlink" title="sorted set"></a>sorted set</h3><p>和 set 相比，sorted set 增加了一个<strong>权重参数 score</strong>，使得集合中的元素能够按 score 进行有序排列，还可以通过 score 的范围来获取元素的列表。有点像是 Java 中 HashMap 和 TreeSet 的结合体。</p>
 <p>常用命令： zadd,zcard,zscore,zrange,zrevrange,zrem 等。</p>
 <p>应用场景： 需要对数据根据某个权重进行排序的场景。比如在直播系统中，实时排行信息包含直播间在线用户列表，各种<strong>礼物排行榜，弹幕消息（可以理解为按消息维度的消息排行榜）等信息</strong>。</p>

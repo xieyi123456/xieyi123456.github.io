@@ -235,7 +235,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Mysql-%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" target="_self">
         <div>
-          架构 Mysql逻辑架构图主要分三层：（1）第一层负责连接处理，授权认证，安全等等（2）第二层负责编译并优化SQL（3）第三层是存储引擎。 sql语句执行流程 查询语句的执行流程如下：权限校验（如果命中缓存）—&gt;查询缓存—&gt;分析器—&gt;优化器—&gt;权限校验—&gt;执行器—&gt;引擎  更新语句执行流程如下：分析器—-&gt;权限校验—-&gt;执行器—&gt;引擎—redo
+          架构 Mysql 逻辑架构图主要分三层（1）第一层负责连接处理，授权认证，安全等等（2）第二层负责编译并优化 SQL（3）第三层是存储引擎。 sql 语句执行流程 查询语句的执行流程如下：权限校验（如果命中缓存）—&gt;查询缓存—&gt;分析器—&gt;优化器—&gt;权限校验—&gt;执行器—&gt;引擎  更新语句执行流程如下：分析器—-&gt;权限校验—-&gt;执行器—&gt;引擎—re
         </div>
       </a>
 
@@ -296,7 +296,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Mysql-sql%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95%E4%B8%8E%E4%BC%98%E5%8C%96/" target="_self">
         <div>
-          sql语法举例有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。 SELECT NAME,SUM(score) FROM chengji GROUP BY NAME ORDER BY SUM(score) DESC; 顺序12345678Select FromJoin onWhereGroup byHavingOrder byLimit    单表
+          sql 语法举例有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。 SELECT NAME,SUM(score) FROM chengji GROUP BY NAME ORDER BY SUM(score) DESC; 顺序12345678Select FromJoin onWhereGroup byHavingOrder byLimit    单
         </div>
       </a>
 
@@ -357,7 +357,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/" target="_self">
         <div>
-          同步容器collections中有一些方法：synchronizedlist： synchronizedmap： synchronizedcollection： 在遍历时容器发生了结构性变化，会报错。 写时复制的的List和Setcopyonwritearraylist copyonwritearrayset 线程安全 迭代器不支持修改 每次修改时都会新建一个数组，复制进去。读都会访问原来的数组。
+          同步容器collections 中有一些方法synchronizedlist： synchronizedmap： synchronizedcollection： 在遍历时容器发生了结构性变化，会报错。 写时复制的的 List 和 Setcopyonwritearraylist copyonwritearrayset 线程安全 迭代器不支持修改 每次修改时都会新建一个数组，复制进去。读都会访问原来的
         </div>
       </a>
 
@@ -418,7 +418,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%90%8C%E6%AD%A5%E5%92%8C%E5%8D%8F%E4%BD%9C%E5%B7%A5%E5%85%B7%E7%B1%BB/" target="_self">
         <div>
-          wait、notify属于Object类中。 当条件不成立时，线程调用wait进入条件等待队列。 另一个线程修改了条件变量后调用notify，调用wait的线程唤醒后需要重新检查条件变量。 显示条件sychronized：wait，notify reentranlock：显式条件-condition接口：await，signal 线程中断协作工具类读写锁reentrantreadwritelock
+          wait、notify属于 Object 类中。 当条件不成立时，线程调用 wait 进入条件等待队列。 另一个线程修改了条件变量后调用 notify，调用 wait 的线程唤醒后需要重新检查条件变量。 显示条件sychronized：wait，notify reentranlock：显式条件-condition 接口：await，signal 线程中断协作工具类读写锁 reentrantread
         </div>
       </a>
 
@@ -540,7 +540,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Java%E5%B9%B6%E5%8F%91-%E5%B8%B8%E8%A7%81%E5%85%B3%E9%94%AE%E5%AD%97/" target="_self">
         <div>
-          synchronized见《线程安全的机制》 CASCAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。 CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。 CAS虽然很高效的解决了原子操作问题，但是CAS仍然存在三
+          synchronized见《线程安全的机制》 CASCAS 是英文单词 CompareAndSwap 的缩写，中文意思是：比较并替换。CAS 需要有 3 个操作数：内存地址 V，旧的预期值 A，即将要更新的目标值 B。 CAS 指令执行时，当且仅当内存地址 V 的值与预期值 A 相等时，将内存地址 V 的值修改为 B，否则就什么都不做。整个比较并替换的操作是一个原子操作。 CAS 虽然很高效的解决
         </div>
       </a>
 
@@ -662,7 +662,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/" target="_self">
         <div>
-          概述评估 GC 的性能指标吞吐量：运行用户代码的时间占总运行时间的比例（总运行时间 &#x3D; 程序的运行时间 + 内存回收的时间）垃圾收集开销：吞吐量的补数，垃圾收集所用时间与总运行时间的比例。暂停时间：执行垃圾收集时，程序的工作线程被暂停的时间。收集频率：相对于应用程序的执行，收集操作发生的频率。内存占用：Java堆区所占的内存大小。快速：一个对象从诞生到被回收所经历的时间。 吞吐量、暂停时
+          概述评估 GC 的性能指标吞吐量：运行用户代码的时间占总运行时间的比例（总运行时间 &#x3D; 程序的运行时间 + 内存回收的时间）垃圾收集开销：吞吐量的补数，垃圾收集所用时间与总运行时间的比例。暂停时间：执行垃圾收集时，程序的工作线程被暂停的时间。收集频率：相对于应用程序的执行，收集操作发生的频率。内存占用：Java 堆区所占的内存大小。快速：一个对象从诞生到被回收所经历的时间。 吞吐量、暂停
         </div>
       </a>
 
@@ -784,7 +784,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%EF%BC%8C%E5%A0%86%EF%BC%8C%E6%96%B9%E6%B3%95%E5%8C%BA/" target="_self">
         <div>
-          PC寄存器（程序计数器）它是一块很小的内存空间，几乎可以忽略不记。也是运行速度最快的存储区域。 在JVM规范中，每个线程都有它自己的程序计数器，是线程私有的，生命周期与线程的生命周期保持一致。 任何时间一个线程都只有一个方法在执行，也就是所谓的当前方法。程序计数器会存储当前线程正在执行的Java方法的JVM指令地址；或者，如果是在执行native方法，则是未指定值（undefned）。 它是程序控
+          PC 寄存器（程序计数器）它是一块很小的内存空间，几乎可以忽略不记。也是运行速度最快的存储区域。 在 JVM 规范中，每个线程都有它自己的程序计数器，是线程私有的，生命周期与线程的生命周期保持一致。 任何时间一个线程都只有一个方法在执行，也就是所谓的当前方法。程序计数器会存储当前线程正在执行的 Java 方法的 JVM 指令地址；或者，如果是在执行 native 方法，则是未指定值（undefne
         </div>
       </a>
 
