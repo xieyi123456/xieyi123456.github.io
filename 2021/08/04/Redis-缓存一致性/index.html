@@ -16,16 +16,16 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="如何保证数据库和缓存的数据一致性一般来说，如果允许缓存可以稍微的跟数据库偶尔有不一致的情况，也就是说如果你的系统不是严格要求 “缓存+数据库” 必须保持一致性的话，最好不要做这个方案，即：读请求和写请求串行化，串到一个内存队列里去。 串行化可以保证一定不会出现不一致的情况，但是它也会导致系统的吞吐量大幅度降低，用比正常情况下多几倍的机器去支撑线上的一个请求。 Cache Aside Pattern">
+    <meta name="description" content="啥情况会缓存和 DB 不一致写并发例如，两个请求，同时先更新 db，后更新 缓存。 a 更新 db 为 20 b 更新 db 为 10 写缓存更新为 10 写缓存更新为 20 读写并发a 读缓存，没有值 a 读 db 为 10 b 写 db 更新缓存为 20 a 写缓存 更新为 10 概率低，写操作耗时相对较大。 保证一致性 删除缓存 更新 db 再次删除缓存 第一次删除？ 如果没有，写 db 成">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-缓存一致性">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="如何保证数据库和缓存的数据一致性一般来说，如果允许缓存可以稍微的跟数据库偶尔有不一致的情况，也就是说如果你的系统不是严格要求 “缓存+数据库” 必须保持一致性的话，最好不要做这个方案，即：读请求和写请求串行化，串到一个内存队列里去。 串行化可以保证一定不会出现不一致的情况，但是它也会导致系统的吞吐量大幅度降低，用比正常情况下多几倍的机器去支撑线上的一个请求。 Cache Aside Pattern">
+<meta property="og:description" content="啥情况会缓存和 DB 不一致写并发例如，两个请求，同时先更新 db，后更新 缓存。 a 更新 db 为 20 b 更新 db 为 10 写缓存更新为 10 写缓存更新为 20 读写并发a 读缓存，没有值 a 读 db 为 10 b 写 db 更新缓存为 20 a 写缓存 更新为 10 概率低，写操作耗时相对较大。 保证一致性 删除缓存 更新 db 再次删除缓存 第一次删除？ 如果没有，写 db 成">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/UgD7uS9WeIimzxR.png">
 <meta property="article:published_time" content="2021-08-04T09:22:25.000Z">
-<meta property="article:modified_time" content="2023-07-17T04:35:35.969Z">
+<meta property="article:modified_time" content="2024-03-25T12:19:29.535Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="思想">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k 字
+          2.8k 字
         
       </span>
     
@@ -280,7 +280,33 @@
             
               <div class="markdown-body">
                 
-                <h2 id="如何保证数据库和缓存的数据一致性"><a href="#如何保证数据库和缓存的数据一致性" class="headerlink" title="如何保证数据库和缓存的数据一致性"></a>如何保证数据库和缓存的数据一致性</h2><p>一般来说，如果允许缓存可以稍微的跟数据库偶尔有不一致的情况，也就是说如果你的系统不是严格要求 “缓存+数据库” 必须保持一致性的话，最好不要做这个方案，即：<strong>读请求和写请求串行化，串到一个内存队列里去</strong>。</p>
+                <h2 id="啥情况会缓存和-DB-不一致"><a href="#啥情况会缓存和-DB-不一致" class="headerlink" title="啥情况会缓存和 DB 不一致"></a>啥情况会缓存和 DB 不一致</h2><h3 id="写并发"><a href="#写并发" class="headerlink" title="写并发"></a>写并发</h3><p>例如，两个请求，同时先更新 db，后更新 缓存。</p>
+<p>a 更新 db 为 20</p>
+<p>b 更新 db 为 10</p>
+<p>写缓存更新为 10</p>
+<p>写缓存更新为 20</p>
+<h3 id="读写并发"><a href="#读写并发" class="headerlink" title="读写并发"></a>读写并发</h3><p>a 读缓存，没有值</p>
+<p>a 读 db 为 10</p>
+<p>b 写 db 更新缓存为 20</p>
+<p>a 写缓存 更新为 10</p>
+<p>概率低，写操作耗时相对较大。</p>
+<h3 id="保证一致性"><a href="#保证一致性" class="headerlink" title="保证一致性"></a>保证一致性</h3><blockquote>
+<p>删除缓存</p>
+<p>更新 db</p>
+<p>再次删除缓存</p>
+<p>第一次删除？</p>
+<p>如果没有，写 db 成功，删除 redis 失败，脏数据</p>
+<p>第二次删除？</p>
+<p>读写并发的问题</p>
+</blockquote>
+<p>删除缓存相比较更新缓存，方案更加简单，而且带来的一致性问题也更少。</p>
+<p>而一般情况下，如果把缓存的删除动作放到第二步，有一个好处，那就是缓存删除失败的概率还是比较低的，除非是网络问题或者缓存服务器宕机的问题，否则大部分情况都是可以成功的。</p>
+<p>比如，如果业务量不大，并发不高的情况，可以选择先更新数据库，后删除缓存的方式，因为这种方案更加简单。</p>
+<p>但是，如果是业务量比较大，并发度很高的话，那么建议选择先删除缓存，因为这种方式在引入延迟双删、分布式锁等机制会，会使得整个方案会更加趋近于完美，带来的并发问题更少。当然，也会更复杂。</p>
+<p>其实，先操作数据库，后操作缓存，是一种比较典型的设计模式——Cache Aside Pattern。</p>
+<p>这种模式的主要方案就是先写数据库，后删缓存，而且缓存的删除是可以在旁路异步执行的。</p>
+<p>这种模式的优点就是我们说的，他可以解决”写写并发”导致的数据不一致问题，并且可以大大降低”读写并发”的问题，所以这也是Facebook比较推崇的一种模式。</p>
+<h2 id="如何保证数据库和缓存的数据一致性"><a href="#如何保证数据库和缓存的数据一致性" class="headerlink" title="如何保证数据库和缓存的数据一致性"></a>如何保证数据库和缓存的数据一致性</h2><p>一般来说，如果允许缓存可以稍微的跟数据库偶尔有不一致的情况，也就是说如果你的系统不是严格要求 “缓存+数据库” 必须保持一致性的话，最好不要做这个方案，即：<strong>读请求和写请求串行化，串到一个内存队列里去</strong>。</p>
 <p><strong>串行化</strong>可以保证<strong>一定不会出现不一致的情况</strong>，但是它也会导致系统的吞吐量大幅度降低，用比正常情况下多几倍的机器去支撑线上的一个请求。</p>
 <h2 id="Cache-Aside-Pattern-旁路缓存模式"><a href="#Cache-Aside-Pattern-旁路缓存模式" class="headerlink" title="Cache Aside Pattern 旁路缓存模式"></a><strong>Cache Aside Pattern 旁路缓存模式</strong></h2><p>最经典的缓存+数据库读写的模式，就是 <strong>Cache Aside Pattern。</strong></p>
 <blockquote>
@@ -354,7 +380,7 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/08/05/a-%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/" title="常见数据结构和算法">
+                      <a href="/2021/08/05/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/" title="常见数据结构和算法">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">常见数据结构和算法</span>
                         <span class="visible-mobile">上一篇</span>

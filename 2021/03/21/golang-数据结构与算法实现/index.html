@@ -1,0 +1,603 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/wztx.png">
+  <link rel="icon" href="/img/wztx.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XieYi">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="无重复字符的最长子串asddffggg-&gt;3(asd) 思路：滑动窗口 123456789101112131415161718192021func lengthOfLongestSubstring(s string) int &amp;#123;    res :&#x3D; 0    start :&#x3D; 0    recordMap :&#x3D; make(map[string]int, 0)    for i, s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang 数据结构与算法实现">
+<meta property="og:url" content="https://xieyi123456.github.io/2021/03/21/golang-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="XieYi&#39;s Blog">
+<meta property="og:description" content="无重复字符的最长子串asddffggg-&gt;3(asd) 思路：滑动窗口 123456789101112131415161718192021func lengthOfLongestSubstring(s string) int &amp;#123;    res :&#x3D; 0    start :&#x3D; 0    recordMap :&#x3D; make(map[string]int, 0)    for i, s">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-21T14:37:06.000Z">
+<meta property="article:modified_time" content="2024-03-25T07:12:47.780Z">
+<meta property="article:author" content="XieYi">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>golang 数据结构与算法实现 - XieYi&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xieyi123456.github.io","root":"/","version":"1.9.5","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":3},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="XieYi's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XieYi&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/background.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">golang 数据结构与算法实现</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-03-21 22:37" pubdate>
+          2021年3月21日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.3k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">golang 数据结构与算法实现</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="无重复字符的最长子串"><a href="#无重复字符的最长子串" class="headerlink" title="无重复字符的最长子串"></a>无重复字符的最长子串</h2><p>asddffggg-&gt;3(asd)</p>
+<p>思路：滑动窗口</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs golang"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">lengthOfLongestSubstring</span><span class="hljs-params">(s <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">int</span> &#123;<br>    res := <span class="hljs-number">0</span><br>    start := <span class="hljs-number">0</span><br>    recordMap := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">int</span>, <span class="hljs-number">0</span>)<br>    <span class="hljs-keyword">for</span> i, ss := <span class="hljs-keyword">range</span> s &#123;<br>       now, ok := recordMap[<span class="hljs-type">string</span>(ss)]<br>       <span class="hljs-keyword">if</span> ok &#123;<br>          start = getIntMax(start, now+<span class="hljs-number">1</span>)<br>       &#125;<br>       res = getIntMax(res, i-start+<span class="hljs-number">1</span>)<br>       recordMap[<span class="hljs-type">string</span>(ss)] = i<br>    &#125;<br>    <span class="hljs-keyword">return</span> res<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getIntMax</span><span class="hljs-params">(a, b <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> &#123;<br>    <span class="hljs-keyword">if</span> a &gt; b &#123;<br>       <span class="hljs-keyword">return</span> a<br>    &#125;<br>    <span class="hljs-keyword">return</span> b<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="LRU"><a href="#LRU" class="headerlink" title="LRU"></a>LRU</h2><p>最近最少使用的缓存</p>
+<p>get 拿出来放在最上面</p>
+<p>put 有：删除原来的，放在最上面，没有，直接放在最上面，超出容量的删除</p>
+<p>双向链表实现，有一个哨兵节点 dummy</p>
+<p>删除一个节点</p>
+<p>x.prev.next &#x3D; x.next</p>
+<p>x.next.prev &#x3D; x.prev</p>
+<p>插入一个节点</p>
+<p>x.prev &#x3D; dummy</p>
+<p>x.next &#x3D; dummy.next</p>
+<p>x.prev.next &#x3D; x</p>
+<p>x.next.prev &#x3D; x</p>
+<p>get 用 hash 表实现，快速查找</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> entry <span class="hljs-keyword">struct</span> &#123;<br>	key, value <span class="hljs-type">int</span><br>&#125;<br><br><span class="hljs-keyword">type</span> LRUCache <span class="hljs-keyword">struct</span> &#123;<br>	capacity  <span class="hljs-type">int</span><br>	list      *list.List <span class="hljs-comment">// 双向链表</span><br>	keyToNode <span class="hljs-keyword">map</span>[<span class="hljs-type">int</span>]*list.Element<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Constructor</span><span class="hljs-params">(capacity <span class="hljs-type">int</span>)</span></span> LRUCache &#123;<br>	<span class="hljs-keyword">return</span> LRUCache&#123;capacity, list.New(), <span class="hljs-keyword">map</span>[<span class="hljs-type">int</span>]*list.Element&#123;&#125;&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c *LRUCache)</span></span> get(key <span class="hljs-type">int</span>) <span class="hljs-type">int</span> &#123;<br>	node := c.keyToNode[key]<br>	<span class="hljs-keyword">if</span> node == <span class="hljs-literal">nil</span> &#123; <span class="hljs-comment">// 没有这本书</span><br>		<span class="hljs-keyword">return</span> <span class="hljs-number">-1</span><br>	&#125;<br>	c.list.MoveToFront(node) <span class="hljs-comment">// 把这本书放在最上面</span><br>	<span class="hljs-keyword">return</span> node.Value.(entry).value<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c *LRUCache)</span></span> put(key, value <span class="hljs-type">int</span>) &#123;<br>	<span class="hljs-keyword">if</span> node := c.keyToNode[key]; node != <span class="hljs-literal">nil</span> &#123; <span class="hljs-comment">// 有这本书</span><br>		node.Value = entry&#123;key, value&#125; <span class="hljs-comment">// 更新</span><br>		c.list.MoveToFront(node)       <span class="hljs-comment">// 把这本书放在最上面</span><br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	c.keyToNode[key] = c.list.PushFront(entry&#123;key, value&#125;) <span class="hljs-comment">// 新书，放在最上面</span><br>	<span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(c.keyToNode) &gt; c.capacity &#123;                     <span class="hljs-comment">// 书太多了</span><br>		<span class="hljs-built_in">delete</span>(c.keyToNode, c.list.Remove(c.list.Back()).(entry).key) <span class="hljs-comment">// 去掉最后一本书</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="限制并发数"><a href="#限制并发数" class="headerlink" title="限制并发数"></a>限制并发数</h2><p><strong>思考1：</strong>为什么要使用sync.WaitGroup？</p>
+<p>这里如果不使用sync.WaitGroup控制的话，原因出在当主程序结束时，子协程也是会被终止掉的。因此剩余的 goroutine 没来及把值输出，程序就已经中断了</p>
+<p><strong>思考2：</strong>代码中channel数据结构为什么定义struct，而不定义成bool这种类型呢？</p>
+<p>因为空结构体变量的内存占用大小为0，而bool类型内存占用大小为1，这样可以更加最大化利用我们服务器的内存空间。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Glimit <span class="hljs-keyword">struct</span> &#123;<br>	n <span class="hljs-type">int</span><br>	c <span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;<br>&#125;<br><br><span class="hljs-comment">// initialization Glimit struct</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span><span class="hljs-params">(n <span class="hljs-type">int</span>)</span></span> *Glimit &#123;<br>	<span class="hljs-keyword">return</span> &amp;Glimit&#123;<br>		n: n,<br>		c: <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;, n),<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">// Run f in a new goroutine but with limit.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(g *Glimit)</span></span> Run(f <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>) &#123;<br>	g.c &lt;- <span class="hljs-keyword">struct</span>&#123;&#125;&#123;&#125;<br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		f()<br>		&lt;-g.c<br>	&#125;()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	number := <span class="hljs-number">8</span><br>	g := New(<span class="hljs-number">3</span>)<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; number; i++ &#123;<br>		wg.Add(<span class="hljs-number">1</span>)<br>		value := i<br>		goFunc := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>			<span class="hljs-comment">// 做一些业务逻辑处理</span><br>			fmt.Printf(<span class="hljs-string">&quot;go func: %d\n&quot;</span>, value)<br>			time.Sleep(time.Second)<br>			wg.Done()<br>		&#125;<br>		g.Run(goFunc)<br>	&#125;<br>	wg.Wait()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="依次打印-dog-cat-fish"><a href="#依次打印-dog-cat-fish" class="headerlink" title="依次打印 dog cat fish"></a>依次打印 dog cat fish</h2><p>channel 通信</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> wg sync.WaitGroup<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>	<span class="hljs-comment">// counter use to count the output</span><br>	<span class="hljs-keyword">var</span> counter <span class="hljs-type">int</span> = <span class="hljs-number">3</span><br>	dogch := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;, <span class="hljs-number">1</span>)<br>	catch := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;, <span class="hljs-number">1</span>)<br>	fishch := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;, <span class="hljs-number">1</span>)<br>	wg.Add(<span class="hljs-number">3</span>)<br>	<span class="hljs-comment">// let run the three goroutine</span><br><br>	<span class="hljs-comment">// the origin of the goroutine to set dogch &lt;- struct &#123;&#125;&#123;&#125;</span><br>	dogch &lt;- <span class="hljs-keyword">struct</span>&#123;&#125;&#123;&#125;<br><br>	<span class="hljs-keyword">go</span> dog(dogch, counter, catch)<br>	<span class="hljs-keyword">go</span> cat(catch, counter, fishch)<br>	<span class="hljs-keyword">go</span> fish(fishch, counter, dogch)<br><br>	wg.Wait()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">dog</span><span class="hljs-params">(dogch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;, counter <span class="hljs-type">int</span>, catch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;)</span></span> &#123;<br>	dogtimes := <span class="hljs-number">0</span><br>	<span class="hljs-keyword">for</span> dogtimes &lt; counter &#123;<br>		<span class="hljs-keyword">select</span> &#123;<br>		<span class="hljs-keyword">case</span> &lt;-dogch:<br>			fmt.Println(<span class="hljs-string">&quot;dog&quot;</span>)<br>			dogtimes++<br>			<span class="hljs-comment">// let cat run</span><br>			catch &lt;- <span class="hljs-keyword">struct</span>&#123;&#125;&#123;&#125;<br>		&#125;<br>	&#125;<br>	wg.Done()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">cat</span><span class="hljs-params">(catch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;, counter <span class="hljs-type">int</span>, fishch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;)</span></span> &#123;<br>	cattimes := <span class="hljs-number">0</span><br>	<span class="hljs-keyword">for</span> cattimes &lt; counter &#123;<br>		<span class="hljs-keyword">select</span> &#123;<br>		<span class="hljs-keyword">case</span> &lt;-catch:<br>			fmt.Println(<span class="hljs-string">&quot;cat&quot;</span>)<br>			cattimes++<br>			<span class="hljs-comment">//let fish run</span><br>			fishch &lt;- <span class="hljs-keyword">struct</span>&#123;&#125;&#123;&#125;<br>		&#125;<br>	&#125;<br>	wg.Done()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fish</span><span class="hljs-params">(fishch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;, counter <span class="hljs-type">int</span>, dogch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;)</span></span> &#123;<br>	fishtimes := <span class="hljs-number">0</span><br>	<span class="hljs-keyword">for</span> fishtimes &lt; counter &#123;<br>		<span class="hljs-keyword">select</span> &#123;<br>		<span class="hljs-keyword">case</span> &lt;-fishch:<br>			fmt.Println(<span class="hljs-string">&quot;fish&quot;</span>)<br>			fishtimes++<br>			<span class="hljs-comment">// let dog run</span><br>			dogch &lt;- <span class="hljs-keyword">struct</span>&#123;&#125;&#123;&#125;<br>		&#125;<br>	&#125;<br>	wg.Done()<br>&#125;<br><br><span class="hljs-comment">//题解：</span><br><span class="hljs-comment">// 分别使用三个goroutine代表dog cat fish，由于携程执行的无顺序性，但是题目要求顺序循环输出，</span><br><span class="hljs-comment">// 所以，我们使用通道来实现阻塞，通过传值到通道中来实现顺序执行</span><br><span class="hljs-comment">// 首先定义了三个有缓冲通道 ，并设置了循环的次数counter</span><br><span class="hljs-comment">// counter use to count the output</span><br><span class="hljs-comment">//	var counter int = 3</span><br><span class="hljs-comment">//	dogch := make(chan struct&#123;&#125;, 1)</span><br><span class="hljs-comment">//	catch := make(chan struct&#123;&#125;, 1)</span><br><span class="hljs-comment">//	fishch := make(chan struct&#123;&#125;, 1)</span><br><br><span class="hljs-comment">// 然后对于每一个goroutine来说设置一个 for循环来执行counter次，里面采用for-select-case</span><br><span class="hljs-comment">// 如果该通道没值 则会阻塞在这个地方直到有值传进来。</span><br><br><span class="hljs-comment">//  // the origin of the goroutine to set dogch &lt;- struct &#123;&#125;&#123;&#125;</span><br><span class="hljs-comment">//  dogch &lt;- struct&#123;&#125;&#123;&#125; 这一句话是三个goroutin启动的触发条件。</span><br><span class="hljs-comment">//  第一个goroutine有值之后，执行第一个输出 dog，然后向catch里面传值，这个时候被阻塞的第一个goroutine//</span><br><span class="hljs-comment">//  得以激活，一次类推，直到把循环走完，每个goroutine都done了，程序结束</span><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/07/06/RPC-%E6%A6%82%E8%BF%B0/" title="RPC-概述">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">RPC-概述</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"WrPC7xJfVpGUd8GjrKoxR34Q-gzGzoHsz","appKey":"1Ta1bWsuCydK80lVeBdHgrc6","path":"window.location.pathname","placeholder":"show me your view!","avatar":"wavatar","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

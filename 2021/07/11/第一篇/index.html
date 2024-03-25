@@ -16,21 +16,25 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="举例：Hello_woRLD&#x3D;&#x3D;helloWorld 123456789101112131415161718192021222324252627public static String camelName(String name) &amp;#123;       StringBuilder result &#x3D; new StringBuilder();       if (name &#x3D;&#x3D;">
+    <meta name="description" content="多思考下、多记录些确实能让人平静。一时兴起搞了个博客来记录下自己的工作、生活、感悟。先勾勒下蓝图吧！后面怎么写？写哪些内容？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="下划线转驼峰">
-<meta property="og:url" content="https://xieyi123456.github.io/2021/08/09/%E4%B8%8B%E5%88%92%E7%BA%BF%E8%BD%AC%E9%A9%BC%E5%B3%B0/index.html">
+<meta property="og:title" content="先想想写啥、咋写">
+<meta property="og:url" content="https://xieyi123456.github.io/2021/07/11/%E7%AC%AC%E4%B8%80%E7%AF%87/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="举例：Hello_woRLD&#x3D;&#x3D;helloWorld 123456789101112131415161718192021222324252627public static String camelName(String name) &amp;#123;       StringBuilder result &#x3D; new StringBuilder();       if (name &#x3D;&#x3D;">
+<meta property="og:description" content="多思考下、多记录些确实能让人平静。一时兴起搞了个博客来记录下自己的工作、生活、感悟。先勾勒下蓝图吧！后面怎么写？写哪些内容？">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-08-09T05:21:33.000Z">
-<meta property="article:modified_time" content="2023-07-17T04:35:35.978Z">
+<meta property="og:image" content="https://xieyi123456.github.io/img/img1.jpg">
+<meta property="article:published_time" content="2021-07-10T17:49:30.000Z">
+<meta property="article:modified_time" content="2024-03-25T05:29:59.446Z">
 <meta property="article:author" content="XieYi">
+<meta property="article:tag" content="思考">
+<meta property="article:tag" content="生活">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xieyi123456.github.io/img/img1.jpg">
   
   
   
-  <title>下划线转驼峰 - XieYi&#39;s Blog</title>
+  <title>先想想写啥、咋写 - XieYi&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +201,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">下划线转驼峰</span>
+            <span id="subtitle">先想想写啥、咋写</span>
           
         </div>
 
@@ -208,8 +212,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2021-08-09 13:21" pubdate>
-          2021年8月9日 下午
+        <time datetime="2021-07-11 01:49" pubdate>
+          2021年7月11日 凌晨
         </time>
       </span>
     
@@ -220,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          759 字
+          369 字
         
       </span>
     
@@ -272,14 +276,35 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">下划线转驼峰</h1>
+            <h1 id="seo-header">先想想写啥、咋写</h1>
             
             
               <div class="markdown-body">
                 
-                <p>举例：Hello_woRLD&#x3D;&#x3D;helloWorld</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs plain">public static String camelName(String name) &#123;<br>       StringBuilder result = new StringBuilder();<br>       if (name == null || name.isEmpty()) &#123;<br>           return &quot;&quot;;<br>       &#125; else if (!name.contains(&quot;_&quot;)) &#123;<br>           // 不含下划线，仅将首字母小写<br>           return name.substring(0, 1).toLowerCase() + name.substring(1);<br>       &#125;<br>       // 用下划线将原始字符串分割<br>       String camels[] = name.split(&quot;_&quot;);<br>       for (String camel : camels) &#123;<br>           // 跳过原始字符串中开头、结尾的下换线或双重下划线<br>           if (camel.isEmpty()) &#123;<br>               continue;<br>           &#125;<br>           // 处理真正的驼峰片段<br>           if (result.length() == 0) &#123;<br>               // 第一个驼峰片段，全部字母都小写<br>               result.append(camel.toLowerCase());<br>           &#125; else &#123;<br>               // 其他的驼峰片段，首字母大写<br>               result.append(camel.substring(0, 1).toUpperCase());<br>               result.append(camel.substring(1).toLowerCase());<br>           &#125;<br>       &#125;<br>       return result.toString();<br>   &#125;<br></code></pre></td></tr></table></figure>
-
+                <h1 id="为什么要写博客"><a href="#为什么要写博客" class="headerlink" title="为什么要写博客"></a>为什么要写博客</h1><p>学会思考，学会总结，雁过留痕</p>
+<h2 id="平静内心"><a href="#平静内心" class="headerlink" title="平静内心"></a>平静内心</h2><p>在忙碌的生活里创造一个自我的空间，随意流浪。</p>
+<h2 id="沉淀知识"><a href="#沉淀知识" class="headerlink" title="沉淀知识"></a>沉淀知识</h2><p>做业务、学技术…还是要多总结、多思考，防止猴子掰玉米行为。</p>
+<h2 id="记录生活"><a href="#记录生活" class="headerlink" title="记录生活"></a>记录生活</h2><p>写写日记吧，回看起来，挺有意思的。</p>
+<h2 id="思考人生"><a href="#思考人生" class="headerlink" title="思考人生"></a>思考人生</h2><p>时刻清醒，时刻思考，我是谁？要去哪？该做啥？</p>
+<h1 id="写哪些内容"><a href="#写哪些内容" class="headerlink" title="写哪些内容"></a>写哪些内容</h1><p>一般的博客都会有分类、标签这两种方式来区分不同的博文，我想在这里先想好有哪些方方面面，来大致想象出可能会有的内容。</p>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><ul>
+<li>生活随笔-随意记录生活感悟</li>
+<li>吃喝玩乐-记录美好生活</li>
+<li>宝藏分享-喜欢的音乐、电影、游戏…</li>
+<li>Golang</li>
+<li>Java</li>
+<li>计算机基础-三大件</li>
+<li>数据库</li>
+<li>中间件-消息队列-es …</li>
+<li>开发框架-spring…</li>
+<li>开发工具-git、ide、linux …</li>
+</ul>
+<h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2><p>不拘一格，随便加。</p>
+<p><strong>最后，祝愿自己可以偶尔总结。</strong></p>
+<blockquote>
+<p>sticky: 100 排序置顶 tag</p>
+<p>hexo g&#x2F;s&#x2F;d&#x2F;clean</p>
+</blockquote>
 
                 
               </div>
@@ -288,29 +313,32 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%80%9D%E8%80%83/" class="print-no-link">#思考</a>
+      
+        <a href="/tags/%E7%94%9F%E6%B4%BB/" class="print-no-link">#生活</a>
+      
+    </div>
   
 </div>
 
 
               
 
-              
-                <div class="post-prevnext my-3">
-                  <article class="post-prev col-6">
-                    
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2021/08/05/a-Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title="Linux常用命令">
-                        <span class="hidden-mobile">Linux常用命令</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
               
             </div>
 

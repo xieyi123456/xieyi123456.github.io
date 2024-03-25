@@ -16,16 +16,17 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="redis 总是键值对存储。 key 总是 string。 value 有五种类型。 stringstring 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数">
+    <meta name="description" content="redis 总是键值对存储。 key 总是 string。 value 有五种类型。 string！！概述为什么要自己设计 SDS 支持任意字符 高效 string 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-数据类型">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="redis 总是键值对存储。 key 总是 string。 value 有五种类型。 stringstring 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数">
+<meta property="og:description" content="redis 总是键值对存储。 key 总是 string。 value 有五种类型。 string！！概述为什么要自己设计 SDS 支持任意字符 高效 string 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/zkHrifPgLS46UeR.png">
+<meta property="og:image" content="https://xieyioss.oss-cn-beijing.aliyuncs.com/img/image-20240325203227879.png">
 <meta property="article:published_time" content="2021-07-30T07:12:00.000Z">
-<meta property="article:modified_time" content="2023-07-17T04:35:35.953Z">
+<meta property="article:modified_time" content="2024-03-25T12:49:56.637Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="basic">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.5k 字
+          7.5k 字
         
       </span>
     
@@ -283,7 +284,10 @@
                 <p><strong>redis 总是键值对存储。</strong></p>
 <p><strong>key 总是 string。</strong></p>
 <p><strong>value 有五种类型。</strong></p>
-<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>string 数据结构是简单的 <strong>key-value</strong> 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 <strong>简单动态字符串（simple dynamic string，SDS）</strong>。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据<strong>还可以保存二进制数据</strong>，并且**获取字符串长度复杂度为 O(1)**（C 字符串为 O(N)）,除此之外，Redis 的 SDS API 是安全的，不会造成缓冲区溢出。</p>
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><h4 id="！！概述"><a href="#！！概述" class="headerlink" title="！！概述"></a>！！概述</h4><p>为什么要自己设计 SDS</p>
+<p>支持任意字符</p>
+<p>高效</p>
+<p>string 数据结构是简单的 <strong>key-value</strong> 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 <strong>简单动态字符串（simple dynamic string，SDS）</strong>。相比于 C 的原生字符串，Redis 的 SDS 不光可以保存文本数据<strong>还可以保存二进制数据</strong>，并且**获取字符串长度复杂度为 O(1)**（C 字符串为 O(N)）,除此之外，Redis 的 SDS API 是安全的，不会造成缓冲区溢出。</p>
 <p><img src="https://i.loli.net/2021/08/04/zkHrifPgLS46UeR.png" srcset="/img/loading.gif" lazyload alt="image-20210804150655994"></p>
 <p>常用命令： <strong>set,get,strlen,exists,decr,incr,setex</strong> 等等。</p>
 <p>应用场景： <strong>一般常用在需要计数的场景，比如用户的访问次数、热点文章的点赞转发数量等等。</strong></p>
@@ -299,7 +303,10 @@
 <p>通过 lrange 查看对应下标范围的列表元素：<br>127.0.0.1:6379&gt; rpush myList value1 value2 value3<br>127.0.0.1:6379&gt; lrange myList 0 1 # 查看对应下标的 list 列表， 0 为 start,1 为 end<br>127.0.0.1:6379&gt; lrange myList 0 -1 # 查看列表中的所有元素，-1 表示倒数第一<br>通过 lrange 命令，你可以基于 list 实现分页查询，性能非常高！</p>
 <p>通过 llen 查看链表长度：<br>127.0.0.1:6379&gt; llen myList</p>
 <h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p>hash 类似于 JDK1.8 前的 HashMap，**内部实现也差不多(数组 + 链表)**。不过，Redis 的 hash 做了更多优化。另外，hash 是一个 string 类型的 field 和 value 的映射表，特别适合用于存储对象，后续操作的时候，你可以直接仅仅修改这个对象中的某个字段的值。</p>
-<h4 id="渐进式-rehash（）"><a href="#渐进式-rehash（）" class="headerlink" title="渐进式 rehash（）"></a><strong>渐进式 rehash（）</strong></h4><p>hash 对象在扩容时使用了一种叫“<strong>渐进式 rehash</strong>”的方式，步骤如下：</p>
+<h4 id="渐进式-rehash（）"><a href="#渐进式-rehash（）" class="headerlink" title="渐进式 rehash（）"></a><strong>渐进式 rehash（）</strong></h4><blockquote>
+<p>而随着Redis的hash表越来越大，rehash的成本也会越来越高。Redis中实现了一种渐进式rehash的方案，他可以在哈希表rehash操作时，分多个步骤逐渐完成的方式，这样不会因为要一次性把所有元素都完成迁移而导致IO升高，线程阻塞。这个特性使得Redis可以在继续提供读写服务的同时，逐步迁移数据到新的哈希表，而不会对性能造成明显的影响。</p>
+</blockquote>
+<p>hash 对象在扩容时使用了一种叫“<strong>渐进式 rehash</strong>”的方式，步骤如下：</p>
 <p>1）计算新表 size（*2 且为 2 的幂次）、掩码，为新表 ht[1] 分配空间，让字典同时持有 ht[0] 和 ht[1] 两个哈希表。<br>2）将 rehash <strong>索引计数器变量 rehashidx</strong> 的值设置为 0，表示 rehash 正式开始。<br>3）在 rehash 进行期间，每次对字典执行添加、删除、査找、更新操作时，程序除了执行指定的操作以外，还会触发额外的 rehash 操作，在源码中的 _dictRehashStep 方法。</p>
 <p>_dictRehashStep：从名字也可以看出来，大意是 rehash 一步，也就是 rehash 一个索引位置。</p>
 <p>该方法会从 <strong>ht[0] 表的 rehashidx 索引位置上开始向后查找，找到第一个不为空的索引位置，将该索引位置的所有节点 rehash 到 ht[1]，当本次 rehash 工作完成之后，将 ht[0] 索引位置为 rehashidx 的节点清空，同时将 rehashidx 属性的值加一。</strong></p>
@@ -314,15 +321,74 @@
 <p><strong>可以基于 set 轻易实现交集、并集、差集的操作。</strong></p>
 <p>常用命令： <strong>sadd,spop,smembers,sismember,scard,sinterstore,sunion</strong> 等。</p>
 <p>应用场景: 需要存放的数据不能重复以及需要获取多个数据源交集和并集等场景。比如：你可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。Redis 可以非常方便的实现如<strong>共同关注、共同粉丝、共同喜好等功能。</strong><br>127.0.0.1:6379&gt; smembers mySet # 查看 set 中所有的元素<br>127.0.0.1:6379&gt; scard mySet # 查看 set 的长度<br>127.0.0.1:6379&gt; sismember mySet value1 # 检查某个元素是否存在 set 中，只能接收单个元素<br>127.0.0.1:6379&gt; sadd mySet2 value2 value3<br>127.0.0.1:6379&gt; sinterstore mySet3 mySet mySet2 # 获取 mySet 和 mySet2 的交集并存放在 mySet3 中</p>
-<h3 id="sorted-set"><a href="#sorted-set" class="headerlink" title="sorted set"></a>sorted set</h3><p>和 set 相比，sorted set 增加了一个<strong>权重参数 score</strong>，使得集合中的元素能够按 score 进行有序排列，还可以通过 score 的范围来获取元素的列表。有点像是 Java 中 HashMap 和 TreeSet 的结合体。</p>
+<h3 id="sorted-set"><a href="#sorted-set" class="headerlink" title="sorted set"></a>sorted set</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>数据结构转换</p>
+<p><strong>总的来说就是，当元素数量少于128，每个元素的长度都小于64字节的时候，使用ZipList（ListPack），否则，使用SkipList</strong></p>
+<p>跳表</p>
+<p>多级索引</p>
+<p>和 set 相比，sorted set 增加了一个<strong>权重参数 score</strong>，使得集合中的元素能够按 score 进行有序排列，还可以通过 score 的范围来获取元素的列表。有点像是 Java 中 HashMap 和 TreeSet 的结合体。</p>
 <p>常用命令： zadd,zcard,zscore,zrange,zrevrange,zrem 等。</p>
 <p>应用场景： 需要对数据根据某个权重进行排序的场景。比如在直播系统中，实时排行信息包含直播间在线用户列表，各种<strong>礼物排行榜，弹幕消息（可以理解为按消息维度的消息排行榜）等信息</strong>。</p>
-<h4 id="Sorted-Set-为什么同时使用字典和跳跃表？"><a href="#Sorted-Set-为什么同时使用字典和跳跃表？" class="headerlink" title="Sorted Set 为什么同时使用字典和跳跃表？"></a>Sorted Set 为什么同时使用字典和跳跃表？</h4><p>主要是为了提升性能。</p>
+<h4 id="Sorted-Set-为什么同时使用字典和跳跃表？"><a href="#Sorted-Set-为什么同时使用字典和跳跃表？" class="headerlink" title="Sorted Set 为什么同时使用字典和跳跃表？"></a>Sorted Set 为什么同时使用字典和跳跃表？</h4><blockquote>
+<p>Sorted Set 能支持范围查询，这是因为它的核心数据结构设计采用了跳表，而它又能O(1)的复杂度获取元素权重，这是因为它同时采用了哈希表进行索引。</p>
+<p>zset的数据结构，其中包含了两个成员，分别是哈希表dict和跳表zsl。</p>
+<blockquote>
+<p>dict存储 member-&gt;score 之间的映射关系，所以 ZSCORE 的时间复杂度为 O(1)。skiplist 是一个「有序链表 + 多层索引」的结构，查询元素的复杂度是 O(logN)，所以他的查询效率很高。</p>
+</blockquote>
+</blockquote>
+<p>主要是为了提升性能。</p>
 <p>单独使用字典：在执行范围型操作，比如 zrank、zrange，字典需要进行排序，至少需要 O(NlogN) 的时间复杂度及额外 O(N) 的内存空间。<br>单独使用跳跃表：根据成员查找分值操作的复杂度从 O(1) 上升为 O(logN）</p>
 <h4 id="Sorted-Set-为什么使用跳跃表，而不是红黑树？"><a href="#Sorted-Set-为什么使用跳跃表，而不是红黑树？" class="headerlink" title="Sorted Set 为什么使用跳跃表，而不是红黑树？"></a>Sorted Set 为什么使用跳跃表，而不是红黑树？</h4><p>主要有以下几个原因：<br>1）跳表的性能和红黑树差不多。<br>2）<strong>跳表更容易实现和调试</strong>。</p>
+<h4 id="实现滑动窗口限流"><a href="#实现滑动窗口限流" class="headerlink" title="实现滑动窗口限流"></a>实现滑动窗口限流</h4><p>我们就可以把login接口这个需要做限流的资源名作为key在redis中进行存储，然后value我们现在ZSET这种数据结构，把他的score设置为当前请求的时间戳，member的话建议用请求的详情的hash进行存储（或者UUID、MD5什么的），避免在并发时，时间戳一致出现scode和memberv一样导致被zadd幂等的问题。</p>
+<p><img src="https://xieyioss.oss-cn-beijing.aliyuncs.com/img/image-20240325203227879.png" srcset="/img/loading.gif" lazyload alt="image-20240325203227879"></p>
+<p>只保留在特定时间窗口内的请求记录，而丢弃窗口之外的记录。</p>
+<p>主要步骤如下： </p>
+<ol>
+<li>定义滑动窗口的时间范围，例如，窗口大小为60秒。</li>
+<li>每次收到一个请求时，我们就定义出一个zset然后存储到redis中。</li>
+<li>然后再通过ZREMRANGEBYSCORE命令来删除分值小于窗口起始时间戳（当前时间戳-60s）的数据。</li>
+<li>最后，再使用ZCARD命令来获取有序集合中的成员数量，即在窗口内的请求量。</li>
+</ol>
 <h3 id="bitmap"><a href="#bitmap" class="headerlink" title="bitmap"></a>bitmap</h3><p>bitmap 存储的是连续的二进制数字（0 和 1），通过 bitmap, 只需要一个 bit 位来表示某个元素对应的值或者状态，key 就是对应元素本身 。我们知道 8 个 bit 可以组成一个 byte，所以 bitmap 本身会极大的节省储存空间。</p>
 <p>常用命令： setbit 、getbit 、bitcount、bitop</p>
 <p>应用场景： 适合需要保存状态信息（比如是否签到、是否登录…）并需要进一步对这些信息进行分析的场景。比如<strong>用户签到情况、活跃用户情况、用户行为统计（比如是否点赞过某个视频）</strong>。</p>
+<h3 id="redis-还能用来做什么"><a href="#redis-还能用来做什么" class="headerlink" title="redis 还能用来做什么"></a>redis 还能用来做什么</h3><p>Redis最主要的功能就是拿来做缓存，来提升系统的性能，但是除了做缓存以外，他还能做很多事（但是，能做并不代表就适合，并不代表就一定要用它）：</p>
+<p>消息队列：Redis 支持发布&#x2F;订阅模式和Stream，可以作为轻量级消息队列使用，用于异步处理任务或处理高并发请求。</p>
+<p>排行榜：利用Redis 的有序集合和列表结构，可以成为设计实时排行榜的绝佳选择，例如各类热门排行榜、热门商品列表等。</p>
+<p>分布式锁：Redis 的单线程特性可以保证多个客户端之间对同一把锁的操作是原子性的，可以轻松实现分布式锁，用于控制多个进程对共享资源的访问。</p>
+<p>地理位置应用：Redis 支持GEO，支持地理位置定位和查询，可以存储地理位置信息并通过 Redis 的查询功能获取附近的位置信息。</p>
+<p>分布式限流：Redis提供了令牌桶和漏桶算法的实现，可以用于实现分布式限流。</p>
+<p>分布式Session：可以使用Redis实现分布式Session管理，保证多台服务器之间用户的会话状态同步。</p>
+<p>布隆过滤器：Redis提供了布隆过滤器（Bloom Filter）数据结构的实现，可以高效地检测一个元素是否存在于一个集合中</p>
+<h3 id="redis-key-设计原则"><a href="#redis-key-设计原则" class="headerlink" title="redis key 设计原则"></a>redis key 设计原则</h3><p>key<br>可读性：一个Key应该具有比较好的可读性，让人能看得懂是什么意思，而不是含糊不清。key 名称以 key 所代表的 value 类型结尾，以提高可读性。例如：user:basic.info:userid:string。</p>
+<p>简洁性：Key 应该保持简洁，避免过长的命名，以节省内存和提高性能。一个好的做法是使用短、有意义的 Key，但也不要过于简单以避免与其他 Key 冲突。</p>
+<p>避免特殊字符：避免在 Key 中使用特殊字符，以确保 Key 的可读性和可操作性。命名中尽量只包含：大小写字母、数字、竖线、下划线、英文点号(.)和英文半角冒号(:)。</p>
+<p>命名空间：使用命名空间来区分不同部分的 Key。例如，可以为用户数据使用 “user:” 前缀，为缓存数据使用 “cache:” 前缀。</p>
+<p>长度限制：避免在 Key 的长度过长，会占用内存空间。</p>
+<p>value<br>数据类型选择：根据数据的特性选择合适的数据格式。Redis 支持字符串、列表、哈希、集合和有序集合等多种数据类型，选择合适的数据格式可以提高操作效率。</p>
+<p>避免大Key：如果Value很大，那么对应的Key就称之为大Key，大Key会带来很多问题应该尽量避免。可以尝试将大数据分割为多个小 Value，以提高性能和降低内存使用。</p>
+<p>过期时间：为 Value 设置适当的过期时间以自动清理不再需要的数据，以减少内存占用。</p>
+<p>压缩：如果数据具有可压缩性，可以在存储之前进行压缩，以减少内存使用。</p>
+<p>合理控制和使用数据结构内存编码优化配置：例如 ziplist 是一种特殊的数据结构，它可以将小型列表、哈希表和有序集合存储在一个连续的内存块中，从而节省了内存空间。但由于 ziplist 没有索引，因此在对 ziplist 进行查找、插入或删除操作时，需要进行线性扫描，这可能会导致性能下降。在实际应用中，应该根据具体情况来决定是否使用 ziplist。如果数据量较小且需要频繁进行遍历操作，那么使用 ziplist 可能是一个不错的选择。但是，如果数据量较大且需要频繁进行插入、删除或查找操作，那么使用 ziplist 可能会影响性能，应该考虑使用其他数据结构来代替。</p>
+<h3 id="Lua-和-redis-事务"><a href="#Lua-和-redis-事务" class="headerlink" title="Lua 和 redis 事务"></a>Lua 和 redis 事务</h3><p>原子性</p>
+<p><strong>Redis的事务在执行过程中，如果有某一个命令失败了，是不影响后续命令的执行的，而Lua脚本中，如果执行过程中某个命令执行失败了，是会影响后续命令执行的。</strong></p>
+<p>交互</p>
+<p>在Redis的事务执行时，每一条命令都需要和Redis服务器进行一次交互，我们可以在Redis事务过程中，MULTI 和 EXEC 之间发送多个 Redis 命令给到Redis服务器，这些命令会被服务器缓存起来，但并不会立即执行。但是每一条命令的提交都需要进行一次网络交互。</p>
+<p>而Lua脚本则不需要，只需要一次性的把整个脚本提交给Redis即可。网络交互比事务要少。</p>
+<p>前后依赖</p>
+<p>在 Redis 的事务中，事务内的命令都是独立执行的，并且在没有执行EXEC命令之前，命令是没有被真正执行的，所以后续命令是不会也不能依赖于前一个命令的结果的。</p>
+<p>而在Lua 脚本中是可以依赖前一个命令的结果的，Lua 脚本中的多个命令是依次执行的，我们可以利用前一个命令的结果进行后续的处理。</p>
+<p>流程编排</p>
+<p>借助Lua脚本，我们可以实现非常丰富的各种分支流程控制，以及各种运算相关操作。而Redis的事务本身是不支持这些操作的。</p>
+<blockquote>
+<p>不支持回滚主要的原因是支持回滚将对 Redis 的简洁性和性能产生重大影响。</p>
+</blockquote>
+<h3 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h3><p>所谓乐观锁，其实就是基于CAS的机制，CAS的本质是Compare And Swap，就是需要知道一个key在修改前的值，去进行比较。</p>
+<p>在Redis中，想要实现这个功能，我们可以依赖 WATCH 命令。这个命令一旦运行，他会确保只有在 WATCH 监视的键在调用 EXEC 之前没有改变时，后续的事务才会执行。</p>
+<h3 id="实现-redis-锁"><a href="#实现-redis-锁" class="headerlink" title="实现 redis 锁"></a>实现 redis 锁</h3><p>一个分布式锁有很多基本要求，比如说锁的互斥性、可重入性、锁的性能等问题。</p>
+<p>对于锁的互斥性，可以借助<strong>setnx</strong>来保证，因为这个操作本身就是一个原子性操作，并且结合Redis的单线程的机制，就可以保证互斥性。</p>
+<p>可重入：value 是代表客户端的唯一值，例如 uuid，logID</p>
+<p>有效时间：超时时间 10s</p>
+<p>wait time：每次 sleep 200 ms，自旋 1s</p>
 
                 
               </div>

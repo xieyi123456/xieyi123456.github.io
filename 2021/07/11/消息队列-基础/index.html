@@ -18,21 +18,24 @@
   
     <meta name="description" content="消息队列基础的知识点记录">
 <meta property="og:type" content="article">
-<meta property="og:title" content="消息队列 基础">
+<meta property="og:title" content="消息队列">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/11/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97-%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
 <meta property="og:description" content="消息队列基础的知识点记录">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xieyioss.oss-cn-beijing.aliyuncs.com/img/image-20240325164457080.png">
+<meta property="og:image" content="https://xieyioss.oss-cn-beijing.aliyuncs.com/img/image-20240325171236046.png">
 <meta property="article:published_time" content="2021-07-10T17:50:24.000Z">
-<meta property="article:modified_time" content="2024-03-21T14:30:03.086Z">
+<meta property="article:modified_time" content="2024-03-25T13:33:53.531Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="基础">
 <meta property="article:tag" content="消息队列">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xieyioss.oss-cn-beijing.aliyuncs.com/img/image-20240325164457080.png">
   
   
   
-  <title>消息队列 基础 - XieYi&#39;s Blog</title>
+  <title>消息队列 - XieYi&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">消息队列 基础</span>
+            <span id="subtitle">消息队列</span>
           
         </div>
 
@@ -222,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          5.4k 字
         
       </span>
     
@@ -274,12 +277,133 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">消息队列 基础</h1>
+            <h1 id="seo-header">消息队列</h1>
             
             
               <div class="markdown-body">
                 
-                
+                <p>消息队列是一种中间件。</p>
+<p><strong>中间件就是一类为应用软件服务的软件，应用软件是为用户服务的，用户不会接触或者使用到中间件。</strong></p>
+<p>除了消息队列之外，常见的中间件还有 RPC 框架、分布式组件、HTTP 服务器、任务调度框架、配置中心、数据库层的分库分表工具和数据迁移工具等等。</p>
+<p>随着分布式和微服务系统的发展，消息队列在系统设计中有了更大的发挥空间，使用消息队列可以<strong>降低系统耦合性、实现任务异步、有效地进行流量削峰</strong>，是分布式和微服务系统中重要的组件之一。</p>
+<h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><p><strong>通过异步处理提高系统性能（减少响应所需时间）</strong></p>
+<p>项目：</p>
+<p>元数据变更</p>
+<p>记录变更</p>
+<p>强制解除（先返回解除中，异步消费消息同步元数据，再发消息返回成功）</p>
+<p><strong>削峰&#x2F;限流</strong></p>
+<p><strong>降低系统耦合性。</strong></p>
+<p>不同微服务都来消费元数据，数据变更消息，workflow、数据集等。</p>
+<p>生产者（客户端）发送消息到消息队列中去，接受者（服务端）处理消息，需要消费的系统直接去消息队列取消息进行消费即可而不需要和其他系统有耦合，这显然也提高了系统的扩展性。</p>
+<p><strong>消息队列使用发布-订阅模式工作，消息发送者（生产者）发布消息，一个或多个消息接受者（消费者）订阅消息。</strong> 从上图可以看到<strong>消息发送者（生产者）和消息接受者（消费者）之间没有直接耦合</strong>，消息发送者将消息发送至分布式消息队列即结束对消息的处理，消息接受者从分布式消息队列获取该消息后进行后续处理，并不需要知道该消息从何而来。<strong>对新增业务，只要对该类消息感兴趣，即可订阅该消息，对原有系统和业务没有任何影响，从而实现网站业务的可扩展性设计</strong>。</p>
+<p>消息接受者对消息进行过滤、处理、包装后，构造成一个新的消息类型，将消息继续发送出去，等待其他消息接受者订阅该消息。因此基于事件（消息对象）驱动的业务架构可以是一系列流程。</p>
+<p><strong>分布式事务</strong></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ul>
+<li><strong>系统可用性降低：</strong> 系统可用性在某种程度上降低，为什么这样说呢？在加入 MQ 之前，你不用考虑消息丢失或者说 MQ 挂掉等等的情况，但是，引入 MQ 之后你就需要去考虑了！</li>
+<li><strong>系统复杂性提高：</strong> 加入 MQ 之后，你需要保证消息没有被<strong>重复消费、处理消息丢</strong>失的情况、保证消息传递的顺序性等等问题！</li>
+<li><strong>一致性问题：</strong> 我上面讲了消息队列可以实现异步，消息队列带来的异步确实可以提高系统响应速度。但是，万一消息的真正消费者并没有正确消费消息怎么办？这样就会导致数据不一致的情况了!</li>
+</ul>
+<h2 id="选型"><a href="#选型" class="headerlink" title="选型"></a>选型</h2><h3 id="持久化和可靠性"><a href="#持久化和可靠性" class="headerlink" title="持久化和可靠性"></a>持久化和可靠性</h3><ul>
+<li>RabbitMQ：RabbitMQ采用消息持久化机制，消息被持久化到磁盘上，保证消息的可靠性。支持多种消息确认机制和事务，可以保证消息的可靠传递。</li>
+<li>RocketMQ：RocketMQ具有强大的持久化和可靠性特性，支持同步刷盘和异步复制机制，能够提供高可靠性的消息传递保证。</li>
+<li>Kafka：Kafka以持久化的方式存储消息，消息被写入磁盘上的日志文件。通过分区和复制机制，提供了高可靠性和持久化存储的能力。</li>
+</ul>
+<h3 id="吞吐量"><a href="#吞吐量" class="headerlink" title="吞吐量"></a>吞吐量</h3><ul>
+<li>RabbitMQ：RabbitMQ的吞吐量通常较低，适合中小规模的应用场景。RabbitMQ适用于中小规模的应用场景，通常能够处理万级到十万级的消息量级。它主要侧重于消息的可靠性传递和消息的持久化，对于高吞吐量的需求可能需要进行优化和调整。</li>
+<li>RocketMQ：RocketMQ具有较高的吞吐量，可以达到百万级消息的处理能力。它在分布式事务和大规模消息传递场景下表现出色。</li>
+<li>Kafka：Kafka是以高吞吐量而著称的消息队列系统，能够处理百万级甚至更高的消息量级。Kafka适用于大规模数据处理、实时流处理和日志处理等高吞吐量场景。</li>
+</ul>
+<h3 id="响应时间"><a href="#响应时间" class="headerlink" title="响应时间"></a>响应时间</h3><p><img src="https://xieyioss.oss-cn-beijing.aliyuncs.com/img/image-20240325164457080.png" srcset="/img/loading.gif" lazyload alt="image-20240325164457080"></p>
+<h3 id="社区及生态"><a href="#社区及生态" class="headerlink" title="社区及生态"></a>社区及生态</h3><p>rabbitmq&lt;rocketmq&lt;kafka</p>
+<ul>
+<li>RabbitMQ：RabbitMQ拥有丰富的插件和工具生态系统，具有广泛的开发者社区支持。</li>
+<li>RocketMQ：RocketMQ在国内得到广泛应用，具有丰富的阿里巴巴生态系统和社区支持。</li>
+<li>Kafka：Kafka拥有活跃的开源社区和广泛的生态系统，被许多大型公司广泛采用。</li>
+</ul>
+<h3 id="设计理念"><a href="#设计理念" class="headerlink" title="设计理念"></a>设计理念</h3><ul>
+<li>RabbitMQ：RabbitMQ是一个基于AMQP（高级消息队列协议）的开源消息中间件，强调易用性和灵活性，支持多种消息模式和可靠的消息传递。</li>
+<li>RocketMQ：RocketMQ是阿里巴巴开源的分布式消息中间件，最初是为了满足阿里巴巴内部的海量数据处理需求而设计的，具有高吞吐量和低延迟的特点。在2016年阿里巴巴将RocketMQ捐赠给了Apache软件基金会。</li>
+<li>Kafka：Kafka是由LinkedIn开发的分布式流处理平台，主要用于高吞吐量的实时数据流处理，以持久化的方式存储和处理数据。在2011年Kafka成为Apache开源项目。</li>
+</ul>
+<h3 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h3><ul>
+<li>RabbitMQ：RabbitMQ采用队列（Queue）模型，消息被发送到队列中，消费者从队列中接收消息并进行处理。</li>
+<li>RocketMQ：RocketMQ采用主题（Topic）和标签（Tag）的模型，消息被发布到主题上，消费者可以根据主题和标签进行订阅和过滤消息。</li>
+<li>Kafka：Kafka采用发布-订阅的模型，消息被发布到主题上，多个消费者可以订阅同一个主题并独立消费消息。</li>
+</ul>
+<h3 id="消息模式"><a href="#消息模式" class="headerlink" title="消息模式"></a>消息模式</h3><p>主流的消息中间件的传输模型主要为<strong>点对点模型和发布订阅</strong>模型。具体来说：</p>
+<ol>
+<li><strong>RabbitMQ：</strong></li>
+</ol>
+<ul>
+<li>发布-订阅模式：RabbitMQ支持发布-订阅模式，其中生产者将消息发布到交换机（Exchange），然后交换机将消息传递给多个绑定（Binding）到它的队列。消费者可以独立地从队列中接收消息。</li>
+<li>点对点模式：RabbitMQ也支持点对点模式，其中生产者将消息发送到指定的队列，然后消费者从该队列中接收消息。每条消息只能被一个消费者接收和处理。</li>
+</ul>
+<p><strong>2.RocketMQ：</strong></p>
+<ul>
+<li>发布-订阅模式：RocketMQ支持发布-订阅模式，其中生产者将消息发送到指定的主题（Topic），然后消费者订阅感兴趣的主题。RocketMQ的订阅模式支持多种订阅方式，如广播模式和集群模式，可以实现消息的多播或负载均衡消费。</li>
+<li>队列模式：RocketMQ还支持队列模式，其中生产者将消息发送到指定的队列，然后消费者从指定的队列中接收消息。多个消费者可以并行地从同一个队列消费消息。</li>
+</ul>
+<p><strong>3.Kafka：</strong></p>
+<ul>
+<li>发布-订阅模式：Kafka采用发布-订阅模式，其中生产者将消息发布到指定的主题（Topic），然后消费者订阅感兴趣的主题。Kafka的订阅模式支持多个消费者组，每个消费者组都可以独立地消费消息，实现了高吞吐量和水平扩展。</li>
+<li>分区模式：Kafka通过分区将主题划分为多个分区，每个分区在物理上对应一个独立的日志文件。生产者将消息发送到指定分区，消费者可以按照分区进行并行消费。这种分区模式使得Kafka能够实现水平扩展和高吞吐量</li>
+</ul>
+<h2 id="RocketMQ"><a href="#RocketMQ" class="headerlink" title="RocketMQ"></a>RocketMQ</h2><h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p><img src="https://xieyioss.oss-cn-beijing.aliyuncs.com/img/image-20240325171236046.png" srcset="/img/loading.gif" lazyload alt="image-20240325171236046"></p>
+<p>RocketMQ主要由Producer、Broker和Consumer三部分组成。</p>
+<ul>
+<li>Producer：消息生产者，负责将消息发送到Broker。</li>
+<li>Broker：<strong>消息中转服务器</strong>，负责存储和转发消息。RocketMQ支持多个Broker构成集群，每个Broker都拥有独立的存储空间和消息队列。</li>
+<li>Consumer：消息消费者，负责从Broker消费消息。</li>
+</ul>
+<p>NameServer：名称服务，负责维护Broker的元数据信息，包括Broker地址、Topic和Queue等信息。Producer和Consumer在启动时需要连接到NameServer获取Broker的地址信息，心跳包检测 boker 状态。</p>
+<p>Topic：<strong>消息主题，是消息的逻辑分类单位</strong>。Producer将消息发送到特定的Topic中，Consumer从指定的Topic中消费消息。</p>
+<p>Message Queue：消息队列，<strong>是Topic的物理实现</strong>。一个Topic可以有多个Queue，<strong>每个Queue都是独立的存储单元。</strong>Producer发送的消息会被存储到对应的Queue中，Consumer从指定的Queue中消费消息。</p>
+<h3 id="事务消息"><a href="#事务消息" class="headerlink" title="事务消息"></a>事务消息</h3><p>发消息前有事务，事务和发消息要保持一致性，不推荐将发消息耦合性在事务中，可用事务消息。</p>
+<p>在发送事务消息时，首先向RocketMQ Broker发送一条“half消息”（即半消息），半消息将被存储在Broker端的事务消息日志中，但是这个消息还不能被消费者消费。</p>
+<p>接下来，在半消息发送成功后，应用程序通过执行本地事务来确定是否要提交该事务消息。</p>
+<p>如果本地事务执行成功，就会通知RocketMQ Broker提交该事务消息，使得该消息可以被消费者消费；否则，就会通知RocketMQ Broker回滚该事务消息，该消息将被删除，从而保证消息不会被消费者消费。</p>
+<h3 id="顺序消费"><a href="#顺序消费" class="headerlink" title="顺序消费"></a>顺序消费</h3><p>和Kafka只支持同一个Partition内消息的顺序性一样，RocketMQ中也提供了基于队列(分区)的顺序消费。即同一个队列内的消息可以做到有序，但是不同队列内的消息是无序的</p>
+<p><strong>总结下来就是三次加锁，先锁定Broker上的MessageQueue，确保消息只会投递到唯一的消费者，对本地的MessageQueue加锁，确保只有一个线程能处理这个消息队列。对存储消息的ProcessQueue加锁，确保在重平衡的过程中不会出现消息的重复消费。</strong></p>
+<p>性能较差，非必要不用。</p>
+<h3 id="保证消息不丢失"><a href="#保证消息不丢失" class="headerlink" title="保证消息不丢失"></a>保证消息不丢失</h3><p>broker 集群部署，一主多从</p>
+<p>在消费者端，需要确保在消息拉取并消费成功之后再给Broker返回ACK，就可以保证消息不丢失了，如果这个过程中Broker一直没收到ACK，那么就可以重试。</p>
+<p>所以，在消费者的代码中，一定要在业务逻辑的最后一步return ConsumeConcurrentlyStatus.CONSUME_SUCCESS; 当然，也可以先把数据保存在数据库中，就返回，然后自己再慢慢处理。</p>
+<p>但是，需要注意的是RocketMQ和Kafka一样，只能最大限度的保证消息不丢失，但是没办法做到100%保证不丢失。</p>
+<p>业务：</p>
+<p>16次重试，都消费失败就丢失。kafka 不支持重试</p>
+<p>也会持久化消息。</p>
+<h3 id="延时消息"><a href="#延时消息" class="headerlink" title="延时消息"></a>延时消息</h3><p>kafka 不支持</p>
+<p>RocketMQ的延迟消息并不是支持任意时长的延迟的，它只支持（5.0之前）：1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h这几个时长。</p>
+<p>另外，RocketMQ 5.0中新增了基于<strong>时间轮</strong>实现的定时消息。</p>
+<p>前面提到的延迟消息，并使用Timer定时器来实现延迟投递。但是，由于Timer定时器有一定的缺陷，比如在定时器中有大量任务时，会导致定时器的性能下降，从而影响消息投递。</p>
+<p>因此，在RocketMQ 5.0中，采用了一种新的实现方式：基于时间轮的定时消息。时间轮是一种高效的定时器算法，能够处理大量的定时任务，并且能够在O(1)时间内找到下一个即将要执行的任务，因此能够提高消息的投递性能。</p>
+<p>并且，基于时间轮的定时消息能够支持更高的消息精度，可以实现秒级、毫秒级甚至更小时间粒度的定时消息。</p>
+<p>具体实现方式如下：</p>
+<p>-<br>  RocketMQ在Broker端使用一个时间轮来管理定时消息，将消息按照过期时间<strong>放置在不同的槽位</strong>中，这样可以大幅减少定时器任务的数量。</p>
+<ul>
+<li>时间轮的每个槽位对应一个时间间隔，比如1秒、5秒、10秒等，每次时间轮的滴答，槽位向前移动一个时间间隔。</li>
+<li>当Broker接收到定时消息时，根据消息的过期时间计算出需要投递的槽位，并将消息放置到对应的槽位中。</li>
+<li>当时间轮的滴答到达消息的过期时间时，时间轮会将该槽位中的所有消息投递给消费者。</li>
+</ul>
+<h3 id="消费堆积"><a href="#消费堆积" class="headerlink" title="消费堆积"></a>消费堆积</h3><p>生产</p>
+<p>消费</p>
+<p>增加消费者数量：消息堆积了，消费不过来了，<strong>那就把消费者的数量增加一下</strong>，让更多的实例来消费这些消息。</p>
+<p>提升消费者消费速度：消费者消费的慢可能是消息堆积的主要原因，想办法提升消费速度，比如引入线程池、本地消息存储后即返回成功后续再慢慢消费等。</p>
+<p>降低生产者的生产速度：如果生产者可控的话，可以让生产者生成消息的速度慢一点。</p>
+<p>清理过期消息：有一些过期消息、或者一直无法成功的消息，在业务做评估之后，如果无影响或者影响不大，其实是可以清理的。</p>
+<p>调整 RocketMQ 的配置参数：RocketMQ 提供了很多可配置的参数，例如消息消费模式、消息拉取间隔时间等，可以根据实际情况来调整这些参数，从而优化消息消费的效率。</p>
+<p>增加 Topic 队列数：如果一个 Topic 的队列数比较少，那么就容易出现消息堆积的情况。可以通过增加队列数来提高消息的处理并发度，从而减少消息堆积。</p>
+<h3 id="消费模式"><a href="#消费模式" class="headerlink" title="消费模式"></a>消费模式</h3><p>RocketMQ 支持两种消息模式：广播消费（ Broadcasting ）和集群消费（ Clustering ）。</p>
+<p>广播消费：当使用广播消费模式时，RocketMQ 会将每条消息推送给集群内所有的消费者，保证消息至少被每个消费者消费一次。</p>
+<p>集群消费：当使用集群消费模式时，RocketMQ 认为任意一条消息只需要被集群内的任意一个消费者处理即可。</p>
+<p>集群模式下，每一条消息都只会被分发到一台机器上处理。但是不保证每一次失败重投的消息路由到同一台机器上。一般来说，用集群消费的更多一些。</p>
+<h3 id="推拉"><a href="#推拉" class="headerlink" title="推拉"></a>推拉</h3><p>MQ的消费模式可以大致分为两种，一种是推Push，一种是拉Pull</p>
+<p>Push是服务端主动推送消息给客户端，Pull是客户端需要主动到服务端轮询获取数据。</p>
+<p>他们各自有各自的优缺点，推优点是及时性较好，但如果客户端没有做好流控，一旦服务端推送大量消息到客户端时，就会导致客户端消息堆积甚至崩溃。</p>
+<p>拉优点是客户端可以依据自己的消费能力进行消费，但是频繁拉取会给服务端造成压力，并且可能会导致消息消费不及时。</p>
+<p>RocketMQ既提供了Push模式也提供了Pull模式，开发者可以自行选择。</p>
+<p>一般来说，拉的模式可以削峰。</p>
+
                 
               </div>
             
@@ -328,9 +452,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/07/30/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2%EF%BC%88%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%89/" title="最长回文子串（子序列）">
+                      <a href="/2021/07/30/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2%EF%BC%88%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%89/" title="leetcode 子串、子序列">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">最长回文子串（子序列）</span>
+                        <span class="hidden-mobile">leetcode 子串、子序列</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

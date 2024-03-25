@@ -16,18 +16,18 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="主从复制主从复制，是指将一台 Redis 服务器的数据，复制到其他的 Redis 服务器。前者称为主节点(master)，后者称为从节点(slave)；数据的复制是单向的，只能由主节点到从节点。 slaveof 命令 部分复制：偏移量，积压缓冲区，服务器运行 id 主从复制的作用 数据冗余：主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。 故障恢复：当主节点出现问题时，可以由从节点提供">
+    <meta name="description" content="概述Redis有三种主要的集群模式，用于在分布式环境中实现高可用性和数据复制。这些集群模式分别是：主从复制（Master-Slave Replication）、哨兵模式（Sentinel）和Redis Cluster模式。 主从模式主从复制是Redis最简单的集群模式。这个模式主要是为了解决单点故障的问题，所以将数据复制多个副本中，这样即使有一台服务器出现故障，其他服务器依然可以继续提供服务。 主">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-集群">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Redis-%E9%9B%86%E7%BE%A4/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="主从复制主从复制，是指将一台 Redis 服务器的数据，复制到其他的 Redis 服务器。前者称为主节点(master)，后者称为从节点(slave)；数据的复制是单向的，只能由主节点到从节点。 slaveof 命令 部分复制：偏移量，积压缓冲区，服务器运行 id 主从复制的作用 数据冗余：主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。 故障恢复：当主节点出现问题时，可以由从节点提供">
+<meta property="og:description" content="概述Redis有三种主要的集群模式，用于在分布式环境中实现高可用性和数据复制。这些集群模式分别是：主从复制（Master-Slave Replication）、哨兵模式（Sentinel）和Redis Cluster模式。 主从模式主从复制是Redis最简单的集群模式。这个模式主要是为了解决单点故障的问题，所以将数据复制多个副本中，这样即使有一台服务器出现故障，其他服务器依然可以继续提供服务。 主">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/05/HeojUDSBxl2mPvg.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/GfF65HaBPXZeYUD.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/LwtvuDC3nEzQmjl.png">
 <meta property="article:published_time" content="2021-07-30T07:12:48.000Z">
-<meta property="article:modified_time" content="2023-07-17T04:35:35.963Z">
+<meta property="article:modified_time" content="2024-03-25T09:37:10.920Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="集群">
 <meta name="twitter:card" content="summary_large_image">
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.7k 字
+          5k 字
         
       </span>
     
@@ -282,7 +282,36 @@
             
               <div class="markdown-body">
                 
-                <h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><p>主从复制，是指将一台 Redis 服务器的数据，复制到其他的 Redis 服务器。前者称为主节点(master)，后者称为从节点(slave)；数据的复制是单向的，只能由主节点到从节点。</p>
+                <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Redis有三种主要的集群模式，用于在分布式环境中实现高可用性和数据复制。这些集群模式分别是：主从复制（Master-Slave Replication）、哨兵模式（Sentinel）和Redis Cluster模式。</p>
+<h3 id="主从模式"><a href="#主从模式" class="headerlink" title="主从模式"></a>主从模式</h3><p>主从复制是Redis最简单的集群模式。这个模式主要是为了解决单点故障的问题，所以将数据复制多个副本中，这样即使有一台服务器出现故障，其他服务器依然可以继续提供服务。</p>
+<p>主从模式中，包括一个主节点（Master）和一个或多个从节点（Slave）。主节点负责处理所有写操作和读操作，而从节点则复制主节点的数据，并且只能处理读操作。当主节点发生故障时，可以将一个从节点升级为主节点，实现故障转移（需要手动实现）。</p>
+<p>缺点：无法自动故障转移</p>
+<h3 id="哨兵模式"><a href="#哨兵模式" class="headerlink" title="哨兵模式"></a>哨兵模式</h3><p>为了解决主从模式的无法自动容错及恢复的问题，Redis引入了一种哨兵模式的集群架构。</p>
+<p>哨兵模式是在主从复制的基础上加入了哨兵节点。哨兵节点是一种特殊的Redis节点，用于监控主节点和从节点的状态。当主节点发生故障时，哨兵节点可以自动进行故障转移，选择一个合适的从节点升级为主节点，并通知其他从节点和应用程序进行更新。</p>
+<h3 id="集群模式"><a href="#集群模式" class="headerlink" title="集群模式"></a>集群模式</h3><p>Redis Cluster是Redis中推荐的分布式集群解决方案。它将数据自动分片到多个节点上，每个节点负责一部分数据。 </p>
+<p>Redis Cluster采用主从复制模式来提高可用性。每个分片都有一个主节点和多个从节点。主节点负责处理写操作，而从节点负责复制主节点的数据并处理读请求。</p>
+<p>Redis Cluster能够自动检测节点的故障。当一个节点失去连接或不可达时，Redis Cluster会尝试将该节点标记为不可用，并从可用的从节点中提升一个新的主节点。</p>
+<p>Redis Cluster是适用于大规模应用的解决方案，它提供了更好的横向扩展和容错能力。它自动管理数据分片和故障转移，减少了运维的负担。</p>
+<p>Cluster模式的特点是数据分片存储在不同的节点上，每个节点都可以单独对外提供读写服务。不存在单点故障的问题。</p>
+<p>项目：30 分片，单实例 2000MB</p>
+<h4 id="数据分片"><a href="#数据分片" class="headerlink" title="数据分片"></a>数据分片</h4><p>Redis的数据分片（sharding）是一种将一个Redis数据集分割成多个部分，分别存储在不同的Redis节点上的技术。它可以用于将一个单独的Redis数据库扩展到多个物理机器上，从而提高Redis集群的性能和可扩展性。</p>
+<p>Redis数据分片的实现方式通常是将数据按照某种规则（例如，key的hash值）分配到不同的节点上。当客户端想要访问某个key时，它会先计算出这个key应该存储在哪个节点上，然后直接连接到该节点进行操作。因此，对于客户端而言，Redis集群就像是一个大型的、统一的数据库，而不需要关心数据的实际分布情况。</p>
+<p>在Redis的Cluster 集群模式中，使用哈希槽（hash slot）的方式来进行数据分片，将整个数据集划分为多个槽，每个槽分配给一个节点。客户端访问数据时，先计算出数据对应的槽，然后直接连接到该槽所在的节点进行操作。Redis Cluster还提供了自动故障转移、数据迁移和扩缩容等功能，能够比较方便地管理一个大规模的Redis集群。</p>
+<p>Redis Cluster将整个数据集划分为<strong>16384</strong>（2 的 14 次方）个槽，每个槽都有一个编号（0~16383），集群的每个节点可以负责多个hash槽，客户端访问数据时，先根据key计算出对应的槽编号，然后根据槽编号找到负责该槽的节点，向该节点发送请求。</p>
+<p>在 Redis 的每一个节点上，都有这么两个东西，一个是槽（slot），它的的取值范围是：0-16383。还有一个就是 cluster，可以理解为是一个集群管理的插件。当我们的存取的 Key 的时候，Redis 会根据 CRC16 算法得出一个结果，然后把结果对 16384 求余数，这样每个 key 都会对应一个编号在 0-16383 之间的哈希槽，通过这个值，去找到对应的插槽所对应的节点，然后直接自动跳转到这个对应的节点上进行存取操作。</p>
+<h4 id="Redis-通信"><a href="#Redis-通信" class="headerlink" title="Redis 通信"></a>Redis 通信</h4><p>Redis 使用自己设计的一种文本协议进行客户端与服务端之间的通信——RESP（REdis Serialization Protocol），这种协议简单、高效，易于解析，被广泛使用。</p>
+<p>RESP 协议基于 TCP 协议，采用请求&#x2F;响应模式。</p>
+<h3 id="redis-memcached"><a href="#redis-memcached" class="headerlink" title="redis memcached"></a>redis memcached</h3><p>Redis 和 Memcached 都是常见的缓存服务器，它们的主要区别包括以下几个方面：</p>
+<ul>
+<li>数据结构不同：Redis 提供了多种数据结构，如字符串、哈希表、列表、集合、有序集合等，而 Memcached 只支持简单的键值对存储。</li>
+<li>持久化方式不同：Redis 支持多种持久化方式，如 RDB 和 AOF，可以将数据持久化到磁盘上；而 Memcached 不支持持久化。</li>
+<li>数据分片方式不同：Redis 使用哈希槽分片，可以实现数据的自动分片和负载均衡；而 Memcached 只能手动分片。</li>
+<li>处理数据的方式不同：Redis 使用单线程处理数据请求，支持事务、Lua 脚本等高级功能；而 Memcached 使用多线程处理数据请求，只支持基本的 GET、SET 操作。</li>
+<li>协议不同：Redis 使用自己的协议，支持多个数据库，可以使用密码进行认证；而 Memcached 使用文本协议，只支持一个默认数据库。</li>
+<li>内存管理方式不同：Redis 的内存管理比 Memcached 更加复杂，支持更多的内存优化策略。</li>
+</ul>
+<p>综上所述，Redis 和 Memcached 有着不同的设计理念和应用场景。Redis 适用于数据结构复杂、需要高级功能和数据持久化的场景；而 Memcached 则适用于简单的键值存储场景。</p>
+<h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><p>主从复制，是指将一台 Redis 服务器的数据，复制到其他的 Redis 服务器。前者称为主节点(master)，后者称为从节点(slave)；数据的复制是单向的，只能由主节点到从节点。</p>
 <p>slaveof 命令</p>
 <p>部分复制：偏移量，积压缓冲区，服务器运行 id</p>
 <h3 id="主从复制的作用"><a href="#主从复制的作用" class="headerlink" title="主从复制的作用"></a>主从复制的作用</h3><ul>
@@ -295,7 +324,7 @@
 <p>如果主库发现从库传来的复制 id 和自己的 replid、replid2 都不同，或者复制偏移不在复制积压缓冲中，则判定需要进行全量复制。</p>
 <p>master 发送 fullresync 响应，附带 replid 及复制偏移。然后， master 根据需要构建 rdb，并将 rdb 及复制缓冲发送给 slave。</p>
 <p><img src="https://i.loli.net/2021/08/05/HeojUDSBxl2mPvg.png" srcset="/img/loading.gif" lazyload alt="image-20210805212150709"></p>
-<h2 id="哨兵模式"><a href="#哨兵模式" class="headerlink" title="哨兵模式"></a>哨兵模式</h2><p>Redis 的主从复制模式下，一旦主节点由于故障不能提供服务，需要手动将从节点晋升为主节点，同时还要通知客户端更新主节点地址，这种故障处理方式从一定程度上是无法接受的。</p>
+<h2 id="哨兵模式-1"><a href="#哨兵模式-1" class="headerlink" title="哨兵模式"></a>哨兵模式</h2><p>Redis 的主从复制模式下，一旦主节点由于故障不能提供服务，需要手动将从节点晋升为主节点，同时还要通知客户端更新主节点地址，这种故障处理方式从一定程度上是无法接受的。</p>
 <p>Redis Sentinel 是 Redis 高可用的实现方案。Sentinel 是一个管理多个 Redis 实例的工具，它可以实现对 Redis 的监控、通知、自动故障转移。</p>
 <h3 id="哨兵模式的原理"><a href="#哨兵模式的原理" class="headerlink" title="哨兵模式的原理"></a>哨兵模式的原理</h3><p>哨兵模式的主要作用在于它能够自动完成故障发现和故障转移，并通知客户端，从而实现高可用。哨兵模式通常由一组 Sentinel 节点和一组（或多组）主从复制节点组成。</p>
 <h4 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a>心跳机制</h4><p>（1）Sentinel 与 Redis Node</p>
