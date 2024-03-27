@@ -16,16 +16,16 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="进程与线程进程更好的描述和控制程序的并发执行。PCB 进程控制块-进程存在的唯一标志。程序的一次执行过程。拥有资源的基本单位。状态：运行，就绪，阻塞，创建，结束 线程一个基本的 CPU 执行单元。是系统独立调度派的基本单位。一个进程中可以有多个线程。线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。 进程调度 ⼀旦操作系统把进程切换到运⾏状态，也就意味着该进程占⽤着 CPU">
+    <meta name="description" content="[TOC] 进程与线程进程更好的描述和控制程序的并发执行。PCB 进程控制块-进程存在的唯一标志。程序的一次执行过程。拥有资源的基本单位。状态：运行，就绪，阻塞，创建，结束 线程一个基本的 CPU 执行单元。是系统独立调度派的基本单位。一个进程中可以有多个线程。线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。 进程调度 ⼀旦操作系统把进程切换到运⾏状态，也就意味着该进程占⽤">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统-线程与进程">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="进程与线程进程更好的描述和控制程序的并发执行。PCB 进程控制块-进程存在的唯一标志。程序的一次执行过程。拥有资源的基本单位。状态：运行，就绪，阻塞，创建，结束 线程一个基本的 CPU 执行单元。是系统独立调度派的基本单位。一个进程中可以有多个线程。线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。 进程调度 ⼀旦操作系统把进程切换到运⾏状态，也就意味着该进程占⽤着 CPU">
+<meta property="og:description" content="[TOC] 进程与线程进程更好的描述和控制程序的并发执行。PCB 进程控制块-进程存在的唯一标志。程序的一次执行过程。拥有资源的基本单位。状态：运行，就绪，阻塞，创建，结束 线程一个基本的 CPU 执行单元。是系统独立调度派的基本单位。一个进程中可以有多个线程。线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。 进程调度 ⼀旦操作系统把进程切换到运⾏状态，也就意味着该进程占⽤">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/06/puJzalWFGyTfjmt.png">
 <meta property="article:published_time" content="2021-07-30T07:05:47.000Z">
-<meta property="article:modified_time" content="2023-07-17T04:35:35.960Z">
+<meta property="article:modified_time" content="2024-03-27T08:32:13.943Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="概念">
 <meta name="twitter:card" content="summary_large_image">
@@ -280,7 +280,8 @@
             
               <div class="markdown-body">
                 
-                <h3 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h3><h4 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h4><p>更好的描述和控制程序的并发执行。<br>PCB 进程控制块-进程存在的唯一标志。<br>程序的一次执行过程。<br>拥有资源的基本单位。<br>状态：运行，就绪，阻塞，创建，结束</p>
+                <p>[TOC]</p>
+<h3 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h3><h4 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h4><p>更好的描述和控制程序的并发执行。<br>PCB 进程控制块-进程存在的唯一标志。<br>程序的一次执行过程。<br>拥有资源的基本单位。<br>状态：运行，就绪，阻塞，创建，结束</p>
 <h4 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h4><p>一个基本的 CPU 执行单元。<br>是系统独立调度派的基本单位。<br>一个进程中可以有多个线程。<br>线程切换只需要保存设置程序计数器，虚拟机栈少量内容，开销小。轻量级进程。</p>
 <h3 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h3><ul>
 <li>⼀旦操作系统把进程切换到运⾏状态，也就意味着该进程占⽤着 CPU 在执⾏，但是当操作系统把进程切换到其他状态时，那就不能在 CPU 中执⾏了，于是操作系统会选择下⼀个要运⾏的进程。</li>

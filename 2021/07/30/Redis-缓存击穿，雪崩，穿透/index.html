@@ -16,16 +16,16 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="概述首先，雪崩的概念比较容易记，就是很多个Key同时过期才会雪崩，”缓存雪崩的时候没有一个Key是无辜的”。 至于穿透和击穿，区别在于穿透是”透”，什么叫透呢，那就是不仅缓存被击穿了，数据库也被击穿了，这种才叫透。所以，这种缓存和数据库中都没有的情况叫做”缓存穿透”。 击穿是 redis 没有，直接打到 db。 缓存穿透访问一个缓存和数据库都不存在的 key，此时会直接打到数据库上，并且查不到数据">
+    <meta name="description" content="[TOC] 概述首先，雪崩的概念比较容易记，就是很多个Key同时过期才会雪崩，”缓存雪崩的时候没有一个Key是无辜的”。 至于穿透和击穿，区别在于穿透是”透”，什么叫透呢，那就是不仅缓存被击穿了，数据库也被击穿了，这种才叫透。所以，这种缓存和数据库中都没有的情况叫做”缓存穿透”。 击穿是 redis 没有，直接打到 db。 缓存穿透访问一个缓存和数据库都不存在的 key，此时会直接打到数据库上，并">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-缓存击穿，雪崩，穿透">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Redis-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%8C%E9%9B%AA%E5%B4%A9%EF%BC%8C%E7%A9%BF%E9%80%8F/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="概述首先，雪崩的概念比较容易记，就是很多个Key同时过期才会雪崩，”缓存雪崩的时候没有一个Key是无辜的”。 至于穿透和击穿，区别在于穿透是”透”，什么叫透呢，那就是不仅缓存被击穿了，数据库也被击穿了，这种才叫透。所以，这种缓存和数据库中都没有的情况叫做”缓存穿透”。 击穿是 redis 没有，直接打到 db。 缓存穿透访问一个缓存和数据库都不存在的 key，此时会直接打到数据库上，并且查不到数据">
+<meta property="og:description" content="[TOC] 概述首先，雪崩的概念比较容易记，就是很多个Key同时过期才会雪崩，”缓存雪崩的时候没有一个Key是无辜的”。 至于穿透和击穿，区别在于穿透是”透”，什么叫透呢，那就是不仅缓存被击穿了，数据库也被击穿了，这种才叫透。所以，这种缓存和数据库中都没有的情况叫做”缓存穿透”。 击穿是 redis 没有，直接打到 db。 缓存穿透访问一个缓存和数据库都不存在的 key，此时会直接打到数据库上，并">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/nZqz2gG4hsDHpwm.png">
 <meta property="article:published_time" content="2021-07-30T07:13:09.000Z">
-<meta property="article:modified_time" content="2024-03-25T12:04:58.705Z">
+<meta property="article:modified_time" content="2024-03-27T08:34:06.809Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="概念">
 <meta name="twitter:card" content="summary_large_image">
@@ -280,7 +280,8 @@
             
               <div class="markdown-body">
                 
-                <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>首先，雪崩的概念比较容易记，就是<strong>很多个Key同时过期</strong>才会雪崩，”缓存雪崩的时候没有一个Key是无辜的”。</p>
+                <p>[TOC]</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>首先，雪崩的概念比较容易记，就是<strong>很多个Key同时过期</strong>才会雪崩，”缓存雪崩的时候没有一个Key是无辜的”。</p>
 <p>至于穿透和击穿，区别在于穿透是”透”，什么叫透呢，那就是不仅缓存被击穿了，数据库也被击穿了，这种才叫透。所以，<strong>这种缓存和数据库中都没有的情况叫做”缓存穿透”。</strong></p>
 <p>击穿是 redis 没有，直接打到 db。</p>
 <h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>访问一个<strong>缓存和数据库都不存在的 key</strong>，此时会直接打到数据库上，并且查不到数据，没法写缓存，所以下一次同样会打到数据库上。此时，缓存起不到作用，请求每次都会走到数据库，流量大时数据库可能会被打挂。此时缓存就好像被“穿透”了一样，起不到任何作用。</p>

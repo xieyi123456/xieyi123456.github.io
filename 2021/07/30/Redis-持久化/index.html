@@ -16,15 +16,15 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Redis 的持久化机制有：RDB、AOF、混合持久化（RDB+AOF，Redis 4.0 引入）。 RDB类似于快照。在某个时间点，将 Redis 在内存中的数据库状态（数据库的键值对等信息）保存到磁盘里面。RDB 持久化功能生成的 RDB 文件是经过压缩的二进制文件。 命令：有两个 Redis 命令可以用于生成 RDB 文件，一个是 SAVE，另一个是 BGSAVE。开启：使用 save po">
+    <meta name="description" content="[TOC] Redis 的持久化机制有：RDB、AOF、混合持久化（RDB+AOF，Redis 4.0 引入）。 RDB类似于快照。在某个时间点，将 Redis 在内存中的数据库状态（数据库的键值对等信息）保存到磁盘里面。RDB 持久化功能生成的 RDB 文件是经过压缩的二进制文件。 命令：有两个 Redis 命令可以用于生成 RDB 文件，一个是 SAVE，另一个是 BGSAVE。开启：使用 s">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-持久化">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="Redis 的持久化机制有：RDB、AOF、混合持久化（RDB+AOF，Redis 4.0 引入）。 RDB类似于快照。在某个时间点，将 Redis 在内存中的数据库状态（数据库的键值对等信息）保存到磁盘里面。RDB 持久化功能生成的 RDB 文件是经过压缩的二进制文件。 命令：有两个 Redis 命令可以用于生成 RDB 文件，一个是 SAVE，另一个是 BGSAVE。开启：使用 save po">
+<meta property="og:description" content="[TOC] Redis 的持久化机制有：RDB、AOF、混合持久化（RDB+AOF，Redis 4.0 引入）。 RDB类似于快照。在某个时间点，将 Redis 在内存中的数据库状态（数据库的键值对等信息）保存到磁盘里面。RDB 持久化功能生成的 RDB 文件是经过压缩的二进制文件。 命令：有两个 Redis 命令可以用于生成 RDB 文件，一个是 SAVE，另一个是 BGSAVE。开启：使用 s">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-07-30T07:12:32.000Z">
-<meta property="article:modified_time" content="2023-07-17T04:35:35.944Z">
+<meta property="article:modified_time" content="2024-03-27T08:34:15.025Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="持久化">
 <meta name="twitter:card" content="summary_large_image">
@@ -278,7 +278,8 @@
             
               <div class="markdown-body">
                 
-                <p>Redis 的持久化机制有：<strong>RDB、AOF、混合持久化（RDB+AOF，Redis 4.0 引入）。</strong></p>
+                <p>[TOC]</p>
+<p>Redis 的持久化机制有：<strong>RDB、AOF、混合持久化（RDB+AOF，Redis 4.0 引入）。</strong></p>
 <h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><p>类似于快照。在某个时间点，<strong>将 Redis 在内存中的数据库状态（数据库的键值对等信息）保存到磁盘里面</strong>。<br>RDB 持久化功能生成的 RDB 文件是<strong>经过压缩的二进制文件。</strong></p>
 <p>命令：有两个 Redis 命令可以用于生成 RDB 文件<strong>，一个是 SAVE，另一个是 BGSAVE</strong>。<br>开启：使用 save point 配置，满足 save point 条件后会触发 BGSAVE <strong>来存储一次快照</strong>。</p>
 <p>save point 格式：save <seconds> <changes>，含义是 Redis 如果<strong>在 seconds 秒内数据发生了 changes 次改变，就保存快照文件。</strong></p>

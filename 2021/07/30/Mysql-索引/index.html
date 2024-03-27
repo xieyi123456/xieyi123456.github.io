@@ -16,16 +16,16 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="索引索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:B+树和 Hash。Hash 索引不支持顺序和范围查询。 主键索引 vs 唯一索引主键是一种约束，唯一索引是一种索引，两者在本质上是不同的。 主键创建后一定包含一个唯一性索引，唯一性索引并不一定就是主键。 唯一性索引列允许空值，而主键列不允许为空值。 主键列在创建时，已经默认为空值 + 唯一索引了。 主键可以被其他表引用为外键，而唯">
+    <meta name="description" content="[TOC] 索引索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:B+树和 Hash。Hash 索引不支持顺序和范围查询。 主键索引 vs 唯一索引主键是一种约束，唯一索引是一种索引，两者在本质上是不同的。 主键创建后一定包含一个唯一性索引，唯一性索引并不一定就是主键。 唯一性索引列允许空值，而主键列不允许为空值。 主键列在创建时，已经默认为空值 + 唯一索引了。 主键可以被其他表引用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mysql-索引">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Mysql-%E7%B4%A2%E5%BC%95/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="索引索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:B+树和 Hash。Hash 索引不支持顺序和范围查询。 主键索引 vs 唯一索引主键是一种约束，唯一索引是一种索引，两者在本质上是不同的。 主键创建后一定包含一个唯一性索引，唯一性索引并不一定就是主键。 唯一性索引列允许空值，而主键列不允许为空值。 主键列在创建时，已经默认为空值 + 唯一索引了。 主键可以被其他表引用为外键，而唯">
+<meta property="og:description" content="[TOC] 索引索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:B+树和 Hash。Hash 索引不支持顺序和范围查询。 主键索引 vs 唯一索引主键是一种约束，唯一索引是一种索引，两者在本质上是不同的。 主键创建后一定包含一个唯一性索引，唯一性索引并不一定就是主键。 唯一性索引列允许空值，而主键列不允许为空值。 主键列在创建时，已经默认为空值 + 唯一索引了。 主键可以被其他表引用">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/dm9kpsbhzaX8M2D.png">
 <meta property="article:published_time" content="2021-07-30T07:11:24.000Z">
-<meta property="article:modified_time" content="2024-03-22T07:58:25.857Z">
+<meta property="article:modified_time" content="2024-03-27T08:34:27.663Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="索引">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.5k 字
+          6.3k 字
         
       </span>
     
@@ -280,7 +280,8 @@
             
               <div class="markdown-body">
                 
-                <h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:<strong>B+树和 Hash</strong>。<br>Hash 索引不支持顺序和范围查询。</p>
+                <p>[TOC]</p>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:<strong>B+树和 Hash</strong>。<br>Hash 索引不支持顺序和范围查询。</p>
 <h3 id="主键索引-vs-唯一索引"><a href="#主键索引-vs-唯一索引" class="headerlink" title="主键索引 vs 唯一索引"></a>主键索引 vs 唯一索引</h3><p>主键是一种约束，唯一索引是一种索引，两者在本质上是不同的。</p>
 <p>主键创建后一定包含一个唯一性索引，唯一性索引并不一定就是主键。</p>
 <p>唯一性索引列允许空值，而主键列不允许为空值。</p>
@@ -321,6 +322,14 @@
 <h3 id="什么是回表查询？"><a href="#什么是回表查询？" class="headerlink" title="什么是回表查询？"></a>什么是回表查询？</h3><p>InnoDB 中，对于<strong>主键索引，只需要走一遍主键索引的查询就能在叶子节点拿到数据。</strong><br>而对于普通索引，叶子节点存储的是 key + 主键值，因此需要再走一次主键索引，通过主键索引找到行记录，这就是所谓的回表查询，先定位主键值，再定位行记录。</p>
 <h3 id="走普通索引，一定会出现回表查询吗？"><a href="#走普通索引，一定会出现回表查询吗？" class="headerlink" title="走普通索引，一定会出现回表查询吗？"></a>走普通索引，一定会出现回表查询吗？</h3><p>不一定，如果查询语句所要求的字段全部命中了索引，那么就不必再进行回表查询。<br>有一个 user 表，主键为 id，name 为普通索引，则再执行：<br>select id, name from user where name &#x3D;’joonwhee’ 时，通过 name 的索引就能拿到 id 和 name。</p>
 <h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h3><p>当索引上<strong>包含了查询语句中的所有列</strong>时，我们无需进行回表查询就能拿到所有的请求数据，因此速度会很快。当 explain 的输出结果 Extra 字段为 <strong>Using index</strong> 时，则代表触发覆盖索引。</p>
+<h3 id="索引下推"><a href="#索引下推" class="headerlink" title="索引下推"></a>索引下推</h3><p>索引下推是 MySQL 5.6引入了一种优化技术，默认开启，使用SET optimizer_switch &#x3D; ‘index_condition_pushdown&#x3D;off’;可以将其关闭。</p>
+<p>官方文档中给的例子和解释如下： people表中（zipcode，lastname，firstname）构成一个索引<br>SELECT * FROM people WHERE zipcode&#x3D;’95054′ AND lastname LIKE ‘%etrunia%’ AND address LIKE ‘%Main Street%’;</p>
+<p>如果没有使用索引下推技术，则MySQL会通过zipcode&#x3D;’95054’从存储引擎中查询对应的数据，返回到MySQL服务端，然后MySQL服务端基于lastname LIKE ‘%etrunia%’和address LIKE ‘%Main Street%’来判断数据是否符合条件。 </p>
+<p>如果使用了索引下推技术，则MYSQL首先会返回符合zipcode&#x3D;’95054’的索引，然后根据lastname LIKE ‘%etrunia%’来判断索引是否符合条件。</p>
+<p>如果符合条件，则根据该索引来定位对应的数据，如果不符合，则直接reject掉。 有了索引下推优化，可以在有like条件查询的情况下，减少回表次数。</p>
+<p>当一条SQL使用到索引下推时，explain的执行计划中的extra字段中内容为：Using index condition</p>
+<p>上面的例子中，提到了like，包括MySQL官网中也只提到了like，但是其实不止有Like。因为我认为索引下推其实是解决索引失效带来的效率低的问题的一种手段。</p>
+<p>所以当联合索引中，某个非前导列因为索引失效而要进行扫表并回表时，就可以进行索引下推优化了。</p>
 <h3 id="联合索引（复合索引）的底层实现？最佳左前缀原则？"><a href="#联合索引（复合索引）的底层实现？最佳左前缀原则？" class="headerlink" title="联合索引（复合索引）的底层实现？最佳左前缀原则？"></a>联合索引（复合索引）的底层实现？最佳左前缀原则？</h3><p>联合索引底层还是使用 B+树索引，并且还是只有<strong>一棵树</strong>，只是此时的排序会：首先按照第一个索引排序，在第一个索引相同的情况下，再按第二个索引排序，依次类推。</p>
 <p>这也是为什么有“最佳左前缀原则”的原因，<strong>因为右边（后面）的索引都是在左边（前面）的索引排序的基础上进行排序的，如果没有左边的索引，单独看右边的索引，其实是无序的</strong></p>
 <h3 id="B-树中一个节点到底多大合适？"><a href="#B-树中一个节点到底多大合适？" class="headerlink" title="B+树中一个节点到底多大合适？"></a>B+树中一个节点到底多大合适？</h3><p>1 页或页的倍数最为合适。因为如果一个节点的大小小于 1 页，那么读取这个节点的时候其实也会读出 1 页，造成资源的浪费。所以为了不造成浪费，所以最后把一个节点的大小控制在 1 页、2 页、3 页等倍数页大小最为合适。</p>

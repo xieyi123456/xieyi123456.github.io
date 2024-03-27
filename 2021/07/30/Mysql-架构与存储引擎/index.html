@@ -16,16 +16,16 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="架构 Mysql 逻辑架构图主要分三层（1）第一层负责连接处理，授权认证，安全等等（2）第二层负责编译并优化 SQL（3）第三层是存储引擎。 sql 语句执行流程 查询语句的执行流程如下：权限校验（如果命中缓存）—&gt;查询缓存—&gt;分析器—&gt;优化器—&gt;权限校验—&gt;执行器—&gt;引擎  更新语句执行流程如下：分析器—-&gt;权限校验—-&gt;执行器—&gt;引擎—re">
+    <meta name="description" content="[TOC] 问题char varcharchar和varchar都是用于在数据库中存储字符串的数据类型。它们之间的主要区别在于存储空间的使用方式： char是一种定长的数据类型，它的长度固定且在存储时会自动在结尾添加空格来将字符串填满指定的长度。char的长度范围是0-255， varchar是一种可变长度的数据类型，它只会存储实际的字符串内容，不会填充空格。因此，在存储短字符串时，varchar">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mysql-架构与存储引擎">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Mysql-%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="架构 Mysql 逻辑架构图主要分三层（1）第一层负责连接处理，授权认证，安全等等（2）第二层负责编译并优化 SQL（3）第三层是存储引擎。 sql 语句执行流程 查询语句的执行流程如下：权限校验（如果命中缓存）—&gt;查询缓存—&gt;分析器—&gt;优化器—&gt;权限校验—&gt;执行器—&gt;引擎  更新语句执行流程如下：分析器—-&gt;权限校验—-&gt;执行器—&gt;引擎—re">
+<meta property="og:description" content="[TOC] 问题char varcharchar和varchar都是用于在数据库中存储字符串的数据类型。它们之间的主要区别在于存储空间的使用方式： char是一种定长的数据类型，它的长度固定且在存储时会自动在结尾添加空格来将字符串填满指定的长度。char的长度范围是0-255， varchar是一种可变长度的数据类型，它只会存储实际的字符串内容，不会填充空格。因此，在存储短字符串时，varchar">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/AotCLWx597J4FnN.png">
 <meta property="article:published_time" content="2021-07-30T07:11:06.000Z">
-<meta property="article:modified_time" content="2023-07-17T04:35:35.972Z">
+<meta property="article:modified_time" content="2024-03-27T08:34:42.660Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="结构">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          3.5k 字
         
       </span>
     
@@ -280,8 +280,27 @@
             
               <div class="markdown-body">
                 
-                <h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="https://i.loli.net/2021/08/04/AotCLWx597J4FnN.png" srcset="/img/loading.gif" lazyload alt="image-20210804135513993"></p>
-<h3 id="Mysql-逻辑架构图主要分三层"><a href="#Mysql-逻辑架构图主要分三层" class="headerlink" title="Mysql 逻辑架构图主要分三层"></a><strong>Mysql 逻辑架构图主要分三层</strong></h3><p>（1）第一层负责连接处理，授权认证，安全等等<br>（2）第二层负责编译并优化 SQL<br>（3）第三层是存储引擎。</p>
+                <p>[TOC]</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="char-varchar"><a href="#char-varchar" class="headerlink" title="char varchar"></a>char varchar</h3><p>char和varchar都是用于在数据库中存储字符串的数据类型。它们之间的主要区别在于存储空间的使用方式：</p>
+<p>char是一种定长的数据类型，它的长度固定且在存储时会自动在结尾添加空格来将字符串填满指定的长度。char的长度范围是0-255，</p>
+<p>varchar是一种可变长度的数据类型，它只会存储实际的字符串内容，不会填充空格。因此，在存储短字符串时，varchar可以节省空间。varchar的长度范围是0-65535（MySQL 5.0.3之后的版本）。</p>
+<p>varchar 的优点是变长的字符串类型，兼容性更好；但是同时也会带来一些问题，如使用varchar可能会产生内存碎片、varchar 会额外需要1到2个字节存储长度信息、以及update语句可能会导致页分裂等。</p>
+<p>char的优点是定长的字符串类型，减少内存碎片，并且无需额外的磁盘空间去存储长度信息。但是他的缺点是<strong>会删除列末尾的空格信息</strong></p>
+<p>存储身份证号（固定长度）、存储订单号（固定长度）、存储国家编码（固定长度），这些都适合用char。</p>
+<h3 id="范式"><a href="#范式" class="headerlink" title="范式"></a>范式</h3><p>所谓数据库范式，其实就是数据库的设计上的一些规范；这些规范可以让数据库的设计更加简洁、清晰；同时也会更加好的可以保证一致性。</p>
+<p>三个常用的范式：</p>
+<p>第一范式（1NF）是说，数据库表中的属性的原子性的，要求属性具有原子性，不可再被拆分；<br>比如<strong>地址如果都细化拆分成省、市、区、街道、小区等等多个字段这就是符合第一范式</strong>的， 如果地址就是一个字段，那就不符合了。<br>第二范式（2NF）是说，数据库表中的每个实例或记录必须可以被唯一地区分，说白了就是要有主键，其他的字段都依赖于主键。<br>第三范式（3NF）是说，任何非主属性不依赖于其它非主属性，也就是说，<strong>非主键外的所有字段必须互不依赖</strong></p>
+<p>如果我们在做表结构设计的时候，完全遵守数据库三范式，确实可以避免一些写时异常，提升一些写入性能，但是同时也会丢失一些读取性能。</p>
+<p>因为在遵守范式的数据库设计中，表中不能有任何冗余字段，这就使得查询的时候就会经常有多表关联查询，这无疑是比较耗时的。</p>
+<p>于是就有了反范式化。所谓反范式化，是一种针对遵从设计范式的数据库的性能优化策略。</p>
+<p>也就是说，反范式化不等于非范式化，反范式化一定发生在满足范式设计的基础之上。前者相当于先遵守所有规则，再进行局部调整。</p>
+<p>比如我们可以在表中增加一些冗余字段，方便我们进行数据查询，而不再需要经常做多表join，但同时，这也会带来一个问题，那就是这些冗余字段之间的一致性如何保证，这个问题本来在遵守范式的设计中是不会有的，一旦做了反范式，那就需要开发者自行解决了。</p>
+<p>反范式其实本质上是软件开发中一个比较典型的方案，那就是”用空间换时间”，通过做一些数据冗余，来提升查询速度。</p>
+<p>在互联网业务中，比较典型的就是数据量大，并发高，并且通常查询的频率要远高于写入的频率，所以适当的做一些反范式，通过做一些字段的冗余，可以提升查询性能，降低响应时长，从而提升并发度。</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="https://i.loli.net/2021/08/04/AotCLWx597J4FnN.png" srcset="/img/loading.gif" lazyload alt="image-20210804135513993"></p>
+<h3 id="Mysql-逻辑架构图主要分三层"><a href="#Mysql-逻辑架构图主要分三层" class="headerlink" title="Mysql 逻辑架构图主要分三层"></a><strong>Mysql 逻辑架构图主要分三层</strong></h3><p>（1）第一层负责连接处理，授权认证，安全等等<br>（2）第二层负责编译并优化 SQL<br>（3）第三层是存储引擎。、</p>
+<h3 id="sql-执行2"><a href="#sql-执行2" class="headerlink" title="sql 执行2"></a>sql 执行2</h3><p>select * from users where age&#x3D;’18’ and name&#x3D;’Hollis’;</p>
+<p>①使用连接器，通过客户端&#x2F;服务器通信协议与 MySQL <strong>建立连接。并查询是否有权限</strong><br>②Mysql8.0之前检查是否开启缓存，开启了 Query Cache 且命中完全相同的 SQL 语句，则将查询结果直接返回给客户端；<br>③由<strong>解析器（分析器）进行语法分析和语义分析，并生成解析</strong>树。如查询是select、表名users、条件是age&#x3D;’18’ and name&#x3D;’Hollis’，预处理器则会根据 MySQL 规则进一步检查解析树是否合法。比如检查要查询的数据表或数据列是否存在等。<br>④由优化器生成<strong>执行计划。根据索引看看是否可以优化</strong><br>⑤<strong>执行器来执行SQL语句</strong>，这里具体的执行会操作MySQL的存储引擎来执行 SQL 语句，根据存储引擎类型，得到查询结果。若开启了 Query Cache，则缓存，否则直接返回。</p>
 <h3 id="sql-语句执行流程"><a href="#sql-语句执行流程" class="headerlink" title="sql 语句执行流程"></a>sql 语句执行流程</h3><ul>
 <li><p>查询语句的执行流程如下：权限校验（如果命中缓存）—&gt;查询缓存—&gt;分析器—&gt;优化器—&gt;权限校验—&gt;执行器—&gt;引擎</p>
 </li>

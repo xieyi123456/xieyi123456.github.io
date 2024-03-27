@@ -16,12 +16,12 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="sql 语法举例有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。 SELECT NAME,SUM(score) FROM chengji GROUP BY NAME ORDER BY SUM(score) DESC; 顺序12345678Select FromJoin onWhereGroup byHavingOrder byLimit    单">
+    <meta name="description" content="[TOC] sql 语法举例有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。 SELECT NAME,SUM(score) FROM chengji GROUP BY NAME ORDER BY SUM(score) DESC; 顺序12345678Select FromJoin onWhereGroup byHavingOrder byLimi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mysql-语法与常见优化思路">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Mysql-sql%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95%E4%B8%8E%E4%BC%98%E5%8C%96/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="sql 语法举例有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。 SELECT NAME,SUM(score) FROM chengji GROUP BY NAME ORDER BY SUM(score) DESC; 顺序12345678Select FromJoin onWhereGroup byHavingOrder byLimit    单">
+<meta property="og:description" content="[TOC] sql 语法举例有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。 SELECT NAME,SUM(score) FROM chengji GROUP BY NAME ORDER BY SUM(score) DESC; 顺序12345678Select FromJoin onWhereGroup byHavingOrder byLimi">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/1WtTkRxDCL96fSI.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/V7tN63gewq8cWoz.png">
@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/08/04/Jai1wMqE6ZLFjzu.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/twSDImsCXHxWE2a.png">
 <meta property="article:published_time" content="2021-07-30T07:10:46.000Z">
-<meta property="article:modified_time" content="2024-03-25T05:32:23.897Z">
+<meta property="article:modified_time" content="2024-03-27T08:34:49.671Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="basic">
 <meta name="twitter:card" content="summary_large_image">
@@ -230,7 +230,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.5k 字
+          6.1k 字
         
       </span>
     
@@ -287,7 +287,8 @@
             
               <div class="markdown-body">
                 
-                <h2 id="sql-语法举例"><a href="#sql-语法举例" class="headerlink" title="sql 语法举例"></a>sql 语法举例</h2><p>有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。</p>
+                <p>[TOC]</p>
+<h2 id="sql-语法举例"><a href="#sql-语法举例" class="headerlink" title="sql 语法举例"></a>sql 语法举例</h2><p>有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。</p>
 <p>SELECT NAME,SUM(score) FROM chengji</p>
 <p>GROUP BY NAME</p>
 <p>ORDER BY SUM(score) DESC;</p>
@@ -394,6 +395,16 @@
 <p><strong>ALL</strong>&#x3D; Full Table Scan，将遍历全表以找到匹配的行。<br>一般来说，得保证查询至少达到 range 级别，最好能达到 ref。</p>
 <p><strong>extra</strong></p>
 <p><img src="https://i.loli.net/2021/08/04/twSDImsCXHxWE2a.png" srcset="/img/loading.gif" lazyload alt="image-20210804135035776"></p>
+<h2 id="不推荐-join"><a href="#不推荐-join" class="headerlink" title="不推荐 join"></a>不推荐 join</h2><p>之所以不建议使用join查询，最主要的原因就是join的效率比较低。</p>
+<p>MySQL是使用了嵌套循环（Nested-Loop Join）的方式来实现关联查询的，简单点说就是要通过两层循环，用第一张表做外循环，第二张表做内循环，外循环的每一条记录跟内循环中的记录作比较，符合条件的就输出。</p>
+<p>在MySQL 中，可以使用 JOIN 在两个或多个表中进行联合查询，join有三种，分别是inner join、left join 和 right join。</p>
+<p>INNER JOIN（内连接,或等值连接）：获取两个表中字段匹配关系的记录。<br>○取两个表的交集部分<br>LEFT JOIN（左连接）：获取左表所有记录，即使右表没有对应匹配的记录。<br>取两个表的交集部分+左表中的数据<br>RIGHT JOIN（右连接）： 与 LEFT JOIN 相反，用于获取右表所有记录，即使左表没有对应匹配的记录。<br>取两个表的交集部分+右表中的数据</p>
+<p>在配合join一起使用的还有on关键字，用来指明关联查询的一些条件。</p>
+<p>如果不能通过数据库做关联查询，那么需要查询多表的数据的时候要怎么做呢？</p>
+<p>主要有两种做法：</p>
+<p>1、在内存中自己做关联，即先从数据库中把数据查出来之后，我们在代码中再进行二次查询，然后再进行关联。</p>
+<p>2、数据冗余，那就是把一些重要的数据在表中做冗余，这样就可以避免关联查询了。</p>
+<p>3、宽表，就是基于一定的join关系，把数据库中多张表的数据打平做一张大宽表，可以同步到ES或者干脆直接在数据库中直接查都可以</p>
 
                 
               </div>

@@ -16,17 +16,17 @@
   <meta name="author" content="XieYi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="redis 总是键值对存储。 key 总是 string。 value 有五种类型。 string！！概述为什么要自己设计 SDS 支持任意字符 高效 string 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的">
+    <meta name="description" content="[TOC] redis 总是键值对存储。 key 总是 string。 value 有五种类型。 string！！概述为什么要自己设计 SDS 支持任意字符 高效 string 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-数据类型">
 <meta property="og:url" content="https://xieyi123456.github.io/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
-<meta property="og:description" content="redis 总是键值对存储。 key 总是 string。 value 有五种类型。 string！！概述为什么要自己设计 SDS 支持任意字符 高效 string 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的">
+<meta property="og:description" content="[TOC] redis 总是键值对存储。 key 总是 string。 value 有五种类型。 string！！概述为什么要自己设计 SDS 支持任意字符 高效 string 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/zkHrifPgLS46UeR.png">
 <meta property="og:image" content="https://xieyioss.oss-cn-beijing.aliyuncs.com/img/image-20240325203227879.png">
 <meta property="article:published_time" content="2021-07-30T07:12:00.000Z">
-<meta property="article:modified_time" content="2024-03-25T12:49:56.637Z">
+<meta property="article:modified_time" content="2024-03-27T08:33:43.028Z">
 <meta property="article:author" content="XieYi">
 <meta property="article:tag" content="basic">
 <meta name="twitter:card" content="summary_large_image">
@@ -281,7 +281,8 @@
             
               <div class="markdown-body">
                 
-                <p><strong>redis 总是键值对存储。</strong></p>
+                <p>[TOC]</p>
+<p><strong>redis 总是键值对存储。</strong></p>
 <p><strong>key 总是 string。</strong></p>
 <p><strong>value 有五种类型。</strong></p>
 <h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><h4 id="！！概述"><a href="#！！概述" class="headerlink" title="！！概述"></a>！！概述</h4><p>为什么要自己设计 SDS</p>

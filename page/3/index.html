@@ -235,7 +235,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Redis-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" target="_self">
         <div>
-          redis 总是键值对存储。 key 总是 string。 value 有五种类型。 string！！概述为什么要自己设计 SDS 支持任意字符 高效 string 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相比于 C 的
+          [TOC] redis 总是键值对存储。 key 总是 string。 value 有五种类型。 string！！概述为什么要自己设计 SDS 支持任意字符 高效 string 数据结构是简单的 key-value 类型。虽然 Redis 是用 C 语言写的，但是 Redis 并没有使用 C 的字符串表示，而是自己构建了一种 简单动态字符串（simple dynamic string，SDS）。相
         </div>
       </a>
 
@@ -296,7 +296,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Mysql-%E7%B4%A2%E5%BC%95/" target="_self">
         <div>
-          索引索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:B+树和 Hash。Hash 索引不支持顺序和范围查询。 主键索引 vs 唯一索引主键是一种约束，唯一索引是一种索引，两者在本质上是不同的。 主键创建后一定包含一个唯一性索引，唯一性索引并不一定就是主键。 唯一性索引列允许空值，而主键列不允许为空值。 主键列在创建时，已经默认为空值 + 唯一索引了。 主键可以被其他表引用为外键，而唯
+          [TOC] 索引索引是一种用于快速查询和检索数据的数据结构。常见的索引结构有:B+树和 Hash。Hash 索引不支持顺序和范围查询。 主键索引 vs 唯一索引主键是一种约束，唯一索引是一种索引，两者在本质上是不同的。 主键创建后一定包含一个唯一性索引，唯一性索引并不一定就是主键。 唯一性索引列允许空值，而主键列不允许为空值。 主键列在创建时，已经默认为空值 + 唯一索引了。 主键可以被其他表引用
         </div>
       </a>
 
@@ -357,7 +357,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Mysql-%E4%BA%8B%E5%8A%A1/" target="_self">
         <div>
-          事务特性 原子性： 事务是最小的执行单位，不允许分割。事务的原子性确保动作要么全部完成，要么完全不起作用；  一致性： 执行事务前后，数据保持一致，例如转账业务中，无论事务是否成功，转账者和收款人的总额应该是不变的；  隔离性： 并发访问数据库时，一个用户的事务不被其他事务所干扰，各并发事务之间数据库是独立的；  持久性： 一个事务被提交之后。它对数据库中数据的改变是持久的，即使数据库发生故障也不
+          [TOC] 事务特性 原子性： 事务是最小的执行单位，不允许分割。事务的原子性确保动作要么全部完成，要么完全不起作用；  一致性： 执行事务前后，数据保持一致，例如转账业务中，无论事务是否成功，转账者和收款人的总额应该是不变的；  隔离性： 并发访问数据库时，一个用户的事务不被其他事务所干扰，各并发事务之间数据库是独立的；  持久性： 一个事务被提交之后。它对数据库中数据的改变是持久的，即使数据库
         </div>
       </a>
 
@@ -418,7 +418,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Mysql-%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" target="_self">
         <div>
-          架构 Mysql 逻辑架构图主要分三层（1）第一层负责连接处理，授权认证，安全等等（2）第二层负责编译并优化 SQL（3）第三层是存储引擎。 sql 语句执行流程 查询语句的执行流程如下：权限校验（如果命中缓存）—&gt;查询缓存—&gt;分析器—&gt;优化器—&gt;权限校验—&gt;执行器—&gt;引擎  更新语句执行流程如下：分析器—-&gt;权限校验—-&gt;执行器—&gt;引擎—re
+          [TOC] 问题char varcharchar和varchar都是用于在数据库中存储字符串的数据类型。它们之间的主要区别在于存储空间的使用方式： char是一种定长的数据类型，它的长度固定且在存储时会自动在结尾添加空格来将字符串填满指定的长度。char的长度范围是0-255， varchar是一种可变长度的数据类型，它只会存储实际的字符串内容，不会填充空格。因此，在存储短字符串时，varchar
         </div>
       </a>
 
@@ -479,7 +479,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2021/07/30/Mysql-sql%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95%E4%B8%8E%E4%BC%98%E5%8C%96/" target="_self">
         <div>
-          sql 语法举例有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。 SELECT NAME,SUM(score) FROM chengji GROUP BY NAME ORDER BY SUM(score) DESC; 顺序12345678Select FromJoin onWhereGroup byHavingOrder byLimit    单
+          [TOC] sql 语法举例有一张表，三列：name,course(课程)，score，查询出每个学生的总成绩并按从高到低排序。 SELECT NAME,SUM(score) FROM chengji GROUP BY NAME ORDER BY SUM(score) DESC; 顺序12345678Select FromJoin onWhereGroup byHavingOrder byLimi
         </div>
       </a>
 
