@@ -3,11 +3,11 @@
   <title>XieYi&#39;s Blog</title>
   
   <subtitle>log something</subtitle>
-  <link href="https://xieyi123456.github.io/atom.xml" rel="self"/>
+  <link href="https://xieyi1998.top/atom.xml" rel="self"/>
   
-  <link href="https://xieyi123456.github.io/"/>
+  <link href="https://xieyi1998.top/"/>
   <updated>2025-09-06T14:26:12.970Z</updated>
-  <id>https://xieyi123456.github.io/</id>
+  <id>https://xieyi1998.top/</id>
   
   <author>
     <name>XieYi</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>hexo 常用命令</title>
-    <link href="https://xieyi123456.github.io/2025/09/06/hexo-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
-    <id>https://xieyi123456.github.io/2025/09/06/hexo-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</id>
+    <link href="https://xieyi1998.top/2025/09/06/hexo-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <id>https://xieyi1998.top/2025/09/06/hexo-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</id>
     <published>2025-09-06T14:22:07.000Z</published>
     <updated>2025-09-06T14:26:12.970Z</updated>
     
@@ -37,8 +37,8 @@
   
   <entry>
     <title>Linux常用命令</title>
-    <link href="https://xieyi123456.github.io/2021/08/05/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
-    <id>https://xieyi123456.github.io/2021/08/05/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</id>
+    <link href="https://xieyi1998.top/2021/08/05/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <id>https://xieyi1998.top/2021/08/05/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</id>
     <published>2021-08-05T07:22:53.000Z</published>
     <updated>2024-03-27T08:34:58.421Z</updated>
     
@@ -47,19 +47,19 @@
     
     
     
-    <category term="开发工具" scheme="https://xieyi123456.github.io/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/"/>
+    <category term="开发工具" scheme="https://xieyi1998.top/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/"/>
     
     
-    <category term="linux" scheme="https://xieyi123456.github.io/tags/linux/"/>
+    <category term="linux" scheme="https://xieyi1998.top/tags/linux/"/>
     
-    <category term="常用命令" scheme="https://xieyi123456.github.io/tags/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <category term="常用命令" scheme="https://xieyi1998.top/tags/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
     
   </entry>
   
   <entry>
     <title>设计模式</title>
-    <link href="https://xieyi123456.github.io/2021/08/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%20java/"/>
-    <id>https://xieyi123456.github.io/2021/08/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%20java/</id>
+    <link href="https://xieyi1998.top/2021/08/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%20java/"/>
+    <id>https://xieyi1998.top/2021/08/05/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%20java/</id>
     <published>2021-08-05T06:50:04.000Z</published>
     <updated>2024-03-27T08:31:00.125Z</updated>
     
@@ -72,17 +72,17 @@
     
     
     
-    <category term="top" scheme="https://xieyi123456.github.io/categories/top/"/>
+    <category term="top" scheme="https://xieyi1998.top/categories/top/"/>
     
     
-    <category term="basic" scheme="https://xieyi123456.github.io/tags/basic/"/>
+    <category term="basic" scheme="https://xieyi1998.top/tags/basic/"/>
     
   </entry>
   
   <entry>
     <title>常见数据结构和算法</title>
-    <link href="https://xieyi123456.github.io/2021/08/05/atop-%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/"/>
-    <id>https://xieyi123456.github.io/2021/08/05/atop-%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/</id>
+    <link href="https://xieyi1998.top/2021/08/05/atop-%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/"/>
+    <id>https://xieyi1998.top/2021/08/05/atop-%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/</id>
     <published>2021-08-05T06:39:32.000Z</published>
     <updated>2024-03-27T08:31:59.287Z</updated>
     
@@ -96,17 +96,17 @@
     
     
     
-    <category term="top" scheme="https://xieyi123456.github.io/categories/top/"/>
+    <category term="top" scheme="https://xieyi1998.top/categories/top/"/>
     
     
-    <category term="basic" scheme="https://xieyi123456.github.io/tags/basic/"/>
+    <category term="basic" scheme="https://xieyi1998.top/tags/basic/"/>
     
   </entry>
   
   <entry>
     <title>Redis-缓存一致性</title>
-    <link href="https://xieyi123456.github.io/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/"/>
-    <id>https://xieyi123456.github.io/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/</id>
+    <link href="https://xieyi1998.top/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/"/>
+    <id>https://xieyi1998.top/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/</id>
     <published>2021-08-04T09:22:25.000Z</published>
     <updated>2024-03-27T08:33:59.394Z</updated>
     
@@ -119,17 +119,17 @@
     
     
     
-    <category term="Redis" scheme="https://xieyi123456.github.io/categories/Redis/"/>
+    <category term="Redis" scheme="https://xieyi1998.top/categories/Redis/"/>
     
     
-    <category term="思想" scheme="https://xieyi123456.github.io/tags/%E6%80%9D%E6%83%B3/"/>
+    <category term="思想" scheme="https://xieyi1998.top/tags/%E6%80%9D%E6%83%B3/"/>
     
   </entry>
   
   <entry>
     <title>Java并发-线程安全的机制</title>
-    <link href="https://xieyi123456.github.io/2021/08/03/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%9C%BA%E5%88%B6/"/>
-    <id>https://xieyi123456.github.io/2021/08/03/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%9C%BA%E5%88%B6/</id>
+    <link href="https://xieyi1998.top/2021/08/03/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%9C%BA%E5%88%B6/"/>
+    <id>https://xieyi1998.top/2021/08/03/Java%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%9C%BA%E5%88%B6/</id>
     <published>2021-08-03T07:20:24.000Z</published>
     <updated>2023-07-17T04:35:35.955Z</updated>
     
@@ -141,17 +141,17 @@
     
     
     
-    <category term="Java并发" scheme="https://xieyi123456.github.io/categories/Java%E5%B9%B6%E5%8F%91/"/>
+    <category term="Java并发" scheme="https://xieyi1998.top/categories/Java%E5%B9%B6%E5%8F%91/"/>
     
     
-    <category term="机制" scheme="https://xieyi123456.github.io/tags/%E6%9C%BA%E5%88%B6/"/>
+    <category term="机制" scheme="https://xieyi1998.top/tags/%E6%9C%BA%E5%88%B6/"/>
     
   </entry>
   
   <entry>
     <title>Java虚拟机-String-table</title>
-    <link href="https://xieyi123456.github.io/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-String-table/"/>
-    <id>https://xieyi123456.github.io/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-String-table/</id>
+    <link href="https://xieyi1998.top/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-String-table/"/>
+    <id>https://xieyi1998.top/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-String-table/</id>
     <published>2021-08-02T05:53:10.000Z</published>
     <updated>2023-07-17T04:35:35.955Z</updated>
     
@@ -163,17 +163,17 @@
     
     
     
-    <category term="JVM" scheme="https://xieyi123456.github.io/categories/JVM/"/>
+    <category term="JVM" scheme="https://xieyi1998.top/categories/JVM/"/>
     
     
-    <category term="底层" scheme="https://xieyi123456.github.io/tags/%E5%BA%95%E5%B1%82/"/>
+    <category term="底层" scheme="https://xieyi1998.top/tags/%E5%BA%95%E5%B1%82/"/>
     
   </entry>
   
   <entry>
     <title>Java虚拟机-对象相关</title>
-    <link href="https://xieyi123456.github.io/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3/"/>
-    <id>https://xieyi123456.github.io/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3/</id>
+    <link href="https://xieyi1998.top/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3/"/>
+    <id>https://xieyi1998.top/2021/08/02/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-%E5%AF%B9%E8%B1%A1%E7%9B%B8%E5%85%B3/</id>
     <published>2021-08-02T03:57:24.000Z</published>
     <updated>2023-07-17T04:35:35.969Z</updated>
     
@@ -190,8 +190,8 @@
   
   <entry>
     <title>操作系统-简单概念</title>
-    <link href="https://xieyi123456.github.io/2021/08/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%AE%80%E5%8D%95%E6%A6%82%E5%BF%B5/"/>
-    <id>https://xieyi123456.github.io/2021/08/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%AE%80%E5%8D%95%E6%A6%82%E5%BF%B5/</id>
+    <link href="https://xieyi1998.top/2021/08/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%AE%80%E5%8D%95%E6%A6%82%E5%BF%B5/"/>
+    <id>https://xieyi1998.top/2021/08/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E7%AE%80%E5%8D%95%E6%A6%82%E5%BF%B5/</id>
     <published>2021-08-01T13:13:55.000Z</published>
     <updated>2024-03-27T08:32:31.160Z</updated>
     
@@ -204,17 +204,17 @@
     
     
     
-    <category term="操作系统" scheme="https://xieyi123456.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    <category term="操作系统" scheme="https://xieyi1998.top/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
     
-    <category term="概念" scheme="https://xieyi123456.github.io/tags/%E6%A6%82%E5%BF%B5/"/>
+    <category term="概念" scheme="https://xieyi1998.top/tags/%E6%A6%82%E5%BF%B5/"/>
     
   </entry>
   
   <entry>
     <title>leetcode</title>
-    <link href="https://xieyi123456.github.io/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/"/>
-    <id>https://xieyi123456.github.io/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/</id>
+    <link href="https://xieyi1998.top/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/"/>
+    <id>https://xieyi1998.top/2021/07/31/%E7%AC%94%E8%AF%95%E6%80%BB%E7%BB%931/</id>
     <published>2021-07-31T13:28:34.000Z</published>
     <updated>2024-03-27T08:32:57.801Z</updated>
     
@@ -223,17 +223,17 @@
     
     
     
-    <category term="计算机基础" scheme="https://xieyi123456.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/"/>
+    <category term="计算机基础" scheme="https://xieyi1998.top/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/"/>
     
     
-    <category term="算法题" scheme="https://xieyi123456.github.io/tags/%E7%AE%97%E6%B3%95%E9%A2%98/"/>
+    <category term="算法题" scheme="https://xieyi1998.top/tags/%E7%AE%97%E6%B3%95%E9%A2%98/"/>
     
   </entry>
   
   <entry>
     <title>Spring-常见概念</title>
-    <link href="https://xieyi123456.github.io/2021/07/30/Spring-%E5%B8%B8%E8%A7%81%E6%A6%82%E5%BF%B5/"/>
-    <id>https://xieyi123456.github.io/2021/07/30/Spring-%E5%B8%B8%E8%A7%81%E6%A6%82%E5%BF%B5/</id>
+    <link href="https://xieyi1998.top/2021/07/30/Spring-%E5%B8%B8%E8%A7%81%E6%A6%82%E5%BF%B5/"/>
+    <id>https://xieyi1998.top/2021/07/30/Spring-%E5%B8%B8%E8%A7%81%E6%A6%82%E5%BF%B5/</id>
     <published>2021-07-30T07:15:42.000Z</published>
     <updated>2024-03-27T08:33:18.082Z</updated>
     
@@ -246,17 +246,17 @@
     
     
     
-    <category term="Spring" scheme="https://xieyi123456.github.io/categories/Spring/"/>
+    <category term="Spring" scheme="https://xieyi1998.top/categories/Spring/"/>
     
     
-    <category term="basic" scheme="https://xieyi123456.github.io/tags/basic/"/>
+    <category term="basic" scheme="https://xieyi1998.top/tags/basic/"/>
     
   </entry>
   
   <entry>
     <title>Netty-零拷贝</title>
-    <link href="https://xieyi123456.github.io/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/"/>
-    <id>https://xieyi123456.github.io/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</id>
+    <link href="https://xieyi1998.top/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/"/>
+    <id>https://xieyi1998.top/2021/07/30/Netty-%E9%9B%B6%E6%8B%B7%E8%B4%9D/</id>
     <published>2021-07-30T07:15:17.000Z</published>
     <updated>2023-07-17T04:35:35.979Z</updated>
     
@@ -270,17 +270,17 @@
     
     
     
-    <category term="Netty" scheme="https://xieyi123456.github.io/categories/Netty/"/>
+    <category term="Netty" scheme="https://xieyi1998.top/categories/Netty/"/>
     
     
-    <category term="basic" scheme="https://xieyi123456.github.io/tags/basic/"/>
+    <category term="basic" scheme="https://xieyi1998.top/tags/basic/"/>
     
   </entry>
   
   <entry>
     <title>Netty-长连接，心跳机制</title>
-    <link href="https://xieyi123456.github.io/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/"/>
-    <id>https://xieyi123456.github.io/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/</id>
+    <link href="https://xieyi1998.top/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/"/>
+    <id>https://xieyi1998.top/2021/07/30/Netty-%E9%95%BF%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6/</id>
     <published>2021-07-30T07:15:05.000Z</published>
     <updated>2023-07-17T04:35:35.978Z</updated>
     
@@ -293,17 +293,17 @@
     
     
     
-    <category term="Netty" scheme="https://xieyi123456.github.io/categories/Netty/"/>
+    <category term="Netty" scheme="https://xieyi1998.top/categories/Netty/"/>
     
     
-    <category term="机制" scheme="https://xieyi123456.github.io/tags/%E6%9C%BA%E5%88%B6/"/>
+    <category term="机制" scheme="https://xieyi1998.top/tags/%E6%9C%BA%E5%88%B6/"/>
     
   </entry>
   
   <entry>
     <title>Netty-线程模型</title>
-    <link href="https://xieyi123456.github.io/2021/07/30/Netty-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/"/>
-    <id>https://xieyi123456.github.io/2021/07/30/Netty-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/</id>
+    <link href="https://xieyi1998.top/2021/07/30/Netty-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/"/>
+    <id>https://xieyi1998.top/2021/07/30/Netty-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/</id>
     <published>2021-07-30T07:14:46.000Z</published>
     <updated>2023-07-17T04:35:35.980Z</updated>
     
@@ -317,17 +317,17 @@
     
     
     
-    <category term="Netty" scheme="https://xieyi123456.github.io/categories/Netty/"/>
+    <category term="Netty" scheme="https://xieyi1998.top/categories/Netty/"/>
     
     
-    <category term="线程" scheme="https://xieyi123456.github.io/tags/%E7%BA%BF%E7%A8%8B/"/>
+    <category term="线程" scheme="https://xieyi1998.top/tags/%E7%BA%BF%E7%A8%8B/"/>
     
   </entry>
   
   <entry>
     <title>Netty-核心组件</title>
-    <link href="https://xieyi123456.github.io/2021/07/30/Netty-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6/"/>
-    <id>https://xieyi123456.github.io/2021/07/30/Netty-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6/</id>
+    <link href="https://xieyi1998.top/2021/07/30/Netty-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6/"/>
+    <id>https://xieyi1998.top/2021/07/30/Netty-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6/</id>
     <published>2021-07-30T07:14:18.000Z</published>
     <updated>2023-07-17T04:35:35.944Z</updated>
     
@@ -342,17 +342,17 @@
     
     
     
-    <category term="Netty" scheme="https://xieyi123456.github.io/categories/Netty/"/>
+    <category term="Netty" scheme="https://xieyi1998.top/categories/Netty/"/>
     
     
-    <category term="结构" scheme="https://xieyi123456.github.io/tags/%E7%BB%93%E6%9E%84/"/>
+    <category term="结构" scheme="https://xieyi1998.top/tags/%E7%BB%93%E6%9E%84/"/>
     
   </entry>
   
   <entry>
     <title>Netty-优点，应用场景</title>
-    <link href="https://xieyi123456.github.io/2021/07/30/Netty-%E4%BC%98%E7%82%B9%EF%BC%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/"/>
-    <id>https://xieyi123456.github.io/2021/07/30/Netty-%E4%BC%98%E7%82%B9%EF%BC%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</id>
+    <link href="https://xieyi1998.top/2021/07/30/Netty-%E4%BC%98%E7%82%B9%EF%BC%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/"/>
+    <id>https://xieyi1998.top/2021/07/30/Netty-%E4%BC%98%E7%82%B9%EF%BC%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/</id>
     <published>2021-07-30T07:14:02.000Z</published>
     <updated>2023-07-17T04:35:35.980Z</updated>
     
@@ -364,17 +364,17 @@
     
     
     
-    <category term="Netty" scheme="https://xieyi123456.github.io/categories/Netty/"/>
+    <category term="Netty" scheme="https://xieyi1998.top/categories/Netty/"/>
     
     
-    <category term="应用" scheme="https://xieyi123456.github.io/tags/%E5%BA%94%E7%94%A8/"/>
+    <category term="应用" scheme="https://xieyi1998.top/tags/%E5%BA%94%E7%94%A8/"/>
     
   </entry>
   
   <entry>
     <title>Netty-NIO三大组件</title>
-    <link href="https://xieyi123456.github.io/2021/07/30/Netty-NIO%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6/"/>
-    <id>https://xieyi123456.github.io/2021/07/30/Netty-NIO%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6/</id>
+    <link href="https://xieyi1998.top/2021/07/30/Netty-NIO%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6/"/>
+    <id>https://xieyi1998.top/2021/07/30/Netty-NIO%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6/</id>
     <published>2021-07-30T07:13:44.000Z</published>
     <updated>2023-07-17T04:35:35.968Z</updated>
     
@@ -386,17 +386,17 @@
     
     
     
-    <category term="Netty" scheme="https://xieyi123456.github.io/categories/Netty/"/>
+    <category term="Netty" scheme="https://xieyi1998.top/categories/Netty/"/>
     
     
-    <category term="结构" scheme="https://xieyi123456.github.io/tags/%E7%BB%93%E6%9E%84/"/>
+    <category term="结构" scheme="https://xieyi1998.top/tags/%E7%BB%93%E6%9E%84/"/>
     
   </entry>
   
   <entry>
     <title>Redis-缓存击穿，雪崩，穿透</title>
-    <link href="https://xieyi123456.github.io/2021/07/30/Redis-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%8C%E9%9B%AA%E5%B4%A9%EF%BC%8C%E7%A9%BF%E9%80%8F/"/>
-    <id>https://xieyi123456.github.io/2021/07/30/Redis-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%8C%E9%9B%AA%E5%B4%A9%EF%BC%8C%E7%A9%BF%E9%80%8F/</id>
+    <link href="https://xieyi1998.top/2021/07/30/Redis-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%8C%E9%9B%AA%E5%B4%A9%EF%BC%8C%E7%A9%BF%E9%80%8F/"/>
+    <id>https://xieyi1998.top/2021/07/30/Redis-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%8C%E9%9B%AA%E5%B4%A9%EF%BC%8C%E7%A9%BF%E9%80%8F/</id>
     <published>2021-07-30T07:13:09.000Z</published>
     <updated>2024-03-27T08:34:06.809Z</updated>
     
@@ -409,17 +409,17 @@
     
     
     
-    <category term="Redis" scheme="https://xieyi123456.github.io/categories/Redis/"/>
+    <category term="Redis" scheme="https://xieyi1998.top/categories/Redis/"/>
     
     
-    <category term="概念" scheme="https://xieyi123456.github.io/tags/%E6%A6%82%E5%BF%B5/"/>
+    <category term="概念" scheme="https://xieyi1998.top/tags/%E6%A6%82%E5%BF%B5/"/>
     
   </entry>
   
   <entry>
     <title>Redis-集群</title>
-    <link href="https://xieyi123456.github.io/2021/07/30/Redis-%E9%9B%86%E7%BE%A4/"/>
-    <id>https://xieyi123456.github.io/2021/07/30/Redis-%E9%9B%86%E7%BE%A4/</id>
+    <link href="https://xieyi1998.top/2021/07/30/Redis-%E9%9B%86%E7%BE%A4/"/>
+    <id>https://xieyi1998.top/2021/07/30/Redis-%E9%9B%86%E7%BE%A4/</id>
     <published>2021-07-30T07:12:48.000Z</published>
     <updated>2024-03-27T08:33:50.786Z</updated>
     
@@ -432,17 +432,17 @@
     
     
     
-    <category term="Redis" scheme="https://xieyi123456.github.io/categories/Redis/"/>
+    <category term="Redis" scheme="https://xieyi1998.top/categories/Redis/"/>
     
     
-    <category term="集群" scheme="https://xieyi123456.github.io/tags/%E9%9B%86%E7%BE%A4/"/>
+    <category term="集群" scheme="https://xieyi1998.top/tags/%E9%9B%86%E7%BE%A4/"/>
     
   </entry>
   
   <entry>
     <title>Redis-持久化</title>
-    <link href="https://xieyi123456.github.io/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/"/>
-    <id>https://xieyi123456.github.io/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</id>
+    <link href="https://xieyi1998.top/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/"/>
+    <id>https://xieyi1998.top/2021/07/30/Redis-%E6%8C%81%E4%B9%85%E5%8C%96/</id>
     <published>2021-07-30T07:12:32.000Z</published>
     <updated>2024-03-27T08:34:15.025Z</updated>
     
@@ -456,10 +456,10 @@
     
     
     
-    <category term="Redis" scheme="https://xieyi123456.github.io/categories/Redis/"/>
+    <category term="Redis" scheme="https://xieyi1998.top/categories/Redis/"/>
     
     
-    <category term="持久化" scheme="https://xieyi123456.github.io/tags/%E6%8C%81%E4%B9%85%E5%8C%96/"/>
+    <category term="持久化" scheme="https://xieyi1998.top/tags/%E6%8C%81%E4%B9%85%E5%8C%96/"/>
     
   </entry>
   

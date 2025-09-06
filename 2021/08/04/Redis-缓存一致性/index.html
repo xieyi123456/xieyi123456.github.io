@@ -19,7 +19,7 @@
     <meta name="description" content="[TOC] 啥情况会缓存和 DB 不一致写并发例如，两个请求，同时先更新 db，后更新 缓存。 a 更新 db 为 20 b 更新 db 为 10 写缓存更新为 10 写缓存更新为 20 读写并发a 读缓存，没有值 a 读 db 为 10 b 写 db 更新缓存为 20 a 写缓存 更新为 10 概率低，写操作耗时相对较大。 保证一致性 删除缓存 更新 db 再次删除缓存 第一次删除？ 如果没有，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis-缓存一致性">
-<meta property="og:url" content="https://xieyi123456.github.io/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/index.html">
+<meta property="og:url" content="https://xieyi1998.top/2021/08/04/Redis-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/index.html">
 <meta property="og:site_name" content="XieYi&#39;s Blog">
 <meta property="og:description" content="[TOC] 啥情况会缓存和 DB 不一致写并发例如，两个请求，同时先更新 db，后更新 缓存。 a 更新 db 为 20 b 更新 db 为 10 写缓存更新为 10 写缓存更新为 20 读写并发a 读缓存，没有值 a 读 db 为 10 b 写 db 更新缓存为 20 a 写缓存 更新为 10 概率低，写操作耗时相对较大。 保证一致性 删除缓存 更新 db 再次删除缓存 第一次删除？ 如果没有，">
 <meta property="og:locale" content="zh_CN">
@@ -71,7 +71,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"xieyi123456.github.io","root":"/","version":"1.9.5","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":3},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"xieyi1998.top","root":"/","version":"1.9.5","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":3},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
