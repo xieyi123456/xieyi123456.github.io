@@ -6,7 +6,7 @@
   <link href="https://xieyi123456.github.io/atom.xml" rel="self"/>
   
   <link href="https://xieyi123456.github.io/"/>
-  <updated>2024-03-27T08:34:58.421Z</updated>
+  <updated>2025-09-06T14:26:12.970Z</updated>
   <id>https://xieyi123456.github.io/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hexo 常用命令</title>
+    <link href="https://xieyi123456.github.io/2025/09/06/hexo-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <id>https://xieyi123456.github.io/2025/09/06/hexo-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</id>
+    <published>2025-09-06T14:22:07.000Z</published>
+    <updated>2025-09-06T14:26:12.970Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;环境检查与初始化&quot;&gt;&lt;a href=&quot;#环境检查与初始化&quot; class=&quot;headerlink&quot; title=&quot;环境检查与初始化&quot;&gt;&lt;/a&gt;环境检查与初始化&lt;/h1&gt;&lt;hr&gt;
+&lt;p&gt;hexo version              # 查看 Hexo &amp;#x2F</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Linux常用命令</title>
@@ -441,30 +460,6 @@
     
     
     <category term="持久化" scheme="https://xieyi123456.github.io/tags/%E6%8C%81%E4%B9%85%E5%8C%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis-线程模型,事务</title>
-    <link href="https://xieyi123456.github.io/2021/07/30/Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/"/>
-    <id>https://xieyi123456.github.io/2021/07/30/Redis-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/</id>
-    <published>2021-07-30T07:12:19.000Z</published>
-    <updated>2024-03-27T08:33:34.427Z</updated>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h2 id=&quot;redis-为什么快&quot;&gt;&lt;a href=&quot;#redis-为什么快&quot; class=&quot;headerlink&quot; title=&quot;redis 为什么快&quot;&gt;&lt;/a&gt;redis 为什么快&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;基于内存&lt;/stron</summary>
-      
-    
-    
-    
-    <category term="Redis" scheme="https://xieyi123456.github.io/categories/Redis/"/>
-    
-    
-    <category term="模型" scheme="https://xieyi123456.github.io/tags/%E6%A8%A1%E5%9E%8B/"/>
     
   </entry>
   

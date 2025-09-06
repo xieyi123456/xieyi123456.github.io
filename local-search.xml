@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>hexo 常用命令</title>
+    <link href="/2025/09/06/hexo-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <url>/2025/09/06/hexo-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    
+    <content type="html"><![CDATA[<h1 id="环境检查与初始化"><a href="#环境检查与初始化" class="headerlink" title="环境检查与初始化"></a>环境检查与初始化</h1><hr><p>hexo version              # 查看 Hexo &#x2F; Node &#x2F; npm 版本<br>hexo init <folder><folder></p><hr><h1 id="本地开发"><a href="#本地开发" class="headerlink" title="本地开发"></a>本地开发</h1><hr><p>hexo generate  或  hexo g   # 生成静态文件到 public<br>hexo server    或  hexo s   # 启动本地服务器，默认 <a href="http://localhost:4000/">http://localhost:4000</a><br>hexo clean &amp;&amp; hexo g &amp;&amp; hexo s   # 一键「清缓存+生成+预览」</p><p>常用可选参数<br>hexo s -p 5000              # 改端口<br>hexo s -l                   # 静默日志<br>hexo g -w                   # watch 模式，改文件自动重新生成</p><hr><h1 id="写作与草稿"><a href="#写作与草稿" class="headerlink" title="写作与草稿"></a>写作与草稿</h1><hr><p>hexo new post “标题”        # 新建文章，文件在 source&#x2F;_posts<br>hexo new draft “标题”       # 新建草稿，文件在 source&#x2F;_drafts<br>hexo publish draft “标题”   # 把草稿正式发布到 _posts<br>hexo new page “about”       # 新建独立页面，会生成 source&#x2F;about&#x2F;index.md</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Linux常用命令</title>
     <link href="/2021/08/05/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
     <url>/2021/08/05/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
